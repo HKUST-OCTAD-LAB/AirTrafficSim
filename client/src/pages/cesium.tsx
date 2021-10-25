@@ -1,8 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import { Viewer as CesiumViewer, Ion, createWorldTerrain, createOsmBuildings, JulianDate, Color, Cartesian3, SampledPositionProperty, TimeIntervalCollection, TimeInterval, PathGraphics, IonResource} from "cesium";
-import { Viewer, Scene, Globe, Camera, Entity, Clock, useCesium, CesiumComponentRef, ModelGraphics } from "resium";
-import { url } from "inspector";
-import Model from "cesium/Source/Scene/Model";
+import React, { useEffect, useRef, useState } from "react";
+import { Viewer as CesiumViewer, Ion, createWorldTerrain, createOsmBuildings, JulianDate, Color, Cartesian3, SampledPositionProperty, TimeIntervalCollection, TimeInterval, PathGraphics, IonResource, VelocityOrientationProperty} from "cesium";
+import { Viewer, Entity, Clock, CesiumComponentRef } from "resium";
 
 Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
@@ -21,45 +19,54 @@ const positionProperty = new SampledPositionProperty();
 const Cesium = () => {
     const v = useRef<CesiumComponentRef<CesiumViewer>>(null);
 
-  return (
-    <Viewer terrainProvider={terrainProvider} ref={v}>
-        <Clock 
-            startTime={start.clone()} 
-            stopTime={stop.clone()} 
-            currentTime={start.clone()}
-            multiplier={50}
-            shouldAnimate={true}
-        />
-        {/* viewer.timeline.zoomTo(start, stop); */}
-        {flightData.map((dataPoint:any, i:any) => {
-            const time = JulianDate.addSeconds(start, i * timeStepInSeconds, new JulianDate());
-            const position = Cartesian3.fromDegrees(dataPoint.longitude, dataPoint.latitude, dataPoint.height);
-            positionProperty.addSample(time, position);
-            
-            return (
-                 <Entity
-                    description={`Location: (${dataPoint.longitude}, ${dataPoint.latitude}, ${dataPoint.height})`}
-                    point={{pixelSize: 10, color: Color.RED}}
-                    position={position}
-                />
-            )
-        })
-        }
-        {async function loadModel() {
-            const airplaneUri = await IonResource.fromAssetId(650360);
+    const [airplane, setAirplane] = useState<IonResource>();
+
+    useEffect(() => {
+        console.log("useEffector");
+        const fetchAirplane = async () => {
+            const res = await IonResource.fromAssetId(650360);
+            setAirplane(res);
+            console.log(res);
+        };
+        fetchAirplane();
+    }, []);
+
+    
+
+    return (
+        <Viewer terrainProvider={terrainProvider} ref={v}>
+            <Clock 
+                startTime={start.clone()} 
+                stopTime={stop.clone()} 
+                currentTime={start.clone()}
+                multiplier={50}
+                shouldAnimate={true}
+            />
+            {v.current?.cesiumElement?.timeline.zoomTo(start, stop)}
+            {flightData.map((dataPoint:any, i:any) => {
+                const time = JulianDate.addSeconds(start, i * timeStepInSeconds, new JulianDate());
+                const position = Cartesian3.fromDegrees(dataPoint.longitude, dataPoint.latitude, dataPoint.height);
+                positionProperty.addSample(time, position);
+                
                 return (
                     <Entity
-                        availability={new TimeIntervalCollection([new TimeInterval({ start: start, stop: stop })])}
-                        position={positionProperty}
-                        model={{uri: airplaneUri}}
-                        path={new PathGraphics({width: 3})}
-                        tracked
+                        description={`Location: (${dataPoint.longitude}, ${dataPoint.latitude}, ${dataPoint.height})`}
+                        point={{pixelSize: 10, color: Color.RED}}
+                        position={position}
                     />
                 )
+            })
             }
-        }        
-    </Viewer>
-  )
+            <Entity
+                availability={new TimeIntervalCollection([new TimeInterval({ start: start, stop: stop })])}
+                position={positionProperty}
+                model={{uri: airplane}}
+                path={new PathGraphics({width: 3})}
+                orientation={new VelocityOrientationProperty(positionProperty)}
+                tracked
+            /> 
+        </Viewer>
+    )
 };
 
 export default Cesium;
