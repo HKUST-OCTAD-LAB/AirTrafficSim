@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Viewer as CesiumViewer, Ion, createWorldTerrain, createOsmBuildings, JulianDate, Color, Cartesian3, SampledPositionProperty, TimeIntervalCollection, TimeInterval, PathGraphics, IonResource, VelocityOrientationProperty} from "cesium";
-import { Viewer, Entity, Clock, CesiumComponentRef } from "resium";
+import { Viewer, Entity, Clock, CesiumComponentRef, Cesium3DTileset } from "resium";
 
 Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
@@ -35,6 +35,7 @@ const Cesium = () => {
 
     return (
         <Viewer terrainProvider={terrainProvider} ref={v}>
+            <Cesium3DTileset url={OsmBuildings.resource}/>
             <Clock 
                 startTime={start.clone()} 
                 stopTime={stop.clone()} 
