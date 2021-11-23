@@ -34,7 +34,7 @@ const Cesium = () => {
     
 
     return (
-        <Viewer terrainProvider={terrainProvider} ref={v}>
+        <Viewer terrainProvider={terrainProvider} ref={v} full>
             <Cesium3DTileset url={OsmBuildings.resource}/>
             <Clock 
                 startTime={start.clone()} 
