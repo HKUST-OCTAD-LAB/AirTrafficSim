@@ -10,6 +10,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Drawer from '@mui/material/Drawer';
+import { createTheme, ThemeProvider} from '@mui/material/styles';
 
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
@@ -17,34 +18,49 @@ import MailIcon from '@mui/icons-material/Mail';
 import CesiumBase from './pages/CesiumBase';
 
 const App = () => {
+  const theme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
+
   return (
-    <Router>
-      <Box sx={{ display: 'flex'}}>
-          <Drawer variant="permanent" anchor="left" sx={{ width: 200, flexShrink: 0, '& .MuiDrawer-paper': {width: 200}}}>
-          <Toolbar>
-            <Typography> ATC </Typography>
-          </Toolbar>
-          <Divider />
-          <List>
-            {['Dashboard', 'Airspace', 'Aircrafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-          </Drawer> 
-        <Box component="main" sx={{ flexGrow: 1}}>
-          <Switch>
-            <Route path="/">
-              <CesiumBase/>
-            </Route>
-          </Switch>  
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Box sx={{ display: 'flex'}}>
+            <Drawer variant="permanent" anchor="left" sx={{ width: 200, flexShrink: 0, '& .MuiDrawer-paper': {width: 200}}}>
+              <Toolbar>
+                <Typography> ATC Simulator</Typography>
+              </Toolbar>
+              <Divider />
+              <List>
+                <ListItem>
+                  <ListItemText primary={"Dashboard"} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={"Real Time Simulation"} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={"Scenarios"} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={"Map Editor"} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={"Scenraios"} />
+                </ListItem>
+              </List>
+            </Drawer> 
+          <Box component="main" sx={{ flexGrow: 1}}>
+            <Switch>
+              <Route path="/">
+                <CesiumBase/>
+              </Route>
+            </Switch>  
+          </Box>
         </Box>
-      </Box>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
 
