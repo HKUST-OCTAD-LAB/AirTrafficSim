@@ -1,20 +1,26 @@
-import React, {useEffect, useRef } from "react";
-import { CzmlDataSource } from "resium";
-import { io } from "socket.io-client";
-// import socket from '../utils/websocket';
+import React, {RefObject, useEffect, useRef, useState } from "react";
+import { CesiumComponentRef, CzmlDataSource } from "resium";
+import {Viewer as CesiumViewer} from "cesium";
+import socket from '../utils/websocket';
 
-const socket = io("ws://localhost:5000");
 
 const Aircrafts = () => {
-    
-    console.log(socket);
+    const [dataSource, setDataSource] = useState();
 
-    socket.on('abc', (msg) => {
-        console.log(msg);
-    })
+    useEffect(() => {
+        console.log("useEffect - Aircrafts")
+
+        socket.on('realtime:all', (msg) => {
+            console.log(msg);
+            setDataSource(msg);
+        })
+    }, [])
 
     return (
-        <CzmlDataSource/>
+        <CzmlDataSource data={dataSource} onLoad={(ds) => {
+            console.log(ds);
+            
+        }}/>
     );
 }
 

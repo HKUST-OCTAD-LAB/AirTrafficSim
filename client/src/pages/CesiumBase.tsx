@@ -8,21 +8,21 @@ const terrainProvider = createWorldTerrain( {requestVertexNormals: true, request
 const SentinelTwoImagery = new IonImageryProvider({ assetId: 3954 }) //createWorldImagery() for Bing Imagery
 
 const CesiumBase = () => {
-    const ref = useRef<CesiumComponentRef<CesiumViewer>>(null);
+    const viewerRef = useRef<CesiumComponentRef<CesiumViewer>>(null);
 
     useEffect(() => {
       console.log("useEffect() - Cesium Base")
-        if (ref.current && ref.current.cesiumElement) {
+        if (viewerRef.current && viewerRef.current.cesiumElement) {
           // ref.current.cesiumElement is Cesium's Viewer
           // DO SOMETHING
-          console.log(ref);
-          ref.current.cesiumElement.extend(viewerCesiumInspectorMixin)
+          console.log(viewerRef);
+          viewerRef.current.cesiumElement.extend(viewerCesiumInspectorMixin)
         }
       }, []);
 
       
     return (
-        <Viewer ref={ref} style={{height: "100vh"}} animation={false} homeButton={false} baseLayerPicker={false} fullscreenButton={false} navigationHelpButton={false} imageryProvider={SentinelTwoImagery}>
+        <Viewer ref={viewerRef} style={{height: "100vh"}}  homeButton={false} baseLayerPicker={false} fullscreenButton={false} navigationHelpButton={false} imageryProvider={SentinelTwoImagery}>
             <Globe terrainProvider={terrainProvider} enableLighting={true}/>
             <Cesium3DTileset url={IonResource.fromAssetId(96188)}/>
             <Aircrafts/>

@@ -1,5 +1,5 @@
-import socketIOClient from 'socket.io-client';
+import { io } from "socket.io-client";
 
-let socket = socketIOClient('/', {path: '/socket/', transports: ['websocket', 'polling', 'flashsocket']});
+const socket = io("http://localhost:5000");
 
 export default socket;

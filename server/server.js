@@ -1,19 +1,21 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const postRouter = require('./src/routes/post.router');
 const cors = require('cors');
-const { Server } = require("socket.io");
-const http = require('http');
-// require('./src/database');
-const PORT = 5000;
 
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+  cors: {
+    methods: ['GET', 'POST'],
+  },
+});
 
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-);
+
+const PORT = process.env.PORT || 5000;
+// require('./src/database');
+
+//Express config
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -21,23 +23,19 @@ app.get('/', (req, res) => {
   res.send("Hello World ! ");
 });
 
-app.listen(PORT, function () {
-  console.log(`Server Listening on ${PORT}`);
-});
+const json = require('./src/data/sample.json')
 
-const server = http.createServer(app);
-const io = new Server(server);
-
+// Handle client socket connection
 io.on('connection', socket => {
   console.log('New client connected!');
-  
-  socket.broadcast.emit('hi');
 
-  socket.on('abc', (msg) => {
-    io.emit('abc', msg);
-  });
+  socket.emit("realtime:all", json);
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
   })
 })
+
+server.listen(PORT, () => {
+  console.log(`Server Listening on ${PORT}`);
+});
