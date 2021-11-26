@@ -10,6 +10,7 @@ const io = require('socket.io')(server, {
   },
 });
 
+const realtime = require('./src/models/realtime');
 
 const PORT = process.env.PORT || 5000;
 // require('./src/database');
@@ -23,13 +24,13 @@ app.get('/', (req, res) => {
   res.send("Hello World ! ");
 });
 
-const json = require('./src/data/sample.json')
+const aircarfts = realtime.raeltime();
 
 // Handle client socket connection
 io.on('connection', socket => {
   console.log('New client connected!');
 
-  socket.emit("realtime:all", json);
+  socket.emit("realtime:all", aircarfts);
 
   socket.on('disconnect', () => {
     console.log('user disconnected');

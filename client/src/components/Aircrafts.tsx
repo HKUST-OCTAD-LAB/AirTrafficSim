@@ -1,6 +1,5 @@
-import React, {RefObject, useEffect, useRef, useState } from "react";
-import { CesiumComponentRef, CzmlDataSource } from "resium";
-import {Viewer as CesiumViewer} from "cesium";
+import React, {useEffect, useState } from "react";
+import { CzmlDataSource } from "resium";
 import socket from '../utils/websocket';
 
 
@@ -19,7 +18,6 @@ const Aircrafts = () => {
     return (
         <CzmlDataSource data={dataSource} onLoad={(ds) => {
             console.log(ds);
-            
         }}/>
     );
 }
