@@ -32,19 +32,23 @@ module.exports = {
                         "description": `${content[key][2]}, ${content[key][1]}, ${content[key][4]}`,
                         "epoch": time.toISOString(),
                         "position": {
-                            "cartographicDegrees": [content[key][2], content[key][1], content[key][4]]
+                            "cartographicDegrees": [content[key][2], content[key][1], content[key][4]/3.2808]
                         },
                         "point": {"pixelSize": 5},
                         "label": {
-                            "text": `${content[key][2]}, ${content[key][1]}, ${content[key][4]}`,
-                            "font": "1px",
+                            "text": `${content[key][13]}, ${content[key][8]}\n${content[key][11]}-${content[key][12]}\n${content[key][4]}, ${content[key][5]}`,
+                            "font": "9px sans-serif",
                             "horizontalOrigin": "LEFT",
                             "pixelOffset": {
-                                "cartesian2": [8, 0],
+                                "cartesian2": [10, 15],
                             },
                             "distanceDisplayCondition": {
-                                "distanceDisplayCondition": [0, 2000000]
+                                "distanceDisplayCondition": [0, 1000000]
                             },
+                            "showBackground": true,
+                            "backgroundColor": {
+                                "rgba": [0, 0, 0, 100]
+                            }
                         }
                     }
                     aircrafts.push(aircraft);

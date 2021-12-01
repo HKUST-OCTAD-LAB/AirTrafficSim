@@ -1,6 +1,6 @@
 import React, {useEffect, useState } from "react";
 import { CzmlDataSource } from "resium";
-import socket from '../utils/websocket';
+import axios from "axios";
 
 
 const Aircrafts = () => {
@@ -9,9 +9,11 @@ const Aircrafts = () => {
     useEffect(() => {
         console.log("useEffect - Aircrafts")
 
-        socket.on('realtime:all', (msg) => {
-            console.log(msg);
-            setDataSource(msg);
+        axios.get("http://localhost:5000/replay").then( res => {
+            console.log(res.data);
+            setDataSource(res.data);
+        }).catch(err => {
+            console.log(err);
         })
     }, [])
 

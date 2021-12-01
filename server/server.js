@@ -12,6 +12,7 @@ const io = require('socket.io')(server, {
 });
 
 const realtime = require('./src/models/realtime');
+const replay = require('./src/models/replay');
 
 const PORT = process.env.PORT || 5000;
 // require('./src/database');
@@ -25,6 +26,10 @@ app.get('/', (req, res) => {
   res.send("Hello World ! ");
 });
 
+app.get('/replay', (req, res) => {
+  res.send(replay.replay());
+})
+
 // Handle client socket connection
 io.on('connection', socket => {
   console.log('New client connected!');
@@ -34,7 +39,7 @@ io.on('connection', socket => {
   })
 })
 
-setInterval(realtime.realtime, 5000, io.sockets, http);
+// setInterval(realtime.realtime, 5000, io.sockets, http);
 
 server.listen(PORT, () => {
   console.log(`Server Listening on ${PORT}`);

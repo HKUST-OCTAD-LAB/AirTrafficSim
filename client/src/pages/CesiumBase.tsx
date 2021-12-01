@@ -1,7 +1,8 @@
 import React, {useEffect, useRef } from "react";
-import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, IonImageryProvider, createWorldImagery } from "cesium";
+import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, IonImageryProvider, createWorldImagery} from "cesium";
 import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Camera, Scene } from "resium";
 import Aircrafts from "../components/Aircrafts";
+import {realtime} from "../components/realtime";
 
 Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
@@ -16,6 +17,7 @@ const CesiumBase = () => {
         if (viewerRef.current && viewerRef.current.cesiumElement) {
           // ref.current.cesiumElement is Cesium's Viewer
           // DO SOMETHING
+          realtime(viewerRef.current.cesiumElement);
         }
       }, []);
 
