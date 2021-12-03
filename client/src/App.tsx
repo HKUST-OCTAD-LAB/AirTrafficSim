@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -12,8 +12,9 @@ import Typography from '@mui/material/Typography';
 import Drawer from '@mui/material/Drawer';
 import { createTheme, ThemeProvider} from '@mui/material/styles';
 
-import CesiumBase from './pages/CesiumBase';
 import socket from './utils/websocket';
+import RealtTime from './pages/Realtime';
+import Scenarios from './pages/Scenarios';
 
 socket.on('connection', () => {
     console.log("connected");
@@ -21,6 +22,9 @@ socket.on('connection', () => {
 )
 
 const App = () => {
+  const [realTimeSelected, setRealTimeSelected] = useState(false);
+  const [scenariosSelected, setScenariosSelected] = useState(false);
+
   const theme = createTheme({
     palette: {
       mode: 'dark',
@@ -41,23 +45,23 @@ const App = () => {
                   <ListItemText primary={"Dashboard"} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary={"Real Time Simulation"} />
+                  <ListItemText primary={"Real Time Simulation"}/>
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary={"Scenarios"} />
+                  <ListItemText primary={"Scenarios"}/>
                 </ListItem>
-                <ListItem>
+                {/* <ListItem>
                   <ListItemText primary={"Map Editor"} />
                 </ListItem>
                 <ListItem>
                   <ListItemText primary={"Scenraios"} />
-                </ListItem>
+                </ListItem> */}
               </List>
             </Drawer> 
           <Box component="main" sx={{ flexGrow: 1}}>
             <Switch>
               <Route path="/">
-                <CesiumBase/>
+                <RealtTime/>
               </Route>
             </Switch>  
           </Box>

@@ -39,7 +39,7 @@ io.on('connection', socket => {
   })
 })
 
-// setInterval(realtime.realtime, 5000, io.sockets, http);
+setInterval(realtime.realtime, 5000, io.sockets, http);
 
 server.listen(PORT, () => {
   console.log(`Server Listening on ${PORT}`);
