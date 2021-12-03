@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -15,6 +13,7 @@ import { createTheme, ThemeProvider} from '@mui/material/styles';
 import socket from './utils/websocket';
 import RealtTime from './pages/Realtime';
 import Scenarios from './pages/Scenarios';
+import Home from './pages/home';
 
 socket.on('connection', () => {
     console.log("connected");
@@ -22,8 +21,6 @@ socket.on('connection', () => {
 )
 
 const App = () => {
-  const [realTimeSelected, setRealTimeSelected] = useState(false);
-  const [scenariosSelected, setScenariosSelected] = useState(false);
 
   const theme = createTheme({
     palette: {
@@ -41,28 +38,22 @@ const App = () => {
               </Toolbar>
               <Divider />
               <List>
-                <ListItem>
+                <ListItemButton component={Link} to='/'>
                   <ListItemText primary={"Dashboard"} />
-                </ListItem>
-                <ListItem>
+                </ListItemButton>
+                <ListItemButton component={Link} to='/realtime'>
                   <ListItemText primary={"Real Time Simulation"}/>
-                </ListItem>
-                <ListItem>
+                </ListItemButton>
+                <ListItemButton component={Link} to='/scenarios'>
                   <ListItemText primary={"Scenarios"}/>
-                </ListItem>
-                {/* <ListItem>
-                  <ListItemText primary={"Map Editor"} />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={"Scenraios"} />
-                </ListItem> */}
+                </ListItemButton>
               </List>
             </Drawer> 
           <Box component="main" sx={{ flexGrow: 1}}>
             <Switch>
-              <Route path="/">
-                <RealtTime/>
-              </Route>
+              <Route path="/realtime" component={RealtTime}/>
+              <Route path="/scenarios" component={Scenarios}/>
+              <Route path="/" exact component={Home}/>
             </Switch>  
           </Box>
         </Box>
