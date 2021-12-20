@@ -13,6 +13,7 @@ const io = require('socket.io')(server, {
 
 const realtime = require('./src/models/realtime');
 const replay = require('./src/models/replay');
+const navdata = require('./src/models/navdata');
 
 const PORT = process.env.PORT || 5000;
 // require('./src/database');
@@ -30,6 +31,14 @@ app.get('/replay', (req, res) => {
   res.send(replay.replay());
 })
 
+app.get('/navdata', (req, res) => {
+  const sendnav = (document) => {
+    res.send(document);
+  }
+
+  navdata.navdata(sendnav);
+})
+
 // Handle client socket connection
 io.on('connection', socket => {
   console.log('New client connected!');
@@ -39,7 +48,7 @@ io.on('connection', socket => {
   })
 })
 
-setInterval(realtime.realtime, 5000, io.sockets, http);
+// setInterval(realtime.realtime, 2000, io.sockets, http);
 
 server.listen(PORT, () => {
   console.log(`Server Listening on ${PORT}`);

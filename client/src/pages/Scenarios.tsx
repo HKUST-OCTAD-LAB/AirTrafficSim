@@ -10,16 +10,24 @@ const bingImagery = createWorldImagery(); //createWorldImagery() for Bing Imager
 
 const Scenarios = () => {
     const viewerRef = useRef<CesiumComponentRef<CesiumViewer>>(null);
-    const [dataSource, setDataSource] = useState();
+    const [replay, setReplay] = useState();
+    const [navData, setNavdata] = useState();
 
     useEffect(() => {
       console.log("useEffect() - Scenarios | page load - axios get")
 
-      axios.get("http://localhost:5000/replay").then( res => {
-          console.log(res.data);
-          setDataSource(res.data);
+      // axios.get("http://localhost:5000/replay").then( res => {
+      //     console.log("replay", res.data);
+      //     setReplay(res.data);
+      // }).catch(err => {
+      //     console.log(err);
+      // })
+
+      axios.get("http://localhost:5000/navdata").then( res => {
+        console.log("navdata", res.data);
+        setNavdata(res.data);
       }).catch(err => {
-          console.log(err);
+        console.log(err);
       })
     }, []);
       
@@ -28,9 +36,12 @@ const Scenarios = () => {
         <Scene debugShowFramesPerSecond={true}/>
         <Globe terrainProvider={terrainProvider}/>
         <Cesium3DTileset url={IonResource.fromAssetId(96188)}/>
-        <CzmlDataSource data={dataSource} onLoad={(ds) => {
+        {replay && <CzmlDataSource data={replay} onLoad={(ds) => {
             console.log(ds);
-        }}/>
+        }}/>}
+        {navData && <CzmlDataSource data={navData} onLoad={(ds) => {
+            console.log(ds);
+        }}/>}
       </Viewer>
     )
 };

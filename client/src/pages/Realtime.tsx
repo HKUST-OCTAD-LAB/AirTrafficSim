@@ -21,7 +21,7 @@ const RealtTime = () => {
           var czmldatasource = new CzmlDataSource();
           viewer.dataSources.add(czmldatasource);
           socket.on('realtime:all', (msg) => {
-              // console.log("real time data received");
+              console.log("real time data received");
               czmldatasource.process(msg);
     })
         }
