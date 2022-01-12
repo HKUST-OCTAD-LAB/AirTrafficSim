@@ -1,7 +1,7 @@
 module.exports = {
     realtime: realtime = (socket, http) => {
         console.log("function - realtime");
-        http.request("https://data-live.flightradar24.com/zones/fcgi/feed.js?faa=1&bounds=73.602%2C-57.378%2C-180%2C180&satellite=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=1&estimated=1&maxage=14400&gliders=1&stats=1", (res) => {
+        http.request("http://data-live.flightradar24.com/zones/fcgi/feed.js?faa=1&bounds=90%2C-90%2C105%2C125&satellite=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=1&estimated=1&maxage=14400&gliders=1&stats=1", (res) => {
             var data = "";
             res.on("data", (chunk) => {
                 data += chunk;

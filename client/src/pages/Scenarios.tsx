@@ -16,19 +16,19 @@ const Scenarios = () => {
     useEffect(() => {
       console.log("useEffect() - Scenarios | page load - axios get")
 
-      // axios.get("http://localhost:5000/replay").then( res => {
-      //     console.log("replay", res.data);
-      //     setReplay(res.data);
-      // }).catch(err => {
-      //     console.log(err);
-      // })
-
-      axios.get("http://localhost:5000/navdata").then( res => {
-        console.log("navdata", res.data);
-        setNavdata(res.data);
+      axios.get("http://localhost:5000/replay").then( res => {
+          console.log("replay", res.data);
+          setReplay(res.data);
       }).catch(err => {
-        console.log(err);
+          console.log(err);
       })
+
+      // axios.get("http://localhost:5000/navdata").then( res => {
+      //   console.log("navdata", res.data);
+      //   setNavdata(res.data);
+      // }).catch(err => {
+      //   console.log(err);
+      // })
     }, []);
       
     return (

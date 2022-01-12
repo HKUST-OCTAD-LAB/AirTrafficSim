@@ -32,11 +32,11 @@ app.get('/replay', (req, res) => {
 })
 
 app.get('/navdata', (req, res) => {
-  const sendnav = (document) => {
-    res.send(document);
-  }
+  // const sendnav = (document) => {
+  //   res.send(document);
+  // }
 
-  navdata.navdata(sendnav);
+  // navdata.navdata(sendnav);
 })
 
 // Handle client socket connection
@@ -48,7 +48,7 @@ io.on('connection', socket => {
   })
 })
 
-// setInterval(realtime.realtime, 2000, io.sockets, http);
+setInterval(realtime.realtime, 2000, io.sockets, http);
 
 server.listen(PORT, () => {
   console.log(`Server Listening on ${PORT}`);
