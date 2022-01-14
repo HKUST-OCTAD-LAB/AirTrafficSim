@@ -10,7 +10,10 @@ class Performance:
     ----------
 
     Methods
-    -------.
+    -------
+    __init__:
+
+    add_aircraft_performance:
 
     Notes
     -----
@@ -22,8 +25,10 @@ class Performance:
         """
         Initialize BADA performance parameters 
 
+        Parameters
+        ----------
         N: int
-            Maximum size of performance array (pre initialize to eliminate inefficient append)
+            Number of aircrafts. Maximum size of performance array (pre-initialize to eliminate inefficient append)
             TODO: Revise the initial estimate
         """
         # ----------------------------  Operations Performance File (OPF) section 3.11 -----------------------------------------
@@ -193,26 +198,19 @@ class Performance:
         """
         Append one specific aircraft performance data to the performance array.
 
-
         Parameters
         ----------
         self: Performance class instance
             Used to append data to the performance array.
-
         ICAO: string
             ICAO code of the specific aircraft.
-
         n: int
             Index of array.
-
         mass: int
             Aircraft mass for specific flight. To be used for APF. 1 = LO, 2 = AV, 3 = HI
 
-
         Returns
         -------
-
-
         """
 
         # Get file name by searching in SYNONYM.NEW
@@ -316,11 +314,11 @@ class Performance:
         APF = np.genfromtxt(Path('./traffic/BADA/',file_name+'.APF'), delimiter=[6,8,9,4,4,4,3,5,4,4,4,4,3,4,4,5,4,4,4,5,7], dtype="U2,U7,U7,U2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,U6", comments="CC", autostrip=True)
         self.__v_cl_1[n] = APF[mass][4]
         self.__v_cl_2[n] = APF[mass][5]
-        self.__m_cl[n] = APF[mass][6]
+        self.__m_cl[n] = APF[mass][6]/100
         self.__v_cr_1[n] = APF[mass][9]
         self.__v_cr_2[n] = APF[mass][10]
-        self.__m_cr[n] = APF[mass][11]
-        self.__m_des[n] = APF[mass][12]
+        self.__m_cr[n] = APF[mass][11]/100
+        self.__m_des[n] = APF[mass][12]/100
         self.__v_des_2[n] = APF[mass][13]
         self.__v_des_1[n] = APF[mass][14]
 
@@ -328,5 +326,37 @@ class Performance:
         del APF
 
 
-performance = Performance();
-performance.add_aircraft_performance("A20N")
+    def calculate_performance(self, Aircrafts):
+        """
+        Calculate aircraft performance according to BADA.
+
+        Parameters
+        ----------
+        self:
+
+        Aircrafts: Aircrafts() class
+            To obtain and update aircrafts' present states.
+
+        """
+
+        # Section 3.1.1 MSL Standard atmosphere condition
+        self.__T_0 = 288.15                 # Standard atmospheric temperature at MSL [K]
+        self.__p_0 = 101325                 # Standard atmospheric pressure at MSL [Pa]
+        self.__rho_0 = 1.225                # Standard atmospheric density at MSL [kg/m^3]
+        self.__a_0 = 340.294                # Speed of sound [m/s]
+
+        self.__K = 1.4                      # Adiabatic index of air [dimensionless]
+        self.__R = 287.05287                # Real gas constant of air [m^2/(K*s^2)]
+        self.__g_0 = 9.80665                # Gravitational acceleration [m/s^2]
+        self.__beta_T = -0.0065             # ISA temperature gradient with altitude below the tropopause [K/m]
+
+
+        # Total energy model (section 3.2)
+
+
+        # Aerodynamic (3.6)
+
+
+
+        pass
+
