@@ -1,6 +1,4 @@
-from .src.aircraft import Aircrafts
-from .src.aircraft import Performance
+from .src.env import Environment
 
-aircrafts = Aircrafts()
-performance = Performance()
-performance.add_aircraft_performance("A20N")
+env = Environment()
+env.step(100, 30)
