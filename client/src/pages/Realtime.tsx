@@ -1,12 +1,13 @@
 import React, {useEffect, useRef } from "react";
-import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, IonImageryProvider, createWorldImagery, CzmlDataSource} from "cesium";
-import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene } from "resium";
+import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, IonImageryProvider, createWorldImagery, CzmlDataSource, OpenStreetMapImageryProvider, Color} from "cesium";
+import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer } from "resium";
 import socket from "../utils/websocket";
 
 Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
 const SentinelTwoImagery = new IonImageryProvider({ assetId: 3954 }); //createWorldImagery() for Bing Imagery
 const bingImagery = createWorldImagery(); //createWorldImagery() for Bing Imagery
+const simple = new OpenStreetMapImageryProvider({url: 'https://stamen-tiles.a.ssl.fastly.net/toner-background/' });
 
 const RealtTime = () => {
     const viewerRef = useRef<CesiumComponentRef<CesiumViewer>>(null);
@@ -29,9 +30,11 @@ const RealtTime = () => {
 
       
     return (
-      <Viewer imageryProvider={bingImagery} ref={viewerRef} style={{height: "100vh"}}  homeButton={false} baseLayerPicker={false} fullscreenButton={false} navigationHelpButton={false}>
+      <Viewer imageryProvider={false} ref={viewerRef} style={{height: "100vh"}}  homeButton={false} baseLayerPicker={false} fullscreenButton={false} navigationHelpButton={false} skyAtmosphere={false}>
         <Scene debugShowFramesPerSecond={true}/>
-        <Globe terrainProvider={terrainProvider}/>
+        <Globe terrainProvider={terrainProvider} baseColor={Color.fromCssColorString('#000000')}/>
+        {/* <ImageryLayer imageryProvider={simple} alpha={0.2}/> */}
+        <ImageryLayer imageryProvider={simple} alpha={0.2} contrast={-1}/>
         <Cesium3DTileset url={IonResource.fromAssetId(96188)}/>
         {/* <Camera onChange={(res) => {
           console.log("camera change: ", res);
