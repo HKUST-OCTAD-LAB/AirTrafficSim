@@ -194,7 +194,7 @@ class Performance:
         self.__SYNONYM = np.genfromtxt(Path('simulation/data/BADA/SYNONYM.NEW'), delimiter=[3,2,7,20,25,8,5], names=['CD','ST','ACCODE','MANUFACTURER','MODEL','FILENAME','ICAO'], dtype="U2,U1,U4,U18,U25,U6,U1", comments="CC", autostrip=True, skip_footer=1)
 
 
-    def add_aircraft_performance(self, icao, n, mass=2):
+    def add_aircraft(self, icao, n, mass=2):
         """
         Append one specific aircraft performance data to the performance array.
 

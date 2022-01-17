@@ -34,7 +34,7 @@ const App = () => {
         <Box sx={{ display: 'flex'}}>
             <Drawer variant="permanent" anchor="left" sx={{ width: 200, flexShrink: 0, '& .MuiDrawer-paper': {width: 200}}}>
               <Toolbar>
-                <Typography> ATC Simulator</Typography>
+                <Typography> AirTrafficSim</Typography>
               </Toolbar>
               <Divider />
               <List>

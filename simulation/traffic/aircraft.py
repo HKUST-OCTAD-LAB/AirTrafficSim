@@ -23,7 +23,7 @@ class Aircraft:
         
         print("aircraft.py - set_ap_heading()", ap_heading)
 
-        self.traffic.ap_heading[self.index] = ap_heading
+        self.traffic.ap.heading[self.index] = ap_heading
 
     def update(self):
         """
