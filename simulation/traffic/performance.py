@@ -17,7 +17,7 @@ class Performance:
 
     Notes
     -----
-    Styling ref: https://numpydoc.readthedocs.io/en/latest/format.html#params
+    
 
     """
 
