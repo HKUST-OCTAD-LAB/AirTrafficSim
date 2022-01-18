@@ -1,4 +1,5 @@
 """Aircraft performance class calculation using BADA 3.15"""
+from audioop import mul
 from pathlib import Path
 import numpy as np
 
@@ -189,6 +190,23 @@ class Performance:
         del GPF
 
 
+        # ----------------------------  Atmosphere model section 3.1 -----------------------------------------
+        # MSL Standard atmosphere condition (section 3.1.1)
+        self.__T_0 = 288.15                                     # Standard atmospheric temperature at MSL [K]
+        self.__P_0 = 101325                                     # Standard atmospheric pressure at MSL [Pa]
+        self.__RHO_0 = 1.225                                    # Standard atmospheric density at MSL [kg/m^3]
+        self.__A_0 = 340.294                                    # Speed of sound [m/s]
+
+        # Expression (section 3.1.2)
+        self.__KAPPA = 1.4                                      # Adiabatic index of air [dimensionless]
+        self.__R = 287.05287                                    # Real gas constant of air [m^2/(K*s^2)]
+        self.__G_0 = 9.80665                                    # Gravitational acceleration [m/s^2]
+        self.__BETA_T_BELOW_TROP = -0.0065                      # ISA temperature gradient with altitude below the tropopause [K/m]
+
+        # Tropopause (separation between troposphere (below) and stratosphere (above))
+        self.__H_P_TROP = 11000                                 # Geopotential pressure altitude [m]
+
+
         # ----------------------------  SYNONYM FILE FORMAT (SYNONYM.NEW) section 6.3 -----------------------------------------
         # | 'CD' | SUPPORT TYPE (-/*) | AIRCRAFT Code | MANUFACTURER | NAME OR MODEL | FILE NAME | ICAO (Y/N) |
         self.__SYNONYM = np.genfromtxt(Path('simulation/data/BADA/SYNONYM.NEW'), delimiter=[3,2,7,20,25,8,5], names=['CD','ST','ACCODE','MANUFACTURER','MODEL','FILENAME','ICAO'], dtype="U2,U1,U4,U18,U25,U6,U1", comments="CC", autostrip=True, skip_footer=1)
@@ -328,7 +346,7 @@ class Performance:
 
     def calculate_performance(self):
         """
-        Calculate aircraft performance according to BADA.
+        Calculate aircraft performance according to BADA. (Section 3)
 
         Parameters
         ----------
@@ -339,16 +357,24 @@ class Performance:
 
         """
 
-        # Section 3.1.1 MSL Standard atmosphere condition
-        self.__T_0 = 288.15                 # Standard atmospheric temperature at MSL [K]
-        self.__p_0 = 101325                 # Standard atmospheric pressure at MSL [Pa]
-        self.__rho_0 = 1.225                # Standard atmospheric density at MSL [kg/m^3]
-        self.__a_0 = 340.294                # Speed of sound [m/s]
+        # ----------------------------  Atmosphere model section 3.1 -----------------------------------------
+        # d_t = 0                                                 # Temperature differential at MSL TODO: Input, Weather class
+        # d_p = 0                                                 # Pressure differential at MSL TODO: Input, Weather class
 
-        self.__K = 1.4                      # Adiabatic index of air [dimensionless]
-        self.__R = 287.05287                # Real gas constant of air [m^2/(K*s^2)]
-        self.__g_0 = 9.80665                # Gravitational acceleration [m/s^2]
-        self.__beta_T = -0.0065             # ISA temperature gradient with altitude below the tropopause [K/m]
+        # # Standard Mean Sea Level (subindex H_p = 0)
+        # H_p_hp0 = 0                                             # Geopotential pressure altitude [m]
+        # p_hp0 = p_0
+        # T_isa_hp0 = T_0
+        # T_hp_0 = T_0 + d_t
+        # T_isa_msl = 0                                           # defined below TODO:
+        # H_hp0 = 1/beta_T*(T_0-T_isa_msl+d_t*np.log(T_0/T_isa_msl))
+
+        # # Mean Sea Level (subindex MSL)
+        # H_msl = 0
+        # p_msl = p_0 + d_p
+        # H_p_msl = T_0/beta_T*((p_msl/p_0)^(beta_T*R/g_0)-1)
+        # T_isa_msl = T_0 + beta_T * H_p_msl
+        # T_msl = T_0 + d_t + beta_T * H_p_msl
 
 
         # Total energy model (section 3.2)
@@ -357,5 +383,254 @@ class Performance:
         # Aerodynamic (3.6)
         
 
+    def __cal_temperature(self, H_p, d_T):
+        """
+        Calculate Temperature (Equation 3.1-12~16) TODO: Move to weather class
 
+        Parameters
+        ----------
+        H_p: float
+            Geopotential pressuer altitude [m]
+
+        d_t: float
+            Temperature differential at MSL [K]
+
+        Returns
+        -------
+        T_< if below tropopause: float
+            Temperature [K]
+
+        T_trop or T_> if equal to or above tropopause: float
+            Temperature [K]
+        """
+        if (H_p < self.__H_P_TROP):
+            # If below Geopotential pressure altitude of tropopause
+            return self.__T_0 + d_T + self.__BETA_T_BELOW_TROP * H_p
+        else:
+            # If equal or above Geopotential pressure altitude of tropopause
+            return self.__T_0 + d_T + self.__BETA_T_BELOW_TROP * self.__H_P_TROP
+
+    
+    def __cal_air_pressure(self, H_p, T, d_T):
+        """
+        Calculate Air Pressure (Equation 3.1-17~20) TODO: Move to weather class
+
+        Parameters
+        ----------
+        H_p: float
+            Geopotential pressuer altitude [m]
+
+        T: float
+            Temperature [K]
+
+        d_t: float
+            Temperature differential at MSL [K]
+
+        Returns
+        -------
+        p_< or p_trop if below or equal to tropopause: float
+            Pressure [Pa]
+
+        p_> if above tropopause: float
+            Pressure [Pa]
+        """
+        if (H_p <= self.__H_P_TROP):
+            # If below or equal Geopotential pressure altitude of tropopause 
+            return self.__P_0 * np.power((T - d_T) / self.__T_0, -self.__G_0/(self.__BETA_T_BELOW_TROP * self.__R))
+        else:
+            # If above Geopotential pressure altitude of tropopause
+            __p_trop = self.__P_0 * np.power((T - d_T) / self.__T_0, -self.__G_0/(self.__BETA_T_BELOW_TROP * self.__R))     # Equation 3.1-19
+            __T_isa_trop = self.__T_0 + self.__BETA_T_BELOW_TROP * self.__H_P_TROP      # Equation 3.1-14
+            return __p_trop * np.exp(-self.__G_0/(self.__R * __T_isa_trop) * (H_p - self.__H_P_TROP))
+
+    
+    def __cal_air_density(self, p, T):
+        """
+        Calculate Air Density (Equation 3.1-21) TODO: Move to weather class
+
+        Parameters
+        ----------
+        p: float
+            Pressure [Pa]
+
+        T: float
+            Temperature [K]
+        
+        Returns
+        -------
+        rho: float
+            Density [kg/m^3]
+        """
+        return p / (self.__R * T)
+
+    
+    def __cal_speed_of_sound(self, T):
+        """
+        Calculate speed of sound. (Equation 3.1-22) TODO: Move to weather class
+
+        Parameters
+        ----------
+        T: float
+            Temperature [K]
+
+        Returns
+        -------
+        a: float
+            Speed of sound [m/s]
+        """
+        return np.sqrt(self.__KAPPA * self.__R * T)
+
+    
+    def __cas_to_tas(self, v_cas, p, rho):
+        """
+        Convert Calibrated air speed to True air speed. (Equation 3.1-23) TODO: Move to weather class
+
+        Parameters
+        ----------
+        v_cas: float
+            Calibrated air speed [m/s]
+
+        p: float
+            Pressure [Pa] 
+
+        rho: float
+            Density [kg/m^3]
+        
+        Returns
+        -------
+        v_tas : float
+            True air speed [m/s]
+        """
+        mu = (self.__KAPPA - 1)/ self.__KAPPA
+        return np.power(2/mu*p/rho*(1+self.P_0/p*(np.power(np.power(1+mu/2*self.__RHO_0/self.__P_0*np.square(v_cas), 1/mu) -1, mu)-1)), 1/2)
+
+
+    def __tas_to_cas(self, v_tas, p, rho):
+        """
+        Convert True air speed to Calibrated air speed. TODO: Move to weather class
+
+        Parameters
+        ----------
+        v_tas: float
+            True air speed [m/s]
+
+        p: float
+            Pressure [Pa] 
+
+        rho: float
+            Density [kg/m^3]
+        
+        Returns
+        -------
+        v_cas : float
+            Calibrated air speed [m/s]
+        """
+        mu = (self.__KAPPA - 1)/ self.__KAPPA
+        return np.power(2/mu*self.__P_0/self.__RHO_0*(1+p/self.__P_0*(np.power(np.power(1+mu/2*rho/p*np.square(v_tas),1/mu) -1, mu) -1 )), 1/2)
+
+
+    def __mach_to_tas(self, M, T):
+        """
+        Convert Mach number to True Air speed (Equation 3.1-26)
+
+        Parameters
+        ----------
+        M: float
+            Mach number [dimensionless]
+
+        T: float
+            Temperature [K]
+
+        Returns
+        -------
+        V_tas: float:
+            True air speed [m/s]
+        """
+        return M * np.sqrt(self.__KAPPA * self.__R * T)
+
+
+    def __mach_to_tas(self, V_tas, T):
+        """
+        Convert True Air speed to Mach number (Equation 3.1-26)
+
+        Parameters
+        ----------
+        V_tas: float:
+            True air speed [m/s]
+
+        T: float
+            Temperature [K]
+
+        Returns
+        -------
+        M: float
+            Mach number [dimensionless]
+        """
+        return V_tas / np.sqrt(self.__KAPPA * self.__R * T)
+
+    
+    def __cal_transition_alt(self, V_cas, M, d_T):
+        """
+        Calculate Mach/CAS transition altitude. (Equation 3.1-27~28)
+
+        Parameters
+        ----------
+        V_cas: float
+            Calibrated air speed [m/s]
+
+        M: float
+            Mach number [dimensionless]
+
+        d_t: float
+            Temperature differential at MSL [K]
+
+        Returns
+        -------
+        H_p_trans: float
+            Transition altitude [m]
+
+        Note
+        ----
+        Transition altitude is defined to be the geopotential pressure altitude at which V_CAS and M represent the same TAS value.
+        """
+        __p_trans = self.__P_0 * (np.power(1 + (self.__KAPPA-1)/2 * np.square(V_cas/self.__A_0), self.__KAPPA/(self.__KAPPA-1)) - 1) \
+                    / (np.power(1 + (self.__KAPPA-1)/2*np.square(M), self.__KAPPA/(self.__KAPPA-1)) - 1)       #Equation 3.1-28
+        __T_trop = self.__T_0 + d_T + self.__BETA_T_BELOW_TROP * self.__H_P_TROP        # Equation 3.1-15
+        __p_trop = self.__P_0 * np.power((__T_trop - d_T) / self.__T_0, -self.__G_0/(self.__BETA_T_BELOW_TROP * self.__R))     # Equation 3.1-19
+        # TODO: vectorized?
+        if (__p_trans >= __p_trop):
+            return self.__T_0/self.__BETA_T_BELOW_TROP * (np.power(__p_trans/self.__P_0, -self.__BETA_T_BELOW_TROP*self.__R/self.__G_0) - 1)
+        else:
+            __T_isa_trop = self.__T_0 + self.__BETA_T_BELOW_TROP * self.__H_P_TROP      # Equation 3.1-14
+            return self.__H_P_TROP - self.__R*__T_isa_trop/self.__G_0 * np.log(__p_trans/__p_trop)
+
+
+    def __total_energy_model(self):
+        """
+        Total energy model (Section 3.2)
+        TODO:
+        """
         pass
+
+
+    def __calculate_operating_speed(self, mass, v_ref):
+        """
+        Calculate operating speed given mass (Section 3.4)
+
+        Parameters
+        ----------
+        mass: float
+            Mass of the aircraft [kg]
+
+        v_ref: float
+            Velocity reference (e.g. v_stall) [m/s] 
+
+        Returns
+        -------
+        V: float
+            Operating velocity [m/s]
+        """
+        return v_ref * np.sqrt(mass/self.__m_ref)
+
+    
+    
