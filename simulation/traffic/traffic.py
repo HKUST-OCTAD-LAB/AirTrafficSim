@@ -17,7 +17,7 @@ class Traffic:
         # General information
         self.call_sign = np.empty([N], dtype='U10')             # Callsign [string]
         self.aircraft_type = np.empty([N], dtype='U4')          # Aircraft type in ICAO format [string]
-        self.flight_phase = np.zeros([N])                       # Flight phase [1: At gate, 2: Taxi, 3: Takeoff, 4: Climb, 5: Cruise, 6: Descent, 7: Approach, 8: Landing, 9: Taxi, 10: At Gate]
+        self.flight_phase = np.zeros([N])                       # Flight phase [Flight_phase enum] (BADA section 3.5)
 
         # Position
         self.lat = np.zeros([N])                                # Latitude [deg]
@@ -132,8 +132,8 @@ class Traffic:
         print("Current heading:", self.heading[i:n])
 
         # Calculate ground speed
-        self.gs_north[i:n] = self.tas[i:n] * np.cos(np.deg2rad(self.heading[i:n])) + self.weather.wind_north[i:n]
-        self.gs_east[i:n] = self.tas[i:n] * np.sin(np.deg2rad(self.heading[i:n])) + self.weather.wind_east[i:n]
+        self.gs_north[i:n] = self.tas[i:n] * np.cos(np.radians(self.heading[i:n])) + self.weather.wind_north[i:n]
+        self.gs_east[i:n] = self.tas[i:n] * np.sin(np.radians(self.heading[i:n])) + self.weather.wind_east[i:n]
         print("Ground speed: (North/East)", self.gs_north[i:n], self.gs_east[i:n])
 
         # Calculate position

@@ -1,7 +1,9 @@
 """Aircraft performance class calculation using BADA 3.15"""
-from audioop import mul
 from pathlib import Path
+from sre_parse import FLAGS
 import numpy as np
+
+from .enums import Flight_phase, Engine_type, Wake_category
 
 class Performance:
     """
@@ -35,8 +37,8 @@ class Performance:
         # ----------------------------  Operations Performance File (OPF) section 3.11 -----------------------------------------
         # Aircraft type
         self.__n_eng = np.zeros([N])                            # number of engines
-        self.__engine_type = np.zeros([N])                      # engine type, either Jet (1), Turboprop (2), or Piston (3)
-        self.__wake_category = np.zeros([N])                    # wake category, either J (1), H (2), M (3), L(4)
+        self.__engine_type = np.zeros([N])                      # engine type [Engine_type enum]
+        self.__wake_category = np.zeros([N])                    # wake category [Wake_category enum]
 
         # Mass
         self.__m_ref = np.zeros([N])                            # reference mass [tones]
@@ -79,7 +81,7 @@ class Performance:
         self.__c_tdes_high = np.zeros([N])                      # high altitude descent thrust coefficient [dimensionless]
         self.__h_p_des = np.zeros([N])                          # transition altitude for calculation of descent thrust [feet]
         self.__c_tdes_app = np.zeros([N])                       # approach thrust coefficient [dimensionless]
-        self.__c_tdes_id = np.zeros([N])                        # landing thrust coefficient [dimensionless]
+        self.__c_tdes_ld = np.zeros([N])                        # landing thrust coefficient [dimensionless]
         self.__v_des_ref = np.zeros([N])                        # reference descent speed [knots (CAS)]
         self.__m_des_ref = np.zeros([N])                        # reference descent Mach number [dimensionless]
 
@@ -139,7 +141,7 @@ class Performance:
         self.__C_DES_EXP = GPF[9][5]                            # Expedited descent factor [1.6]
 
         # Thrust factors
-        self.__C_CR = GPF[11][5]                                # Maximum cruise thrust coefficient [0.95] (postition different between GPF and user menu)
+        self.__C_TCR = GPF[11][5]                               # Maximum cruise thrust coefficient [0.95] (postition different between GPF and user menu)
         self.__C_TH_TO = GPF[10][5]                             # Take-off thrust coefficient [1.2] (no longer used since BADA 3.0) (postition different between GPF and user menu)
 
         # Configuration altitude threshold
@@ -302,7 +304,7 @@ class Performance:
         self.__c_tdes_high[n] = OPF[15][4]
         self.__h_p_des[n] = OPF[15][5]
         self.__c_tdes_app[n] = OPF[15][6]
-        self.__c_tdes_id[n] = OPF[15][7]
+        self.__c_tdes_ld[n] = OPF[15][7]
 
         self.__v_des_ref[n] = OPF[16][3]
         self.__m_des_ref[n] = OPF[16][4]
@@ -377,6 +379,7 @@ class Performance:
         # T_msl = T_0 + d_T + beta_T * H_p_msl
         
 
+    # ----------------------------  Atmosphere model section 3.1 -----------------------------------------
     def __cal_temperature(self, H_p, d_T):
         """
         Calculate Temperature (Equation 3.1-12~16) TODO: Move to weather class
@@ -599,7 +602,8 @@ class Performance:
             return self.__H_P_TROP - self.__R*__T_isa_trop/self.__G_0 * np.log(__p_trans/__p_trop)
 
 
-    def __calculate_energy_share_factor(self, H_p, T, d_T, M, ap_speed_mode, flight_phase):
+    # ----------------------------  Total-Energy Model Section 3.2 -----------------------------------------
+    def __cal_energy_share_factor(self, H_p, T, d_T, M, ap_speed_mode, flight_phase):
         """
         Calculate energy share factor (Equation 3.2-5, 8~11)
 
@@ -622,7 +626,7 @@ class Performance:
             TODO: should it be traffic class?
 
         flight_phase: float[]
-            Flight phase from Traffic class [1: At gate, 2: Taxi, 3: Takeoff, 4: Climb, 5: Cruise, 6: Descent, 7: Approach, 8: Landing, 9: Taxi, 10: At Gate]
+            Flight phase from Traffic class [Flight_phase enum]
 
         Returns
         -------
@@ -647,22 +651,22 @@ class Performance:
             * np.power((1.0 + np.power((1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M)), -1.0/(self.__KAPPA-1)) \
                 * (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0)), -1.0)
         
-        # Acceleration in climb TODO: take off also count as climb? Should it be flight_phase <= 4?
-        __e = (ap_speed_mode == 3) * (flight_phase == 4) * 0.3
+        # Acceleration in climb TODO: take off also count as climb? Should it be flight_phase <=?
+        __e = (ap_speed_mode == 3) * (flight_phase == Flight_phase.CLIMB) * 0.3
         
-        # Deceleration in descent TODO: approach also count as descent? Should it be flight_phase >= 6?
-        __f = (ap_speed_mode == 4) * (flight_phase == 6) * 0.3
+        # Deceleration in descent TODO: approach also count as descent? Should it be flight_phase >=?
+        __f = (ap_speed_mode == 4) * (flight_phase == Flight_phase.DESCENT) * 0.3
         
-        # Deceleration in climb TODO: take off also count as climb? Should it be flight_phase <= 4?
-        __g = (ap_speed_mode == 4) * (flight_phase == 4) * 1.7
+        # Deceleration in climb TODO: take off also count as climb? Should it be flight_phase <=?
+        __g = (ap_speed_mode == 4) * (flight_phase == Flight_phase.CLIMB) * 1.7
         
-        # Acceleration in descent TODO: approach also count as descent? Should it be flight_phase >= 6?
-        __h = (ap_speed_mode == 3) * (flight_phase == 6) * 1.7
+        # Acceleration in descent TODO: approach also count as descent? Should it be flight_phase >=?
+        __h = (ap_speed_mode == 3) * (flight_phase == Flight_phase.DESCENT) * 1.7
 
         return __a + __b + __c + __d + __e + __f + __g + __h
 
 
-    def __calculate_ROCD(self, T, d_T, m, D, f_M, Thr, v_tas):
+    def __cal_ROCD(self, T, d_T, m, D, f_M, Thr, v_tas):
         """
         Speed and Throttle Controller. (Equation 3.2-1a and 3.2-7)
         Calculate Rate of climb or descent given velocity(constant) and thrust (max climb thrust/idle descent).
@@ -699,7 +703,7 @@ class Performance:
         return (T-d_T)/T * (Thr-D)*v_tas/m/self.__G_0 * f_M
 
 
-    def __calculate_speed(self, T, d_T, m, D, f_M, rocd, Thr):
+    def __cal_speed(self, T, d_T, m, D, f_M, rocd, Thr):
         """
         ROCD and Throttle Controller. (Equation 3.2-1b and 3.2-7)
         Calculate speed given ROCD and thrust.
@@ -735,7 +739,7 @@ class Performance:
         return rocd / f_M / ((T-d_T)/T) * m*self.__G_0 / (Thr-D)
 
 
-    def __calculate_thrust(self, T, d_T, m, D, f_M, rocd, v_tas):
+    def __cal_thrust(self, T, d_T, m, D, f_M, rocd, v_tas):
         """
         Speed and ROCD Controller. (Equation 3.2-1c and 3.2-7)
         Calculate speed given ROCD and speed.
@@ -771,7 +775,8 @@ class Performance:
         return rocd / f_M / ((T-d_T)/T) * m*self.__G_0 / v_tas + D
 
 
-    def __calculate_operating_speed(self, m, v_ref):
+    # ----------------------------  Mass section 3.4 -----------------------------------------
+    def __cal_operating_speed(self, m, v_ref):
         """
         Calculate operating speed given mass (Equation 3.4-1)
 
@@ -791,7 +796,8 @@ class Performance:
         return v_ref * np.sqrt(m/self.__m_ref)
 
     
-    def __calculate_maximum_altitude(self, d_T, m):
+    # ----------------------------  Flight envelope section 3.5 -----------------------------------------
+    def __cal_maximum_altitude(self, d_T, m):
         """
         Calculate flight envelope (Section 3.5-1)
 
@@ -801,7 +807,7 @@ class Performance:
             Temperature differential from ISA [K]
 
         m: float[]
-            Actual aircraft mass [kg]
+            Aircraft mass [kg]
 
         Returns
         -------
@@ -810,3 +816,360 @@ class Performance:
         """
         return (self.__h_max == 0) * self.__h_mo + \
             (self.__h_max != 0) * np.minimum(self.__h_mo, self.__h_max + self.__g_t*(d_T-self.__c_tc_4) + self.__g_w*(self.__m_max-m))
+
+    
+    def __cal_minimum_speed(self, flight_phase):
+        """
+        Calculate minimum speed for aircraft (3.5-2~3)
+
+        Parameters
+        ----------
+        flight_phase: float[]
+            Flight phase from Traffic class [Flight_phase enum]
+
+        Returns
+        -------
+        v_min: float[]
+            Minimum at speed at specific configuration [m/s] TODO: need to consider mass using __calculate_operating_speed?
+        """
+
+        v_stall = (flight_phase == Flight_phase.TAKEOFF) * self.__v_stall_to + (flight_phase == Flight_phase.INITIAL_CLIMB) * self.__v_stall_ic \
+                + ((flight_phase == Flight_phase.CLIMB) + (flight_phase == Flight_phase.CRUISE) + (flight_phase == Flight_phase.DESCENT)) * self.__v_stall_cr \
+                + (flight_phase == Flight_phase.APPROACH) * self.__v_stall_ap + (flight_phase == Flight_phase.LANDING) * self.__v_stall_ld
+
+        return ((flight_phase == 3) * self.__C_V_MIN_TO + (flight_phase != 3) * self.__C_V_MIN) * v_stall
+
+
+    # ----------------------------  Aerodynamic section 3.6 -----------------------------------------
+    def __cal_aerodynamic_drag(self, v_tas, bank_angle, m, rho, flight_phase):
+        """
+        Calculate Aerodynamic drag (Section 3.6.1)
+
+        Parameters
+        ----------
+        v_tas: float[]
+            True airspeed [m/s]
+
+        bank_angles: float[]
+            Bank angles from Traffic class [deg]
+
+        m: float[]
+            Aircraft mass [kg]
+
+        rho: float[]
+            Density [kg/m^3]
+
+        flight_phase: float[]
+            Flight phase from Traffic class [Flight_phase enum]
+
+        Returns
+        -------
+        D: float[]
+            Drag force [N]
+        """
+        # Lift coefficient (Equation 3.6-1)
+        c_L = 2.0 * m * self.__G_0 / rho / np.square(v_tas) / self.__s / np.cos(np.radians(bank_angle))
+        
+        # Drag coefficient (Equation3.6-2~4)
+        c_D = ((flight_phase != Flight_phase.APPROACH) & (flight_phase != Flight_phase.LANDING)) * (self.__c_d0_cr + self.__c_d2_cr * np.square(c_L)) \
+            + ((flight_phase == Flight_phase.APPROACH) & (self.__c_d2_ap != 0)) * (self.__c_d0_ap + self.__c_d2_ap * np.square(c_L)) \
+            + ((flight_phase == Flight_phase.LANDING) & (self.__c_d2_ld != 0)) * (self.__c_d0_ld + self.__c_d0_ldg + self.__c_d2_ld * np.square(c_L)) \
+            + ((flight_phase == Flight_phase.APPROACH) & (self.__c_d2_ap == 0)) * (self.__c_d0_cr + self.__c_d2_cr * np.square(c_L)) \
+            + ((flight_phase == Flight_phase.LANDING) & (self.__c_d2_ld == 0)) * (self.__c_d0_cr + self.__c_d2_cr * np.square(c_L))
+        
+        # Drag force
+        return c_D * rho * np.square(v_tas) * self.__s / 2.0
+
+
+    def __cal_low_speed_buffeting_limit(self):
+        """
+        Low speed buffeting limit for jet and turboprop aircraft. It is expressed as Mach number. (Equation 3.6-6)
+        TODO: Appendix B
+        """
+        pass
+
+
+    # ----------------------------  Engine Thrust section 3.7 ----------------------------------------- 
+    def __cal_max_climb_to_thrust(self, H_p, v_tas, d_T):
+        """
+        Calculate maximum climb thrust for both take-off and climb phases (Section 3.7.1)
+
+        Parameters
+        ----------
+        H_p: float[]
+            Geopotential pressuer altitude [ft] TODO: Different unit
+
+        v_tas: float[]
+            True airspeed [kt] TODO: Different unit
+
+        d_T: float[]
+            Temperature differential from ISA [K]
+
+        Returns
+        -------
+        Thr_max_climb: float[]
+            Maximum climb thrust [N]
+        """
+        # Maximum climb thrust at standard atmosphere conditions (Equations 3.7-1~3)
+        thr_max_climb_isa = (self.__engine_type == Engine_type.JET) * (self.__c_tc_1 * (1.0 - H_p/self.__c_tc_2 + self.__c_tc_3 * np.square(H_p))) \
+                          + (self.__engine_type == Engine_type.TURBOPROP) * (self.__c_tc_1/v_tas * (1.0 - H_p/self.__c_tc_2) + self.__c_tc_3) \
+                          + (self.__engine_type == Engine_type.PISTON) * (self.__c_tc_1 * (1.0 - H_p/self.__c_tc_2) + self.__c_tc_3/v_tas)
+
+        # Corrected for temperature deviation from ISA
+        return thr_max_climb_isa * (1.0 - np.clip(self.__c_tc_5, 0.0, None) * np.clip(d_T-self.__c_tc_4, 0, 0.4/np.clip(self.__c_tc_5, 0.0, None)))
+
+
+    def __cal_max_cruise_thrust(self, thr_max_climb):
+        """
+        Calculate maximum cruise thrust (Equation 3.7-8)
+
+        Parameters
+        ----------
+        thr_max_climb: float[]
+            Maximum climb thrust [N] (obtained from __cal_max_climb_to_thrust())
+        
+        Returns
+        -------
+        thr_cruise_max: float[]
+            Maximum cruise thrust [N]
+
+        Notes
+        -----
+        The normal cruise thrust is by definition set equal to drag (Thr=D). However, the maximum amount of thrust available in cruise situation is limited.
+        """
+        return self.__C_TCR * thr_max_climb
+
+    
+    def __cal_descent_thrust(self, H_p, thr_max_climb, flight_phase):
+        """
+        Calculate descent thrust (Section 3.7.3)
+
+        Parameters
+        ----------
+        H_p: float[]
+            Geopotential pressuer altitude [m]
+
+        thr_max_climb: float[]
+            Maximum climb thrust [N]
+
+        flight_phase: float[]
+            Flight phase from Traffic class [Flight_phase enum]
+
+        Returns
+        -------
+        Thr_des: float[]
+            Descent thrust [N]
+        """
+        # When “non-clean” data (see Section 3.6.1) is available, H_p,des cannot be below H_max,AP. 
+        h_p_des = np.where(self.__c_d2_ap != 0, np.clip(self.__h_p_des, self.__H_MAX_AP, None), self.__h_p_des)
+        return np.where(H_p > h_p_des, \
+                        self.__c_tdes_high * thr_max_climb, \
+                        np.select([flight_phase == Flight_phase.CRUISE, flight_phase == Flight_phase.APPROACH, flight_phase == Flight_phase.LANDING], \
+                                  [self.__c_tdes_low * thr_max_climb, self.__c_tdes_app * thr_max_climb, self.__c_tdes_ld * thr_max_climb]))
+
+    
+
+    # ----------------------------  Reduced climb power section 3.8 ----------------------------------------- 
+    def __cal_reduced_climb_power(self, m, H_p, h_max):
+        """
+        Calculate reduced climb power (section 3.8)
+
+        Parameters
+        ----------
+        m: float[]
+            Aircraft mass [kg]
+
+        H_p: float[]
+            Geopotential pressuer altitude [m]
+
+        h_max: float[]
+            Actual maximum altitude for any given mass [kg] (obtained from __cal_maximum_altitude())
+
+        Returns
+        -------
+        C_pow,red: float[]
+            Coefficient of reduced climb power [dimensionless]
+
+        Notes
+        -----
+        The result can be applied in the calculation of ROCD during climb phase TODO:
+        """
+        c_red = np.where(H_p < 0.8*h_max, \
+                        np.select([self.__engine_type == Engine_type.TURBOPROP, self.__engine_type == Engine_type.PISTON, self.__engine_type == Engine_type.JET], \
+                                  [self.__C_RED_TURBO, self.__C_RED_PISTON, self.__C_RED_JET]), \
+                        0.0)
+        return 1.0 - c_red * (self.__m_max - m) / (self.__m_max - self.__m_min)
+
+
+    # ----------------------------  Fuel consumption section 3.9 ----------------------------------------- 
+    def __cal_nominal_fuel_flow(self, v_tas, thr):
+        """
+        Calculate nominal fuel flow (except idle descent and cruise) (equations 3.9-1~3 and 3.9-7)
+
+        Parameters
+        ----------
+        v_tas: float[]
+            True airspeed [kt] TODO: Different unit
+
+        Thr: float[]
+            Thrust acting parallel to the aircraft velocity vector [N]
+
+        Returns
+        -------
+        f_norm: float[]
+            Nominal fuel flow [kg/min]
+        """
+        return np.select([self.__engine_type == Engine_type.JET, self.__engine_type == Engine_type.TURBOPROP, self.__engine_type == Engine_type.PISTON], \
+                         [self.__c_f1 * (1.0 + v_tas/self.__c_f2) * thr, \
+                          self.__c_f1 * (1.0 - v_tas/self.__c_f2) * (v_tas/1000.0) * thr, \
+                          self.__c_f1])
+
+
+    def __cal_minimum_fuel_flow(self, H_p):
+        """
+        Calculate fuel flow for idle descent (equations 3.9-4 and 3.9-8)
+
+        Parameters
+        ----------
+        H_p: float[]
+            Geopotential pressuer altitude [m]
+
+        Returns
+        -------
+        f_min: float[]
+            Minimum fuel flow [kg/min]
+        """
+        return np.where(self.__engine_type != Engine_type.PISTON, self.__c_f3 * (1.0 - H_p/self.__c_f4), self.__c_f3)
+
+
+    def __cal_approach_landing_fuel_flow(self, v_tas, thr, H_p):
+        """
+        Calculate fuel flow for approach and landing (equations 3.9-5 and 3.9-8)
+
+        Parameters
+        ----------
+        v_tas: float[]
+            True airspeed [kt] TODO: Different unit
+
+        Thr: float[]
+            Thrust acting parallel to the aircraft velocity vector [N]
+
+        H_p: float[]
+            Geopotential pressuer altitude [m]
+
+        Returns
+        -------
+        f_app/ld: float[]
+            Approach and landing fuel flow [kg/min]
+        """
+        return np.where(self.__engine_type != Engine_type.PISTON, np.maximum(self.__cal_nominal_fuel_flow(v_tas, thr), self.__cal_minimum_fuel_flow(H_p)), self.__cal_minimum_fuel_flow(H_p))
+
+    def __cal_cruise_fuel_flow(self, v_tas, thr):
+        """
+        Calculate fuel flow for cruise (equations 3.9-46and 3.9-9)
+
+        Parameters
+        ----------
+        v_tas: float[]
+            True airspeed [kt] TODO: Different unit
+
+        Thr: float[]
+            Thrust acting parallel to the aircraft velocity vector [N]
+
+        Returns
+        -------
+        f_cr: float[]
+            Cruise fuel flow [kg/min]
+        """
+        return np.select([self.__engine_type == Engine_type.JET, self.__engine_type == Engine_type.TURBOPROP, self.__engine_type == Engine_type.PISTON], \
+                         [self.__c_f1 * (1.0 + v_tas/self.__c_f2) * thr * self.__c_fcr, \
+                          self.__c_f1 * (1.0 - v_tas/self.__c_f2) * (v_tas/1000.0) * thr * self.__c_fcr, \
+                          self.__c_f1 * self.__c_fcr]) 
+
+    
+    # ----------------------------  Airline Procedure Models section 4 ----------------------------------------- 
+    def __cal_procedure_speed_climb(self, H_p, m):
+        """
+        Calculate standard air speed for climb phase (section 4.1)
+
+        Parameters
+        ----------
+        H_p: float[]
+            Geopotential pressuer altitude [m]
+
+        m: float[]
+            Aircraft mass [kg]
+
+        Returns
+        -------
+        v_cl: float[]
+            Standard climb CAS [kt]
+        -or-
+        M_cl: float[]
+            Standard Mach [dimensionless] 
+        """
+
+    def __cal_procedure_speed_cruise(self, H_p):
+        """
+        Calculate standard air speed for cruise phase (section 4.2)
+
+        Parameters
+        ----------
+        H_p: float[]
+            Geopotential pressuer altitude [m]
+
+        Returns
+        -------
+        v_cr: float[]
+            Standard cruise CAS [kt]
+        -or-
+        M_cr: float[]
+            Standard cruise Mach [dimensionless] 
+        """
+
+
+    def __cal_procedure_speed_descent(self, H_p, m):  
+        """
+        Calculate standard air speed for descent phase (section 4.3)
+
+        Parameters
+        ----------
+        H_p: float[]
+            Geopotential pressuer altitude [m]
+
+        m: float[]
+            Aircraft mass [kg]
+
+        Returns
+        -------
+        v_des: float[]
+            Standard descent CAS [kt]
+        -or-
+        M_des: float[]
+            Standard descentMach [dimensionless] 
+        """
+
+
+    def __cal_procedure_speed(self, H_p, m, flight_phase):
+        """
+        Calculate standard air speed
+
+        Parameters
+        ----------
+        H_p: float[]
+            Geopotential pressuer altitude [m]
+
+        m: float[]
+            Aircraft mass [kg]
+
+        flight_phase: float[]
+            Flight phase from Traffic class [Flight_phase enum]
+
+        Returns
+        -------
+        v_std: float[]
+            Standard CAS [kt]
+        -or-
+        M_std: float[]
+            Standard Mach [dimensionless] 
+        """
