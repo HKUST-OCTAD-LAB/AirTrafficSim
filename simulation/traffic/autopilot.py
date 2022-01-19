@@ -31,3 +31,6 @@ class Autopilot:
         self.waypoint_restriction = [[]]                        # Python 2D list of waypoint restriction (vertical...) TODO:
         self.waypoint_lat = np.zeros([N])                       # Latitude of target waypoint [deg]
         self.waypoint_long = np.zeros([N])                      # Longitude of target waypoint [deg]
+
+        # Flight mode
+        self.speed_mode = np.zeros([N])                         # Autopilot speed mode [1: constant CAS, 2: constant Mach, 3: accelerate, 4: decelerate]

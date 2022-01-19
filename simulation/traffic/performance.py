@@ -358,29 +358,23 @@ class Performance:
         """
 
         # ----------------------------  Atmosphere model section 3.1 -----------------------------------------
-        # d_t = 0                                                 # Temperature differential at MSL TODO: Input, Weather class
+        # d_T = 0                                                 # Temperature differential at MSL TODO: Input, Weather class
         # d_p = 0                                                 # Pressure differential at MSL TODO: Input, Weather class
 
         # # Standard Mean Sea Level (subindex H_p = 0)
         # H_p_hp0 = 0                                             # Geopotential pressure altitude [m]
         # p_hp0 = p_0
         # T_isa_hp0 = T_0
-        # T_hp_0 = T_0 + d_t
+        # T_hp_0 = T_0 + d_T
         # T_isa_msl = 0                                           # defined below TODO:
-        # H_hp0 = 1/beta_T*(T_0-T_isa_msl+d_t*np.log(T_0/T_isa_msl))
+        # H_hp0 = 1/beta_T*(T_0-T_isa_msl+d_T*np.log(T_0/T_isa_msl))
 
         # # Mean Sea Level (subindex MSL)
         # H_msl = 0
         # p_msl = p_0 + d_p
         # H_p_msl = T_0/beta_T*((p_msl/p_0)^(beta_T*R/g_0)-1)
         # T_isa_msl = T_0 + beta_T * H_p_msl
-        # T_msl = T_0 + d_t + beta_T * H_p_msl
-
-
-        # Total energy model (section 3.2)
-
-
-        # Aerodynamic (3.6)
+        # T_msl = T_0 + d_T + beta_T * H_p_msl
         
 
     def __cal_temperature(self, H_p, d_T):
@@ -392,7 +386,7 @@ class Performance:
         H_p: float
             Geopotential pressuer altitude [m]
 
-        d_t: float
+        d_T: float
             Temperature differential at MSL [K]
 
         Returns
@@ -423,7 +417,7 @@ class Performance:
         T: float
             Temperature [K]
 
-        d_t: float
+        d_T: float
             Temperature differential at MSL [K]
 
         Returns
@@ -581,7 +575,7 @@ class Performance:
         M: float
             Mach number [dimensionless]
 
-        d_t: float
+        d_T: float
             Temperature differential at MSL [K]
 
         Returns
@@ -605,32 +599,214 @@ class Performance:
             return self.__H_P_TROP - self.__R*__T_isa_trop/self.__G_0 * np.log(__p_trans/__p_trop)
 
 
-    def __total_energy_model(self):
+    def __calculate_energy_share_factor(self, H_p, T, d_T, M, ap_speed_mode, flight_phase):
         """
-        Total energy model (Section 3.2)
-        TODO:
-        """
-        pass
-
-
-    def __calculate_operating_speed(self, mass, v_ref):
-        """
-        Calculate operating speed given mass (Section 3.4)
+        Calculate energy share factor (Equation 3.2-5, 8~11)
 
         Parameters
         ----------
-        mass: float
-            Mass of the aircraft [kg]
+        H_p: float[]
+            Geopotential pressuer altitude [m]
 
-        v_ref: float
+        T: float[]
+            Temperature [K]
+
+        d_T: float[]
+            Temperature differential at MSL [K]
+
+        M: float[]
+            Mach number [dimensionless]
+
+        ap_speed_mode: float[]
+            Speed mode from Autopilot class [1: constant CAS, 2: constant Mach, 3: accelerate, 4: decelerate]
+            TODO: should it be traffic class?
+
+        flight_phase: float[]
+            Flight phase from Traffic class [1: At gate, 2: Taxi, 3: Takeoff, 4: Climb, 5: Cruise, 6: Descent, 7: Approach, 8: Landing, 9: Taxi, 10: At Gate]
+
+        Returns
+        -------
+        f{M}: float[]
+            Energy share factor [dimenesionless]
+        """
+        # Conditiona a: Constant Mach number in stratosphere (Equation 3.2-8)
+        __a = (ap_speed_mode == 2) * (H_p > self.__H_P_TROP) * 1.0 
+
+        # Condition b: Constant Mach number below tropopause (Equation 3.2-9)
+        __b = (ap_speed_mode == 2) * (H_p <= self.__H_P_TROP) \
+            * np.power(1.0 + self.__KAPPA*self.__R*self.__BETA_T_BELOW_TROP/2.0/self.__G_0 * np.square(M) * (T-d_T)/T, -1.0)
+        
+        # Condition c: Constant Calibrated Airspeed (CAS) below tropopause (Equation 3.2-10)
+        __c = (ap_speed_mode == 1) * (H_p <= self.__H_P_TROP) \
+            * np.power(1.0 + self.__KAPPA*self.__R*self.__BETA_T_BELOW_TROP/2.0/self.__G_0 * np.square(M) * (T-d_T)/T \
+                + np.power(1.0 + (self.__KAPPA-1)/2 * np.square(M), -1.0/(self.__KAPPA-1.0)) \
+                    * (np.power((1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M)), self.__KAPPA/(self.__KAPPA-1.0) - 1.0)), -1.0)
+        
+        # Condition d: Constant Calibrated Airspeed (CAS) above tropopause (Equation 3.2-11)
+        __d = (ap_speed_mode == 1) * (H_p > self.__H_P_TROP) \
+            * np.power((1.0 + np.power((1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M)), -1.0/(self.__KAPPA-1)) \
+                * (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0)), -1.0)
+        
+        # Acceleration in climb TODO: take off also count as climb? Should it be flight_phase <= 4?
+        __e = (ap_speed_mode == 3) * (flight_phase == 4) * 0.3
+        
+        # Deceleration in descent TODO: approach also count as descent? Should it be flight_phase >= 6?
+        __f = (ap_speed_mode == 4) * (flight_phase == 6) * 0.3
+        
+        # Deceleration in climb TODO: take off also count as climb? Should it be flight_phase <= 4?
+        __g = (ap_speed_mode == 4) * (flight_phase == 4) * 1.7
+        
+        # Acceleration in descent TODO: approach also count as descent? Should it be flight_phase >= 6?
+        __h = (ap_speed_mode == 3) * (flight_phase == 6) * 1.7
+
+        return __a + __b + __c + __d + __e + __f + __g + __h
+
+
+    def __calculate_ROCD(self, T, d_T, m, D, f_M, Thr, v_tas):
+        """
+        Speed and Throttle Controller. (Equation 3.2-1a and 3.2-7)
+        Calculate Rate of climb or descent given velocity(constant) and thrust (max climb thrust/idle descent).
+        
+        Parameters
+        ----------
+        T: float[]
+            Temperature [K]
+
+        d_T: float[]
+            Temperature differential at MSL [K]
+
+        m: float[]
+            Aircraft mass [kg]
+        
+        D: float[]
+            Aerodynamic drag [N]
+
+        f{M}: float[]
+            Energy share factor [dimenesionless]
+        
+        Thr: float[]
+            Thrust acting parallel to the aircraft velocity vector [N]
+
+        v_tas: float[]
+            True airspeed [m/s]
+
+        Returns
+        -------
+        rocd: float[]
+            Rate of climb or descent [m/s]
+            Defined as variation with time of the aircraft geopotential pressure altitude H_p
+        """
+        return (T-d_T)/T * (Thr-D)*v_tas/m/self.__G_0 * f_M
+
+
+    def __calculate_speed(self, T, d_T, m, D, f_M, rocd, Thr):
+        """
+        ROCD and Throttle Controller. (Equation 3.2-1b and 3.2-7)
+        Calculate speed given ROCD and thrust.
+        
+        Parameters
+        ----------
+        T: float[]
+            Temperature [K]
+
+        d_T: float[]
+            Temperature differential at MSL [K]
+
+        m: float[]
+            Aircraft mass [kg]
+        
+        D: float[]
+            Aerodynamic drag [N]    
+
+        f{M}: float[]
+            Energy share factor [dimenesionless]
+
+        rocd: float[]
+            Rate of climb or descent [m/s]
+
+        Thr: float[]
+            Thrust acting parallel to the aircraft velocity vector [N]
+
+        Returns
+        -------
+        v_tas: float[]
+            True airspeed [m/s]
+        """
+        return rocd / f_M / ((T-d_T)/T) * m*self.__G_0 / (Thr-D)
+
+
+    def __calculate_thrust(self, T, d_T, m, D, f_M, rocd, v_tas):
+        """
+        Speed and ROCD Controller. (Equation 3.2-1c and 3.2-7)
+        Calculate speed given ROCD and speed.
+        
+        Parameters
+        ----------
+        T: float[]
+            Temperature [K]
+
+        d_T: float[]
+            Temperature differential at MSL [K]
+        
+        D: float[]
+            Aerodynamic drag [N]
+
+        m: float[]
+            Aircraft mass [kg]
+
+        f{M}: float[]
+            Energy share factor [dimenesionless]
+
+        rocd: float[]
+            Rate of climb or descent [m/s]
+
+        v_tas: float[]
+            True airspeed [m/s]
+
+        Returns
+        -------
+        Thr: float[]
+            Thrust acting parallel to the aircraft velocity vector [N]
+        """
+        return rocd / f_M / ((T-d_T)/T) * m*self.__G_0 / v_tas + D
+
+
+    def __calculate_operating_speed(self, m, v_ref):
+        """
+        Calculate operating speed given mass (Equation 3.4-1)
+
+        Parameters
+        ----------
+        m: float[]
+            Aircraft mass [kg]
+
+        v_ref: float[]
             Velocity reference (e.g. v_stall) [m/s] 
 
         Returns
         -------
-        V: float
+        V: float[]
             Operating velocity [m/s]
         """
-        return v_ref * np.sqrt(mass/self.__m_ref)
+        return v_ref * np.sqrt(m/self.__m_ref)
 
     
-    
+    def __calculate_maximum_altitude(self, d_T, m):
+        """
+        Calculate flight envelope (Section 3.5-1)
+
+        Parameters
+        ----------
+        d_T: float[]
+            Temperature differential from ISA [K]
+
+        m: float[]
+            Actual aircraft mass [kg]
+
+        Returns
+        -------
+        h_max/act: float[]
+            Actual maximum altitude for any given mass [kg]
+        """
+        return (self.__h_max == 0) * self.__h_mo + \
+            (self.__h_max != 0) * np.minimum(self.__h_mo, self.__h_max + self.__g_t*(d_T-self.__c_tc_4) + self.__g_w*(self.__m_max-m))

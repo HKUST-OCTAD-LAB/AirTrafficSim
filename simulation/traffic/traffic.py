@@ -17,7 +17,7 @@ class Traffic:
         # General information
         self.call_sign = np.empty([N], dtype='U10')             # Callsign [string]
         self.aircraft_type = np.empty([N], dtype='U4')          # Aircraft type in ICAO format [string]
-        self.flight_phase = np.zeros([N])                       # Flight phase [At gate:1, Taxi: 2, Takeoff: 3, Climb: 4, Cruise: 5, Descent: 6, Approach: 7, Landing: 8, Taxi: 9, At Gate: 10]
+        self.flight_phase = np.zeros([N])                       # Flight phase [1: At gate, 2: Taxi, 3: Takeoff, 4: Climb, 5: Cruise, 6: Descent, 7: Approach, 8: Landing, 9: Taxi, 10: At Gate]
 
         # Position
         self.lat = np.zeros([N])                                # Latitude [deg]
