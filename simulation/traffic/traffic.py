@@ -132,8 +132,8 @@ class Traffic:
         print("Current heading:", self.heading[i:n])
 
         # Calculate ground speed
-        self.gs_north[i:n] = self.tas[i:n] * np.cos(np.radians(self.heading[i:n])) + self.weather.wind_north[i:n]
-        self.gs_east[i:n] = self.tas[i:n] * np.sin(np.radians(self.heading[i:n])) + self.weather.wind_east[i:n]
+        self.gs_north[i:n] = self.tas[i:n] * np.cos(np.deg2rad(self.heading[i:n])) + self.weather.wind_north[i:n]
+        self.gs_east[i:n] = self.tas[i:n] * np.sin(np.deg2rad(self.heading[i:n])) + self.weather.wind_east[i:n]
         print("Ground speed: (North/East)", self.gs_north[i:n], self.gs_east[i:n])
 
         # Calculate position

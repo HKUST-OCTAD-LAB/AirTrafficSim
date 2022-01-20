@@ -1,6 +1,7 @@
 """Aircraft performance class calculation using BADA 3.15"""
 from pathlib import Path
 from sre_parse import FLAGS
+from tkinter import E
 import numpy as np
 
 from .enums import Flight_phase, Engine_type, Wake_category
@@ -11,6 +12,7 @@ class Performance:
 
     Attributes
     ----------
+    See __init__()
 
     Methods
     -------
@@ -93,10 +95,10 @@ class Performance:
         self.__c_fcr = np.zeros([N])                            # cruise fuel flow correction coefficient [dimensionless]
 
         # Ground movement
-        self.__tol = np.zeros([N])                              # take-off length
-        self.__ldl = np.zeros([N])                              # landing length
-        self.__span = np.zeros([N])                             # wingspan
-        self.__length = np.zeros([N])                           # length
+        self.__tol = np.zeros([N])                              # take-off length [m]
+        self.__ldl = np.zeros([N])                              # landing length [m]
+        self.__span = np.zeros([N])                             # wingspan [m]
+        self.__length = np.zeros([N])                           # length [m]
 
 
         # ----------------------------  Airline Procedure Models (APF) section 4 -----------------------------------------
@@ -114,6 +116,14 @@ class Performance:
         self.__v_des_1 = np.zeros([N])                          # standard descent CAS [knots] between 3,000/6,000 and 10,000 ft
         self.__v_des_2 = np.zeros([N])                          # standard descent CAS [knots] between 10,000 ft and Mach transition altitude
         self.__m_des = np.zeros([N])                            # standard descent Mach number above Mach transition altitude
+
+        # Speed schedule
+        self.__climb_schedule = np.zeros([N, 8])                
+        """Standard climb CAS schedule [knots*8] (section 4.1)"""
+        self.__cruise_schedule = np.zeros([N, 5])
+        """Standard cruise CAS schedule [knots*5] (section 4.2)"""
+        self.__descent_schedule = np.zeros([N,8])
+        """Standard descent CAS schedule [knots*8] (section 4.3)"""
 
 
         # ----------------------------  Global Aircraft Parameters (GPF) section 5 -----------------------------------------
@@ -843,7 +853,7 @@ class Performance:
     # ----------------------------  Aerodynamic section 3.6 -----------------------------------------
     def __cal_aerodynamic_drag(self, v_tas, bank_angle, m, rho, flight_phase):
         """
-        Calculate Aerodynamic drag (Section 3.6.1)
+        Calculate Aerodynamic drag (Section 3.6.1) TODO: add expedited climb descent factor
 
         Parameters
         ----------
@@ -868,7 +878,7 @@ class Performance:
             Drag force [N]
         """
         # Lift coefficient (Equation 3.6-1)
-        c_L = 2.0 * m * self.__G_0 / rho / np.square(v_tas) / self.__s / np.cos(np.radians(bank_angle))
+        c_L = 2.0 * m * self.__G_0 / rho / np.square(v_tas) / self.__s / np.cos(np.deg2rad(bank_angle))
         
         # Drag coefficient (Equation3.6-2~4)
         c_D = ((flight_phase != Flight_phase.APPROACH) & (flight_phase != Flight_phase.LANDING)) * (self.__c_d0_cr + self.__c_d2_cr * np.square(c_L)) \
@@ -1088,76 +1098,117 @@ class Performance:
 
     
     # ----------------------------  Airline Procedure Models section 4 ----------------------------------------- 
-    def __cal_procedure_speed_climb(self, H_p, m):
+    def __init_procedure_speed(self, m):
         """
-        Calculate standard air speed for climb phase (section 4.1)
+        Initialize standard air speed schedule for all flight phases (Section 4.1-4.3)
 
         Parameters
         ----------
-        H_p: float[]
-            Geopotential pressuer altitude [m]
-
         m: float[]
             Aircraft mass [kg]
-
-        Returns
-        -------
-        v_cl: float[]
-            Standard climb CAS [kt]
-        -or-
-        M_cl: float[]
-            Standard Mach [dimensionless] 
         """
+        # Standard climb schedule
+        # Actual stall speed for takeoff
+        v_stall_to_act = self.__cal_operating_speed(m, self.__v_stall_to)
+        self.__climb_schedule = np.stack((
+            # Column 0
+            np.where(self.__engine_type == Engine_type.JET, 
+                self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_1,        # From 0 - 1,490 ft for jet (Equation 4.1-1)
+                self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_6),       # From 0 - 499 ft for turboprop and piston (Equation 4.1-6)
+            # Column 1
+            np.where(self.__engine_type == Engine_type.JET, 
+                self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_2,        # From 1,500 - 2,999 ft for jet (Equation 4.1-2)
+                self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_7),       # From 500 - 999 ft for turboprop and piston (Equation 4.1-7)
+            # Column 2
+            np.where(self.__engine_type == Engine_type.JET, 
+                self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_3,        # From 3,000 - 3,999 ft for jet (Equation 4.1-3)
+                self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_8),       # From 1,000 - 1,499 ft for turboprop and piston (Equation 4.1-8)
+            # Column 3
+            np.where(self.__engine_type == Engine_type.JET, 
+                self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_4,        # From 4,000 - 4,999 ft for jet (Equation 4.1-4)
+                np.minimum(self.__v_cl_1, 250)),                          # From 1,500 - 9,999 ft for turboprop and piston
+            # Column 4
+            np.where(self.__engine_type == Engine_type.JET, 
+                self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_5,        # From 5,000 - 5,999 ft for jet (Equation 4.1-5)
+                self.__v_cl_2),                                           # From 10,000 ft - Mach transition altitude for turboprop and piston
+            # Column 5
+            np.where(self.__engine_type == Engine_type.JET, 
+                np.minimum(self.__v_cl_1, 250),                           # From 6,000 - 9,999 ft for jet
+                self.__m_cl),                                             # Above Mach transition altitude for turboprop and piston
+            # Column 6
+            np.where(self.__engine_type == Engine_type.JET, 
+                self.__v_cl_2,                                            # From 10,000 ft - Mach transition altitude for jet
+                0.0),                                                     # -
+            # Column 7
+            np.where(self.__engine_type == Engine_type.JET, 
+                self.__m_cl,                                              # Above Mach transition altitude for jet
+                0.0),                                                     # -
+        ), axis=-1)
 
-    def __cal_procedure_speed_cruise(self, H_p):
+        # Standard cruise schedule
+        self.__cruise_schedule = np.stack((
+            # Column 0
+            np.where(self.__engine_type == Engine_type.JET, np.minimum(self.__v_cr_1, 170), np.minimum(self.__v_cr_1, 150)),     # From 0 - 2,999 ft
+            # Column 1
+            np.where(self.__engine_type == Engine_type.JET, np.minimum(self.__v_cr_1, 220), np.minimum(self.__v_cr_1, 180)),     # From 3,000 - 5,999 ft
+            # Column 2
+            np.minimum(self.__v_cr_1, 250),         # From 6,000 - 13,999 ft for jet; From 6,000 - 9,999 ft for turboprop and piston
+            # Column 3
+            self.__v_cr_2,      # From 14,000 ft to Mach transition altitude for jet; From 10,0000 ft to Mach transition altitude for turboprop and piston
+            # Column 4
+            self.__m_cr         # Above Mach transition altitude
+        ), axis=-1)
+
+        # Standard descent schedule
+        # Actual stall speed for landing TODO: consider fuel mass?
+        v_stall_ld_act = self.__cal_operating_speed(m, self.__v_stall_ld)
+        self.__descent_schedule = np.stack((
+            # Column 0
+            np.where(self.__engine_type != Engine_type.PISTON, 
+                self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_1,       # From 0 - 999 ft for jet and turboprop (Equation 4.3-1)
+                self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_5),      # From 0 - 499 ft for piston (Equation 4.3-5)
+            # Column 1
+            np.where(self.__engine_type != Engine_type.PISTON, 
+                self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_2,       # From 1,000 - 1,499 ft for jet and turboprop (Equation 4.3-2)
+                self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_6),      # From 500 - 999 ft for piston (Equation 4.3-6)
+            # Column 2
+            np.where(self.__engine_type != Engine_type.PISTON, 
+                self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_3,       # From 1,500 - 1,999 ft for jet and turboprop (Equation 4.3-3)
+                self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_7),      # From 1,000 - 1,499 ft for piston (Equation 4.3-7)
+            # Column 3
+            np.where(self.__engine_type != Engine_type.PISTON, 
+                self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_4,       # From 2,000 - 2,999 ft for jet and turboprop (Equation 4.3-4)
+                self.__v_des_1),                                          # From 1,500 - 9,999 ft for piston
+            # Column 4
+            np.where(self.__engine_type != Engine_type.PISTON, 
+                np.minimum(self.__v_des_1, 220),                          # From 3,000 - 5,999 ft for jet and turboprop
+                self.__v_des_2),                                          # From 10,000 ft - Mach transition altitude for piston
+            # Column 5
+            np.where(self.__engine_type != Engine_type.PISTON, 
+                np.minimum(self.__v_des_1, 250),                          # From 6,000 - 9,999 ft for jet and turboprop
+                self.__m_des),                                            # Above Mach transition altitude piston
+            # Column 6
+            np.where(self.__engine_type != Engine_type.PISTON, 
+                self.__v_des_2,                                           # From 10,000 ft - Mach transition altitude for jet and turboprop
+                0.0),                                                     # -
+            # Column 7
+            np.where(self.__engine_type != Engine_type.PISTON, 
+                self.__m_des,                                             # Above Mach transition altitude for jet and turboprop
+                0.0),                                                     # -
+        ), axis=-1)
+
+
+    def __get_procedure_speed(self, H_p, H_p_trans, m, flight_phase):
         """
-        Calculate standard air speed for cruise phase (section 4.2)
+        Get the standard air speed schedule
 
         Parameters
         ----------
         H_p: float[]
             Geopotential pressuer altitude [m]
 
-        Returns
-        -------
-        v_cr: float[]
-            Standard cruise CAS [kt]
-        -or-
-        M_cr: float[]
-            Standard cruise Mach [dimensionless] 
-        """
-
-
-    def __cal_procedure_speed_descent(self, H_p, m):  
-        """
-        Calculate standard air speed for descent phase (section 4.3)
-
-        Parameters
-        ----------
-        H_p: float[]
-            Geopotential pressuer altitude [m]
-
-        m: float[]
-            Aircraft mass [kg]
-
-        Returns
-        -------
-        v_des: float[]
-            Standard descent CAS [kt]
-        -or-
-        M_des: float[]
-            Standard descentMach [dimensionless] 
-        """
-
-
-    def __cal_procedure_speed(self, H_p, m, flight_phase):
-        """
-        Calculate standard air speed
-
-        Parameters
-        ----------
-        H_p: float[]
-            Geopotential pressuer altitude [m]
+        H_p_trans: float[]
+            Transition altitude [m]
 
         m: float[]
             Aircraft mass [kg]
@@ -1172,4 +1223,118 @@ class Performance:
         -or-
         M_std: float[]
             Standard Mach [dimensionless] 
+
+        Notes
+        -----
+        TODO: Recommended to determine the speed schedule from the highest altitude to the lowest one, 
+        and to use at each step the speed of the higher altitude range as a ceiling value for the lower altitude range.
+
+        TODO: Bound the speed schedule form the minimum and maximum speed.
         """
+        return np.select([
+            flight_phase == Flight_phase.CLIMB,
+            flight_phase == Flight_phase.CRUISE,
+            flight_phase == Flight_phase.DESCENT
+        ],[
+            # If climb
+            np.where(self.__engine_type == Engine_type.JET,
+                # If jet
+                np.select([H_p < 1500, H_p >= 1500 & H_p < 3000, H_p >= 3000 & H_p < 4000, H_p >= 4000 & H_p < 5000, H_p >= 5000 & H_p < 6000, H_p >= 6000 & H_p < 10000, H_p >= 10000 & H_p < H_p_trans, H_p >= H_p_trans],
+                          [self.__climb_schedule[:,0], self.__climb_schedule[:,1], self.__climb_schedule[:,2], self.__climb_schedule[:,3], self.__climb_schedule[:,4], self.__climb_schedule[:,5], self.__climb_schedule[:,6], self.__climb_schedule[:,7]]),
+                # If turboprop and piston
+                np.select([H_p < 500, H_p >= 500 & H_p < 1000, H_p >= 1000 & H_p < 1500, H_p >= 1500 & H_p < 10000, H_p >= 10000 & H_p < H_p_trans, H_p >= H_p_trans],
+                          [self.__climb_schedule[:,0], self.__climb_schedule[:,1], self.__climb_schedule[:,2], self.__climb_schedule[:,3], self.__climb_schedule[:,4], self.__climb_schedule[:,5]])
+            ),
+            # If cruise
+            np.where(self.__engine_type == Engine_type.JET,
+                # If jet
+                np.select([H_p < 3000, H_p >= 3000 & H_p < 6000, H_p >= 6000 & H_p < 14000, H_p >= 14000 & H_p < H_p_trans, H_p >= H_p_trans],
+                          [self.__cruise_schedule[:,0], self.__cruise_schedule[:,1], self.__cruise_schedule[:,2], self.__cruise_schedule[:,3], self.__cruise_schedule[:,4]]),
+                # If turboprop and piston
+                np.select([H_p < 3000, H_p >= 3000 & H_p < 6000, H_p >= 6000 & H_p < 10000, H_p >= 10000 & H_p < H_p_trans, H_p >= H_p_trans],
+                          [self.__cruise_schedule[:,0], self.__cruise_schedule[:,1], self.__cruise_schedule[:,2], self.__cruise_schedule[:,3], self.__cruise_schedule[:,4]])
+            ),
+            # If descent
+            np.where(self.__engine_type != Engine_type.PISTON,
+                # If jet and turboprop
+                np.select([H_p < 999, H_p >= 1000 & H_p < 1500, H_p >= 1500 & H_p < 2000, H_p >= 2000 & H_p < 3000, H_p >= 3000 & H_p < 6000, H_p >= 6000 & H_p < 10000, H_p >= 10000 & H_p < H_p_trans, H_p >= H_p_trans],
+                          [self.__descent_schedule[:,0], self.__descent_schedule[:,1], self.__descent_schedule[:,2], self.__descent_schedule[:,3], self.__descent_schedule[:,4], self.__descent_schedule[:,5], self.__descent_schedule[:,6], self.__descent_schedule[:,7]]),
+                # If piston
+                np.select([H_p < 500, H_p >= 500 & H_p < 1000, H_p >= 1000 & H_p < 1500, H_p >= 1500 & H_p < 10000, H_p >= 10000 & H_p < H_p_trans, H_p >= H_p_trans],
+                          [self.__descent_schedule[:,0], self.__descent_schedule[:,1], self.__descent_schedule[:,2], self.__descent_schedule[:,3], self.__descent_schedule[:,4], self.__descent_schedule[:,5]])
+            )
+        ])
+
+    
+    # ----------------------------  Global aircraft parameters section 5 -----------------------------------------
+    def cal_max_d_tas(self, d_t):
+        """
+        Calculate maximum delta true air speed (equation 5.2-1)
+
+        Parameters
+        ----------
+        d_t: float[]
+            Timestep [s]
+
+        Returns
+        -------
+        d_v: float[]
+            Max delta velocity for time step [m/s]
+        """
+        return self.__A_L_MAX_CIV * d_t
+    
+    def cal_max_d_rocd(self, d_t, d_v, v_tas, rocd):
+        """
+        Calculate maximum delta rate of climb or descend (equation 5.2-2)
+
+        Parameters
+        ----------
+        d_t: float[]
+            Timestep [s]
+
+        d_v: float[]
+            Delta velocity [m/s]
+
+        v_tas: float[]
+            True air speed [m/s]
+
+        rocd: float[]
+            Current rate of climb/descend [m/s]
+
+        Returns
+        -------
+        d_rocd: float[]
+            Delta rate of climb or descent [m/s]
+        """
+        return np.sin(np.arcsin(rocd/v_tas) - self.__A_N_MAX_CIV * d_t / v_tas) * (v_tas+d_t)
+
+
+    def cal_rate_of_turn(self, bank_angle, v_tas):
+        """
+        Calculate rate of turn (Equation 5.3-1)
+
+        Parameters
+        ----------
+        bank_angle: float[]
+            Bank angle [deg]
+
+        v_tas: float[]
+            True air speed [m/s]
+        
+        Returns
+        -------
+        Rate of turn [deg/s] TODO: or rad/s?
+        """
+        return self.__G_0 / v_tas * np.tan(np.deg2rad(bank_angle))
+
+
+    def cal_expedite_descend_factor(self):
+        """
+        Calculate expedited descent factor for drag multiplication. (Equation 5.4-1)
+
+        Returns
+        -------
+        c_ds_exp: float[]
+            Coefficient of expedited descent factor
+        """
+        return self.__C_DES_EXP
