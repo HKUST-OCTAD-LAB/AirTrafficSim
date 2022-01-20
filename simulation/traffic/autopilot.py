@@ -33,4 +33,5 @@ class Autopilot:
         self.waypoint_long = np.zeros([N])                      # Longitude of target waypoint [deg]
 
         # Flight mode
-        self.speed_mode = np.zeros([N])                         # Autopilot speed mode [1: constant CAS, 2: constant Mach, 3: accelerate, 4: decelerate]
+        self.speed_mode = np.zeros([N])                         # Autopilot speed mode [1: constant Mach, 2: constant CAS, 3: accelerate, 4: decelerate]
+        self.expedite_descent = np.zeros([N], dtype=bool)       # Autopilot expedite climb setting [bool]
