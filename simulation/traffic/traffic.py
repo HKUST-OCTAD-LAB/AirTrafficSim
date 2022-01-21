@@ -11,8 +11,10 @@ class Traffic:
         Initialize base traffic array to store aircraft state variables for one timestep.
         """
 
-        # State vairable:
-        self.n = 0                                              # Aircraft cont
+        # Memory and index control vairable:
+        self.n = 0                                              # Aircraft count
+        self.N = N                                              # Maximum aircraft count
+        self.index = np.zeros([N])                              # Index array to indicate whether there is an aircraft active in each index.
 
         # General information
         self.call_sign = np.empty([N], dtype='U10')             # Callsign [string]
@@ -64,21 +66,33 @@ class Traffic:
 
         print("Traffic.py - add_aircraft()", call_sign, " Type:",  aircraft_type)
 
+        if (self.n >= self.N):
+            # If new index exit maximum aircraft count
+            new_index = np.argwhere(self.index == 0).flatten()
+            if (new_index.size == 0):
+                print ("Traffic array is full. Cannot add aircraft.")
+                return -1
+            else:
+                # Assign new index from empty slots.
+                n = new_index[0]
+        else:
+            n= self.n
+
         # Initialize variables
-        self.call_sign[self.n] = call_sign
-        self.aircraft_type[self.n] = aircraft_type
-        self.flight_phase[self.n] = flight_phase
-        self.lat[self.n] = lat
-        self.long[self.n] = long
-        self.alt[self.n] = alt
-        self.heading[self.n] = heading
-        self.tas[self.n] = tas
-        self.weight[self.n] = weight
-        self.fuel_weight[self.n] = fuel_weight
-        self.payload_weight[self.n] = payload_weight
+        self.call_sign[n] = call_sign
+        self.aircraft_type[n] = aircraft_type
+        self.flight_phase[n] = flight_phase
+        self.lat[n] = lat
+        self.long[n] = long
+        self.alt[n] = alt
+        self.heading[n] = heading
+        self.tas[n] = tas
+        self.weight[n] = weight
+        self.fuel_weight[n] = fuel_weight
+        self.payload_weight[n] = payload_weight
 
         # Add aircraft in performance array
-        self.perf.add_aircraft(aircraft_type, self.n)
+        self.perf.add_aircraft(aircraft_type, n)
         
         # Increase aircraft count
         self.n += 1
@@ -86,12 +100,26 @@ class Traffic:
         return self.n-1
 
 
-    def remove_aircraft(self):
+    def del_aircraft(self, n):
         """
-        Remove an aircraft from traffic array.
+        Delete an aircraft from traffic array.
         TODO:
         """
-        pass
+        self.index[n] = 0
+
+        self.call_sign[n] = ''
+        self.aircraft_type[n] = ''
+        self.flight_phase[n] = 0
+        self.lat[n] = 0
+        self.long[n] = 0
+        self.alt[n] = 0
+        self.heading[n] = 0
+        self.tas[n] = 0
+        self.weight[n] = 0
+        self.fuel_weight[n] = 0
+        self.payload_weight[n] = 0
+        
+        self.perf.del_aircraft(n)
     
 
     

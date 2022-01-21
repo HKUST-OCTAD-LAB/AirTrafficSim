@@ -2,7 +2,7 @@
 from pathlib import Path
 import numpy as np
 
-from .enums import Flight_phase, Engine_type, Wake_category
+from ..utils.enums import Flight_phase, Engine_type
 
 class Performance:
     """
@@ -68,7 +68,7 @@ class Performance:
         """temperature gradient on maximum altitude [feet/K]"""
 
         # Aerodynamics
-        self.__s = np.zeros([N])                                
+        self.__S = np.zeros([N])                                
         """reference wing surface area [m^2]"""
         self.__c_d0_cr = np.zeros([N])                          
         """parasitic drag coefficient (cruise) [dimensionless]"""
@@ -335,12 +335,12 @@ class Performance:
 
     def add_aircraft(self, icao, n, mass=2):
         """
-        Append one specific aircraft performance data to the performance array.
+        Add one specific aircraft performance data to the performance array according to index.
 
         Parameters
         ----------
         self: Performance class instance
-            Used to append data to the performance array.
+            Used to add data to the performance array.
 
         ICAO: string
             ICAO code of the specific aircraft.
@@ -389,7 +389,7 @@ class Performance:
         self.__g_t[n] = OPF[1][7]
 
         # 'CD', 2X, 4 (3X, E10.5) - aerodynamic block - 12 data lines
-        self.__s[n] = OPF[2][3]
+        self.__S[n] = OPF[2][3]
         self.__c_lbo[n] = OPF[2][4]
         self.__k[n] = OPF[2][5]
         # __c_m16 is removed from drag expression
@@ -467,6 +467,84 @@ class Performance:
 
         # Delete variable to free memory
         del APF
+
+
+    def del_aircraft(self, n):
+        """
+        Delete one specific aircraft performance data to the performance array according to index. This is done by setting all parameters to 0 for reuse in future.
+
+        Parameters
+        ----------
+        self: Performance class instance
+            Used to delete data to the performance array.
+
+        n: int
+            Index of array.
+
+        Returns
+        -------
+        TODO:
+        """
+        self.__m_ref[n] = 0
+        self.__m_min[n] = 0
+        self.__m_max[n] = 0
+        self.__m_pyld[n] = 0
+        self.__g_w[n] = 0
+        self.__v_mo[n] = 0
+        self.__m_mo[n] = 0
+        self.__h_mo[n] = 0
+        self.__h_max[n] = 0
+        self.__g_t[n] = 0
+        self.__S[n] = 0
+        self.__c_lbo[n] = 0
+        self.__k[n] = 0
+        # __c_m16 is removed from drag expression
+        self.__v_stall_cr[n] = 0
+        self.__c_d0_cr[n] = 0
+        self.__c_d2_cr[n] = 0
+        self.__v_stall_ic[n] = 0.
+        # self.__c_d0_ic[n] = 0.0           TODO: Initial climb not used?
+        # self.__c_d2_ic[n] = 0.0           TODO: Initial climb not used?
+        self.__v_stall_to[n] = 0
+        # self.__c_d0_to[n] = 0.0           TODO: Initial climb not used?
+        # self.__c_d2_to[n] = 0.0           TODO: Initial climb not used?
+        self.__v_stall_ap[n] = 0
+        self.__c_d0_ap[n] = 0
+        self.__c_d2_ap[n] = 0
+        self.__v_stall_ld[n] = 0
+        self.__c_d0_ld[n] = 0
+        self.__c_d2_ld[n] = 0
+        self.__c_d0_ldg[n] = 0
+        self.__c_tc_1[n] = 0
+        self.__c_tc_2[n] = 0
+        self.__c_tc_3[n] = 0
+        self.__c_tc_4[n] = 0
+        self.__c_tc_5[n] = 0
+        self.__c_tdes_low[n] = 0
+        self.__c_tdes_high[n] = 0
+        self.__h_p_des[n] = 0
+        self.__c_tdes_app[n] = 0
+        self.__c_tdes_ld[n] = 0
+        self.__v_des_ref[n] = 0
+        self.__m_des_ref[n] = 0
+        self.__c_f1[n] = 0
+        self.__c_f2[n] = 0
+        self.__c_f3[n] = 0
+        self.__c_f4[n] = 0
+        self.__c_fcr[n] = 0
+        self.__tol[n] = 0
+        self.__ldl[n] = 0
+        self.__span[n] = 0
+        self.__length[n] = 0
+        self.__v_cl_1[n] = 0
+        self.__v_cl_2[n] = 0
+        self.__m_cl[n] = 0
+        self.__v_cr_1[n] = 0
+        self.__v_cr_2[n] = 0
+        self.__m_cr[n] = 0
+        self.__m_des[n] = 0
+        self.__v_des_2[n] = 0
+        self.__v_des_1[n] = 0
 
 
     def cal_performance(self):
@@ -993,7 +1071,7 @@ class Performance:
             Drag force [N]
         """
         # Lift coefficient (Equation 3.6-1)
-        c_L = 2.0 * m * self.__G_0 / rho / np.square(V_tas) / self.__s / np.cos(np.deg2rad(bank_angle))
+        c_L = 2.0 * m * self.__G_0 / rho / np.square(V_tas) / self.__S / np.cos(np.deg2rad(bank_angle))
         
         # Drag coefficient (Equation3.6-2~4)
         c_D = np.select([flight_phase != Flight_phase.APPROACH & flight_phase != Flight_phase.LANDING, 
@@ -1011,7 +1089,7 @@ class Performance:
                 )
 
         # Drag force
-        return c_D * rho * np.square(V_tas) * self.__s / 2.0 * c_des_exp
+        return c_D * rho * np.square(V_tas) * self.__S / 2.0 * c_des_exp
 
 
     def cal_low_speed_buffeting_limit(self, p, M, m):
@@ -1032,9 +1110,25 @@ class Performance:
 
         Returns
         -------
+        M: float[]
+            Mach number [dimensionless]
 
+        Notes
+        -----
+        TODO: Calculate minimum speed for Jet and Turboprop when H_p >= 15000. V_min = MAX(V_min_stall, M_b) (<- same unit)
+              If H_p < 15000, V_min = V_min_stall
         """
+        Q = (-np.square(-self.__c_lbo/self.__k)/9.0)
+        R = (-27.0*(m*self.__G_0/self.__S)/0.583/p/self.__k - 2.0*np.power(-self.__c_lbo/self.__k, 3)) / 54.0
+        theta = np.arccos(R/np.sqrt(-np.power(Q,3)))
 
+        X_1 = 2.0 * np.sqrt(-Q) * np.cos(np.deg2rad(theta/3)) + (self.__c_lbo/self.__k)/3.0
+        X_2 = 2.0 * np.sqrt(-Q) * np.cos(np.deg2rad(theta/3 + 120)) + (self.__c_lbo/self.__k)/3.0
+        X_3 = 2.0 * np.sqrt(-Q) * np.cos(np.deg2rad(theta/3 + 240)) + (self.__c_lbo/self.__k)/3.0
+
+        arr = np.array([X_1, X_2, X_3])
+        return np.max(np.where(arr <= 0, np.inf, arr), axis=0)
+         
 
     # ----------------------------  Engine Thrust section 3.7 ----------------------------------------- 
     def cal_max_climb_to_thrust(self, H_p, V_tas, d_T):
