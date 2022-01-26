@@ -1,4 +1,4 @@
-from .traffic import Traffic
+from simulation.traffic.traffic import Traffic
 
 class Aircraft:
 

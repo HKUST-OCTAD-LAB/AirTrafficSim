@@ -1,8 +1,8 @@
 import numpy as np
 
-from .autopilot import Autopilot
-from .weather import Weather
-from .performance import Performance
+from simulation.traffic.autopilot import Autopilot
+from simulation.traffic.weather import Weather
+from simulation.traffic.performance import Performance
 
 class Traffic:
 

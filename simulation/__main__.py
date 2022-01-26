@@ -1,4 +1,4 @@
-from .env import Environment
+from simulation.env import Environment
 
 env = Environment()
 env.step()

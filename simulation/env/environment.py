@@ -1,5 +1,5 @@
-from ..traffic import Traffic
-from ..traffic import Aircraft
+from simulation.traffic.traffic import Traffic
+from simulation.traffic.aircraft import Aircraft
 
 class Environment:
 

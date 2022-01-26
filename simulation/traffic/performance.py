@@ -2,7 +2,7 @@
 from pathlib import Path
 import numpy as np
 
-from ..utils.enums import Flight_phase, Engine_type
+from simulation.utils.enums import Flight_phase, Engine_type
 
 class Performance:
     """
