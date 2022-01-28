@@ -11,3 +11,5 @@
 
 #secret
 .env
+
+data/csv/*
