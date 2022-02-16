@@ -1,8 +1,9 @@
 """Aircraft performance class calculation using BADA 3.15"""
 from pathlib import Path
 import numpy as np
+import os
 
-from simulation.utils.enums import Flight_phase, Engine_type
+from utils.enums import Flight_phase, Engine_type
 
 class Performance:
     """
@@ -185,8 +186,8 @@ class Performance:
         # ----------------------------  Global Aircraft Parameters (GPF) section 5 -----------------------------------------
         # Read data from GPF file (section 6.8)
         # 'CD', 1X, A15, 1X, A7, 1X, A16, 1x, A29, 1X, E10.5
-        if Path('simulation/data/BADA/BADA.GPF').is_file():
-            GPF = np.genfromtxt(Path('simulation/data/BADA/BADA.GPF'), delimiter=[3,16,8,17,29,12], dtype="U2,U15,U7,U16,U29,f8", comments="CC", autostrip=True, skip_footer=1)
+        if Path(__file__).parent.parent.resolve().joinpath('./data/BADA/BADA.GPF').is_file():
+            GPF = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/BADA.GPF'), delimiter=[3,16,8,17,29,12], dtype="U2,U15,U7,U16,U29,f8", comments="CC", autostrip=True, skip_footer=1)
         else: 
             print("BADA.GPF File does not exit")
 
@@ -330,10 +331,10 @@ class Performance:
 
         # ----------------------------  SYNONYM FILE FORMAT (SYNONYM.NEW) section 6.3 -----------------------------------------
         # | 'CD' | SUPPORT TYPE (-/*) | AIRCRAFT Code | MANUFACTURER | NAME OR MODEL | FILE NAME | ICAO (Y/N) |
-        self.__SYNONYM = np.genfromtxt(Path('simulation/data/BADA/SYNONYM.NEW'), delimiter=[3,2,7,20,25,8,5], names=['CD','ST','ACCODE','MANUFACTURER','MODEL','FILENAME','ICAO'], dtype="U2,U1,U4,U18,U25,U6,U1", comments="CC", autostrip=True, skip_footer=1)
+        self.__SYNONYM = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/SYNONYM.NEW'), delimiter=[3,2,7,20,25,8,5], names=['CD','ST','ACCODE','MANUFACTURER','MODEL','FILENAME','ICAO'], dtype="U2,U1,U4,U18,U25,U6,U1", comments="CC", autostrip=True, skip_footer=1)
 
 
-    def add_aircraft(self, icao, n, mass=2):
+    def add_aircraft(self, icao, n, mass, mass_class=2):
         """
         Add one specific aircraft performance data to the performance array according to index.
 
@@ -348,8 +349,11 @@ class Performance:
         n: int
             Index of array.
 
-        mass: int
-            Aircraft mass for specific flight. To be used for APF. 1 = LO, 2 = AV, 3 = HI
+        mass: float
+            Mass of aircraft [kg]
+
+        mass_class: int
+            Aircraft mass for specific flight. To be used for APF. 1 = LO, 2 = AV, 3 = HI TODO: useful?
 
         Returns
         -------
@@ -365,11 +369,11 @@ class Performance:
         file_name = self.__SYNONYM[row][5]
 
         # Get data from Operations Performance File (Section 6.4)
-        OPF = np.genfromtxt(Path('simulation/data/BADA/',file_name+'.OPF'), delimiter=[3,2,2,13,13,13,13,11], dtype="U2,U1,U2,f8,f8,f8,f8,f8", comments="CC", autostrip=True, skip_header=16, skip_footer=1)
+        OPF = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/', file_name+'.OPF'), delimiter=[3,2,2,13,13,13,13,11], dtype="U2,U1,U2,f8,f8,f8,f8,f8", comments="CC", autostrip=True, skip_header=16, skip_footer=1)
 
         # 'CD', 3X, A6, 9X, I1, 12X, A9, 17X, A1 - aircraft type block - 1 data line
         # | 'CD' | ICAO | # of engine | 'engines' | engine type ( Jet,  Turboprop  or  Piston) | wake category ( J (jumbo), H (heavy), M (medium) or L (light))
-        OPF_Actype = np.genfromtxt(Path('simulation/data/BADA/',file_name+'.OPF'), delimiter=[5,15,1,12,26,1], dtype="U2,U6,i1,U7,U9,U1", comments="CC", autostrip=True, max_rows=1)
+        OPF_Actype = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/', file_name+'.OPF'), delimiter=[5,15,1,12,26,1], dtype="U2,U6,i1,U7,U9,U1", comments="CC", autostrip=True, max_rows=1)
         self.__n_eng[n] = OPF_Actype.item()[2]
         self.__engine_type[n] = {'Jet':1, 'Turboprop':2, 'Piston':3}.get(OPF_Actype.item()[4])
         self.__wake_category[n] = {'J': 1, 'H':2, 'M':3, 'L': 4}.get(OPF_Actype.item()[5])
@@ -451,10 +455,9 @@ class Performance:
         del OPF_Actype
         del OPF
 
-
         # Get data from Airlines Procedures File (Section 6.5)
         # 'CD', 25X, 2(I3, 1X), I2, 10X, 2(Ix, 1X), I2, 2X, I2, 2(1X, I3) - procedures specification block - 3 dataline
-        APF = np.genfromtxt(Path('simulation/data/BADA/',file_name+'.APF'), delimiter=[6,8,9,4,4,4,3,5,4,4,4,4,3,4,4,5,4,4,4,5,7], dtype="U2,U7,U7,U2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,U6", comments="CC", autostrip=True)
+        APF = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/', file_name+'.APF'), delimiter=[6,8,9,4,4,4,3,5,4,4,4,4,3,4,4,5,4,4,4,5,7], dtype="U2,U7,U7,U2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,U6", comments="CC", autostrip=True)
         self.__v_cl_1[n] = APF[mass][4]
         self.__v_cl_2[n] = APF[mass][5]
         self.__m_cl[n] = APF[mass][6]/100
@@ -467,6 +470,9 @@ class Performance:
 
         # Delete variable to free memory
         del APF
+
+        # Initialize procedure speed
+        self.__init_procedure_speed(mass, n)
 
 
     def del_aircraft(self, n):
@@ -802,7 +808,7 @@ class Performance:
 
 
     # ----------------------------  Total-Energy Model Section 3.2 -----------------------------------------
-    def __cal_energy_share_factor(self, H_p, T, d_T, M, ap_speed_mode, flight_phase):
+    def cal_energy_share_factor(self, H_p, T, d_T, M, ap_speed_mode, flight_phase):
         """
         Calculate energy share factor (Equation 3.2-5, 8~11)
 
@@ -857,7 +863,7 @@ class Performance:
         ])
 
 
-    def cal_tem_rocd(self, T, d_T, m, D, f_M, Thr, V_tas):
+    def cal_tem_rocd(self, T, d_T, m, D, f_M, Thr, V_tas, C_pow_red):
         """
         Total Energy Model. Speed and Throttle Controller. (Equation 3.2-1a and 3.2-7)
         Calculate Rate of climb or descent given velocity(constant) and thrust (max climb thrust/idle descent).
@@ -885,13 +891,16 @@ class Performance:
         V_tas: float[]
             True airspeed [m/s]
 
+        C_pow_red: float[]
+            Reduced climb power coefficient [dimensionless]
+
         Returns
         -------
         rocd: float[]
             Rate of climb or descent [m/s]
             Defined as variation with time of the aircraft geopotential pressure altitude H_p
         """
-        return (T-d_T)/T * (Thr-D)*V_tas/m/self.__G_0 * f_M
+        return (T-d_T)/T * (Thr-D)*V_tas*C_pow_red/m/self.__G_0 * f_M
 
 
     def cal_tem_speed(self, T, d_T, m, D, f_M, rocd, Thr):
@@ -933,7 +942,7 @@ class Performance:
     def cal_tem_thrust(self, T, d_T, m, D, f_M, rocd, V_tas):
         """
         Total Energy Model. Speed and ROCD Controller. (Equation 3.2-1c and 3.2-7)
-        Calculate speed given ROCD and speed.
+        Calculate thrust given ROCD and speed.
         
         Parameters
         ----------
@@ -967,7 +976,7 @@ class Performance:
 
 
     # ----------------------------  Mass section 3.4 -----------------------------------------
-    def cal_operating_speed(self, m, V_ref):
+    def __cal_operating_speed(self, m, V_ref):
         """
         Calculate operating speed given mass (Equation 3.4-1)
 
@@ -1172,7 +1181,7 @@ class Performance:
         Parameters
         ----------
         Thr_max_climb: float[]
-            Maximum climb thrust [N] (obtained from __cal_max_climb_to_thrust())
+            Maximum climb thrust [N] (obtained from cal_max_climb_to_thrust())
         
         Returns
         -------
@@ -1356,7 +1365,7 @@ class Performance:
 
     
     # ----------------------------  Airline Procedure Models section 4 ----------------------------------------- 
-    def __cal_procedure_speed(self, m, n):
+    def __init_procedure_speed(self, m, n):
         """
         Initialize standard air speed schedule for all flight phases (Section 4.1-4.3)
 
@@ -1368,37 +1377,38 @@ class Performance:
         n: int
             Index of performance array.
         """
-        # Standard climb schedule
         # Actual stall speed for takeoff
         v_stall_to_act = self.__cal_operating_speed(m, self.__v_stall_to)
-        self.__climb_schedule[n] = np.where(self.__engine_type == Engine_type.JET,
+        # Standard climb schedule
+        if (self.__engine_type[n] == Engine_type.JET):
             # If Jet (Equation 4.1-1~5)
-            [self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_1, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_2, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_3,
-             self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_4, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_5, np.minimum(self.__v_cl_1, 250), self.__v_cl_2, self.__m_cl],
+            self.__climb_schedule[n] = [self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_1, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_2, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_3,
+                                        self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_4, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_5, np.minimum(self.__v_cl_1[n], 250), self.__v_cl_2[n], self.__m_cl[n]]
+        else:
             # Else if turboprop and piston (Equation 4.1-6~8)
-            [self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_6, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_7, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_8,
-             np.minimum(self.__v_cl_1, 250), self.__v_cl_2, self.__m_cl, 0.0, 0.0]
-        )
+            self.__climb_schedule[n] = [self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_6, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_7, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_8,
+                                        np.minimum(self.__v_cl_1[n], 250), self.__v_cl_2[n], self.__m_cl[n], 0.0, 0.0]
 
         # Standard cruise schedule
-        self.__cruise_schedule = np.where(self.__engine_type == Engine_type.JET,
+        if (self.__engine_type == Engine_type.JET):
             # If Jet
-            [np.minimum(self.__v_cr_1, 170), np.minimum(self.__v_cr_1, 220), np.minimum(self.__v_cr_1, 250), self.__v_cr_2, self.__m_cr],
+            self.__cruise_schedule[n] = [np.minimum(self.__v_cr_1[n], 170), np.minimum(self.__v_cr_1[n], 220), np.minimum(self.__v_cr_1[n], 250), self.__v_cr_2[n], self.__m_cr[n]]
+        else:
             # Else if turboprop and piston
-            [np.minimum(self.__v_cr_1, 150), np.minimum(self.__v_cr_1, 180), np.minimum(self.__v_cr_1, 250), self.__v_cr_2, self.__m_cr]
-        )
+            self.__cruise_schedule[n] =  [np.minimum(self.__v_cr_1[n], 150), np.minimum(self.__v_cr_1[n], 180), np.minimum(self.__v_cr_1[n], 250), self.__v_cr_2[n], self.__m_cr[n]]
 
-        # Standard descent schedule
         # Actual stall speed for landing TODO: consider fuel mass?
         v_stall_ld_act = self.__cal_operating_speed(m, self.__v_stall_ld)
-        self.__descent_schedule = np.where(self.__engine_type != Engine_type.PISTON,
+        # Standard descent schedule
+        if (self.__engine_type != Engine_type.PISTON):
             # If Jet and Turboprop (Equation 4.3-1~4)
-            [self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_1, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_2, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_3,
-             self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_4, np.minimum(self.__v_des_1, 220), np.minimum(self.__v_des_1, 250), self.__v_des_2, self.__m_des],
+            self.__descent_schedule[n] = [self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_1, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_2, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_3,
+                                          self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_4, np.minimum(self.__v_des_1[n], 220), np.minimum(self.__v_des_1[n], 250), self.__v_des_2[n], self.__m_des[n]]
+        else:
             # Else if Piston (Equation 4.3-5~7)
-            [self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_5, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_6, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_7,
-             self.__v_des_1, self.__v_des_2, self.__m_des, 0.0, 0.0]
-        )
+            self.__descent_schedule[n] = [self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_5, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_6, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_7,
+                                          self.__v_des_1[n], self.__v_des_2[n], self.__m_des[n], 0.0, 0.0]
+
 
 
     def get_procedure_speed(self, H_p, H_p_trans, flight_phase):

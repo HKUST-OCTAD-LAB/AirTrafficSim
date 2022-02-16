@@ -1,5 +1,7 @@
-from simulation.traffic.traffic import Traffic
-from simulation.traffic.aircraft import Aircraft
+import csv
+from pathlib import Path
+from traffic.traffic import Traffic
+from traffic.aircraft import Aircraft
 
 class Environment:
 
@@ -22,6 +24,10 @@ class Environment:
         self.traffic = Traffic()
         self.aircraft_head = Aircraft(self.traffic, "1", "A320", 3, 21.98667, 113.553333, 200, 175, 300, 0, 0, 0)
         self.aircraft_fol = Aircraft(self.traffic, "2", "A320", 3, 21.9, 113.5, 200, 175, 300, 0, 0, 0)
+        
+        self.writer = csv.writer(open(Path(__file__).parent.parent.parent.resolve().joinpath('./server/data/simulation.csv'), 'w'))
+        # header = ['time', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas']
+        # self.writer.writerow(header)
 
 
     def step(self):
@@ -36,4 +42,6 @@ class Environment:
         self.aircraft_head.set_ap_heading(173)
         self.aircraft_head.update()
         print("")
+        print("Save to file")
+        self.traffic.save(self.writer, self.global_time)
         self.global_time += 1

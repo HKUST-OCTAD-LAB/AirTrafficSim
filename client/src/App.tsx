@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider} from '@mui/material/styles';
 import socket from './utils/websocket';
 import RealtTime from './pages/Realtime';
 import Scenarios from './pages/Scenarios';
+import Simulation from './pages/Simulation'
 import Home from './pages/home';
 
 socket.on('connection', () => {
@@ -47,12 +48,16 @@ const App = () => {
                 <ListItemButton component={Link} to='/scenarios'>
                   <ListItemText primary={"Scenarios"}/>
                 </ListItemButton>
+                <ListItemButton component={Link} to='/simulation'>
+                  <ListItemText primary={"Simulation"}/>
+                </ListItemButton>
               </List>
             </Drawer> 
           <Box component="main" sx={{ flexGrow: 1}}>
             <Switch>
               <Route path="/realtime" component={RealtTime}/>
               <Route path="/scenarios" component={Scenarios}/>
+              <Route path="/simulation" component={Simulation}/>
               <Route path="/" exact component={Home}/>
             </Switch>  
           </Box>

@@ -15,6 +15,7 @@ const io = require('socket.io')(server, {
 const realtime = require('./src/models/realtime');
 const replay = require('./src/models/replay');
 const navdata = require('./src/models/navdata');
+const simulation = require('./src/models/simulation')
 
 const PORT = process.env.PORT || 5000;
 // require('./src/database');
@@ -25,10 +26,6 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use(express.static("../client/build"));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-});
 
 app.get('/replay', (req, res) => {
   res.send(replay.replay());
@@ -42,6 +39,15 @@ app.get('/navdata', (req, res) => {
   // navdata.navdata(sendnav);
 })
 
+app.get('/api/simulation', (req, res) => {
+  simulation.simulation(io.socket)
+})
+
+// Handles any requests that don't match the ones above
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+
 // Handle client socket connection
 io.on('connection', socket => {
   console.log('New client connected!');
@@ -52,6 +58,10 @@ io.on('connection', socket => {
 })
 
 // setInterval(realtime.realtime, 2000, io.sockets, http);
+
+// tail.on("line", function(data) {
+//   console.log(data);
+// });
 
 server.listen(PORT, () => {
   console.log(`Server Listening on ${PORT}`);

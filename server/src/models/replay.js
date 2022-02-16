@@ -55,6 +55,7 @@ module.exports = {
                     "distanceDisplayCondition": {
                         "distanceDisplayCondition": [0, 1000000]
                     },
+                    // "resolution": 600.0,
                     // "material": {
                     //     "polylineDash": {}
                     // }
