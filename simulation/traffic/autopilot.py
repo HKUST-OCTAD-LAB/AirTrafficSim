@@ -1,6 +1,9 @@
 import numpy as np
 
 class Autopilot:
+    """
+    Calculate target state
+    """
 
     def __init__(self, N=1000):
         # Target position
@@ -35,6 +38,13 @@ class Autopilot:
         # Flight mode
         self.speed_mode = np.zeros([N])                         # Autopilot speed mode [1: constant Mach, 2: constant CAS, 3: accelerate, 4: decelerate]
         self.auto_throttle_mode = np.zeros([N])                 # Autothrottle m,ode [1: Speed, 2: Thrust]
-        self.vertical_mode = np.zeros([N])                      # Autopilot vertical mode [1: alt hold, 2: vs mode, 3: flc mode (flight level change)]
-        self.lateral_mode = np.zeros([N])                       # Autopilot lateral mode [1: heading, 2: track angle]
+        self.vertical_mode = np.zeros([N])                      # Autopilot vertical mode [1: alt hold, 2: vs mode, 3: flc mode (flight level change), 4. VNAV]
+        self.lateral_mode = np.zeros([N])                       # Autopilot lateral mode [1: heading, 2: track angle, 3: LNAV]
         self.expedite_descent = np.zeros([N], dtype=bool)       # Autopilot expedite climb setting [bool]
+
+
+    def update(self):
+        pass
+
+    def update_fms(self):
+        pass

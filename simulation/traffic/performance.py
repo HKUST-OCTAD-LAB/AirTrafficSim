@@ -553,39 +553,42 @@ class Performance:
         self.__v_des_1[n] = 0
 
 
-    def cal_performance(self):
+    def update_fuel(self, flight_phase, tas, thrust, alt):
         """
-        Calculate aircraft performance according to BADA. (Section 3)
+        Calculate fuel burn
 
         Parameters
         ----------
-        self:
+        flight_phase : float[]
+            Flight phase from Traffic class [Flight_phase enum]
+        tas : float[]
+            True airspeed [kt]
+        thrust : float[]
+            Thrust [N]
+        alt : _type_
+            Altitude [ft]
 
-        Aircrafts: Aircrafts() class
-            To obtain and update aircrafts' present states.
-
-        TODO:
+        Returns
+        -------
+        Fuel burn : float[]
+            Fuel burn [kg/s]
         """
+        return np.select(
+                condlist=[
+                        flight_phase == Flight_phase.CRUISE,
+                        flight_phase == Flight_phase.DESCENT,
+                        flight_phase == Flight_phase.APPROACH,
+                        flight_phase == Flight_phase.LANDING
+                        ], 
+                choicelist=[
+                        self.__cal_cruise_fuel_flow(tas, thrust)/60.0,                      # cruise
+                        self.__cal_minimum_fuel_flow(alt)/60.0,                             # Idle descent
+                        self.__cal_approach_landing_fuel_flow(tas, thrust, alt)/60.0,       # Approach
+                        self.__cal_approach_landing_fuel_flow(tas, thrust, alt/60.0)        # Landing
+                        ],                                 
+                default=self.__cal_nominal_fuel_flow(tas, thrust)/60.0                      # Others
+            )
 
-        # ----------------------------  Atmosphere model section 3.1 -----------------------------------------
-        # d_T = 0                                                 # Temperature differential at MSL TODO: Input, Weather class
-        # d_p = 0                                                 # Pressure differential at MSL TODO: Input, Weather class
-
-        # # Standard Mean Sea Level (subindex H_p = 0)
-        # H_p_hp0 = 0                                             # Geopotential pressure altitude [m]
-        # p_hp0 = p_0
-        # T_isa_hp0 = T_0
-        # T_hp_0 = T_0 + d_T
-        # T_isa_msl = 0                                           # defined below TODO:
-        # H_hp0 = 1/beta_T*(T_0-T_isa_msl+d_T*np.log(T_0/T_isa_msl))
-
-        # # Mean Sea Level (subindex MSL)
-        # H_msl = 0
-        # p_msl = p_0 + d_p
-        # H_p_msl = T_0/beta_T*((p_msl/p_0)^(beta_T*R/g_0)-1)
-        # T_isa_msl = T_0 + beta_T * H_p_msl
-        # T_msl = T_0 + d_T + beta_T * H_p_msl
-        
 
     # ----------------------------  Atmosphere model section 3.1 -----------------------------------------
     def cal_temperature(self, H_p, d_T):
@@ -1265,7 +1268,7 @@ class Performance:
 
 
     # ----------------------------  Fuel consumption section 3.9 ----------------------------------------- 
-    def cal_nominal_fuel_flow(self, V_tas, Thr):
+    def __cal_nominal_fuel_flow(self, V_tas, Thr):
         """
         Calculate nominal fuel flow (except idle descent and cruise) (equations 3.9-1~3 and 3.9-7)
 
@@ -1291,7 +1294,7 @@ class Performance:
                           self.__c_f1])                                                     # Equation 3.9-7
 
 
-    def cal_minimum_fuel_flow(self, H_p):
+    def __cal_minimum_fuel_flow(self, H_p):
         """
         Calculate fuel flow for idle descent (equations 3.9-4 and 3.9-8)
 
@@ -1312,7 +1315,7 @@ class Performance:
                     self.__c_f3)                                # Equation 3.9-8
 
 
-    def cal_approach_landing_fuel_flow(self, V_tas, Thr, H_p):
+    def __cal_approach_landing_fuel_flow(self, V_tas, Thr, H_p):
         """
         Calculate fuel flow for approach and landing (equations 3.9-5 and 3.9-8)
 
@@ -1338,7 +1341,7 @@ class Performance:
                     # Piston
                     self.__cal_minimum_fuel_flow(H_p))                                                          # Equation 3.9-8
 
-    def cal_cruise_fuel_flow(self, V_tas, Thr):
+    def __cal_cruise_fuel_flow(self, V_tas, Thr):
         """
         Calculate fuel flow for cruise (equations 3.9-6 and 3.9-9)
 
@@ -1536,10 +1539,46 @@ class Performance:
         
         Returns
         -------
-        Rate of turn [deg/s] TODO: or rad/s?
+        Rate of turn : float[]
+            Rate of turn [deg/s]
         """
         return self.__G_0 / V_tas * np.tan(np.deg2rad(bank_angle))
 
+
+    def cal_bank_angle(self, rate_of_turn, V_tas):
+        """
+        Calculate rate of turn (Equation 5.3-1)
+
+        Parameters
+        ----------
+        Rate of turn : float[]
+            Rate of turn [deg/s]
+
+        V_tas: float[]
+            True air speed [m/s]
+        
+        Returns
+        -------
+        bank_angle: float[]
+            Bank angle [deg]
+        """
+        return np.rad2deg(np.arctan(np.deg2rad(rate_of_turn) * V_tas / self.__G_0))
+
+    def get_nominal_bank_angles(self, flight_phase):
+        """
+        Get standard nominal bank angles (Session 5.3)
+
+        Parameters
+        ----------
+        flight_phase: float[]
+            Flight phase from Traffic class [Flight_phase enum]
+
+        Returns
+        -------
+        bank_angles :float 
+            Bank angles [deg]
+        """
+        return np.where(flight_phase == Flight_phase.TAKEOFF | flight_phase == Flight_phase.LANDING, self.__PHI_NORM_CIV_TOLD, self.__PHI_NORM_CIV_OTHERS)
 
     def cal_expedite_descend_factor(self, expedite_descent):
         """

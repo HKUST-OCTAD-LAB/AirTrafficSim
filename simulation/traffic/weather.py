@@ -1,4 +1,5 @@
 import numpy as np
+from traffic.performance import Performance
 
 class Weather:
     
@@ -13,3 +14,9 @@ class Weather:
         self.T = np.zeros([N])                                  # Temperature [K]
         self.p = np.zeros([N])                                  # Pressure [Pa]
         self.rho = np.zeros([N])                                # Density [kg/m^3]
+
+
+    def update(self, perf: Performance):
+        self.T = perf.cal_temperature(self.alt, self.d_T)
+        self.p = perf.cal_air_pressure(self.alt, self.T, self.d_T)
+        self.rho = perf.cal_air_density(self.p, self.T)

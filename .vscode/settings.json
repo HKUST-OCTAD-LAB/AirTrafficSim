@@ -1,15 +1,15 @@
-{
-    "python.testing.unittestArgs": [
-        "-v",
-        "-s",
-        "./simulation/",
-        "-p",
-        "test_*.py",
-    ],
-    "python.testing.pytestEnabled": true,
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestArgs": [
-        "simulation"
-    ],
-    "testing.defaultGutterClickAction": "debug"
-}
+// {
+//     "python.testing.unittestArgs": [
+//         "-v",
+//         "-s",
+//         "./simulation/",
+//         "-p",
+//         "test_*.py",
+//     ],
+//     "python.testing.pytestEnabled": true,
+//     "python.testing.unittestEnabled": false,
+//     "python.testing.pytestArgs": [
+//         "simulation"
+//     ],
+//     "testing.defaultGutterClickAction": "debug"
+// }

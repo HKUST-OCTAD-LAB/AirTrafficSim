@@ -14,25 +14,28 @@ class Aircraft:
         self.index = traffic.add_aircraft(call_sign, aircraft_type, flight_phase, lat, long, alt, heading, tas, weight, fuel_weight, payload_weight)        # Add aircraft. Obtain aircraft index
 
 
-    def __convert_tas_to_mps(tas):
-        # Convert True air speed to meter per second (1nm = 1852m, 1 hr = 3600s)
-        return tas * 1852 / 3600
+    def set_heading(self, heading):
+        "Set heading [deg]"
+        self.traffic.ap.heading[self.index] = heading
 
-    def set_ap_heading(self, ap_heading):
-        """Temporary function"""
-        
-        print("aircraft.py - set_ap_heading()", ap_heading)
+    def set_speed(self, speed):
+        """Set CAS [kt]"""
+        self.traffic.ap.cas[self.index] = speed
 
-        self.traffic.ap.heading[self.index] = ap_heading
+    def set_vs(self, vs):
+        """Set vs [ft/min]"""
+        self.traffic.ap.vs[self.index] = vs
 
-    def update(self):
-        """
-        Update an aircraft state for each timestep.
-        """
+    def set_alt(self, alt):
+        pass
 
-        print("aircraft.py - update()")
-        
-        self.traffic.update(self.index)
+    def set_direct(self, waypoint):
+        pass
+
+    def resume_own_navigation(self):
+        pass
+
+
 
 
     
