@@ -1,7 +1,7 @@
 from turtle import speed
 import numpy as np
 
-from simulation.utils.enums import AP_speed_mode, Flight_phase, Traffic_speed_mode
+from utils.enums import AP_speed_mode, Flight_phase, Traffic_speed_mode
 
 class Autopilot:
     """
@@ -47,22 +47,23 @@ class Autopilot:
     def update(self, speed_mode, cas, mach, alt, flight_phase):
         self.speed_mode = np.where(speed_mode == Traffic_speed_mode.CAS, 
                             np.select([self.cas < cas, self.cas == cas, self.cas > cas],
-                                      [AP_speed_mode.DECELERATE, AP_speed_mode.CONTANT_CAS, AP_speed_mode.ACCELERATE]),
+                                      [AP_speed_mode.DECELERATE, AP_speed_mode.CONSTANT_CAS, AP_speed_mode.ACCELERATE]),
                             np.select([self.mach < mach, self.mach == mach, self.mach > mach],
                                       [AP_speed_mode.DECELERATE, AP_speed_mode.CONSTANT_MACH, AP_speed_mode.ACCELERATE]))
 
         flight_phase = np.select(condlist=[
                                     self.alt > alt,
-                                    self.alt = alt,
+                                    self.alt == alt,
                                     self.alt < alt
                                 ],
                                 choicelist=[
                                     Flight_phase.CLIMB,
                                     Flight_phase.CRUISE,
-                                    Flight_phase.DESCEND
+                                    Flight_phase.DESCENT
                                 ])
         
 
     def update_fms(self):
+        pass
         # After transitions altitude, constant mach 
-        self.perf.get_procedure_speed(self.unit.feet_to_meter(self.alt), self.trans_alt, self.flight_phase)
+        # self.perf.get_procedure_speed(self.unit.feet_to_meter(self.alt), self.trans_alt, self.flight_phase)

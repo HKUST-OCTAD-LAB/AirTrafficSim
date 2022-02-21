@@ -362,115 +362,114 @@ class Performance:
         """
 
         # Get file name by searching in SYNONYM.NEW
-        try:
-            row = np.where(self.__SYNONYM['ACCODE'] == icao)[0][0]      # Get row index
-            file_name = self.__SYNONYM[row][5]
+        row = np.where(self.__SYNONYM['ACCODE'] == icao)[0][0]      # Get row index
+        file_name = self.__SYNONYM[row][5]
 
-            # Get data from Operations Performance File (Section 6.4)
-            OPF = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/', file_name+'.OPF'), delimiter=[3,2,2,13,13,13,13,11], dtype="U2,U1,U2,f8,f8,f8,f8,f8", comments="CC", autostrip=True, skip_header=16, skip_footer=1)
-
-            # 'CD', 3X, A6, 9X, I1, 12X, A9, 17X, A1 - aircraft type block - 1 data line
-            # | 'CD' | ICAO | # of engine | 'engines' | engine type ( Jet,  Turboprop  or  Piston) | wake category ( J (jumbo), H (heavy), M (medium) or L (light))
-            OPF_Actype = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/', file_name+'.OPF'), delimiter=[5,15,1,12,26,1], dtype="U2,U6,i1,U7,U9,U1", comments="CC", autostrip=True, max_rows=1)
-            self.__n_eng[n] = OPF_Actype.item()[2]
-            self.__engine_type[n] = {'Jet':1, 'Turboprop':2, 'Piston':3}.get(OPF_Actype.item()[4])
-            self.__wake_category[n] = {'J': 1, 'H':2, 'M':3, 'L': 4}.get(OPF_Actype.item()[5])
-            
-            # 'CD', 2X, 5 (3X, E10.5) - mass block - 1 data line
-            self.__m_ref[n] = OPF[0][3]
-            self.__m_min[n] = OPF[0][4]
-            self.__m_max[n] = OPF[0][5]
-            self.__m_pyld[n] = OPF[0][6]
-            self.__g_w[n] = OPF[0][7]
-
-            # 'CD', 2X, 5 (3X, E10.5) - flight envelope block - 1 data line
-            self.__v_mo[n] = OPF[1][3]
-            self.__m_mo[n] = OPF[1][4]
-            self.__h_mo[n] = OPF[1][5]
-            self.__h_max[n] = OPF[1][6]
-            self.__g_t[n] = OPF[1][7]
-
-            # 'CD', 2X, 4 (3X, E10.5) - aerodynamic block - 12 data lines
-            self.__S[n] = OPF[2][3]
-            self.__c_lbo[n] = OPF[2][4]
-            self.__k[n] = OPF[2][5]
-            # __c_m16 is removed from drag expression
-
-            self.__v_stall_cr[n] = OPF[3][4]
-            self.__c_d0_cr[n] = OPF[3][5]
-            self.__c_d2_cr[n] = OPF[3][6]
-
-            self.__v_stall_ic[n] = OPF[4][4] 
-            # self.__c_d0_ic[n] = OPF[3][5]     TODO: Initial climb not used?
-            # self.__c_d2_ic[n] = OPF[3][6]     TODO: Initial climb not used?
-
-            self.__v_stall_to[n] = OPF[5][4]
-            # self.__c_d0_to[n] = OPF[5][5]     TODO: Initial climb not used?
-            # self.__c_d2_to[n] = OPF[5][6]     TODO: Initial climb not used?
-
-            self.__v_stall_ap[n] = OPF[6][4]
-            self.__c_d0_ap[n] = OPF[6][5]
-            self.__c_d2_ap[n] = OPF[6][6]
-
-            self.__v_stall_ld[n] = OPF[7][4]
-            self.__c_d0_ld[n] = OPF[7][5]
-            self.__c_d2_ld[n] = OPF[7][6]
-
-            self.__c_d0_ldg[n] = OPF[11][5]
-
-            # 'CD', 2X, 5 (3X, E10.5) - engine thrust block - 3 data lines
-            self.__c_tc_1[n] = OPF[14][3]
-            self.__c_tc_2[n] = OPF[14][4]
-            self.__c_tc_3[n] = OPF[14][5]
-            self.__c_tc_4[n] = OPF[14][6]
-            self.__c_tc_5[n] = OPF[14][7]
-
-            self.__c_tdes_low[n] = OPF[15][3]
-            self.__c_tdes_high[n] = OPF[15][4]
-            self.__h_p_des[n] = OPF[15][5]
-            self.__c_tdes_app[n] = OPF[15][6]
-            self.__c_tdes_ld[n] = OPF[15][7]
-
-            self.__v_des_ref[n] = OPF[16][3]
-            self.__m_des_ref[n] = OPF[16][4]
-
-            # 'CD', 2X, 2 (3X, E10.5) - fuel consumption block - 3 data lines
-            self.__c_f1[n] = OPF[17][3]
-            self.__c_f2[n] = OPF[17][4]
-
-            self.__c_f3[n] = OPF[18][3]
-            self.__c_f4[n] = OPF[18][4]
-
-            self.__c_fcr[n] = OPF[19][3]
-            
-            # 'CD', 2X, 4 (3X, E10.5) - ground movement block - 1 data line
-            self.__tol[n] = OPF[20][3]
-            self.__ldl[n] = OPF[20][4]
-            self.__span[n] = OPF[20][5]
-            self.__length[n] = OPF[20][6]
-
-            # Delete variable to free memory
-            del OPF_Actype
-            del OPF
-
-            # Get data from Airlines Procedures File (Section 6.5)
-            # 'CD', 25X, 2(I3, 1X), I2, 10X, 2(Ix, 1X), I2, 2X, I2, 2(1X, I3) - procedures specification block - 3 dataline
-            APF = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/', file_name+'.APF'), delimiter=[6,8,9,4,4,4,3,5,4,4,4,4,3,4,4,5,4,4,4,5,7], dtype="U2,U7,U7,U2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,U6", comments="CC", autostrip=True)
-            self.__v_cl_1[n] = APF[mass][4]
-            self.__v_cl_2[n] = APF[mass][5]
-            self.__m_cl[n] = APF[mass][6]/100
-            self.__v_cr_1[n] = APF[mass][9]
-            self.__v_cr_2[n] = APF[mass][10]
-            self.__m_cr[n] = APF[mass][11]/100
-            self.__m_des[n] = APF[mass][12]/100
-            self.__v_des_2[n] = APF[mass][13]
-            self.__v_des_1[n] = APF[mass][14]
-
-            # Delete variable to free memory
-            del APF
-
-        except:
+        if(not file_name):
             print("No aircraft in SYNONYM.NEW")
+
+        # Get data from Operations Performance File (Section 6.4)
+        OPF = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/', file_name+'.OPF'), delimiter=[3,2,2,13,13,13,13,11], dtype="U2,U1,U2,f8,f8,f8,f8,f8", comments="CC", autostrip=True, skip_header=16, skip_footer=1)
+
+        # 'CD', 3X, A6, 9X, I1, 12X, A9, 17X, A1 - aircraft type block - 1 data line
+        # | 'CD' | ICAO | # of engine | 'engines' | engine type ( Jet,  Turboprop  or  Piston) | wake category ( J (jumbo), H (heavy), M (medium) or L (light))
+        OPF_Actype = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/', file_name+'.OPF'), delimiter=[5,15,1,12,26,1], dtype="U2,U6,i1,U7,U9,U1", comments="CC", autostrip=True, max_rows=1)
+        self.__n_eng[n] = OPF_Actype.item()[2]
+        self.__engine_type[n] = {'Jet':1, 'Turboprop':2, 'Piston':3}.get(OPF_Actype.item()[4])
+        self.__wake_category[n] = {'J': 1, 'H':2, 'M':3, 'L': 4}.get(OPF_Actype.item()[5])
+        
+        # 'CD', 2X, 5 (3X, E10.5) - mass block - 1 data line
+        self.__m_ref[n] = OPF[0][3]
+        self.__m_min[n] = OPF[0][4]
+        self.__m_max[n] = OPF[0][5]
+        self.__m_pyld[n] = OPF[0][6]
+        self.__g_w[n] = OPF[0][7]
+
+        # 'CD', 2X, 5 (3X, E10.5) - flight envelope block - 1 data line
+        self.__v_mo[n] = OPF[1][3]
+        self.__m_mo[n] = OPF[1][4]
+        self.__h_mo[n] = OPF[1][5]
+        self.__h_max[n] = OPF[1][6]
+        self.__g_t[n] = OPF[1][7]
+
+        # 'CD', 2X, 4 (3X, E10.5) - aerodynamic block - 12 data lines
+        self.__S[n] = OPF[2][3]
+        self.__c_lbo[n] = OPF[2][4]
+        self.__k[n] = OPF[2][5]
+        # __c_m16 is removed from drag expression
+
+        self.__v_stall_cr[n] = OPF[3][4]
+        self.__c_d0_cr[n] = OPF[3][5]
+        self.__c_d2_cr[n] = OPF[3][6]
+
+        self.__v_stall_ic[n] = OPF[4][4] 
+        # self.__c_d0_ic[n] = OPF[3][5]     TODO: Initial climb not used?
+        # self.__c_d2_ic[n] = OPF[3][6]     TODO: Initial climb not used?
+
+        self.__v_stall_to[n] = OPF[5][4]
+        # self.__c_d0_to[n] = OPF[5][5]     TODO: Initial climb not used?
+        # self.__c_d2_to[n] = OPF[5][6]     TODO: Initial climb not used?
+
+        self.__v_stall_ap[n] = OPF[6][4]
+        self.__c_d0_ap[n] = OPF[6][5]
+        self.__c_d2_ap[n] = OPF[6][6]
+
+        self.__v_stall_ld[n] = OPF[7][4]
+        self.__c_d0_ld[n] = OPF[7][5]
+        self.__c_d2_ld[n] = OPF[7][6]
+
+        self.__c_d0_ldg[n] = OPF[11][5]
+
+        # 'CD', 2X, 5 (3X, E10.5) - engine thrust block - 3 data lines
+        self.__c_tc_1[n] = OPF[14][3]
+        self.__c_tc_2[n] = OPF[14][4]
+        self.__c_tc_3[n] = OPF[14][5]
+        self.__c_tc_4[n] = OPF[14][6]
+        self.__c_tc_5[n] = OPF[14][7]
+
+        self.__c_tdes_low[n] = OPF[15][3]
+        self.__c_tdes_high[n] = OPF[15][4]
+        self.__h_p_des[n] = OPF[15][5]
+        self.__c_tdes_app[n] = OPF[15][6]
+        self.__c_tdes_ld[n] = OPF[15][7]
+
+        self.__v_des_ref[n] = OPF[16][3]
+        self.__m_des_ref[n] = OPF[16][4]
+
+        # 'CD', 2X, 2 (3X, E10.5) - fuel consumption block - 3 data lines
+        self.__c_f1[n] = OPF[17][3]
+        self.__c_f2[n] = OPF[17][4]
+
+        self.__c_f3[n] = OPF[18][3]
+        self.__c_f4[n] = OPF[18][4]
+
+        self.__c_fcr[n] = OPF[19][3]
+        
+        # 'CD', 2X, 4 (3X, E10.5) - ground movement block - 1 data line
+        self.__tol[n] = OPF[20][3]
+        self.__ldl[n] = OPF[20][4]
+        self.__span[n] = OPF[20][5]
+        self.__length[n] = OPF[20][6]
+
+        # Delete variable to free memory
+        del OPF_Actype
+        del OPF
+
+        # Get data from Airlines Procedures File (Section 6.5)
+        # 'CD', 25X, 2(I3, 1X), I2, 10X, 2(Ix, 1X), I2, 2X, I2, 2(1X, I3) - procedures specification block - 3 dataline
+        APF = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/', file_name+'.APF'), delimiter=[6,8,9,4,4,4,3,5,4,4,4,4,3,4,4,5,4,4,4,5,7], dtype="U2,U7,U7,U2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,U6", comments="CC", autostrip=True)
+        self.__v_cl_1[n] = APF[mass_class][4]
+        self.__v_cl_2[n] = APF[mass_class][5]
+        self.__m_cl[n] = APF[mass_class][6]/100
+        self.__v_cr_1[n] = APF[mass_class][9]
+        self.__v_cr_2[n] = APF[mass_class][10]
+        self.__m_cr[n] = APF[mass_class][11]/100
+        self.__m_des[n] = APF[mass_class][12]/100
+        self.__v_des_2[n] = APF[mass_class][13]
+        self.__v_des_1[n] = APF[mass_class][14]
+
+        # Delete variable to free memory
+        del APF
 
     
         # Initialize procedure speed
@@ -623,9 +622,9 @@ class Performance:
         """
         return np.select(
                     condlist=[
-                            flight_phase <= Flight_phase.CLIMB | (flight_phase == Flight_phase.CRUISE & ap_speed_mode == AP_speed_mode.ACCELERATE),
-                            flight_phase == Flight_phase.CRUISE & (ap_speed_mode == AP_speed_mode.CONTANT_CAS | ap_speed_mode == AP_speed_mode.CONSTANT_MACH),
-                            flight_phase >= Flight_phase.DESCENT | (flight_phase == Flight_phase.CRUISE & ap_speed_mode == AP_speed_mode.DECELERATE)],
+                            (flight_phase <= Flight_phase.CLIMB) | ((flight_phase == Flight_phase.CRUISE) & (ap_speed_mode == AP_speed_mode.ACCELERATE)),
+                            (flight_phase == Flight_phase.CRUISE) & ((ap_speed_mode == AP_speed_mode.CONSTANT_CAS) | (ap_speed_mode == AP_speed_mode.CONSTANT_MACH)),
+                            (flight_phase >= Flight_phase.DESCENT) | ((flight_phase == Flight_phase.CRUISE) & (ap_speed_mode == AP_speed_mode.DECELERATE))],
                     choicelist=[
                         self.__cal_max_climb_to_thrust(H_p, V_tas, d_T),                                                       
                         np.minimum(drag, self.__cal_max_cruise_thrust(self.__cal_max_climb_to_thrust(H_p, V_tas, d_T))),         #max climb thrust when acceleration, T = D at cruise, but limited at max cruise thrust
@@ -692,8 +691,8 @@ class Performance:
                         # If below or equal Geopotential pressure altitude of tropopause (Equation 3.1-18)
                         self.__P_0 * np.power((T - d_T) / self.__T_0, -self.__G_0/(self.__BETA_T_BELOW_TROP * self.__R)),
                         # If above Geopotential pressure altitude of tropopause (Equation 3.1-20)
-                        self.cal_air_pressure(self.__H_P_TROP, self.cal_temperature(self.__H_P_TROP, d_T), d_T) \
-                             * np.exp(-self.__G_0/(self.__R * self.cal_temperature(self.__H_P_TROP,0.0)) * (H_p - self.__H_P_TROP))
+                        self.__P_0 * np.power((self.cal_temperature(self.__H_P_TROP, d_T) - d_T) / self.__T_0, -self.__G_0/(self.__BETA_T_BELOW_TROP * self.__R)) \
+                            * np.exp(-self.__G_0/(self.__R * self.cal_temperature(self.__H_P_TROP, 0.0)) * (H_p - self.__H_P_TROP))
                         )
 
     
@@ -846,15 +845,15 @@ class Performance:
         ----
         Transition altitude is defined to be the geopotential pressure altitude at which V_CAS and M represent the same TAS value.
         """
-        __p_trans = self.__P_0 * (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(V_cas/self.__A_0), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0) \
+        p_trans = self.__P_0 * (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(V_cas/self.__A_0), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0) \
                     / (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0)       #Equation 3.1-28
-        __p_trop = self.cal_air_pressure(self.__H_P_TROP, self.cal_temperature(self.__H_P_TROP, d_T),d_T)
+        p_trop = self.cal_air_pressure(self.__H_P_TROP, self.cal_temperature(self.__H_P_TROP, d_T),d_T)
 
-        return np.where(__p_trans >= __p_trop,
+        return np.where(p_trans >= p_trop,
                 # If __p_trans >= __p_trop
-                self.__T_0/self.__BETA_T_BELOW_TROP * (np.power(__p_trans/self.__P_0, -self.__BETA_T_BELOW_TROP*self.__R/self.__G_0) - 1),
+                self.__T_0/self.__BETA_T_BELOW_TROP * (np.power(p_trans/self.__P_0, -self.__BETA_T_BELOW_TROP*self.__R/self.__G_0) - 1),
                 # __p_trans < __p_trop
-                self.__H_P_TROP - self.__R*self.cal_temperature(self.__H_P_TROP,0.0)/self.__G_0 * np.log(__p_trans/__p_trop))
+                self.__H_P_TROP - self.__R*self.cal_temperature(self.__H_P_TROP,0.0)/self.__G_0 * np.log(p_trans/p_trop))
 
 
     # ----------------------------  Total-Energy Model Section 3.2 -----------------------------------------
@@ -1063,7 +1062,7 @@ class Performance:
         Returns
         -------
         h_max/act: float[]
-            Actual maximum altitude for any given mass [kg]
+            Actual maximum altitude for any given mass [ft]
         """
         return np.where(self.__h_max == 0, 
             # If h_max in OPF file is zero, maximum altitude is always h_MO
@@ -1134,18 +1133,17 @@ class Performance:
         c_L = 2.0 * m * self.__G_0 / rho / np.square(V_tas) / self.__S / np.cos(np.deg2rad(bank_angle))
         
         # Drag coefficient (Equation3.6-2~4)
-        c_D = np.select([flight_phase != Flight_phase.APPROACH & flight_phase != Flight_phase.LANDING, 
-                         flight_phase == Flight_phase.APPROACH, 
+        c_D = np.select(condlist=[flight_phase == Flight_phase.APPROACH, 
                          flight_phase == Flight_phase.LANDING],
 
-                        [self.__c_d0_cr + self.__c_d2_cr * np.square(c_L),  # All flight phases except for approach and landing. (Equation 3.6-2)
-                         np.where(self.__c_d2_ap != 0,       # Approach phase
+                        choicelist=[np.where(self.__c_d2_ap != 0,                              # Approach phase
                             self.__c_d0_ap + self.__c_d2_ap * np.square(c_L),       # If c_d0_ap / c_d2_ap are NOT set to 0 (Equation 3.6-3)
                             self.__c_d0_cr + self.__c_d2_cr * np.square(c_L)),      # If c_d0_ap / c_d2_ap are  set to 0 (Equation 3.6-2)
                          np.where(self.__c_d2_ld != 0,      # Landing phase
                             self.__c_d0_ld + self.__c_d0_ldg + self.__c_d2_ld * np.square(c_L),     # If c_d0_ld / c_d2_ld are NOT set to 0 (Equation 3.6-4)
                             self.__c_d0_cr + self.__c_d2_cr * np.square(c_L))                       # If c_d0_ld / c_d2_ld are set to 0 (Equation 3.6-2)
-                        ]
+                        ],
+                        default=self.__c_d0_cr + self.__c_d2_cr * np.square(c_L),  # All flight phases except for approach and landing. (Equation 3.6-2)
                 )
 
         # Drag force
@@ -1222,7 +1220,7 @@ class Performance:
                                       ])
 
         # Corrected for temperature deviation from ISA
-        return thr_max_climb_isa * (1.0 - np.clip(self.__c_tc_5, 0.0, None) * np.clip(d_T-self.__c_tc_4, 0.0, 0.4/np.clip(self.__c_tc_5, 0.0001, None)))
+        return thr_max_climb_isa * (1.0 - np.clip(np.clip(self.__c_tc_5, 0.0, None) * (d_T-self.__c_tc_4), 0.0, 0.4))
 
 
     def __cal_max_cruise_thrust(self, Thr_max_climb):
@@ -1429,7 +1427,7 @@ class Performance:
             Index of performance array.
         """
         # Actual stall speed for takeoff
-        v_stall_to_act = self.__cal_operating_speed(m, self.__v_stall_to)
+        v_stall_to_act = self.__cal_operating_speed(m, self.__v_stall_to)[n]
         # Standard climb schedule
         if (self.__engine_type[n] == Engine_type.JET):
             # If Jet (Equation 4.1-1~5)
@@ -1441,7 +1439,7 @@ class Performance:
                                         np.minimum(self.__v_cl_1[n], 250), self.__v_cl_2[n], self.__m_cl[n], 0.0, 0.0]
 
         # Standard cruise schedule
-        if (self.__engine_type == Engine_type.JET):
+        if (self.__engine_type[n] == Engine_type.JET):
             # If Jet
             self.__cruise_schedule[n] = [np.minimum(self.__v_cr_1[n], 170), np.minimum(self.__v_cr_1[n], 220), np.minimum(self.__v_cr_1[n], 250), self.__v_cr_2[n], self.__m_cr[n]]
         else:
@@ -1449,9 +1447,9 @@ class Performance:
             self.__cruise_schedule[n] =  [np.minimum(self.__v_cr_1[n], 150), np.minimum(self.__v_cr_1[n], 180), np.minimum(self.__v_cr_1[n], 250), self.__v_cr_2[n], self.__m_cr[n]]
 
         # Actual stall speed for landing TODO: consider fuel mass?
-        v_stall_ld_act = self.__cal_operating_speed(m, self.__v_stall_ld)
+        v_stall_ld_act = self.__cal_operating_speed(m, self.__v_stall_ld)[n]
         # Standard descent schedule
-        if (self.__engine_type != Engine_type.PISTON):
+        if (self.__engine_type[n] != Engine_type.PISTON):
             # If Jet and Turboprop (Equation 4.3-1~4)
             self.__descent_schedule[n] = [self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_1, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_2, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_3,
                                           self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_4, np.minimum(self.__v_des_1[n], 220), np.minimum(self.__v_des_1[n], 250), self.__v_des_2[n], self.__m_des[n]]
@@ -1626,7 +1624,7 @@ class Performance:
         bank_angles :float 
             Bank angles [deg]
         """
-        return np.where(flight_phase == Flight_phase.TAKEOFF | flight_phase == Flight_phase.LANDING, self.__PHI_NORM_CIV_TOLD, self.__PHI_NORM_CIV_OTHERS)
+        return np.where((flight_phase == Flight_phase.TAKEOFF) | (flight_phase == Flight_phase.LANDING), self.__PHI_NORM_CIV_TOLD, self.__PHI_NORM_CIV_OTHERS)
 
     def cal_expedite_descend_factor(self, expedite_descent):
         """

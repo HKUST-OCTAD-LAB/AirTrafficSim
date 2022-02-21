@@ -11,7 +11,7 @@ class Unit_conversion:
     @staticmethod
     def mps_to_knots(mps):
         """Convert m/s to knots (1nm/h)"""
-        return mps * 0.514444444
+        return mps / 0.514444444
 
     @staticmethod
     def nm_to_meter(nm):

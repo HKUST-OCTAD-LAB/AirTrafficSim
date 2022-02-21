@@ -5,10 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Simulation Module",
+            "name": "Python: Simulation",
             "type": "python",
             "request": "launch",
-            "module": "simulation"
-        }
+            "program": "simulation",
+            "args" : ["--headless"]
+        },
+        // {
+        //     "name": "Python: Simulation Module",
+        //     "type": "python",
+        //     "request": "launch",
+        //     "module": "simulation"
+        // }
     ]
 }
