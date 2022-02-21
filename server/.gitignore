@@ -13,3 +13,4 @@
 .env
 
 data/csv/*
+data/simulation/*

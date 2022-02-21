@@ -28,6 +28,10 @@ class Wake_category(Enum):
     L = 4
 
 
+class Traffic_speed_mode(Enum):
+    CAS = 1,
+    MACH = 2
+
 class AP_speed_mode(Enum):
     CONSTANT_MACH = 1,
     CONTANT_CAS = 2,

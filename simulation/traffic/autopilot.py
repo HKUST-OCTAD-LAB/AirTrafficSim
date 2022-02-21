@@ -1,4 +1,7 @@
+from turtle import speed
 import numpy as np
+
+from simulation.utils.enums import AP_speed_mode, Flight_phase, Traffic_speed_mode
 
 class Autopilot:
     """
@@ -18,8 +21,6 @@ class Autopilot:
 
         # Target speed
         self.cas = np.zeros([N])                                # Autopilot target calibrated air speed [knots]
-        self.ias = np.zeros([N])                                # Autopilot target indicated air speed [knots] TODO: in use?
-        self.tas = np.zeros([N])                                # Autopilot target true air speed [knots] TODO: in use?
         self.mach = np.zeros([N])                               # Autopilot target Mach number [dimensionless]
 
         # Target vertical speed
@@ -39,12 +40,29 @@ class Autopilot:
         self.speed_mode = np.zeros([N])                         # Autopilot speed mode [1: constant Mach, 2: constant CAS, 3: accelerate, 4: decelerate]
         self.auto_throttle_mode = np.zeros([N])                 # Autothrottle m,ode [1: Speed, 2: Thrust]
         self.vertical_mode = np.zeros([N])                      # Autopilot vertical mode [1: alt hold, 2: vs mode, 3: flc mode (flight level change), 4. VNAV]
-        self.lateral_mode = np.zeros([N])                       # Autopilot lateral mode [1: heading, 2: track angle, 3: LNAV]
+        self.lateral_mode = np.zeros([N])                       # Autopilot lateral mode [1: heading, 2: track angle, 3: LNAV] ATC only use heading, LNAV -> track angle
         self.expedite_descent = np.zeros([N], dtype=bool)       # Autopilot expedite climb setting [bool]
 
 
-    def update(self):
-        pass
+    def update(self, speed_mode, cas, mach, alt, flight_phase):
+        self.speed_mode = np.where(speed_mode == Traffic_speed_mode.CAS, 
+                            np.select([self.cas < cas, self.cas == cas, self.cas > cas],
+                                      [AP_speed_mode.DECELERATE, AP_speed_mode.CONTANT_CAS, AP_speed_mode.ACCELERATE]),
+                            np.select([self.mach < mach, self.mach == mach, self.mach > mach],
+                                      [AP_speed_mode.DECELERATE, AP_speed_mode.CONSTANT_MACH, AP_speed_mode.ACCELERATE]))
+
+        flight_phase = np.select(condlist=[
+                                    self.alt > alt,
+                                    self.alt = alt,
+                                    self.alt < alt
+                                ],
+                                choicelist=[
+                                    Flight_phase.CLIMB,
+                                    Flight_phase.CRUISE,
+                                    Flight_phase.DESCEND
+                                ])
+        
 
     def update_fms(self):
-        pass
+        # After transitions altitude, constant mach 
+        self.perf.get_procedure_speed(self.unit.feet_to_meter(self.alt), self.trans_alt, self.flight_phase)

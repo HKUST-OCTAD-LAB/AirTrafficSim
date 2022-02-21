@@ -5,7 +5,7 @@ from traffic.autopilot import Autopilot
 from traffic.weather import Weather
 from traffic.performance import Performance
 from utils.unit import Unit_conversion
-from utils.enums import Flight_phase, Engine_type, Wake_category, AP_speed_mode, AP_throttle_mode, AP_vertical_mode
+from utils.enums import Flight_phase, Engine_type, Traffic_speed_mode, Wake_category, AP_speed_mode, AP_throttle_mode, AP_vertical_mode
 
 class Traffic:
 
@@ -49,8 +49,6 @@ class Traffic:
         """Bank angle [deg]"""
 
         # Speed
-        self.ias = np.zeros([N])                                
-        """Indicated air speed [knot]"""
         self.cas = np.zeros([N])                                
         """Calibrated air speed [knot]"""
         self.d_cas = np.zeros([N])                              
@@ -63,6 +61,10 @@ class Traffic:
         """Ground speed - East [knot]  """
         self.mach = np.zeros([N])                               
         """Mach number [dimensionless]"""
+        self.speed_mode = np.zeros([N])
+        """Speed mode [Traffic.speed_mode enum 1: CAS, 2: MACH]"""
+        self.accel = np.zeros([N])
+        """Acceleration [m/s^2]"""
 
         # Vertical speed
         self.vs = np.zeros([N])                                 
@@ -93,11 +95,9 @@ class Traffic:
         """Autopilot class"""
         self.weather = Weather(N)                               
         """Weather class"""
-        self.unit = Unit_conversion()                
-        """Unit conversion utils class"""
 
     
-    def add_aircraft(self, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, tas, weight, fuel_weight, payload_weight):
+    def add_aircraft(self, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, tas, mass, fuel_weight, payload_weight):
         """
         Add an aircraft to traffic array.
 
@@ -130,12 +130,12 @@ class Traffic:
         self.alt[n] = alt
         self.heading[n] = heading
         self.tas[n] = tas
-        self.weight[n] = weight
+        self.mass[n] = mass
         self.fuel_weight[n] = fuel_weight
         self.payload_weight[n] = payload_weight
 
         # Add aircraft in performance array
-        self.perf.add_aircraft(aircraft_type, n)
+        self.perf.add_aircraft(aircraft_type, n, mass)
         
         # Increase aircraft count
         self.n = self.n + 1
@@ -158,7 +158,7 @@ class Traffic:
         self.alt[n] = 0
         self.heading[n] = 0
         self.tas[n] = 0
-        self.weight[n] = 0
+        self.mass[n] = 0
         self.fuel_weight[n] = 0
         self.payload_weight[n] = 0
           
@@ -180,21 +180,29 @@ class Traffic:
         """
 
         print("Traffic.py - update()")
+
         # Update atmosphere
         self.weather.update(self.perf)
 
-        # Procedure
-        self.trans_alt = self.perf.cal_transition_alt(self.unit.knots_to_mps(self.cas), self.mach, self.weather.d_T)
-        # After transiiont altitude, constant mach 
-        self.perf.get_procedure_speed(self.unit.feet_to_meter(self.alt), self.trans_alt, self.flight_phase)
-        # Auto pilot target speed
+        # Ceiling
+        max_alt = self.perf.cal_maximum_altitude(self.weather.d_T, self.mass)   # TODO: calculate only once
+        # min_speed = self.perf.cal_minimum_speed(self.flight_phase)
+        # max_d_tas = self.perf.cal_max_d_tas(d_t)
+        # max_d_rocd = self.perf.cal_max_d_rocd(d_t, self.unit.knots_to_mps(self.d_cas), tas, self.unit.ftpm_to_mps(self.vs))
 
-        # Bank angle and Heading
-        diff = np.mod(self.ap.heading - self.heading + 180.0, 360.0) - 180.0  
+        # Transition altitude
+        self.trans_alt = self.perf.cal_transition_alt(self.unit.knots_to_mps(self.cas), self.mach, self.weather.d_T)
+        self.speed_mode = np.where(self.alt < self.trans_alt, Traffic_speed_mode.CAS, Traffic_speed_mode.MACH)
+
+        # Update autopilot
+        self.ap.update(self.speed_mode, self.cas, self.mach, self.alt, self.flight_phase)
+
+        # Bank angle
+        d_heading = np.mod(self.ap.heading - self.heading + 180.0, 360.0) - 180.0  
         self.bank_angle = np.select(condlist=[
-                                        diff == 0.0,
-                                        diff > 0,
-                                        diff < 0,
+                                        d_heading == 0.0,
+                                        d_heading > 0,
+                                        d_heading < 0,
                                     ],
                                     choicelist=[
                                         0.0,
@@ -202,8 +210,62 @@ class Traffic:
                                         np.negative(self.perf.get_nominal_bank_angles(self.flight_phase))       # Turn left
                                     ]
                                 )
-        rate_of_turn = self.perf.cal_rate_of_turn(self.bank_angle, self.unit.knots_to_mps(self.tas))
-        self.heading = np.where(np.abs(diff) < rate_of_turn, self.ap.heading, self.heading + rate_of_turn)
+                                
+        tas = Unit_conversion.knots_to_mps(self.tas)
+
+        # Drag and Thrust
+        self.drag = self.perf.cal_aerodynamic_drag(tas, self.bank_angle, self.mass, self.weather.rho, self.flight_phase, self.perf.cal_expedite_descend_factor(self.ap.expedite_descent))
+        self.thrust = self.perf.cal_thrust(self.flight_phase, self.alt, self.tas, self.weather.d_T, self.drag, self.ap.speed_mode)
+
+        # Total Energy Model
+        self.esf = self.perf.cal_energy_share_factor(self.alt, self.weather.T, self.weather.d_T, self.mach, self.ap.speed_mode, self.flight_phase)      # Energy share factor 
+        rocd = self.perf.cal_tem_rocd(self.weather.T, self.weather.d_T, self.mass, self.drag, self.esf, self.thrust, tas, self.perf.cal_reduced_climb_power(self.mass, self.alt, max_alt))
+        self.vs = Unit_conversion.mps_to_ftpm(rocd)
+        self.accel = np.where(self.ap.speed_mode == AP_speed_mode.ACCELERATE | self.ap.speed_mode == AP_speed_mode.DECELERATE,
+                                self.perf.cal_tem_accel(self.weather.T, self.weather.d_T, self.mass, self.drag, rocd, self.thrust, tas),
+                                0.0)
+        
+        tas = tas + self.accel
+        self.tas = Unit_conversion.mps_to_knots(tas)
+
+        # Air Speed
+        # self.tas = self.perf.cas_to_tas(self.cas, self.weather.p, self.weather.rho)
+        self.mach = self.perf.tas_to_mach(Unit_conversion.knots_to_mps(self.tas), self.weather.T)       
+        self.cas = Unit_conversion.mps_to_knots(self.perf.tas_to_cas(Unit_conversion.knots_to_mps(self.tas), self.weather.p, self.weather.rho))
+
+        # Bound to autopilot
+        self.mach = np.select(condlist=[
+                                self.speed_mode == Traffic_speed_mode.MACH & self.ap.speed_mode == AP_speed_mode.ACCELERATE,
+                                self.speed_mode == Traffic_speed_mode.MACH & self.ap.speed_mode == AP_speed_mode.DECELERATE
+                            ],
+                            choicelist=[
+                                np.where(self.mach > self.ap.mach, self.ap.mach, self.mach),
+                                np.where(self.mach < self.ap.mach, self.ap.mach, self.mach)
+                            ],
+                            default=self.mach)
+
+        self.cas = np.select(condlist=[
+                                self.speed_mode == Traffic_speed_mode.CAS & self.ap.speed_mode == AP_speed_mode.ACCELERATE,
+                                self.speed_mode == Traffic_speed_mode.CAS & self.ap.speed_mode == AP_speed_mode.DECELERATE
+                            ],
+                            choicelist=[
+                                np.where(self.cas > self.ap.cas, self.ap.cas, self.cas),
+                                np.where(self.cas < self.ap.cas, self.ap.cas, self.cas)
+                            ],
+                            default=self.cas)
+
+        self.tas = np.select(condlist=[
+                                self.ap.speed_mode == AP_speed_mode.CONSTANT_MACH,
+                                self.ap.speed_mode == AP_speed_mode.CONTANT_CAS
+                            ],
+                            choicelist=[
+                                self.perf.mach_to_tas(self.mach, self.weather.T),
+                                self.perf.cas_to_tas(self.cas, self.weather.p, self.weather.rho)
+                            ])              
+
+        # Heading
+        rate_of_turn = self.perf.cal_rate_of_turn(self.bank_angle, Unit_conversion.knots_to_mps(self.tas))
+        self.heading = np.where(np.abs(d_heading) < rate_of_turn, self.ap.heading, self.heading + rate_of_turn)
         self.heading = np.select(condlist=[
                                     self.heading > 360.0,
                                     self.heading < 0.0
@@ -213,48 +275,6 @@ class Traffic:
                                     self.heading + 360.0
                                 ],
                                 default=self.heading)
-
-        # Drag and Thrust
-        self.drag = self.perf.cal_aerodynamic_drag(self.tas, self.bank_angle, self.mass, self.weather.rho, self.flight_phase, self.perf.cal_expedite_descend_factor(self.ap.expedite_descent))
-       
-        self.thrust = np.select(condlist=[
-                                    self.flight_phase <= Flight_phase.CLIMB,
-                                    self.flight_phase == Flight_phase.CRUISE,
-                                    self.flight_phase >= Flight_phase.DESCENT],
-                                choicelist=[
-                                    self.perf.cal_max_climb_to_thrust(self.alt, self.tas, self.weather.d_T),
-                                    np.minimum(self.drag, self.perf.cal_max_cruise_thrust(self.perf.cal_max_climb_to_thrust(self.alt, self.tas, self.weather.d_T))),         #T = D at cruise, but limited at max cruise thrust
-                                        self.perf.cal_descent_thrust(self.alt, self.perf.cal_max_climb_to_thrust(self.alt, self.tas, self.weather.d_T), self.configuration)])
-
-        # Total Energy Model
-        self.esf = self.perf.cal_energy_share_factor(self.alt, self.weather.T, self.weather.d_T, self.mach, self.ap.speed_mode, self.flight_phase)      # Energy share factor
-
-        # Thrust mode
-        # self.thrust = self.perf.cal_tem_thrust(self.weather.T, self.weather.d_T, self.drag, self.mass, self.esf, self.unit.feet_to_meter(self.vs), self.unit.knots_to_mps(self.tas))      #TODO: VNAV?
-
-        # Speed mode
-        self.vs = np.where(self.ap.vertical_mode == AP_vertical_mode.FLC,
-                            Unit_conversion.mps_to_ftpm(self.perf.cal_tem_rocd(self.weather.T, self.weather.d_T, self.mass, self.drag, self.esf, self.thrust, self.unit.knots_to_mps(self.tas), self.perf.cal_reduced_climb_power(self.mass, self.alt, max_alt))),
-                            self.vs)
-
-        self.tas = np.where(self.ap.vertical_mode == AP_vertical_mode.VS, 
-                            Unit_conversion.mps_to_knots(self.perf.cal_tem_speed(self.weather.T, self.weather.d_T, self.mass, self.drag, self.esf, self.unit.ftpm_to_mps(self.vs), self.thrust)),
-                            self.tas)
-
-        # Ceiling
-        max_alt = self.perf.cal_maximum_altitude(self.weather.d_T, self.mass)   # TODO: calculate only once
-        min_speed = self.perf.cal_minimum_speed(self.flight_phase)
-        max_d_tas = self.perf.cal_max_d_tas(d_t)
-        max_d_rocd = self.perf.cal_max_d_rocd(d_t, self.unit.knots_to_mps(self.d_cas), self.unit.knots_to_mps(self.tas), self.unit.ftpm_to_mps(self.vs))
-
-
-        # Air Speed
-        self.tas = self.perf.cas_to_tas(self.cas, self.weather.p, self.weather.rho)
-        self.mach = self.perf.tas_to_mach(self.tas, self.weather.T)       
-        self.cas = Unit_conversion.mps_to_knots(self.perf.tas_to_cas(self.tas, self.weather.p, self.weather.rho))
-
-        # Fuel                  
-        self.fuel_weight = self.fuel_weight - self.perf.update_fuel(self.flight_phase, self.tas, self.thrust, self.alt) 
         
         # Ground speed
         self.gs_north = self.tas * np.cos(np.deg2rad(self.heading)) + self.weather.wind_north
@@ -264,6 +284,10 @@ class Traffic:
         self.lat = self.lat + self.gs_north / 216000.0
         self.long = self.long + self.gs_east / 216000.0
         self.alt = self.alt + self.vs / 60.0
+        self.alt = np.where(self.alt - self.ap.alt > self.vs/60.0, self.ap.alt, self.alt)
+
+        # Fuel                  
+        self.fuel_weight = self.fuel_weight - self.perf.update_fuel(self.flight_phase, self.tas, self.thrust, self.alt) 
 
 
     def save(self, writer, time):
