@@ -51,8 +51,6 @@ class Traffic:
         # Speed
         self.cas = np.zeros([N])                                
         """Calibrated air speed [knot]"""
-        self.d_cas = np.zeros([N])                              
-        """Delta velocity [knot]"""
         self.tas = np.zeros([N])                                
         """True air speed [knot]"""
         self.gs_north = np.zeros([N])                           
@@ -83,6 +81,8 @@ class Traffic:
         # Weight and balance TODO: improve the variables
         self.mass = np.zeros([N])                               
         """Aircraft mass [kg]"""
+        self.empty_weight = np.zeros(([N]))
+        """Empty weight [kg]"""
         self.fuel_weight = np.zeros([N])                        
         """Fuel weight [kg]"""
         self.payload_weight = np.zeros([N])                     
@@ -141,6 +141,7 @@ class Traffic:
         self.tas[n] = Unit_conversion.mps_to_knots(self.perf.cas_to_tas(Unit_conversion.knots_to_mps(cas), self.weather.p[n], self.weather.rho[n]))
         self.mach[n] = self.perf.tas_to_mach(Unit_conversion.knots_to_mps(self.tas[n]), self.weather.T[n])
         self.mass[n] = mass
+        self.empty_weight[n] = self.perf._Performance__m_min[n]
         self.fuel_weight[n] = fuel_weight
         self.payload_weight[n] = payload_weight
 
@@ -310,8 +311,20 @@ class Traffic:
 
         # Fuel                  
         self.fuel_weight = self.fuel_weight - self.perf.update_fuel(self.flight_phase, self.tas, self.thrust, self.alt) 
+        # TODO: Update weight 
 
 
     def save(self, writer, time):
-            data = np.column_stack((np.full(self.n, time), np.arange(self.n), self.call_sign[:self.n], self.lat[:self.n], self.long[:self.n], self.alt[:self.n], self.heading[:self.n], self.cas[:self.n]))
-            writer.writerows(data)
+        """
+        Save all states variable of one timestemp to csv file.
+
+        Parameters
+        ----------
+        writer : csv.writer()
+            csv writer object
+        time : int
+            Simulation time [s]
+        """
+        data = np.column_stack((np.full(self.n, time), np.arange(self.n), self.call_sign[:self.n], self.lat[:self.n], self.long[:self.n], self.alt[:self.n], self.heading[:self.n], self.cas[:self.n], self.tas[:self.n], self.mach[:self.n], self.mass[:self.n], self.fuel_weight[:self.n],
+                        self.bank_angle[:self.n], self.trans_alt[:self.n], self.accel[:self.n], self.drag[:self.n], self.esf[:self.n], self.thrust[:self.n], self.flight_phase[:self.n], self.speed_mode[:self.n], self.ap.speed_mode[:self.n])) #debug
+        writer.writerows(data)
