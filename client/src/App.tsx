@@ -43,7 +43,7 @@ const App = () => {
                   <ListItemText primary={"Dashboard"} />
                 </ListItemButton>
                 <ListItemButton component={Link} to='/realtime'>
-                  <ListItemText primary={"Real Time Simulation"}/>
+                  <ListItemText primary={"Real Time"}/>
                 </ListItemButton>
                 <ListItemButton component={Link} to='/scenarios'>
                   <ListItemText primary={"Scenarios"}/>

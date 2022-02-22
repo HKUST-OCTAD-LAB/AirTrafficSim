@@ -36,6 +36,7 @@ module.exports = {
                     "string": `${file}\n${data.alt}ft ${data.gspeed}kt`
                 })
             })
+            console.log(positions)
             // console.log(label)
             const trajectory = {
                 "id": file,

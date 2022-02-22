@@ -16,8 +16,8 @@ class Environment:
         self.aircraft_fol = Aircraft(self.traffic, "FOLLOW", "A20N", Flight_phase.CRUISE, 21.9, 113.5, 20000.0, 175.0, 310.0, 68000.0, 5000.0, 0.0)
         
         self.writer = csv.writer(open(Path(__file__).parent.parent.parent.resolve().joinpath('./server/data/simulation/simulation.csv'), 'w+'))
-        header = ['time', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'weight', 'fuel weight',
-                    'bank angle', 'trans alt', 'accel', 'drag', 'esf', 'thrust', 'flight phase', 'speed mode', 'ap speed mode'] #debug
+        header = ['time', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'weight', 'fuel_weight',
+                    'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode'] #debug
         self.writer.writerow(header)
 
 

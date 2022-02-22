@@ -40,7 +40,8 @@ app.get('/navdata', (req, res) => {
 })
 
 app.get('/api/simulation', (req, res) => {
-  simulation.simulation(io.socket)
+  simulation.simulation(res);
+  // simulation.simulation(io.socket)
 })
 
 // Handles any requests that don't match the ones above
