@@ -1310,7 +1310,7 @@ class Performance:
                         # Else
                         0.0)
 
-        return 1.0 - c_red * (self.__m_max - m) / (self.__m_max - self.__m_min)     # Equation 3.8-1
+        return 1.0 - c_red * (self.__m_max - m/1000.0) / (self.__m_max - self.__m_min)     # Equation 3.8-1
 
 
     # ----------------------------  Fuel consumption section 3.9 ----------------------------------------- 
@@ -1588,7 +1588,7 @@ class Performance:
         Rate of turn : float[]
             Rate of turn [deg/s]
         """
-        return self.__G_0 / V_tas * np.tan(np.deg2rad(bank_angle))
+        return np.rad2deg(self.__G_0 / V_tas * np.tan(np.deg2rad(bank_angle)))
 
 
     def cal_bank_angle(self, rate_of_turn, V_tas):

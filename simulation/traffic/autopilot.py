@@ -1,4 +1,5 @@
-from turtle import speed
+from __future__ import annotations
+
 import numpy as np
 
 from utils.enums import AP_speed_mode, Flight_phase, Traffic_speed_mode
@@ -44,23 +45,24 @@ class Autopilot:
         self.expedite_descent = np.zeros([N], dtype=bool)       # Autopilot expedite climb setting [bool]
 
 
-    def update(self, speed_mode, cas, mach, alt, flight_phase):
-        self.speed_mode = np.where(speed_mode == Traffic_speed_mode.CAS, 
-                            np.select([self.cas < cas, self.cas == cas, self.cas > cas],
+    def update(self, traffic: Traffic):
+        self.speed_mode = np.where(traffic.speed_mode == Traffic_speed_mode.CAS, 
+                            np.select([self.cas < traffic.cas, self.cas == traffic.cas, self.cas > traffic.cas],
                                       [AP_speed_mode.DECELERATE, AP_speed_mode.CONSTANT_CAS, AP_speed_mode.ACCELERATE]),
-                            np.select([self.mach < mach, self.mach == mach, self.mach > mach],
+                            np.select([self.mach < traffic.mach, self.mach == traffic.mach, self.mach > traffic.mach],
                                       [AP_speed_mode.DECELERATE, AP_speed_mode.CONSTANT_MACH, AP_speed_mode.ACCELERATE]))
 
-        flight_phase = np.select(condlist=[
-                                    self.alt > alt,
-                                    self.alt == alt,
-                                    self.alt < alt
-                                ],
-                                choicelist=[
-                                    Flight_phase.CLIMB,
-                                    Flight_phase.CRUISE,
-                                    Flight_phase.DESCENT
-                                ])
+        traffic.flight_phase = np.select(condlist=[
+                                                self.alt > traffic.alt,
+                                                self.alt == traffic.alt,
+                                                self.alt < traffic.alt
+                                            ],
+                                            choicelist=[
+                                                Flight_phase.CLIMB,
+                                                Flight_phase.CRUISE,
+                                                Flight_phase.DESCENT
+                                            ])
+        
         
 
     def update_fms(self):

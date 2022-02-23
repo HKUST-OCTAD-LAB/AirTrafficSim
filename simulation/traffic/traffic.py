@@ -205,7 +205,7 @@ class Traffic:
         self.speed_mode = np.where(self.alt < self.trans_alt, Traffic_speed_mode.CAS, Traffic_speed_mode.MACH)
 
         # Update autopilot
-        self.ap.update(self.speed_mode, self.cas, self.mach, self.alt, self.flight_phase)
+        self.ap.update(self)
 
         # Bank angle
         d_heading = np.mod(self.ap.heading - self.heading + 180.0, 360.0) - 180.0  
@@ -278,8 +278,8 @@ class Traffic:
         self.tas = Unit_conversion.mps_to_knots(tas)              
 
         # Heading
-        rate_of_turn = self.perf.cal_rate_of_turn(self.bank_angle, tas)
-        self.heading = np.where(np.abs(d_heading) < rate_of_turn, self.ap.heading, self.heading + rate_of_turn)
+        rate_of_turn = self.perf.cal_rate_of_turn(self.bank_angle, tas)     # TODO: https://skybrary.aero/articles/rate-turn
+        self.heading = np.where(np.abs(d_heading) < np.abs(rate_of_turn), self.ap.heading, self.heading + rate_of_turn)
         self.heading = np.select(condlist=[
                                     self.heading > 360.0,
                                     self.heading < 0.0
@@ -298,7 +298,6 @@ class Traffic:
         self.lat = self.lat + self.gs_north / 216000.0
         self.long = self.long + self.gs_east / 216000.0
         self.alt = self.alt + self.vs / 60.0
-        self.alt = np.where(self.alt - self.ap.alt > self.vs/60.0, self.ap.alt, self.alt)
         self.alt = np.select(condlist=[     #handle overshoot
                                 self.flight_phase == Flight_phase.CLIMB,
                                 self.flight_phase == Flight_phase.DESCENT
@@ -325,6 +324,6 @@ class Traffic:
         time : int
             Simulation time [s]
         """
-        data = np.column_stack((np.full(self.n, time), np.arange(self.n), self.call_sign[:self.n], self.lat[:self.n], self.long[:self.n], self.alt[:self.n], self.heading[:self.n], self.cas[:self.n], self.tas[:self.n], self.mach[:self.n], self.mass[:self.n], self.fuel_weight[:self.n],
+        data = np.column_stack((np.full(self.n, time), np.arange(self.n), self.call_sign[:self.n], self.lat[:self.n], self.long[:self.n], self.alt[:self.n], self.heading[:self.n], self.cas[:self.n], self.tas[:self.n], self.mach[:self.n], self.vs[:self.n], self.mass[:self.n], self.fuel_weight[:self.n],
                         self.bank_angle[:self.n], self.trans_alt[:self.n], self.accel[:self.n], self.drag[:self.n], self.esf[:self.n], self.thrust[:self.n], self.flight_phase[:self.n], self.speed_mode[:self.n], self.ap.speed_mode[:self.n])) #debug
         writer.writerows(data)

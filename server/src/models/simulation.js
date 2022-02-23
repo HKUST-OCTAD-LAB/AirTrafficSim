@@ -30,6 +30,7 @@ module.exports = {
             var cas = []
             var tas = []
             var mach = []
+            var vs = []
             var weight = []
             var fuel_weight = []
             var bank_angle = []
@@ -57,6 +58,7 @@ module.exports = {
             var cas_data = []
             var tas_data = []
             var mach_data = []
+            var vs_data = []
             var weight_data = []
             var fuel_weight_data = []
             var bank_angle_data = []
@@ -82,6 +84,7 @@ module.exports = {
                     cas_data.push([])
                     tas_data.push([])
                     mach_data.push([])
+                    vs_data.push([])
                     weight_data.push([])
                     fuel_weight_data.push([])
                     bank_angle_data.push([])
@@ -131,6 +134,11 @@ module.exports = {
                 mach_data[data.id].push({
                     time: Number(data.time),
                     value: Number(data.mach)
+                })
+
+                vs_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.vs)
                 })
 
                 weight_data[data.id].push({
@@ -219,6 +227,12 @@ module.exports = {
                     id: content[i].id,
                     name: content[i].callsign,
                     data: mach_data[i]
+                })
+
+                vs.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: vs_data[i]
                 })
 
                 weight.push({
@@ -343,6 +357,7 @@ module.exports = {
             data.push(cas);
             data.push(tas);
             data.push(mach);
+            data.push(vs);
             data.push(weight);
             data.push(fuel_weight);
             data.push(bank_angle);
