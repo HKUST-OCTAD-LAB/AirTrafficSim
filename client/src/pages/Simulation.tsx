@@ -28,7 +28,7 @@ const Simulation = () => {
     const [czml, setCZML] = useState();
     const [data, setData] = useState<any[]>();
     const [time, setTime] = useState(0);
-    const [selectPlot, setSelectPlot] = React.useState('');
+    const [selectPlot, setSelectPlot] = React.useState(0);
 
     var strokeColor = ["#82ca9d", "#8884d8"]
 
@@ -84,13 +84,26 @@ const Simulation = () => {
               value={selectPlot}
               label="Plo state variables"
               onChange={(event) => {
-                setSelectPlot(event.target.value);
+                setSelectPlot(Number(event.target.value));
               }}
               sx={{fontSize: 12}}
             >
               <MenuItem value={0} sx={{fontSize: 12}}>Altitude</MenuItem>
               <MenuItem value={1} sx={{fontSize: 12}}>Heading</MenuItem>
-              <MenuItem value={2} sx={{fontSize: 12}}>Thrust</MenuItem>
+              <MenuItem value={2} sx={{fontSize: 12}}>CAS</MenuItem>
+              <MenuItem value={3} sx={{fontSize: 12}}>TAS</MenuItem>
+              <MenuItem value={4} sx={{fontSize: 12}}>Mach</MenuItem>
+              <MenuItem value={5} sx={{fontSize: 12}}>Weight</MenuItem>
+              <MenuItem value={6} sx={{fontSize: 12}}>Fuel Weight</MenuItem>
+              <MenuItem value={7} sx={{fontSize: 12}}>Bank Angle</MenuItem>
+              <MenuItem value={8} sx={{fontSize: 12}}>Transition Altitude</MenuItem>
+              <MenuItem value={9} sx={{fontSize: 12}}>Acceleration</MenuItem>
+              <MenuItem value={10} sx={{fontSize: 12}}>Drag</MenuItem>
+              <MenuItem value={11} sx={{fontSize: 12}}>ESF</MenuItem>
+              <MenuItem value={12} sx={{fontSize: 12}}>Thrust</MenuItem>
+              <MenuItem value={13} sx={{fontSize: 12}}>Flight Phase</MenuItem>
+              <MenuItem value={14} sx={{fontSize: 12}}>Speed Mode</MenuItem>
+              <MenuItem value={15} sx={{fontSize: 12}}>AP Speed Mode</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -102,7 +115,7 @@ const Simulation = () => {
               <YAxis dataKey="value" tick={{fontSize: 12}}/>
               <Tooltip />
               <Legend verticalAlign="top" height={25} wrapperStyle={{fontSize: 12}}/>
-              {data && data[0].map((d:any) => (
+              {data && data[selectPlot].map((d:any) => (
                 <Line dataKey="value" data={d.data} name={d.name} key={d.name}  dot={false} type="linear" stroke={strokeColor[d.id]} strokeWidth={1.5}/>
               ))}
               <ReferenceLine x={time} stroke="red" />

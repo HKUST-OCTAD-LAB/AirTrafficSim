@@ -51,6 +51,7 @@ module.exports = {
             
             var positions = [];
             var label = [];
+
             var alt_data = []
             var heading_data = []
             var cas_data = []
@@ -71,15 +72,27 @@ module.exports = {
             var time = new Date();
             var max_id = -1
             var max_time = 0
-            var current_time = 0
-
-            // var temp = []
 
             content.forEach((data)=>{
                 if(data.id > max_id){
                     positions.push([])
                     label.push([])
                     alt_data.push([])
+                    heading_data.push([])
+                    cas_data.push([])
+                    tas_data.push([])
+                    mach_data.push([])
+                    weight_data.push([])
+                    fuel_weight_data.push([])
+                    bank_angle_data.push([])
+                    trans_alt_data.push([])
+                    accel_data.push([])
+                    drag_data.push([])
+                    esf_data.push([])
+                    thrust_data.push([])
+                    flight_phase_data.push([])
+                    speed_mode_data.push([])
+                    ap_speed_mode_data.push([])
 
                     max_id += 1
                 } 
@@ -100,6 +113,80 @@ module.exports = {
                     value: Number(data.alt)
                 })
 
+                heading_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.heading)
+                })
+
+                cas_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.cas)
+                })
+
+                tas_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.tas)
+                })
+
+                mach_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.mach)
+                })
+
+                weight_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.weight)
+                })
+
+                fuel_weight_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.fuel_weight)
+                })
+
+                bank_angle_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.bank_angle)
+                })
+
+                trans_alt_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.trans_alt)
+                })
+
+                accel_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.accel)
+                })
+
+                drag_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.drag)
+                })
+
+                esf_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.esf)
+                })
+
+                thrust_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.thrust)
+                })
+
+                flight_phase_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.flight_phase)
+                })
+
+                speed_mode_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.speed_mode)
+                })
+
+                ap_speed_mode_data[data.id].push({
+                    time: Number(data.time),
+                    value: Number(data.ap_speed_mode)
+                })
             })
 
             for(let i = 0; i <= max_id;  i++){
@@ -108,6 +195,96 @@ module.exports = {
                     id: content[i].id,
                     name: content[i].callsign,
                     data: alt_data[i]
+                })
+
+                heading.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: heading_data[i]
+                })
+
+                cas.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: cas_data[i]
+                })
+
+                tas.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: tas_data[i]
+                })
+
+                mach.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: mach_data[i]
+                })
+
+                weight.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: weight_data[i]
+                })
+
+                fuel_weight.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: fuel_weight_data[i]
+                })
+
+                bank_angle.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: bank_angle_data[i]
+                })
+
+                trans_alt.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: trans_alt_data[i]
+                })
+
+                accel.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: accel_data[i]
+                })
+
+                drag.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: drag_data[i]
+                })
+
+                esf.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: esf_data[i]
+                })
+
+                thrust.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: thrust_data[i]
+                })
+
+                flight_phase.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: flight_phase_data[i]
+                })
+
+                speed_mode.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: speed_mode_data[i]
+                })
+
+                ap_speed_mode.push({
+                    id: content[i].id,
+                    name: content[i].callsign,
+                    data: ap_speed_mode_data[i]
                 })
                 
                 // CZML document
@@ -127,7 +304,7 @@ module.exports = {
                         "leadTime": 0,
                         "trailTime": 20,
                         "distanceDisplayCondition": {
-                            "distanceDisplayCondition": [0, 1000000]
+                            "distanceDisplayCondition": [0, 1500000]
                         },
                         // "resolution": 600.0,
                         // "material": {
@@ -142,7 +319,7 @@ module.exports = {
                             "cartesian2": [20, 20],
                         },
                         "distanceDisplayCondition": {
-                            "distanceDisplayCondition": [0, 1000000]
+                            "distanceDisplayCondition": [0, 1500000]
                         },
                         "showBackground": false,
                         "backgroundColor": {
@@ -161,11 +338,26 @@ module.exports = {
                 }
             };
             document.unshift(document_info);
-            data.push(alt)
+            data.push(alt);
+            data.push(heading);
+            data.push(cas);
+            data.push(tas);
+            data.push(mach);
+            data.push(weight);
+            data.push(fuel_weight);
+            data.push(bank_angle);
+            data.push(trans_alt);
+            data.push(accel);
+            data.push(drag);
+            data.push(esf);
+            data.push(thrust);
+            data.push(flight_phase);
+            data.push(speed_mode);
+            data.push(ap_speed_mode);
 
-            respond.push(document)
-            respond.push(data)
-            res.send(respond)
+            respond.push(document);
+            respond.push(data);
+            res.send(respond);
         });
     }
 }
