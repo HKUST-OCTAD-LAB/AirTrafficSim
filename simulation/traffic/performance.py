@@ -851,7 +851,7 @@ class Performance:
 
         return np.where(p_trans >= p_trop,
                 # If __p_trans >= __p_trop
-                self.__T_0/self.__BETA_T_BELOW_TROP * (np.power(p_trans/self.__P_0, -self.__BETA_T_BELOW_TROP*self.__R/self.__G_0) - 1),
+                self.__T_0/self.__BETA_T_BELOW_TROP * (np.power(p_trans/self.__P_0, -self.__BETA_T_BELOW_TROP*self.__R/self.__G_0) - 1.0),
                 # __p_trans < __p_trop
                 self.__H_P_TROP - self.__R*self.cal_temperature(self.__H_P_TROP,0.0)/self.__G_0 * np.log(p_trans/p_trop))
 

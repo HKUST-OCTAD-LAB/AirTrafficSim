@@ -29,7 +29,7 @@ class Aircraft:
 
 
     def set_vs(self, vs):
-        """Set vs [ft/min]"""
+        """Set vertical speed [ft/min]"""
         self.traffic.ap.vs[self.index] = vs
 
 

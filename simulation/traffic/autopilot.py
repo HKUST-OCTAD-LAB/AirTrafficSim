@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from utils.enums import AP_speed_mode, Flight_phase, Traffic_speed_mode
+from utils.unit import Unit_conversion
 
 class Autopilot:
     """
@@ -51,6 +52,10 @@ class Autopilot:
                                       [AP_speed_mode.DECELERATE, AP_speed_mode.CONSTANT_CAS, AP_speed_mode.ACCELERATE]),
                             np.select([self.mach < traffic.mach, self.mach == traffic.mach, self.mach > traffic.mach],
                                       [AP_speed_mode.DECELERATE, AP_speed_mode.CONSTANT_MACH, AP_speed_mode.ACCELERATE]))
+
+        # Handle change in speed mode. 
+        self.mach = np.where(traffic.speed_mode == Traffic_speed_mode.CAS, traffic.perf.tas_to_mach(traffic.perf.cas_to_tas(Unit_conversion.knots_to_mps(traffic.cas), traffic.weather.p, traffic.weather.rho), traffic.weather.T), self.mach)
+        self.cas = np.where(traffic.speed_mode == Traffic_speed_mode.MACH, Unit_conversion.mps_to_knots(traffic.perf.tas_to_cas(traffic.perf.mach_to_tas(traffic.mach, traffic.weather.T), traffic.weather.p, traffic.weather.rho)), self.cas)
 
         traffic.flight_phase = np.select(condlist=[
                                                 self.alt > traffic.alt,

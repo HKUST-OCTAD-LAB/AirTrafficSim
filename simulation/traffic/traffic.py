@@ -245,7 +245,7 @@ class Traffic:
         self.mach = np.select(condlist=[
                                 (self.speed_mode == Traffic_speed_mode.MACH) & (self.ap.speed_mode == AP_speed_mode.ACCELERATE),
                                 (self.speed_mode == Traffic_speed_mode.MACH) & (self.ap.speed_mode == AP_speed_mode.DECELERATE),
-                                (self.speed_mode == Traffic_speed_mode.CAS) & (self.ap.speed_mode == AP_speed_mode.CONSTANT_MACH)
+                                (self.speed_mode == Traffic_speed_mode.MACH) & (self.ap.speed_mode == AP_speed_mode.CONSTANT_MACH)
                             ],
                             choicelist=[
                                 np.where(self.mach > self.ap.mach, self.ap.mach, self.mach),
@@ -267,15 +267,35 @@ class Traffic:
                             default=self.cas)
 
         tas = np.select(condlist=[
-                                self.ap.speed_mode == AP_speed_mode.CONSTANT_MACH,
-                                self.ap.speed_mode == AP_speed_mode.CONSTANT_CAS
-                            ],
-                            choicelist=[
-                                self.perf.mach_to_tas(self.mach, self.weather.T),
-                                self.perf.cas_to_tas(Unit_conversion.knots_to_mps(self.cas), self.weather.p, self.weather.rho)
-                            ],
-                            default=tas)
-        self.tas = Unit_conversion.mps_to_knots(tas)              
+                            self.ap.speed_mode == AP_speed_mode.CONSTANT_MACH,
+                            self.ap.speed_mode == AP_speed_mode.CONSTANT_CAS
+                        ],
+                        choicelist=[
+                            self.perf.mach_to_tas(self.mach, self.weather.T),
+                            self.perf.cas_to_tas(Unit_conversion.knots_to_mps(self.cas), self.weather.p, self.weather.rho)
+                        ],
+                        default=tas)
+
+        tas = np.select(condlist=[
+                            (self.speed_mode == Traffic_speed_mode.CAS) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.cas == self.ap.cas),
+                            (self.speed_mode == Traffic_speed_mode.MACH) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.mach == self.ap.mach)
+                        ],
+                        choicelist=[
+                            self.perf.cas_to_tas(Unit_conversion.knots_to_mps(self.cas), self.weather.p, self.weather.rho),
+                            self.perf.mach_to_tas(self.mach, self.weather.T)
+                        ],
+                        default=tas)
+
+        self.mach = np.where((self.speed_mode == Traffic_speed_mode.CAS) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.cas == self.ap.cas), 
+                                self.perf.tas_to_mach(tas, self.weather.T),
+                                self.mach)
+        
+        self.cas = np.where((self.speed_mode == Traffic_speed_mode.MACH) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.mach == self.ap.mach),
+                                Unit_conversion.mps_to_knots(self.perf.tas_to_cas(tas, self.weather.p, self.weather.rho)),
+                                self.cas)
+
+        self.tas = Unit_conversion.mps_to_knots(tas) 
+
 
         # Heading
         rate_of_turn = self.perf.cal_rate_of_turn(self.bank_angle, tas)     # TODO: https://skybrary.aero/articles/rate-turn
