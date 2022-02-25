@@ -43,7 +43,7 @@ module.exports = {
             var speed_mode = []
             var ap_speed_mode = []
 
-            var file_content = fs.readFileSync(`./data/simulation/simulation.csv`); //TODO: change to dynamic name
+            var file_content = fs.readFileSync(`../data/simulation/simulation.csv`); //TODO: change to dynamic name
             const content = parse(file_content, {
                 columns: true,
                 skip_empty_lines: true

@@ -123,6 +123,17 @@ class Aircraft:
         """
         return self.traffic.lat[self.index]
 
+    
+    def get_fuel_consumed(self):
+        """
+        Get the total fuel consumed of aircraft.
+
+        Returns
+        -------
+        fuel_consumed : float
+            Fuel consumed [kg]
+        """
+        return self.traffic.fuel_consumed[self.index]
 
 
 

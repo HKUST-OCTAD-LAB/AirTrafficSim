@@ -12,7 +12,7 @@ import { createTheme, ThemeProvider} from '@mui/material/styles';
 
 import socket from './utils/websocket';
 import RealtTime from './pages/Realtime';
-import Scenarios from './pages/Scenarios';
+import Replay from './pages/Replay';
 import Simulation from './pages/Simulation'
 import Home from './pages/home';
 
@@ -56,7 +56,7 @@ const App = () => {
           <Box component="main" sx={{ flexGrow: 1}}>
             <Switch>
               <Route path="/realtime" component={RealtTime}/>
-              <Route path="/replay" component={Scenarios}/>
+              <Route path="/replay" component={Replay}/>
               <Route path="/simulation" component={Simulation}/>
               <Route path="/" exact component={Home}/>
             </Switch>  

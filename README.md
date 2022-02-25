@@ -4,15 +4,21 @@ Air traffic sim is a web-based air traffic simulation and visualization platform
 
 ## Features (preview)
 
-Real time visualization and simulation of air traffic.
+Real time visualization of air traffic.
+
 ![real_time](doc/images/real_time_simulation.png)
 
-Replay simulation scenarios.
-![scenarios](doc/images/scenarios.png)
+Replay histortic flights given data.
+
+![replay](doc/images/scenarios.png)
+
+Simulation.
+
+![simulation](doc/images/simulation.png)
 
 ## Installation
 
-The final installation procedures is targeted to adopt docker containers for easy installation and deployment. To install for development purpose, please follow the following guide:
+To install for development purpose, please follow the following guide:
 
 ### Dependencies:
 
@@ -34,7 +40,7 @@ cd AirTrafficSim/
 cd client/
 yarn install
 
-cd ../server/
+cd server/
 npm install
 ```
 After installation, go to client/ folder and create a **.env** file. Insert the Cesium Ion token, which can be extracted from the Cesium Ion portal, in the file as follow.
@@ -49,14 +55,14 @@ yarn start
 ```
 Open a new terminal windows, enter:
 ```
-cd ../server/
+cd server/
 npm run dev
 ```
 You should be able to open the UI using any modern browser at http://localhost:3000.
 
 ### Running simulation (for development)
 
-To run the simulation, download, unzip, and store BADA data in [simulation/data/BADA](simulation/data/BADA/). Then, at project home directory `/AirTrafficSim`, run `python -m simulation`. This will execute [\_\_main\_\_.py](simulation/__main__.py) and begin the simulation.
+To run the simulation, download, unzip, and store BADA data in [data/BADA](data/BADA/). Then, at project home directory `/AirTrafficSim`, run `python simulation`. This will execute [\_\_main\_\_.py](simulation/__main__.py) and begin the simulation.
 
 ## Contribution
 
@@ -76,6 +82,12 @@ AirTrafficSim/
 │   ├── .gitignore
 │   ├── package.json
 │   └── Dockerfile
+├── data/
+│   ├── BADA/
+│   ├── nav/
+│   ├── replay/
+│   └── simulation/
+├── .gitignore
 ├── server/
 │   ├── src/
 │   │   ├── models/
@@ -109,6 +121,10 @@ AirTrafficSim/
 ### client/
 
 The client folder contains the UI of the website. It is written in react.js with [Material UI Library](https://mui.com/). It contains a 3D map using [Cesium.js + Cesium ion](https://cesium.com/) and [Resium](https://resium.reearth.io/).
+
+### data/
+
+The data folder contrains all the data needed for simulation which includes BADA data (user would need to provide their own data due to license requirement), navigation data, replay (input) and simulation (output) data.
 
 ### server/
 
@@ -148,8 +164,10 @@ The traffic folder contains the air traffic simulation code. It is targeted to s
 
 ## System architecture
 
-Initial system architecture plan: 
+Initial system architecture plan:
+
 ![system_arch](doc/images/system_architecture.png)
 
 Traffic class diagram
+
 ![system_arch](doc/images/traffic_class.png)

@@ -27,11 +27,11 @@ app.use(cors());
 
 app.use(express.static("../client/build"));
 
-app.get('/replay', (req, res) => {
+app.get('/api/replay', (req, res) => {
   res.send(replay.replay());
 })
 
-app.get('/navdata', (req, res) => {
+app.get('/api/navdata', (req, res) => {
   // const sendnav = (document) => {
   //   res.send(document);
   // }
