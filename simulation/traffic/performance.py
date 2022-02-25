@@ -335,7 +335,7 @@ class Performance:
         self.__SYNONYM = np.genfromtxt(Path(__file__).parent.parent.resolve().joinpath('./data/BADA/SYNONYM.NEW'), delimiter=[3,2,7,20,25,8,5], names=['CD','ST','ACCODE','MANUFACTURER','MODEL','FILENAME','ICAO'], dtype="U2,U1,U4,U18,U25,U6,U1", comments="CC", autostrip=True, skip_footer=1)
 
 
-    def add_aircraft(self, icao, n, mass, mass_class=2):
+    def add_aircraft(self, icao, n, mass_class=2):
         """
         Add one specific aircraft performance data to the performance array according to index.
 
@@ -349,9 +349,6 @@ class Performance:
 
         n: int
             Index of array.
-
-        mass: float
-            Mass of aircraft [kg]
 
         mass_class: int
             Aircraft mass for specific flight. To be used for APF. 1 = LO, 2 = AV, 3 = HI TODO: useful?
@@ -471,10 +468,6 @@ class Performance:
         # Delete variable to free memory
         del APF
 
-    
-        # Initialize procedure speed
-        self.__init_procedure_speed(mass, n)
-
 
     def del_aircraft(self, n):
         """
@@ -574,6 +567,7 @@ class Performance:
         Fuel burn : float[]
             Fuel burn [kg/s]
         """
+        a = self.__cal_nominal_fuel_flow(tas, thrust)/60.0
         return np.select(
                 condlist=[
                         flight_phase == Flight_phase.CRUISE,
@@ -582,12 +576,12 @@ class Performance:
                         flight_phase == Flight_phase.LANDING
                         ], 
                 choicelist=[
-                        self.__cal_cruise_fuel_flow(tas, thrust)/60.0,                      # cruise
-                        self.__cal_minimum_fuel_flow(alt)/60.0,                             # Idle descent
-                        self.__cal_approach_landing_fuel_flow(tas, thrust, alt)/60.0,       # Approach
-                        self.__cal_approach_landing_fuel_flow(tas, thrust, alt/60.0)        # Landing
+                        self.__cal_cruise_fuel_flow(tas, thrust)/60000.0,                      # cruise
+                        self.__cal_minimum_fuel_flow(alt)/60000.0,                             # Idle descent
+                        self.__cal_approach_landing_fuel_flow(tas, thrust, alt)/60000.0,       # Approach
+                        self.__cal_approach_landing_fuel_flow(tas, thrust, alt/60000.0)        # Landing
                         ],                                 
-                default=self.__cal_nominal_fuel_flow(tas, thrust)/60.0                      # Others
+                default=self.__cal_nominal_fuel_flow(tas, thrust)/60000.0                      # Others
             )
 
     
@@ -1414,7 +1408,7 @@ class Performance:
 
     
     # ----------------------------  Airline Procedure Models section 4 ----------------------------------------- 
-    def __init_procedure_speed(self, m, n):
+    def init_procedure_speed(self, m, n):
         """
         Initialize standard air speed schedule for all flight phases (Section 4.1-4.3)
 

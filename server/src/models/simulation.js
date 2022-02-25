@@ -32,7 +32,7 @@ module.exports = {
             var mach = []
             var vs = []
             var weight = []
-            var fuel_weight = []
+            var fuel_consumed = []
             var bank_angle = []
             var trans_alt = []
             var accel = []
@@ -60,7 +60,7 @@ module.exports = {
             var mach_data = []
             var vs_data = []
             var weight_data = []
-            var fuel_weight_data = []
+            var fuel_consumed_data = []
             var bank_angle_data = []
             var trans_alt_data = []
             var accel_data = []
@@ -86,7 +86,7 @@ module.exports = {
                     mach_data.push([])
                     vs_data.push([])
                     weight_data.push([])
-                    fuel_weight_data.push([])
+                    fuel_consumed_data.push([])
                     bank_angle_data.push([])
                     trans_alt_data.push([])
                     accel_data.push([])
@@ -146,9 +146,9 @@ module.exports = {
                     value: Number(data.weight)
                 })
 
-                fuel_weight_data[data.id].push({
+                fuel_consumed_data[data.id].push({
                     time: Number(data.time),
-                    value: Number(data.fuel_weight)
+                    value: Number(data.fuel_consumed)
                 })
 
                 bank_angle_data[data.id].push({
@@ -241,10 +241,10 @@ module.exports = {
                     data: weight_data[i]
                 })
 
-                fuel_weight.push({
+                fuel_consumed.push({
                     id: content[i].id,
                     name: content[i].callsign,
-                    data: fuel_weight_data[i]
+                    data: fuel_consumed_data[i]
                 })
 
                 bank_angle.push({
@@ -359,7 +359,7 @@ module.exports = {
             data.push(mach);
             data.push(vs);
             data.push(weight);
-            data.push(fuel_weight);
+            data.push(fuel_consumed);
             data.push(bank_angle);
             data.push(trans_alt);
             data.push(accel);

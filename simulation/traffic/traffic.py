@@ -78,15 +78,17 @@ class Traffic:
         self.thrust = np.zeros([N])
         """Thrust [N]"""
 
-        # Weight and balance TODO: improve the variables
+        # Weight and balance
         self.mass = np.zeros([N])                               
         """Aircraft mass [kg]"""
         self.empty_weight = np.zeros(([N]))
         """Empty weight [kg]"""
         self.fuel_weight = np.zeros([N])                        
-        """Fuel weight [kg]"""
+        """Initial fuel weight [kg]"""
         self.payload_weight = np.zeros([N])                     
         """Payload weight [kg]"""
+        self.fuel_consumed = np.zeros([N])
+        """Fuel consumped [kg]"""
 
         # Sub classes
         self.perf = Performance(N)                              
@@ -97,7 +99,7 @@ class Traffic:
         """Weather class"""
 
     
-    def add_aircraft(self, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, mass, fuel_weight, payload_weight):
+    def add_aircraft(self, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight):
         """
         Add an aircraft to traffic array.
 
@@ -123,7 +125,7 @@ class Traffic:
 
         
         # Add aircraft in performance and weather array
-        self.perf.add_aircraft(aircraft_type, n, mass)
+        self.perf.add_aircraft(aircraft_type, n)
         self.weather.add_aircraft(n, alt, self.perf)
 
         # Initialize variables
@@ -140,10 +142,11 @@ class Traffic:
         self.ap.cas[n] = cas
         self.tas[n] = Unit_conversion.mps_to_knots(self.perf.cas_to_tas(Unit_conversion.knots_to_mps(cas), self.weather.p[n], self.weather.rho[n]))
         self.mach[n] = self.perf.tas_to_mach(Unit_conversion.knots_to_mps(self.tas[n]), self.weather.T[n])
-        self.mass[n] = mass
-        self.empty_weight[n] = self.perf._Performance__m_min[n]
+        self.empty_weight[n] = self.perf._Performance__m_min[n] * 1000.0
         self.fuel_weight[n] = fuel_weight
         self.payload_weight[n] = payload_weight
+        self.mass[n] = self.empty_weight[n] + fuel_weight + payload_weight
+        self.perf.init_procedure_speed(self.mass, n)
 
        
         
@@ -328,9 +331,10 @@ class Traffic:
                             ],
                             default=self.alt)
 
-        # Fuel                  
-        self.fuel_weight = self.fuel_weight - self.perf.update_fuel(self.flight_phase, self.tas, self.thrust, self.alt) 
-        # TODO: Update weight 
+        # Fuel        
+        fuel_burn = self.perf.update_fuel(self.flight_phase, self.tas, self.thrust, self.alt) 
+        self.fuel_consumed = self.fuel_consumed + fuel_burn
+        self.mass = self.mass - fuel_burn
 
 
     def save(self, writer, time):
@@ -344,6 +348,6 @@ class Traffic:
         time : int
             Simulation time [s]
         """
-        data = np.column_stack((np.full(self.n, time), np.arange(self.n), self.call_sign[:self.n], self.lat[:self.n], self.long[:self.n], self.alt[:self.n], self.heading[:self.n], self.cas[:self.n], self.tas[:self.n], self.mach[:self.n], self.vs[:self.n], self.mass[:self.n], self.fuel_weight[:self.n],
+        data = np.column_stack((np.full(self.n, time), np.arange(self.n), self.call_sign[:self.n], self.lat[:self.n], self.long[:self.n], self.alt[:self.n], self.heading[:self.n], self.cas[:self.n], self.tas[:self.n], self.mach[:self.n], self.vs[:self.n], self.mass[:self.n], self.fuel_consumed[:self.n],
                         self.bank_angle[:self.n], self.trans_alt[:self.n], self.accel[:self.n], self.drag[:self.n], self.esf[:self.n], self.thrust[:self.n], self.flight_phase[:self.n], self.speed_mode[:self.n], self.ap.speed_mode[:self.n])) #debug
         writer.writerows(data)

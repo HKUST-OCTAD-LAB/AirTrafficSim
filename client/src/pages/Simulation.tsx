@@ -95,7 +95,7 @@ const Simulation = () => {
               <MenuItem value={4} sx={{fontSize: 12}}>Mach</MenuItem>
               <MenuItem value={5} sx={{fontSize: 12}}>VS</MenuItem>
               <MenuItem value={6} sx={{fontSize: 12}}>Weight</MenuItem>
-              <MenuItem value={7} sx={{fontSize: 12}}>Fuel Weight</MenuItem>
+              <MenuItem value={7} sx={{fontSize: 12}}>Fuel Consumed</MenuItem>
               <MenuItem value={8} sx={{fontSize: 12}}>Bank Angle</MenuItem>
               <MenuItem value={9} sx={{fontSize: 12}}>Transition Altitude</MenuItem>
               <MenuItem value={10} sx={{fontSize: 12}}>Acceleration</MenuItem>
