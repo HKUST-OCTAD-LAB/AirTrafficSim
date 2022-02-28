@@ -5,7 +5,7 @@ from traffic.autopilot import Autopilot
 from traffic.weather import Weather
 from traffic.performance import Performance
 from utils.unit import Unit_conversion
-from utils.enums import Flight_phase, Engine_type, Traffic_speed_mode, Wake_category, AP_speed_mode, AP_throttle_mode, AP_vertical_mode
+from utils.enums import Flight_phase,    Speed_mode, AP_speed_mode, AP_throttle_mode, AP_vertical_mode, Configuration, Vertical_mode
 
 class Traffic:
 
@@ -27,6 +27,8 @@ class Traffic:
         """Callsign [string]"""
         self.aircraft_type = np.empty([N], dtype='U4')          
         """Aircraft type in ICAO format [string]"""
+        self.configuration = np.zeros([N])
+        """Aircraft configuration [Configuration enum 1: Clean, 2: Take Off, 3: Approach, 4: Landing]"""
         self.flight_phase = np.zeros([N])                       
         """Flight phase [Flight_phase enum] (BADA section 3.5)"""
 
@@ -59,16 +61,18 @@ class Traffic:
         """Ground speed - East [knot]  """
         self.mach = np.zeros([N])                               
         """Mach number [dimensionless]"""
-        self.speed_mode = np.zeros([N])
-        """Speed mode [Traffic.speed_mode enum 1: CAS, 2: MACH]"""
         self.accel = np.zeros([N])
         """Acceleration [m/s^2]"""
+        self.speed_mode = np.zeros([N])
+        """Speed mode [Traffic.speed_mode enum 1: CAS, 2: MACH]"""
 
         # Vertical speed
         self.vs = np.zeros([N])                                 
         """Vertical speed [feet/min]"""
         self.fpa = np.zeros([N])                                
         """Flight path angle [deg]"""
+        self.vertical_mode = np.zeros([N])
+        """Vertical mode [Vertical mode enum 1: LEVEL, 2: CLIMB, 3: DESCENT]"""
 
         # Aerodynamic
         self.drag = np.zeros([N])                               
@@ -147,6 +151,7 @@ class Traffic:
         self.payload_weight[n] = payload_weight
         self.mass[n] = self.empty_weight[n] + fuel_weight + payload_weight
         self.perf.init_procedure_speed(self.mass, n)
+        self.configuration[n] = Configuration.CLEAN
 
        
         
@@ -205,7 +210,8 @@ class Traffic:
 
         # Transition altitude
         self.trans_alt = Unit_conversion.meter_to_feet(self.perf.cal_transition_alt(Unit_conversion.knots_to_mps(self.cas), self.mach, self.weather.d_T))
-        self.speed_mode = np.where(self.alt < self.trans_alt, Traffic_speed_mode.CAS, Traffic_speed_mode.MACH)
+
+        self.speed_mode = np.where(self.alt < self.trans_alt, Speed_mode.CAS, Speed_mode.MACH)
 
         # Update autopilot
         self.ap.update(self)
@@ -227,11 +233,11 @@ class Traffic:
         tas = Unit_conversion.knots_to_mps(self.tas)
 
         # Drag and Thrust
-        self.drag = self.perf.cal_aerodynamic_drag(tas, self.bank_angle, self.mass, self.weather.rho, self.flight_phase, self.perf.cal_expedite_descend_factor(self.ap.expedite_descent))
-        self.thrust = self.perf.cal_thrust(self.flight_phase, self.alt, self.tas, self.weather.d_T, self.drag, self.ap.speed_mode)
+        self.drag = self.perf.cal_aerodynamic_drag(tas, self.bank_angle, self.mass, self.weather.rho, self.configuration, self.perf.cal_expedite_descend_factor(self.ap.expedite_descent))
+        self.thrust = self.perf.cal_thrust(self.vertical_mode, self.configuration, self.alt, self.tas, self.weather.d_T, self.drag, self.ap.speed_mode)
 
         # Total Energy Model
-        self.esf = self.perf.cal_energy_share_factor(Unit_conversion.feet_to_meter(self.alt), self.weather.T, self.weather.d_T, self.mach, self.ap.speed_mode, self.flight_phase)      # Energy share factor 
+        self.esf = self.perf.cal_energy_share_factor(Unit_conversion.feet_to_meter(self.alt), self.weather.T, self.weather.d_T, self.mach, self.ap.speed_mode, self.vertical_mode)      # Energy share factor 
         rocd = self.perf.cal_tem_rocd(self.weather.T, self.weather.d_T, self.mass, self.drag, self.esf, self.thrust, tas, self.perf.cal_reduced_climb_power(self.mass, self.alt, max_alt))
         self.vs = Unit_conversion.mps_to_ftpm(rocd)
         self.accel = np.where((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE),
@@ -246,9 +252,9 @@ class Traffic:
 
         # Bound to autopilot
         self.mach = np.select(condlist=[
-                                (self.speed_mode == Traffic_speed_mode.MACH) & (self.ap.speed_mode == AP_speed_mode.ACCELERATE),
-                                (self.speed_mode == Traffic_speed_mode.MACH) & (self.ap.speed_mode == AP_speed_mode.DECELERATE),
-                                (self.speed_mode == Traffic_speed_mode.MACH) & (self.ap.speed_mode == AP_speed_mode.CONSTANT_MACH)
+                                (self.speed_mode == Speed_mode.MACH) & (self.ap.speed_mode == AP_speed_mode.ACCELERATE),
+                                (self.speed_mode == Speed_mode.MACH) & (self.ap.speed_mode == AP_speed_mode.DECELERATE),
+                                (self.speed_mode == Speed_mode.MACH) & (self.ap.speed_mode == AP_speed_mode.CONSTANT_MACH)
                             ],
                             choicelist=[
                                 np.where(self.mach > self.ap.mach, self.ap.mach, self.mach),
@@ -258,9 +264,9 @@ class Traffic:
                             default=self.mach)
 
         self.cas = np.select(condlist=[
-                                (self.speed_mode == Traffic_speed_mode.CAS) & (self.ap.speed_mode == AP_speed_mode.ACCELERATE),
-                                (self.speed_mode == Traffic_speed_mode.CAS) & (self.ap.speed_mode == AP_speed_mode.DECELERATE),
-                                (self.speed_mode == Traffic_speed_mode.CAS) & (self.ap.speed_mode == AP_speed_mode.CONSTANT_CAS)
+                                (self.speed_mode == Speed_mode.CAS) & (self.ap.speed_mode == AP_speed_mode.ACCELERATE),
+                                (self.speed_mode == Speed_mode.CAS) & (self.ap.speed_mode == AP_speed_mode.DECELERATE),
+                                (self.speed_mode == Speed_mode.CAS) & (self.ap.speed_mode == AP_speed_mode.CONSTANT_CAS)
                             ],
                             choicelist=[
                                 np.where(self.cas > self.ap.cas, self.ap.cas, self.cas),    #TODO: change to minimum
@@ -280,8 +286,8 @@ class Traffic:
                         default=tas)
 
         tas = np.select(condlist=[
-                            (self.speed_mode == Traffic_speed_mode.CAS) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.cas == self.ap.cas),
-                            (self.speed_mode == Traffic_speed_mode.MACH) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.mach == self.ap.mach)
+                            (self.speed_mode == Speed_mode.CAS) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.cas == self.ap.cas),
+                            (self.speed_mode == Speed_mode.MACH) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.mach == self.ap.mach)
                         ],
                         choicelist=[
                             self.perf.cas_to_tas(Unit_conversion.knots_to_mps(self.cas), self.weather.p, self.weather.rho),
@@ -289,11 +295,11 @@ class Traffic:
                         ],
                         default=tas)
 
-        self.mach = np.where((self.speed_mode == Traffic_speed_mode.CAS) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.cas == self.ap.cas), 
+        self.mach = np.where((self.speed_mode == Speed_mode.CAS) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.cas == self.ap.cas), 
                                 self.perf.tas_to_mach(tas, self.weather.T),
                                 self.mach)
         
-        self.cas = np.where((self.speed_mode == Traffic_speed_mode.MACH) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.mach == self.ap.mach),
+        self.cas = np.where((self.speed_mode == Speed_mode.MACH) & ((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE)) & (self.mach == self.ap.mach),
                                 Unit_conversion.mps_to_knots(self.perf.tas_to_cas(tas, self.weather.p, self.weather.rho)),
                                 self.cas)
 
@@ -322,8 +328,8 @@ class Traffic:
         self.long = self.long + self.gs_east / 216000.0
         self.alt = self.alt + self.vs / 60.0
         self.alt = np.select(condlist=[     #handle overshoot
-                                self.flight_phase == Flight_phase.CLIMB,
-                                self.flight_phase == Flight_phase.DESCENT
+                                self.vertical_mode == Vertical_mode.CLIMB,
+                                self.vertical_mode == Vertical_mode.DESCENT
                             ],
                             choicelist=[
                                 np.where(self.alt > self.ap.alt, self.ap.alt, self.alt),

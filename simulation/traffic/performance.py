@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import os
 
-from utils.enums import AP_speed_mode, Flight_phase, Engine_type
+from utils.enums import AP_speed_mode, Flight_phase, Engine_type, Configuration, Vertical_mode
 
 class Performance:
     """
@@ -566,6 +566,8 @@ class Performance:
         -------
         Fuel burn : float[]
             Fuel burn [kg/s]
+
+        TODO: Thrust mode -> idle descent
         """
         a = self.__cal_nominal_fuel_flow(tas, thrust)/60.0
         return np.select(
@@ -585,20 +587,23 @@ class Performance:
             )
 
     
-    def cal_thrust(self, flight_phase, H_p, V_tas, d_T, drag, ap_speed_mode):
+    def cal_thrust(self, vertical_mode, configuration, H_p, V_tas, d_T, drag, ap_speed_mode):
         """
         Calculate thrust given flight phases.
 
         Parameters
         ----------
-        flight_phase : float[] TODO: match configuration?
-            Flight phase from Traffic class [Flight_phase enum]
+        vertical_mode : float[]
+            Vertical mode from Traffic class [Vertical_mode enum]
+
+        configuration : float[] 
+            Configuration from Traffic class [Configuration enum]
 
          H_p : float[]
-            Geopotential pressuer altitude [ft] TODO: Different unit
+            Geopotential pressuer altitude [ft]
 
         V_tas : float[]
-            True airspeed [kt] TODO: Different unit
+            True airspeed [kt]
 
         d_T : float[]
             Temperature differential from ISA [K]_
@@ -616,13 +621,13 @@ class Performance:
         """
         return np.select(
                     condlist=[
-                            (flight_phase <= Flight_phase.CLIMB) | ((flight_phase == Flight_phase.CRUISE) & (ap_speed_mode == AP_speed_mode.ACCELERATE)),
-                            (flight_phase == Flight_phase.CRUISE) & ((ap_speed_mode == AP_speed_mode.CONSTANT_CAS) | (ap_speed_mode == AP_speed_mode.CONSTANT_MACH)),
-                            (flight_phase >= Flight_phase.DESCENT) | ((flight_phase == Flight_phase.CRUISE) & (ap_speed_mode == AP_speed_mode.DECELERATE))],
+                            (vertical_mode == Vertical_mode.CLIMB) | ((vertical_mode == Vertical_mode.LEVEL) & (ap_speed_mode == AP_speed_mode.ACCELERATE)),
+                            (vertical_mode == Vertical_mode.LEVEL) & ((ap_speed_mode == AP_speed_mode.CONSTANT_CAS) | (ap_speed_mode == AP_speed_mode.CONSTANT_MACH)),
+                            (vertical_mode == Vertical_mode.DESCENT) | ((vertical_mode == Vertical_mode.LEVEL) & (ap_speed_mode == AP_speed_mode.DECELERATE))],
                     choicelist=[
                         self.__cal_max_climb_to_thrust(H_p, V_tas, d_T),                                                       
                         np.minimum(drag, self.__cal_max_cruise_thrust(self.__cal_max_climb_to_thrust(H_p, V_tas, d_T))),         #max climb thrust when acceleration, T = D at cruise, but limited at max cruise thrust
-                        self.__cal_descent_thrust(H_p, self.__cal_max_climb_to_thrust(H_p, V_tas, d_T), flight_phase)])
+                        self.__cal_descent_thrust(H_p, self.__cal_max_climb_to_thrust(H_p, V_tas, d_T), configuration)])
 
 
     # -----------------------------------------------------------------------------------------------------
@@ -851,7 +856,7 @@ class Performance:
 
 
     # ----------------------------  Total-Energy Model Section 3.2 -----------------------------------------
-    def cal_energy_share_factor(self, H_p, T, d_T, M, ap_speed_mode, flight_phase):
+    def cal_energy_share_factor(self, H_p, T, d_T, M, ap_speed_mode, vertical_mode):
         """
         Calculate energy share factor (Equation 3.2-5, 8~11)
 
@@ -870,40 +875,46 @@ class Performance:
             Mach number [dimensionless]
 
         ap_speed_mode: float[]
-            Speed mode from Autopilot class [1: constant Mach, 2: constant CAS, 3: accelerate, 4: decelerate]
-            TODO: should it be in traffic class?
+            Speed mode from Autopilot class [AP_speed_mode enum]
 
-        flight_phase: float[]
-            Flight phase from Traffic class [Flight_phase enum]
+        vertical_mode: float[]
+            Vertical mode from Traffic class [Vertical_mode enum]
 
         Returns
         -------
         f{M}: float[]
             Energy share factor [dimenesionless]
         """
-        return np.select([ap_speed_mode == 1, ap_speed_mode == 2, ap_speed_mode == 3, ap_speed_mode ==4],[
-            # Constant Mach
-            np.where(H_p > self.__H_P_TROP,
-                # Conditiona a: Constant Mach number in stratosphere (Equation 3.2-8)
-                1.0,
-                # Condition b: Constant Mach number below tropopause (Equation 3.2-9)
-                np.power(1.0 + self.__KAPPA*self.__R*self.__BETA_T_BELOW_TROP/2.0/self.__G_0 * np.square(M) * (T-d_T)/T, -1.0)),
+        return np.select(condlist=[
+                            ap_speed_mode == AP_speed_mode.CONSTANT_MACH, 
+                            ap_speed_mode == AP_speed_mode.CONSTANT_CAS, 
+                            ap_speed_mode == AP_speed_mode.ACCELERATE, 
+                            ap_speed_mode == AP_speed_mode.DECELERATE],
 
-            # Constnt CAS
-            np.where(H_p <= self.__H_P_TROP,
-                # Condition c: Constant Calibrated Airspeed (CAS) below tropopause (Equation 3.2-10)
-                np.power(1.0 + self.__KAPPA*self.__R*self.__BETA_T_BELOW_TROP/2.0/self.__G_0 * np.square(M) * (T-d_T)/T \
-                    + np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), -1.0/(self.__KAPPA-1.0)) \
-                        * (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0), -1.0),
-                # Condition d: Constant Calibrated Airspeed (CAS) above tropopause (Equation 3.2-11)
-                np.power(1.0 + np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), -1.0/(self.__KAPPA-1)) \
-                    * (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0), -1.0)),
-            
-            # Acceleration in climb + Acceleration in descent TODO: <= and >= vs ==?
-            (flight_phase == Flight_phase.CLIMB) * 0.3 + (flight_phase == Flight_phase.DESCENT) * 1.7,
-            # Deceleration in descent + Deceleration in climb
-            (flight_phase == Flight_phase.DESCENT) * 0.3 + (flight_phase == Flight_phase.CLIMB) * 1.7
-        ])
+                        choicelist=[
+                            # Constant Mach
+                            np.where(H_p > self.__H_P_TROP,
+                                # Conditiona a: Constant Mach number in stratosphere (Equation 3.2-8)
+                                1.0,
+                                # Condition b: Constant Mach number below tropopause (Equation 3.2-9)
+                                np.power(1.0 + self.__KAPPA*self.__R*self.__BETA_T_BELOW_TROP/2.0/self.__G_0 * np.square(M) * (T-d_T)/T, -1.0)),
+
+                            # Constnt CAS
+                            np.where(H_p <= self.__H_P_TROP,
+                                # Condition c: Constant Calibrated Airspeed (CAS) below tropopause (Equation 3.2-10)
+                                np.power(1.0 + self.__KAPPA*self.__R*self.__BETA_T_BELOW_TROP/2.0/self.__G_0 * np.square(M) * (T-d_T)/T \
+                                    + np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), -1.0/(self.__KAPPA-1.0)) \
+                                        * (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0), -1.0),
+                                # Condition d: Constant Calibrated Airspeed (CAS) above tropopause (Equation 3.2-11)
+                                np.power(1.0 + np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), -1.0/(self.__KAPPA-1)) \
+                                    * (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0), -1.0)),
+                            
+                            # Acceleration in climb + Acceleration in descent
+                            (vertical_mode == Vertical_mode.CLIMB) * 0.3 + (vertical_mode == Vertical_mode.DESCENT) * 1.7,
+
+                            # Deceleration in descent + Deceleration in climb
+                            (vertical_mode == Vertical_mode.DESCENT) * 0.3 + (vertical_mode == Vertical_mode.CLIMB) * 1.7
+                        ])
 
 
     def cal_tem_rocd(self, T, d_T, m, D, f_M, Thr, V_tas, C_pow_red):
@@ -1094,7 +1105,7 @@ class Performance:
 
 
     # ----------------------------  Aerodynamic section 3.6 -----------------------------------------
-    def cal_aerodynamic_drag(self, V_tas, bank_angle, m, rho, flight_phase, c_des_exp):
+    def cal_aerodynamic_drag(self, V_tas, bank_angle, m, rho, configuration, c_des_exp):
         """
         Calculate Aerodynamic drag (Section 3.6.1)
 
@@ -1112,8 +1123,8 @@ class Performance:
         rho: float[]
             Density [kg/m^3]
 
-        flight_phase: float[]
-            Flight phase from Traffic class [Flight_phase enum]
+        configuration: float[]
+            Configuration from Traffic class [Configuration enum]
 
         c_des_exp: float[]
             Coefficient of expedited descent factor [dimensionless]
@@ -1127,17 +1138,19 @@ class Performance:
         c_L = 2.0 * m * self.__G_0 / rho / np.square(V_tas) / self.__S / np.cos(np.deg2rad(bank_angle))
         
         # Drag coefficient (Equation3.6-2~4)
-        c_D = np.select(condlist=[flight_phase == Flight_phase.APPROACH, 
-                         flight_phase == Flight_phase.LANDING],
-
-                        choicelist=[np.where(self.__c_d2_ap != 0,                              # Approach phase
-                            self.__c_d0_ap + self.__c_d2_ap * np.square(c_L),       # If c_d0_ap / c_d2_ap are NOT set to 0 (Equation 3.6-3)
-                            self.__c_d0_cr + self.__c_d2_cr * np.square(c_L)),      # If c_d0_ap / c_d2_ap are  set to 0 (Equation 3.6-2)
-                         np.where(self.__c_d2_ld != 0,      # Landing phase
-                            self.__c_d0_ld + self.__c_d0_ldg + self.__c_d2_ld * np.square(c_L),     # If c_d0_ld / c_d2_ld are NOT set to 0 (Equation 3.6-4)
-                            self.__c_d0_cr + self.__c_d2_cr * np.square(c_L))                       # If c_d0_ld / c_d2_ld are set to 0 (Equation 3.6-2)
+        c_D = np.select(condlist=[
+                            configuration == Configuration.APPROACH, 
+                            configuration == Configuration.LANDING
                         ],
-                        default=self.__c_d0_cr + self.__c_d2_cr * np.square(c_L),  # All flight phases except for approach and landing. (Equation 3.6-2)
+                        choicelist=[
+                            np.where(self.__c_d2_ap != 0,                                               # Approach config
+                                self.__c_d0_ap + self.__c_d2_ap * np.square(c_L),                           # If c_d0_ap / c_d2_ap are NOT set to 0 (Equation 3.6-3)
+                                self.__c_d0_cr + self.__c_d2_cr * np.square(c_L)),                          # If c_d0_ap / c_d2_ap are  set to 0 (Equation 3.6-2)
+                            np.where(self.__c_d2_ld != 0,                                               # Landing config
+                                self.__c_d0_ld + self.__c_d0_ldg + self.__c_d2_ld * np.square(c_L),         # If c_d0_ld / c_d2_ld are NOT set to 0 (Equation 3.6-4)
+                                self.__c_d0_cr + self.__c_d2_cr * np.square(c_L))                           # If c_d0_ld / c_d2_ld are set to 0 (Equation 3.6-2)
+                        ],
+                        default=self.__c_d0_cr + self.__c_d2_cr * np.square(c_L),                   # All configs except for approach and landing. (Equation 3.6-2)
                 )
 
         # Drag force
@@ -1238,7 +1251,7 @@ class Performance:
         return self.__C_TCR * Thr_max_climb
 
     
-    def __cal_descent_thrust(self, H_p, Thr_max_climb, flight_phase):
+    def __cal_descent_thrust(self, H_p, Thr_max_climb, configuration):
         """
         Calculate descent thrust (Section 3.7.3)
 
@@ -1250,8 +1263,8 @@ class Performance:
         Thr_max_climb: float[]
             Maximum climb thrust [N]
 
-        flight_phase: float[] TODO: match configuration?
-            Flight phase from Traffic class [Flight_phase enum]
+        Configuration: float[]
+            Configuration from Traffic class [Configuration enum]
 
         Returns
         -------
@@ -1263,9 +1276,9 @@ class Performance:
                         # If H_p > H_p_des
                         self.__c_tdes_high * Thr_max_climb,     # Equation 3.7-9
                         # Else
-                        np.select([flight_phase == Flight_phase.CRUISE, 
-                                   flight_phase == Flight_phase.APPROACH, 
-                                   flight_phase == Flight_phase.LANDING],
+                        np.select([configuration == Configuration.CLEAN, 
+                                   configuration == Configuration.APPROACH, 
+                                   configuration == Configuration.LANDING],
 
                                   [self.__c_tdes_low * Thr_max_climb,       # Equation 3.7-10
                                    self.__c_tdes_app * Thr_max_climb,       # Equation 3.7-11

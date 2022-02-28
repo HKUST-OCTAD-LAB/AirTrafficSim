@@ -1,20 +1,5 @@
 from enum import IntEnum
 
-class Flight_phase(IntEnum):
-    """Flight configuration"""
-    AT_GATE_ORIGIN = 1,
-    TAXI_ORIGIN = 2,
-    TAKEOFF = 3,
-    INITIAL_CLIMB = 4,
-    CLIMB = 5,
-    CRUISE = 6,
-    DESCENT = 7,
-    APPROACH = 8,
-    LANDING = 9,
-    TAXI_DEST = 10,
-    AT_GATE_DEST = 11
-
-
 class Engine_type(IntEnum):
     JET = 1,
     TURBOPROP = 2,
@@ -28,9 +13,37 @@ class Wake_category(IntEnum):
     L = 4
 
 
-class Traffic_speed_mode(IntEnum):
+class Flight_phase(IntEnum):
+    AT_GATE_ORIGIN = 1,
+    TAXI_ORIGIN = 2,
+    TAKEOFF = 3,
+    INITIAL_CLIMB = 4,
+    CLIMB = 5,
+    CRUISE = 6,
+    DESCENT = 7,
+    APPROACH = 8,
+    LANDING = 9,
+    TAXI_DEST = 10,
+    AT_GATE_DEST = 11
+
+
+class Configuration(IntEnum):
+    CLEAN = 1,
+    TAKEOFF = 2,
+    APPROACH = 3,
+    LANDING = 4
+
+
+class Speed_mode(IntEnum):
     CAS = 1,
     MACH = 2
+
+
+class Vertical_mode(IntEnum):
+    LEVEL = 1,
+    CLIMB = 2,
+    DESCENT = 3
+
 
 class AP_speed_mode(IntEnum):
     CONSTANT_MACH = 1,
