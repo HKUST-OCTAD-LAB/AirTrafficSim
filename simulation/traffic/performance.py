@@ -332,7 +332,7 @@ class Performance:
 
         # ----------------------------  SYNONYM FILE FORMAT (SYNONYM.NEW) section 6.3 -----------------------------------------
         # | 'CD' | SUPPORT TYPE (-/*) | AIRCRAFT Code | MANUFACTURER | NAME OR MODEL | FILE NAME | ICAO (Y/N) |
-        self.__SYNONYM = np.genfromtxt(Path(__file__).parent.parent.parent.resolve().joinpath('./data/BADA/SYNONYM.NEW'), delimiter=[3,2,7,20,25,8,5], names=['CD','ST','ACCODE','MANUFACTURER','MODEL','FILENAME','ICAO'], dtype="U2,U1,U4,U18,U25,U6,U1", comments="CC", autostrip=True, skip_footer=1)
+        self.__SYNONYM = np.genfromtxt(Path(__file__).parent.parent.parent.resolve().joinpath('./data/BADA/SYNONYM.NEW'), delimiter=[3,2,7,20,25,8,5], names=['CD','ST','ACCODE','MANUFACTURER','MODEL','FILENAME','ICAO'], dtype="U2,U1,U4,U18,U25,U6,U1", comments="CC", autostrip=True, skip_footer=1, encoding= 'unicode_escape')
 
 
     def add_aircraft(self, icao, n, mass_class=2):

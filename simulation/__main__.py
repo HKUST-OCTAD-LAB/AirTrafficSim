@@ -45,7 +45,7 @@ if len(sys.argv) > 1:
 
             try:
                 with open('client/.env', 'x') as f:
-                    print('\nEnter Cesium Ion token"')
+                    print('\nEnter Cesium Ion token:')
                     x = input()
                     f.write('REACT_APP_CESIUMION_ACCESS_TOKEN='+x)
             except FileExistsError:

@@ -19,9 +19,9 @@ To install for development purpose, please follow the following guide:
 ### Dependencies:
 
 - conda (tested with 4.10.3)
-- nodejs (tested with 16.13.0)
-- python (tested with 3.9.7)
-- numpy (tested with 1.21.2)
+  - nodejs (tested with 16.13.0)
+  - python (tested with 3.9.7)
+  - numpy (tested with 1.21.2)
 
 
 Other nodejs dependencies can be found in the package.json file in client/ and server/ folder respectively.
