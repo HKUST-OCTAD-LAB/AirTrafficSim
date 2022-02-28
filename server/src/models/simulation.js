@@ -11,7 +11,7 @@ module.exports = {
         const python = spawn('python', ['../simulation', '--headless']);
 
         python.stdout.on('data', function (data) {
-            // console.log(data.toString());
+            console.log(data.toString());
         });
 
         python.stderr.on('data', function (data) {

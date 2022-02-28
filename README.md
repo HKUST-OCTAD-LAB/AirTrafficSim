@@ -4,15 +4,11 @@ Air traffic sim is a web-based air traffic simulation and visualization platform
 
 ## Features (preview)
 
-Real time visualization of air traffic.
-
-![real_time](doc/images/real_time_simulation.png)
-
 Replay histortic flights given data.
 
-![replay](doc/images/scenarios.png)
+![replay](doc/images/replay.png)
 
-Simulation.
+Air traffic simulation using BADA performance data.
 
 ![simulation](doc/images/simulation.png)
 
@@ -22,11 +18,10 @@ To install for development purpose, please follow the following guide:
 
 ### Dependencies:
 
-- npm 8.1.0
-- yarn 1.22.17
-- node 16.13.0
-- python 3.9.7 (suggested to use Conda environment)
-- numpy 1.21.2
+- conda (tested with 4.10.3)
+- nodejs (tested with 16.13.0)
+- python (tested with 3.9.7)
+- numpy (tested with 1.21.2)
 
 
 Other dependencies can be found in the package.json file in client/ and server/ folder respectively.
@@ -34,35 +29,58 @@ Other dependencies can be found in the package.json file in client/ and server/ 
 ### Install from Github
 
 ```
+conda create -n AirTrafficSim python
+conda activate AirTrafficSim
+conda install numpy
+conda install -c conda-forge nodejs
+
 git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
 cd AirTrafficSim/
-
-cd client/
-yarn install
-
-cd server/
-npm install
+python simulation install
 ```
-After installation, go to client/ folder and create a **.env** file. Insert the Cesium Ion token, which can be extracted from the Cesium Ion portal, in the file as follow.
+
+This will execute the script to install the nodejs dependencies and build the production web enviornment for the UI. The script will ask you to enter the Cesium access token which can be extracted from the [Cesium ion portal](https://cesium.com/platform/cesium-ion/) after signing up a free account.
 >REACT_APP_CESIUMION_ACCESS_TOKEN=
 
-### Running web-based UI (for development)
+Please also download, unzip, and store BADA data in [data/BADA](data/BADA/)
+
+### Running web-based UI (Production)
+
+You can start the production environment by executing the following command. It uses port 5000 for communicaiton. Please open or forward the port accordingly if needed.
+
+```
+python simulation run
+```
+
+You should be able to open the UI using any modern browser at http://localhost:5000. When you click the tab "Simulation", it will automatically execute the python simulation and feedback the data for visualization in the UI.
+
+### Running web-based UI (Development)
 
 Currently, the client uses port 3000 and the server uses port 5000 for communication. Please open or forward the ports accordingly if needed. To run development environment: 
+
 ```
-cd client/
+cd AirTrafficSim/client/
 yarn start
 ```
+
 Open a new terminal windows, enter:
+
 ```
-cd server/
+cd AirTrafficSim/server/
 npm run dev
 ```
+
 You should be able to open the UI using any modern browser at http://localhost:3000.
 
-### Running simulation (for development)
+### Running simulation (Standalone)
 
-To run the simulation, download, unzip, and store BADA data in [data/BADA](data/BADA/). Then, at project home directory `/AirTrafficSim`, run `python simulation`. This will execute [\_\_main\_\_.py](simulation/__main__.py) and begin the simulation.
+To run the simulation as a standalone software, you can execute the following command. 
+
+```
+python simulation --headless
+```
+
+This will run the simulation without the UI by executing [\_\_main\_\_.py](simulation/__main__.py). The output data will be stored in [data/simulation](data/simulation/) as a CSV file.
 
 ## Contribution
 
@@ -101,8 +119,6 @@ AirTrafficSim/
 ├── simulation/
 │   ├── atm/
 │   │   └── __init.py
-│   ├── data/
-│   │   └── BADA/
 │   ├── env/
 │   │   ├── __init__.py
 │   │   └── environment.py
@@ -126,6 +142,10 @@ The client folder contains the UI of the website. It is written in react.js with
 
 The data folder contrains all the data needed for simulation which includes BADA data (user would need to provide their own data due to license requirement), navigation data, replay (input) and simulation (output) data.
 
+- [x] Aircraft Performance data ([BADA 3.15](https://www.eurocontrol.int/model/bada))
+- [ ] Navigation data (can extract VHHH data from [eAIP](https://www.ais.gov.hk/eaip_20211202/2021-12-02-000000/html/index-en-US.html))
+- [ ] Weather data
+
 ### server/
 
 The server folder contains the server side program of the website. It is written in [nodejs](https://nodejs.org/en/) using [expressjs](https://expressjs.com/) and [socket.io](https://socket.io/). The platform is targeted to utilize MERN stack (MongoDB, Express JS, React JS and Node JS).
@@ -136,13 +156,6 @@ The simulation folder contains the python code for air traffic simulation. It co
 #### [simulation/atm/](simulation/atm/)
 
 The atm folder contains the simulation code for air traffic management (ATM) and air traffic controller (ATC). This will be the research focus to improve existing ATM strategies and algorithm.
-
-#### [simulation/data/](simulation/data/)
-
-The data folder will contains all the necessary data to conduct the simulation. This includes:
-- [x] Aircraft Performance data ([BADA 3.15](https://www.eurocontrol.int/model/bada))
-- [ ] Navigation data (can extract VHHH data from [eAIP](https://www.ais.gov.hk/eaip_20211202/2021-12-02-000000/html/index-en-US.html))
-- [ ] Weather data
 
 #### [simulation/env/](simulation/env/)
 

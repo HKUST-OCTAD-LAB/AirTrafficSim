@@ -14,7 +14,7 @@ const io = require('socket.io')(server, {
 
 const realtime = require('./src/models/realtime');
 const replay = require('./src/models/replay');
-const navdata = require('./src/models/navdata');
+// const navdata = require('./src/models/navdata');
 const simulation = require('./src/models/simulation')
 
 const PORT = process.env.PORT || 5000;
@@ -66,4 +66,5 @@ io.on('connection', socket => {
 
 server.listen(PORT, () => {
   console.log(`Server Listening on ${PORT}`);
+  console.log(`Client opened at http://localhost:${PORT}`)
 });
