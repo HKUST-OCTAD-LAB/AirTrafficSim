@@ -24,15 +24,14 @@ To install for development purpose, please follow the following guide:
 - numpy (tested with 1.21.2)
 
 
-Other dependencies can be found in the package.json file in client/ and server/ folder respectively.
+Other nodejs dependencies can be found in the package.json file in client/ and server/ folder respectively.
 
 ### Install from Github
 
 ```
-conda create -n AirTrafficSim python
+conda create -n AirTrafficSim python nodejs
 conda activate AirTrafficSim
 conda install numpy
-conda install -c conda-forge nodejs
 
 git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
 cd AirTrafficSim/
