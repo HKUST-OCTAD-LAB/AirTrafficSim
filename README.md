@@ -141,8 +141,8 @@ The client folder contains the UI of the website. It is written in react.js with
 
 The data folder contrains all the data needed for simulation which includes BADA data (user would need to provide their own data due to license requirement), navigation data, replay (input) and simulation (output) data.
 
-- [x] Aircraft Performance data ([BADA 3.15](https://www.eurocontrol.int/model/bada))
-- [ ] Navigation data (can extract VHHH data from [eAIP](https://www.ais.gov.hk/eaip_20211202/2021-12-02-000000/html/index-en-US.html))
+- [x] Aircraft Performance data (Not included but obtainable at [eurocontrol](https://www.eurocontrol.int/model/bada) website.)
+- [x] Navigation data at [xplane_default_data.zip](data/nav/xplane_default_data.zip) using [Xplane-11 data](https://developer.x-plane.com/docs/data-development-documentation/) under the terms of the Free Software Foundation General Public License (GPL).
 - [ ] Weather data
 
 ### server/

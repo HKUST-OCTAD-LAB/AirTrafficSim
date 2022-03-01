@@ -1,6 +1,7 @@
 import sys
 import os
 import subprocess
+from zipfile import ZipFile
 from contextlib import contextmanager
 
 from env import Environment
@@ -60,11 +61,15 @@ if len(sys.argv) > 1:
             except ImportError:
                 print ("\nnumpy is not installed")
 
+            if len(os.listdir('data/nav/xplane/')) <= 1:
+                print("\n Unzipping X-plane navigation data.")
+                ZipFile('data/nav/xplane_default_data.zip').extractall('data/nav/xplane/')
+
             print("\nInstallation completed.\nExecute \"python simulation run\" to start the simulation.")
 
             if len(os.listdir('data/BADA/')) <= 1 :
                 print("\nBADA folder is empty. Remember to put the BADA performance data into /data/BADA/\n")
-      
+ 
     
 else:
     print('simulation')
