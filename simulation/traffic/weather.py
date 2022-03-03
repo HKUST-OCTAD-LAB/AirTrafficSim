@@ -5,7 +5,9 @@ from utils.unit import Unit_conversion
 class Weather:
     
     def __init__(self, N=1000):
-        # Turbulence
+        # Wind speed
+        self.wind_speed = np.zeros([N])                         # Wind speed [knots]
+        self.wind_direction = np.zeros([N])                     # Wind direction [deg]
         self.wind_north = np.zeros([N])                         # Wind - North [knots]
         self.wind_east = np.zeros([N])                          # Wind - East [knots]
         

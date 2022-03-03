@@ -1,17 +1,24 @@
 import numpy as np
 import csv
+from pathlib import Path
 
 from traffic.autopilot import Autopilot
 from traffic.weather import Weather
 from traffic.performance import Performance
 from utils.unit import Unit_conversion
-from utils.enums import Flight_phase,    Speed_mode, AP_speed_mode, AP_throttle_mode, AP_vertical_mode, Configuration, Vertical_mode
+from utils.enums import Flight_phase, Speed_mode, AP_speed_mode, AP_throttle_mode, AP_vertical_mode, Configuration, Vertical_mode
 
 class Traffic:
 
-    def __init__(self, N=1000):
+    def __init__(self, file_name, N=1000):
         """
         Initialize base traffic array to store aircraft state variables for one timestep.
+
+        file_name : String
+            Output file name
+
+        N :  int
+            Total number of aircraft
         """
 
         # Memory and index control vairable:
@@ -102,8 +109,14 @@ class Traffic:
         self.weather = Weather(N)                               
         """Weather class"""
 
+        # Handle output
+        self.writer = csv.writer(open(Path(__file__).parent.parent.parent.resolve().joinpath('data/simulation/'+file_name+'.csv'), 'w+'))
+        header = ['time', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
+                    'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode'] #debug
+        self.writer.writerow(header)
+
     
-    def add_aircraft(self, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight):
+    def add_aircraft(self, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight, flight_plan=[]):
         """
         Add an aircraft to traffic array.
 
@@ -128,9 +141,10 @@ class Traffic:
             n = self.n
 
         
-        # Add aircraft in performance and weather array
+        # Add aircraft in performance, weather, and autopilot array
         self.perf.add_aircraft(aircraft_type, n)
         self.weather.add_aircraft(n, alt, self.perf)
+        self.ap.add_aircraft(n, lat, long, alt, heading, cas, flight_plan)
 
         # Initialize variables
         self.call_sign[n] = call_sign
@@ -343,7 +357,7 @@ class Traffic:
         self.mass = self.mass - fuel_burn
 
 
-    def save(self, writer, time):
+    def save(self, time):
         """
         Save all states variable of one timestemp to csv file.
 
@@ -356,4 +370,4 @@ class Traffic:
         """
         data = np.column_stack((np.full(self.n, time), np.arange(self.n), self.call_sign[:self.n], self.lat[:self.n], self.long[:self.n], self.alt[:self.n], self.heading[:self.n], self.cas[:self.n], self.tas[:self.n], self.mach[:self.n], self.vs[:self.n], self.mass[:self.n], self.fuel_consumed[:self.n],
                         self.bank_angle[:self.n], self.trans_alt[:self.n], self.accel[:self.n], self.drag[:self.n], self.esf[:self.n], self.thrust[:self.n], self.flight_phase[:self.n], self.speed_mode[:self.n], self.ap.speed_mode[:self.n])) #debug
-        writer.writerows(data)
+        self.writer.writerows(data)

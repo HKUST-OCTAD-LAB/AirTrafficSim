@@ -61,3 +61,7 @@ class AP_vertical_mode(IntEnum):
     ALT_HOLD = 1,
     VS = 2,
     FLC = 3
+
+class AP_lateral_mode(IntEnum):
+    HEADING = 1,
+    LNAV = 2

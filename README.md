@@ -22,6 +22,7 @@ To install for development purpose, please follow the following guide:
   - nodejs (tested with 16.13.0)
   - python (tested with 3.9.7)
   - numpy (tested with 1.21.2)
+  - pandas (tested with 1.4.1)
 
 
 Other nodejs dependencies can be found in the package.json file in client/ and server/ folder respectively.
@@ -31,7 +32,6 @@ Other nodejs dependencies can be found in the package.json file in client/ and s
 ```
 conda create -n AirTrafficSim python nodejs
 conda activate AirTrafficSim
-conda install numpy
 
 git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
 cd AirTrafficSim/

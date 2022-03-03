@@ -17,5 +17,15 @@
         //     "request": "launch",
         //     "module": "simulation"
         // }
+        {
+            "name": "Python: Profiling",
+            "type": "python",
+            "request": "launch",
+            "module": "cProfile",
+            "args": [
+                "-o", "tmp/profile.prof", "simulation/__main__.py", "--headless"
+            ]
+            // snakeviz tmp/profile.prof to visuzlie the profile
+        },
     ]
 }

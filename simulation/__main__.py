@@ -59,7 +59,14 @@ if len(sys.argv) > 1:
             try:
                 import numpy
             except ImportError:
-                print ("\nnumpy is not installed")
+                print ("\nInstalling numpy")
+                subprocess.call('conda install numpy', shell=True)
+
+            try:
+                import pandas
+            except ImportError:
+                print ("\nInstalling pandas")
+                subprocess.call('conda install pandas', shell=True)
 
             if len(os.listdir('data/nav/xplane/')) <= 1:
                 print("\n Unzipping X-plane navigation data.")

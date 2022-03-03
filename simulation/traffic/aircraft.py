@@ -1,21 +1,24 @@
 from traffic.traffic import Traffic
 
+from utils.enums import AP_lateral_mode
+
 class Aircraft:
     """
     Aircraft class to represent the states of one individual aircraft, including get and set functions.
     """
 
-    def __init__(self, traffic:Traffic, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight):
+    def __init__(self, traffic:Traffic, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight, flight_plan=[]):
         """
         Initialize one aircraft and add the aircraft to traffic array.
         """
         self.traffic = traffic          # Pass traffic array reference
-        self.index = self.traffic.add_aircraft(call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight)        # Add aircraft. Obtain aircraft index
+        self.index = self.traffic.add_aircraft(call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight, flight_plan)        # Add aircraft. Obtain aircraft index
 
 
     def set_heading(self, heading):
         """Set heading [deg]"""
         self.traffic.ap.heading[self.index] = heading
+        self.traffic.ap.lateral_mode[self.index] = AP_lateral_mode.HEADING
 
 
     def set_speed(self, speed):
@@ -39,11 +42,11 @@ class Aircraft:
 
 
     def set_direct(self, waypoint):
-        pass
+        self.traffic.ap.lateral_mode[self.index] = AP_lateral_mode.LNAV
 
 
     def resume_own_navigation(self):
-        pass
+        self.traffic.ap.lateral_mode[self.index] = AP_lateral_mode.LNAV
 
 
     def get_heading(self):
