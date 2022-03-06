@@ -83,7 +83,7 @@ This will run the simulation without the UI by executing [\_\_main\_\_.py](simul
 
 ## Contribution
 
-AirTrafficSim is under heavy development. To contribute to the simulation, please follow this [python styling guide](https://numpydoc.readthedocs.io/en/latest/format.html#params).
+AirTrafficSim is under heavy development. To contribute to the simulation, please follow this [python styling guide](https://hackmd.io/@ChrisNguyenAE/By-NM-x6t).
 
 ---
 ## Project structure
