@@ -31,6 +31,7 @@ Other nodejs dependencies can be found in the package.json file in client/ and s
 
 ```
 conda create -n AirTrafficSim python nodejs
+conda install -c conda-forge fastapi
 conda activate AirTrafficSim
 
 git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
