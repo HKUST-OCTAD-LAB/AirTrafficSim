@@ -20,7 +20,6 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
-    "axios": "^0.26.0",
     "cesium": "^1.91.0",
     "craco-cesium": "^1.2.0",
     "ionicons": "^5.4.0",
@@ -49,7 +48,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "BUILD_PATH='../server/build' craco build",
+    "build": "BUILD_PATH='../data/build' craco build",
     "test": "craco test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
   },

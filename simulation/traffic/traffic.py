@@ -110,7 +110,7 @@ class Traffic:
         """Weather class"""
 
         # Handle output
-        self.writer = csv.writer(open(Path(__file__).parent.parent.parent.resolve().joinpath('data/simulation/'+file_name+'.csv'), 'w+'))
+        self.writer = csv.writer(open(Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+file_name+'.csv'), 'w+'))
         header = ['time', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
                     'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode'] #debug
         self.writer.writerow(header)
@@ -172,7 +172,7 @@ class Traffic:
         # Increase aircraft count
         self.n = self.n + 1
 
-        return self.n - 1
+        return n
 
 
     def del_aircraft(self, n):
@@ -195,6 +195,9 @@ class Traffic:
         self.payload_weight[n] = 0
           
         self.perf.del_aircraft(n)
+
+        # Decrease aircraft count
+        self.n = self.n - 1
     
 
     

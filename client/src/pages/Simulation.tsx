@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect} from "react";
 import { IonContent, IonPage, IonTitle, IonToolbar, IonRange, IonIcon, IonButtons, IonButton, IonProgressBar, IonLabel, IonItem, IonSelect, IonSelectOption, IonGrid, IonCol, IonRow, IonFooter, IonChip, IonModal, IonToggle, IonList, useIonViewDidEnter, IonHeader, IonSegment, IonSegmentButton, IonLoading } from '@ionic/react';
-import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate} from "cesium";
+import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource} from "cesium";
 import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer, CzmlDataSource, Clock } from "resium";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, ReferenceLine, CartesianGrid } from "recharts";
 
@@ -11,16 +11,8 @@ import {
     folder
 } from "ionicons/icons";
 
-import socket from "../utils/websocket";
-import axios from "axios";
 import { io } from "socket.io-client";
-
-// const socket = io("http://localhost:6000");
-// const socket = io();
-
-
-axios.defaults.baseURL = 'http://127.0.0.1:8000/api/';
-
+const socket = io("http://localhost:5000");
 
 Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
@@ -34,6 +26,7 @@ const Simulation: React.FC = () => {
 
     // Data - cesium
     const [replayCzml, setReplayCzml] = useState();
+    const simulationDataSource = new cesiumCzmlDataSource();
     // Data - graph
 
     // Clock
@@ -61,16 +54,9 @@ const Simulation: React.FC = () => {
     useIonViewDidEnter(()=> {
         console.log('ionViewDidEnter event fired');
         if (viewerRef.current?.cesiumElement) {
-            // ref.current.cesiumElement is Cesium's Viewer
-            // DO SOMETHING
             const viewer = viewerRef.current.cesiumElement;
             console.log(viewer)
-            // var czmldatasource = new CzmlDataSource();
-            // viewer.dataSources.add(czmldatasource);
-            // socket.on('realtime:all', (msg) => {
-            //     console.log("real time data received");
-            //     czmldatasource.process(msg);
-            // })
+            viewer.dataSources.add(simulationDataSource);
         }
     })
     
@@ -86,22 +72,33 @@ const Simulation: React.FC = () => {
     }
 
     function getReplayDirs(){
-        axios.get("replay/").then( res => {
-            console.log("replay", res.data);
-            setReplayList(res.data)
-        }).catch(err => {
-            console.log(err);
-        })
+        socket.emit("getReplayDir", (res :any) => {
+            console.log(res); // ok
+            setReplayList(res)
+        });
     }
 
     function getReplayCZML(category:string, file:string){
-        axios.get("replay/"+category+"/"+file).then( res => {
-            console.log("replay", res.data);
-            setReplayCzml(res.data)
-        }).catch(err => {
-            console.log(err);
-        })
+        socket.emit("getReplayCZML", category, file, (res :any) => {
+            console.log(res);
+            if (viewerRef.current?.cesiumElement) {
+                const viewer = viewerRef.current.cesiumElement;
+                setReplayCzml(res);
+            }
+        });
     }
+
+    function runSimulation(){
+        socket.emit("runSimulation");
+    }
+
+    socket.on("simulationData", (msg) => {
+        console.log(msg);
+        if (viewerRef.current?.cesiumElement) {
+            const viewer = viewerRef.current.cesiumElement;
+            simulationDataSource.process(msg);
+        }
+    })
 
     return (
         <IonPage>
@@ -122,7 +119,7 @@ const Simulation: React.FC = () => {
                             setStartTime(clock.startTime);
                         }} 
                     />
-                    {replayCzml && <CzmlDataSource data={replayCzml} onLoad={(ds) => {
+                    {replayCzml && mode === 'replay' && <CzmlDataSource data={replayCzml} onLoad={(ds) => {
                         setIsLoading(false);
                         console.log(ds);
                     }}/>}
@@ -146,7 +143,7 @@ const Simulation: React.FC = () => {
                                     <IonChip outline={mode === 'replay' ? false : true} color="dark" onClick={() => {setMode('replay'); getReplayDirs(); setShowReplayModal(true);}}>
                                         <IonLabel>Replay</IonLabel>
                                     </IonChip>
-                                    <IonChip outline={mode === 'simulation' ? false : true} color="dark" onClick={() => {setMode('simulation'); setShowSimulationModal(true);}}>
+                                    <IonChip outline={mode === 'simulation' ? false : true} color="dark" onClick={() => {setMode('simulation'); setShowSimulationModal(false); runSimulation()}}>
                                         <IonLabel>Simulation</IonLabel>
                                     </IonChip>
                                 </IonItem>

@@ -3,6 +3,7 @@ import os
 import subprocess
 from zipfile import ZipFile
 from contextlib import contextmanager
+import server.server as server
 
 from env import Environment
 
@@ -23,8 +24,7 @@ if len(sys.argv) > 1:
             env.step()
 
     if sys.argv[1] == 'run':
-        with cd('server'):
-            subprocess.call('npm start', shell=True)
+        server.run_server()
 
     if sys.argv[1] == 'install':
         if os.path.isdir('client/build'):
