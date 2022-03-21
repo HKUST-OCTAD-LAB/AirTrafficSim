@@ -71,7 +71,7 @@ class Autopilot:
         """Autopilot expedite climb setting [bool]"""
 
         # Init nav class
-        self.nav = Nav()
+        # self.nav = Nav()
 
 
     def add_aircraft(self, n, lat, long, alt, heading, cas, flight_plan=[]):
@@ -108,11 +108,11 @@ class Autopilot:
             self.flight_plan_name[n] = np.array(flight_plan)
             for i, val in enumerate(flight_plan):
                 if i == 0:
-                    lat_tmp, long_tmp = self.nav.get_fix_coordinate(val, lat, long)
+                    lat_tmp, long_tmp = Nav.get_fix_coordinate(val, lat, long)
                     self.flight_plan_lat[n][0] = lat_tmp
                     self.flight_plan_long[n][0] = long_tmp
                 else:
-                    lat_tmp, long_tmp = self.nav.get_fix_coordinate(val, self.flight_plan_lat[n][i-1], self.flight_plan_long[n][i-1])
+                    lat_tmp, long_tmp = Nav.get_fix_coordinate(val, self.flight_plan_lat[n][i-1], self.flight_plan_long[n][i-1])
                     self.flight_plan_lat[n].append(lat_tmp)
                     self.flight_plan_long[n].append(long_tmp)
             self.lateral_mode[n] = AP_lateral_mode.LNAV

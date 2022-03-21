@@ -1,13 +1,16 @@
+from glob import glob
 from pathlib import Path
+from importlib import import_module
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-from server.replay import Replay
-from env.environment import Environment
 import eventlet
+
+from server.replay import Replay
+from server.utils import Utils
 
 eventlet.monkey_patch()
 
-app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath('data/build'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('data/build')))
+app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath('client/build'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('client/build')))
 socketio = SocketIO(app, cors_allowed_origins='*', async_mode='eventlet', logger=True)
 
 @socketio.on('connect')
@@ -26,10 +29,23 @@ def get_replay_dir():
 def get_replay_czml(category, date):
     return Replay.get_replay_czml(category, date)
 
+@socketio.on('getSimulationFile')
+def get_simulation_file():
+    simulation_list=[]
+    for file in Path(__file__).parent.parent.joinpath('env/').glob('*.py'):
+        if file.name != 'environment.py' and file.name != '__init__.py':
+            simulation_list.append(file.name.removesuffix('.py'))
+    return simulation_list
+
 @socketio.on('runSimulation')
-def run_simulation():
-    env = Environment()
-    env.run()
+def run_simulation(file):
+    Env = getattr(import_module('env.'+file), file)
+    env = Env()
+    env.run(socketio)
+
+@socketio.on('getNav')
+def get_Nav(lat1, long1, lat2, long2):
+    return Utils.get_nav(lat1, long1, lat2, long2)
 
 @app.route("/")
 def serve_client():

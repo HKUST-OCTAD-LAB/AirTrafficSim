@@ -48,7 +48,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "BUILD_PATH='../data/build' craco build",
+    "build": "craco build",
     "test": "craco test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
   },

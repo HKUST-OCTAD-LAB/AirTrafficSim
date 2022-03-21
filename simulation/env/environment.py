@@ -1,33 +1,29 @@
-from socket import socket
 import time
 from flask_socketio import emit
 from datetime import datetime, timedelta
 import numpy as np
+import csv
+from pathlib import Path
 
-from utils.enums import Flight_phase
 from utils.unit import Unit_conversion
 from traffic.traffic import Traffic
-from traffic.aircraft import Aircraft
 
 
 class Environment:
 
-    def __init__(self, socket=False):
+    def __init__(self, N=1000, file_name="default"):
+        # User setting
+        self.end_time = 5000
+        """The simulation end time [s]"""
 
+        # Simulation variable
+        self.traffic = Traffic(N)
         self.global_time = 0                    # [s]
-        self.end_time = 10000                    # [s]
-
-        self.time_to_target = 0                 # [s]
-
-        self.traffic = Traffic('simulation', 2)
-        self.aircraft_head = Aircraft(self.traffic, "HEAD", "A20N", Flight_phase.CRUISE, 22.387778, 113.428116, 20000.0, 175.0, 310.0, 10000.0, 12000.0, ["SIERA", "CANTO", "MURRY", "GOODI", "SILVA", "LIMES"])
-        self.aircraft_fol = Aircraft(self.traffic, "FOLLOW", "A20N", Flight_phase.CRUISE, 21.9, 113.5, 20000.0, 175.0, 310.0, 10000.0, 12000.0)
 
         # Handle io
-        self.socket = socket                    # Whether to send message to client through socket
+        self.socket = False                    # Whether to send message to client through socket
         self.datetime = datetime.utcnow()
         self.last_sent_time = time.time()
-
         # Buffer
         self.time = []
         self.lat = []
@@ -35,66 +31,75 @@ class Environment:
         self.alt = []
         self.cas = []
 
-        
+        # File IO
+        self.writer = csv.writer(open(Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+file_name+'-'+self.datetime.isoformat(timespec='seconds')+'.csv'), 'w+'))
+        header = ['time', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
+                    'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode'] #debug
+        self.writer.writerow(header)
 
-    def run(self):
+
+    def atc_command(self):
+        pass
+
+
+    def run(self, socketio=None):
         for i in range(self.end_time):
-            self.step()
+            # One timestep
+            start_time = time.time()
+            print("")
+            print("Environment - step(), time = ", self.global_time)
+            print("")
 
+            self.atc_command()
 
-    def step(self):
-        start_time = time.time()
-        print("")
-        print("Environment - step(), time = ", self.global_time)
-        print("")
-        print("Set ATC command")
-        if self.global_time == 10:  
-            # Right
-            self.aircraft_fol.set_heading(220)
-            # Left
-            # self.aircraft_head.set_heading(150)
+            print("update states")
+            self.traffic.update()
+            print("Save to file")
+            self.save(self.global_time)
+            
+            if(self.socket):
+                # Save to buffer
+                self.time.append((self.datetime + timedelta(seconds=self.global_time)).isoformat())
+                self.lat.append(self.traffic.lat)
+                self.long.append(self.traffic.long)
+                self.alt.append(self.traffic.alt)
+                self.cas.append(self.traffic.cas)
 
-        if self.global_time == 100:
-            # Climb
-            self.aircraft_fol.set_alt(10000)
-            # Descend
-            self.aircraft_head.set_alt(30000)
+                now = time.time()
+                if ((now - self.last_sent_time) > 5) or (self.global_time == (self.end_time-1)):
+                    self.send_to_client(socketio)
+                    # socketio.sleep(0)
+                    self.last_sent_time = now
+                    self.time = []
+                    self.lat = []
+                    self.long = []
+                    self.alt = []
+                    self.cas = []
 
-        if self.global_time == 300:
-            # Accelerate
-            self.aircraft_fol.set_speed(200)
-            # self.aircraft_head.set_mach(0.7)
-
-        print("update states")
-        self.traffic.update()
-        print("Save to file")
-        self.traffic.save(self.global_time)
-        
-        if(socket):
-            # Save to buffer
-            self.time.append((self.datetime + timedelta(seconds=self.global_time)).isoformat())
-            self.lat.append(self.traffic.lat)
-            self.long.append(self.traffic.long)
-            self.alt.append(self.traffic.alt)
-            self.cas.append(self.traffic.cas)
-
-            now = time.time()
-            if ((now - self.last_sent_time) > 1) or (self.global_time == (self.end_time-1)):
-                self.send_to_client()
-                self.last_sent_time = now
-                self.time = []
-                self.lat = []
-                self.long = []
-                self.alt = []
-                self.cas = []
-
-        self.global_time += 1
+            self.global_time += 1
 
         print("Environment - step() finish at", time.time() - start_time)
 
 
-    def send_to_client(self):
-        print("send to client")
+    def save(self, time):
+        """
+        Save all states variable of one timestemp to csv file.
+
+        Parameters
+        ----------
+        writer : csv.writer()
+            csv writer object
+        time : int
+            Simulation time [s]
+        """
+        data = np.column_stack((np.full(self.traffic.n, time), np.arange(self.traffic.n), self.traffic.call_sign[:self.traffic.n], self.traffic.lat[:self.traffic.n], self.traffic.long[:self.traffic.n], self.traffic.alt[:self.traffic.n], self.traffic.heading[:self.traffic.n], 
+                        self.traffic.cas[:self.traffic.n], self.traffic.tas[:self.traffic.n], self.traffic.mach[:self.traffic.n], self.traffic.vs[:self.traffic.n], self.traffic.mass[:self.traffic.n], self.traffic.fuel_consumed[:self.traffic.n],
+                        self.traffic.bank_angle[:self.traffic.n], self.traffic.trans_alt[:self.traffic.n], self.traffic.accel[:self.traffic.n], self.traffic.drag[:self.traffic.n], self.traffic.esf[:self.traffic.n], self.traffic.thrust[:self.traffic.n], self.traffic.flight_phase[:self.traffic.n], self.traffic.speed_mode[:self.traffic.n], self.traffic.ap.speed_mode[:self.traffic.n])) #debug
+        self.writer.writerows(data)
+
+
+    def send_to_client(self, socketio):
+        # print("send to client")
         if self.global_time == 0:
             document = [{
                     "id": "document",
@@ -163,5 +168,5 @@ class Environment:
                 }
             document.append(trajectory)
         
-        emit('simulationData',document)
+        emit('simulationData', document)
         

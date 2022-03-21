@@ -7,19 +7,19 @@ class Replay:
     @staticmethod
     def get_replay_dir():
         """Return a list of directories in data/replay given path"""
-        replay_list = []
+        historic_list = []
         for dir in Path(__file__).parent.parent.parent.joinpath('data/replay/historic').iterdir():
             if dir.is_dir():
-                replay_list.append(dir.name)
+                historic_list.append(dir.name)
         
         simulation_list=[]
         for dir in Path(__file__).parent.parent.parent.joinpath('data/replay/simulation').iterdir():
             if dir.is_dir():
                 simulation_list.append(dir.name)
 
-        replay_list.sort(reverse=True)
+        historic_list.sort(reverse=True)
         simulation_list.sort(reverse=True)
-        return {"historic": replay_list, "simulation": simulation_list}
+        return {"historic": historic_list, "simulation": simulation_list}
 
 
     @staticmethod

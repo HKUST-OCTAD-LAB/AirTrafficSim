@@ -3,9 +3,9 @@ import os
 import subprocess
 from zipfile import ZipFile
 from contextlib import contextmanager
-import server.server as server
+from importlib import import_module
 
-from env import Environment
+import server.server as server
 
 @contextmanager
 def cd(newdir):
@@ -19,9 +19,9 @@ def cd(newdir):
 
 if len(sys.argv) > 1:
     if sys.argv[1] == '--headless':
-        env = Environment()
-        for i in range (1000):
-            env.step()
+        Env = getattr(import_module('env.'+sys.argv[2]), sys.argv[2])
+        env = Env()
+        env.run()
 
     if sys.argv[1] == 'run':
         server.run_server()
