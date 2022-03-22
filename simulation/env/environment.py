@@ -2,6 +2,7 @@ import time
 from flask_socketio import emit
 from datetime import datetime, timedelta
 import numpy as np
+import pandas as pd
 import csv
 from pathlib import Path
 
@@ -13,7 +14,9 @@ class Environment:
 
     def __init__(self, N=1000, file_name="default"):
         # User setting
-        self.end_time = 5000
+        self.start_time = datetime.utcnow()
+        """The simulation start time [datetime object]"""
+        self.end_time = 60
         """The simulation end time [s]"""
 
         # Simulation variable
@@ -32,9 +35,12 @@ class Environment:
         self.cas = []
 
         # File IO
-        self.writer = csv.writer(open(Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+file_name+'-'+self.datetime.isoformat(timespec='seconds')+'.csv'), 'w+'))
-        header = ['time', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
-                    'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode'] #debug
+        self.folder_path = Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+file_name+'-'+self.datetime.isoformat(timespec='seconds'))
+        self.folder_path.mkdir()
+        self.file_path = Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+file_name+'-'+self.datetime.isoformat(timespec='seconds')+'.csv')
+        self.writer = csv.writer(open(self.file_path, 'w+'))
+        header = ['timestep','timestamp', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
+                    'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode']
         self.writer.writerow(header)
 
 
@@ -55,7 +61,7 @@ class Environment:
             print("update states")
             self.traffic.update()
             print("Save to file")
-            self.save(self.global_time)
+            self.save()
             
             if(self.socket):
                 # Save to buffer
@@ -77,25 +83,29 @@ class Environment:
                     self.cas = []
 
             self.global_time += 1
+            print("Environment - step() finish at", time.time() - start_time)
 
-        print("Environment - step() finish at", time.time() - start_time)
+        print("")
+        print("Export to CSVs")
+        self.export_to_csv()
+        print("")
+        print("Simulation finished")
 
 
-    def save(self, time):
+    def save(self):
         """
         Save all states variable of one timestemp to csv file.
-
-        Parameters
-        ----------
-        writer : csv.writer()
-            csv writer object
-        time : int
-            Simulation time [s]
         """
-        data = np.column_stack((np.full(self.traffic.n, time), np.arange(self.traffic.n), self.traffic.call_sign[:self.traffic.n], self.traffic.lat[:self.traffic.n], self.traffic.long[:self.traffic.n], self.traffic.alt[:self.traffic.n], self.traffic.heading[:self.traffic.n], 
+        data = np.column_stack((np.full(self.traffic.n, self.global_time), np.full(self.traffic.n, (self.datetime + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), np.arange(self.traffic.n), self.traffic.call_sign[:self.traffic.n], self.traffic.lat[:self.traffic.n], self.traffic.long[:self.traffic.n], self.traffic.alt[:self.traffic.n], self.traffic.heading[:self.traffic.n], 
                         self.traffic.cas[:self.traffic.n], self.traffic.tas[:self.traffic.n], self.traffic.mach[:self.traffic.n], self.traffic.vs[:self.traffic.n], self.traffic.mass[:self.traffic.n], self.traffic.fuel_consumed[:self.traffic.n],
                         self.traffic.bank_angle[:self.traffic.n], self.traffic.trans_alt[:self.traffic.n], self.traffic.accel[:self.traffic.n], self.traffic.drag[:self.traffic.n], self.traffic.esf[:self.traffic.n], self.traffic.thrust[:self.traffic.n], self.traffic.flight_phase[:self.traffic.n], self.traffic.speed_mode[:self.traffic.n], self.traffic.ap.speed_mode[:self.traffic.n])) #debug
         self.writer.writerows(data)
+
+
+    def export_to_csv(self):
+        df = pd.read_csv(self.file_path)
+        for id in df['id'].unique():
+            df[df['id'] == id].to_csv(self.folder_path.joinpath(str(id)+'.csv'), index=False)
 
 
     def send_to_client(self, socketio):

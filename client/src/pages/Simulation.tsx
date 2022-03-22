@@ -29,6 +29,7 @@ const Simulation: React.FC = () => {
     const [navCzml, setNavCzml] = useState();
     const simulationDataSource = new cesiumCzmlDataSource();
     // Data - graph
+    const [graphData, setGraphData] = useState([]);
 
     // Clock
     const [clockDirection, setClockDirection] = useState(0);
@@ -42,12 +43,14 @@ const Simulation: React.FC = () => {
     // UI - toolbar
     const [mode, setMode] = useState('');
     const [graph, setGraph] = useState<string>('None');
+    const [graphHeader, setGraphHeader] = useState(['None']);
     const [stateliteMode, setStateliteMode] = useState(false);
     // UI - Pop up modal
     const [replayList, setReplayList] = useState<any>();
     const [replayCategory, setReplayCategory] = useState('historic')
     const [replayFile, setReplayFile] = useState('')
     const [simulationList, setSimulationList] = useState<any>();
+    const [simulationFile, setSimulationFile] = useState('')
     const [isLoading, setIsLoading] = useState(false);
     const [showReplayModal, setShowReplayModal] = useState(false);
     const [showSimulationModal, setShowSimulationModal] = useState(false);
@@ -78,12 +81,23 @@ const Simulation: React.FC = () => {
         });
     }
 
-    function getReplayCZML(category:string, file:string){
-        socket.emit("getReplayCZML", category, file, (res :any) => {
-            if (viewerRef.current?.cesiumElement) {
-                const viewer = viewerRef.current.cesiumElement;
-                setReplayCzml(res);
-            }
+    function getReplayCZML(dir :string){
+        setGraph('None')
+        socket.emit("getReplayCZML", replayCategory, dir, (res :any) => {
+            setReplayCzml(res);
+        });
+        getGraphHeader(dir)
+    }
+
+    function getGraphHeader(file :string){
+        socket.emit("getGraphHeader", mode, replayCategory, file, (res :any) => {
+            setGraphHeader(res)
+        });
+    }
+
+    function getGraphData(graph_type :string){
+        socket.emit("getGraphData", mode, replayCategory, replayFile, graph_type, (res :any) => {
+            setGraphData(res)
         });
     }
 
@@ -93,8 +107,9 @@ const Simulation: React.FC = () => {
         });
     }
 
-    function runSimulation(simulationFile :string){
-        socket.emit("runSimulation", simulationFile);
+    function runSimulation(file :string){
+        setGraph('None')
+        socket.emit("runSimulation", file);
     }
 
     function getNav(){
@@ -151,7 +166,7 @@ const Simulation: React.FC = () => {
                 </Viewer >
             </IonContent>
             
-            <IonLoading isOpen={isLoading} message="Loading..."/>
+            <IonLoading isOpen={isLoading} spinner="crescent" message="Loading..."/>
 
             <IonFooter>
                 {/* <IonProgressBar value={0.25} buffer={0.5} color='dark'/>    */}
@@ -193,7 +208,7 @@ const Simulation: React.FC = () => {
                                         {replayList &&
                                             <IonList>
                                                 {replayList[replayCategory].map((dir: any) =>
-                                                    <IonItem key={dir} button={true} onClick={()=>{setShowReplayModal(false); setIsLoading(true); getReplayCZML(replayCategory, dir);}}>
+                                                    <IonItem key={dir} button={true} onClick={()=>{setShowReplayModal(false); setIsLoading(true); setReplayFile(dir); getReplayCZML(dir);}}>
                                                         <IonIcon icon={folder} slot="start"/>
                                                         <IonLabel>{dir}</IonLabel>
                                                     </IonItem>
@@ -213,7 +228,7 @@ const Simulation: React.FC = () => {
                                         {simulationList &&
                                             <IonList>
                                                 {simulationList.map((file: string) =>
-                                                    <IonItem key={file} button={true} onClick={()=>{setShowSimulationModal(false); runSimulation(file);}}>
+                                                    <IonItem key={file} button={true} onClick={()=>{setShowSimulationModal(false); setSimulationFile(file); runSimulation(file);}}>
                                                         <IonIcon icon={folder} slot="start"/>
                                                         <IonLabel>{file}</IonLabel>
                                                     </IonItem>
@@ -234,11 +249,10 @@ const Simulation: React.FC = () => {
                             <IonCol size="auto">
                                 <IonItem style={{"width": "120px"}}>
                                     <IonLabel position="stacked">Show graph</IonLabel>
-                                    <IonSelect color='dark' interface="popover" placeholder="Type" onIonChange={e => setGraph(e.detail.value)}>
-                                        <IonSelectOption value="None">None</IonSelectOption>
-                                        <IonSelectOption value="blonde">Blonde</IonSelectOption>
-                                        <IonSelectOption value="black">Black</IonSelectOption>
-                                        <IonSelectOption value="red">Red</IonSelectOption>
+                                    <IonSelect color='dark' interface="alert" placeholder="type" value={graph} onIonChange={e => {getGraphData(e.detail.value); setGraph(e.detail.value);}}>
+                                        {graphHeader.map((header :string) => 
+                                            <IonSelectOption key={header} value={header}>{header}</IonSelectOption>
+                                        )}
                                     </IonSelect>
                                 </IonItem>
                             </IonCol>
@@ -291,17 +305,17 @@ const Simulation: React.FC = () => {
                     </IonGrid>                   
                 </IonToolbar>  
                 {graph !== 'None' &&
-                    <IonItem style={{"height": "200px"}}>
-                        <ResponsiveContainer width="100%" height="100%">
+                    <IonItem>
+                        <ResponsiveContainer height={200}>
                             <LineChart>
                             {/* <CartesianGrid strokeDasharray="3 3" /> */}
                             <XAxis dataKey="time" type="number" unit="s" tick={{fontSize: 12}}/>
                             <YAxis dataKey="value" tick={{fontSize: 12}}/>
                             <Tooltip />
                             <Legend verticalAlign="top" height={25} wrapperStyle={{fontSize: 12}}/>
-                            {/* {data && data[graph].map((d:any) => (
-                                <Line dataKey="value" data={d.data} name={d.name} key={d.name}  dot={false} type="linear" stroke={strokeColor[d.id]} strokeWidth={1.5}/>
-                            ))} */}
+                            {graphData && graphData.map((d:any) => (
+                                <Line dataKey="value" data={d.data} name={d.name} key={d.name} dot={false} type="linear" strokeWidth={1.5}/>
+                            ))}
                             <ReferenceLine x={Math.trunc(clockTime)} stroke="red" />
                             </LineChart>
                         </ResponsiveContainer>

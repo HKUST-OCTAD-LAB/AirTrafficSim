@@ -26,8 +26,16 @@ def get_replay_dir():
     return Replay.get_replay_dir()
 
 @socketio.on('getReplayCZML')
-def get_replay_czml(category, date):
-    return Replay.get_replay_czml(category, date)
+def get_replay_czml(replayCategory, replayFile):
+    return Replay.get_replay_czml(replayCategory, replayFile)
+
+@socketio.on('getGraphHeader')
+def get_graph_header(mode, replayCategory, replayFile):
+    return Replay.get_graph_header(mode, replayCategory, replayFile)
+
+@socketio.on('getGraphData')
+def get_graph_data(mode, replayCategory, replayFile, graph):
+    return Replay.get_graph_data(mode, replayCategory, replayFile, graph)
 
 @socketio.on('getSimulationFile')
 def get_simulation_file():

@@ -1,4 +1,5 @@
 from pathlib import Path
+import csv
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -23,16 +24,36 @@ class Replay:
 
 
     @staticmethod
-    def get_replay_czml(category, date):
-        """Send CZML file of the replay date for visualization"""
+    def get_replay_czml(replayCategory, replayFile):
+        """Send CZML file of the file name for visualization"""
         trajectories = []
         start_time = None
         end_time = None
-        for file in Path(__file__).parent.parent.parent.joinpath('data/replay/',category,date).iterdir():
+        for file in Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile).iterdir():
             file_content = pd.read_csv(file)
-            start = file_content.iloc[0]['timestamp']
-            end = file_content.iloc[-1]['timestamp']
             
+            if replayCategory == 'historic':
+                start = datetime.utcfromtimestamp(file_content.iloc[0]['timestamp'])
+                end = datetime.utcfromtimestamp(file_content.iloc[-1]['timestamp'])
+
+                id = file.name
+                positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.utcfromtimestamp(x).isoformat()), 
+                                        file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
+                label = [{"interval": datetime.utcfromtimestamp(time).isoformat()+"/"+end.isoformat(), 
+                        "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
+                        for time, alt, gspeed in zip(file_content['timestamp'], file_content['alt'], file_content['gspeed'])]
+            
+            elif replayCategory == 'simulation':
+                start = datetime.fromisoformat(file_content.iloc[0]['timestamp'])
+                end = datetime.fromisoformat(file_content.iloc[-1]['timestamp'])
+
+                id = file_content.iloc[0]['callsign']
+                positions =  np.column_stack((file_content['timestamp'], file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
+                label = [{"interval": time+"/"+end.isoformat(), 
+                        "string": id+"\n"+str(int(np.round(alt)))+"ft "+str(int(np.round(cas)))+"kt"} 
+                        for time, alt, cas in zip(file_content['timestamp'], file_content['alt'], file_content['cas'])]
+            
+
             if start_time == None and end_time == None:
                 start_time = start
                 end_time = end
@@ -42,16 +63,11 @@ class Replay:
 
             if end > end_time:
                 end_time = end
-            
-            positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.utcfromtimestamp(x).isoformat()), 
-                                    file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
-            label = [{"interval": datetime.utcfromtimestamp(time).isoformat()+"/"+datetime.utcfromtimestamp(end).isoformat(), 
-                    "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
-                    for time, alt, gspeed in zip(file_content['timestamp'], file_content['alt'], file_content['gspeed'])]
-            
+
+
             trajectory = {
-                "id": file.name,
-                "availability": datetime.utcfromtimestamp(start).isoformat()+"/"+ datetime.utcfromtimestamp(end).isoformat(),
+                "id": id,
+                "availability": start.isoformat()+"/"+ end.isoformat(),
                 "position": {
                     "cartographicDegrees": positions
                 },
@@ -96,9 +112,37 @@ class Replay:
             "name": "Replay",
             "version": "1.0",
             "clock": {
-                "interval": datetime.utcfromtimestamp(start_time).isoformat()+"/"+ datetime.utcfromtimestamp(end_time).isoformat(),
-                "currentTime": datetime.utcfromtimestamp(start_time).isoformat()
+                "interval": start_time.isoformat()+"/"+ end_time.isoformat(),
+                "currentTime": start_time.isoformat()
             }
         }
+
         trajectories.insert(0, document)
         return trajectories
+
+
+    @staticmethod
+    def get_graph_header(mode, replayCategory, replayFile):
+        header = ['None']
+        if mode == 'replay' and replayCategory == 'simulation':
+            header.extend(next(csv.reader(open(Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile+'.csv')))))
+            header.remove('timestamp')
+            header.remove('id')
+            header.remove('callsign')
+            header.remove('lat')
+            header.remove('long')
+        return header
+
+    @staticmethod
+    def get_graph_data(mode, replayCategory, replayFile, graph):
+        data = []
+        if mode == 'replay' and replayCategory == 'simulation' and graph != 'None':
+            for file in Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile).iterdir():
+                file_content = pd.read_csv(file)
+                data.append({
+                    "name": file_content.iloc[0]['callsign'],
+                    "data": [{"time": time, 
+                              "value": graph} 
+                              for time, graph in zip(file_content['timestep'], file_content[graph])]
+                })
+        return data
