@@ -1,70 +1,45 @@
-import React from 'react';
-import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Drawer from '@mui/material/Drawer';
-import { createTheme, ThemeProvider} from '@mui/material/styles';
+import { Route } from 'react-router-dom';
+import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
 
-import socket from './utils/websocket';
-import RealtTime from './pages/Realtime';
-import Replay from './pages/Replay';
-import Simulation from './pages/Simulation'
-import Home from './pages/home';
+/* Core CSS required for Ionic components to work properly */
+import '@ionic/react/css/core.css';
 
-socket.on('connection', () => {
-    console.log("connected");
-  }
-)
+/* Basic CSS for apps built with Ionic */
+import '@ionic/react/css/normalize.css';
+import '@ionic/react/css/structure.css';
+import '@ionic/react/css/typography.css';
 
-const App = () => {
+/* Optional CSS utils that can be commented out */
+import '@ionic/react/css/padding.css';
+import '@ionic/react/css/float-elements.css';
+import '@ionic/react/css/text-alignment.css';
+import '@ionic/react/css/text-transformation.css';
+import '@ionic/react/css/flex-utils.css';
+import '@ionic/react/css/display.css';
 
-  const theme = createTheme({
-    palette: {
-      mode: 'dark',
-    },
-  });
+/* Theme variables */
+import './theme/variables.css';
+import Simulation from './pages/Simulation';
 
-  return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Box sx={{ display: 'flex'}}>
-            <Drawer variant="permanent" anchor="left" sx={{ width: 200, flexShrink: 0, '& .MuiDrawer-paper': {width: 200}}}>
-              <Toolbar>
-                <Typography> AirTrafficSim</Typography>
-              </Toolbar>
-              <Divider />
-              <List>
-                {/* <ListItemButton component={Link} to='/'>
-                  <ListItemText primary={"Dashboard"} />
-                </ListItemButton>
-                <ListItemButton component={Link} to='/realtime'>
-                  <ListItemText primary={"Real Time"}/>
-                </ListItemButton> */}
-                <ListItemButton component={Link} to='/replay'>
-                  <ListItemText primary={"Replay"}/>
-                </ListItemButton>
-                <ListItemButton component={Link} to='/simulation'>
-                  <ListItemText primary={"Simulation"}/>
-                </ListItemButton>
-              </List>
-            </Drawer> 
-          <Box component="main" sx={{ flexGrow: 1}}>
-            <Switch>
-              <Route path="/realtime" component={RealtTime}/>
-              <Route path="/replay" component={Replay}/>
-              <Route path="/simulation" component={Simulation}/>
-              <Route path="/" exact component={Home}/>
-            </Switch>  
-          </Box>
-        </Box>
-      </Router>
-    </ThemeProvider>
-  );
-}
+setupIonicReact();
+
+const App: React.FC = () => (
+  <IonApp>
+    <IonReactRouter>
+      <IonRouterOutlet>
+        <Route exact path="/">
+          <Simulation />
+        </Route>
+        {/* <Route exact path="/home">
+          <Home />
+        </Route> */}
+        {/* <Route exact path="/">
+          <Redirect to="/" />
+        </Route> */}
+      </IonRouterOutlet>
+    </IonReactRouter>
+  </IonApp>
+);
 
 export default App;
