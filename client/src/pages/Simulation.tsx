@@ -121,7 +121,7 @@ const Simulation: React.FC = () => {
             // console.log("camera direction", direction.x, direction.y, direction.z);
             var rectangle = viewer.camera.computeViewRectangle();
             // console.log("camera rectangle", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180);
-            if(currentMagnitude < 6500000){
+            if(currentMagnitude < 6700000){
                 socket.emit("getNav", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, (res :any) => {
                     setNavCzml(res);
                 });
@@ -308,13 +308,12 @@ const Simulation: React.FC = () => {
                     <IonItem>
                         <ResponsiveContainer height={200}>
                             <LineChart>
-                            {/* <CartesianGrid strokeDasharray="3 3" /> */}
                             <XAxis dataKey="time" type="number" unit="s" tick={{fontSize: 12}}/>
-                            <YAxis dataKey="value" tick={{fontSize: 12}}/>
+                            <YAxis dataKey="value" tick={{fontSize: 12}} domain={['auto', 'auto']}/>
                             <Tooltip />
                             <Legend verticalAlign="top" height={25} wrapperStyle={{fontSize: 12}}/>
                             {graphData && graphData.map((d:any) => (
-                                <Line dataKey="value" data={d.data} name={d.name} key={d.name} dot={false} type="linear" strokeWidth={1.5}/>
+                                <Line dataKey="value" data={d.data} name={d.name} key={d.name} dot={false} type="linear" stroke={d.color} strokeWidth={1.5}/>
                             ))}
                             <ReferenceLine x={Math.trunc(clockTime)} stroke="red" />
                             </LineChart>

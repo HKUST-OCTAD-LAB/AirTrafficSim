@@ -3,6 +3,7 @@ import csv
 import pandas as pd
 import numpy as np
 from datetime import datetime
+from itertools import cycle
 
 class Replay:
     @staticmethod
@@ -136,11 +137,13 @@ class Replay:
     @staticmethod
     def get_graph_data(mode, replayCategory, replayFile, graph):
         data = []
+        color = cycle(["#ea5545", "#f46a9b", "#ef9b20", "#edbf33", "#ede15b", "#bdcf32", "#87bc45", "#27aeef", "#b33dc6"])
         if mode == 'replay' and replayCategory == 'simulation' and graph != 'None':
             for file in Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile).iterdir():
                 file_content = pd.read_csv(file)
                 data.append({
                     "name": file_content.iloc[0]['callsign'],
+                    "color": next(color),
                     "data": [{"time": time, 
                               "value": graph} 
                               for time, graph in zip(file_content['timestep'], file_content[graph])]

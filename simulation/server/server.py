@@ -60,5 +60,5 @@ def serve_client():
     return render_template("index.html")
 
 def run_server(port = 5000):
-    print("Running server at port", port)
+    print("Running server at http://localhost:"+str(port))
     socketio.run(app, port=port)
