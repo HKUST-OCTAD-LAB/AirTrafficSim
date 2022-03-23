@@ -2,7 +2,7 @@ import React, { useState, useRef,} from "react";
 import { IonContent, IonPage, IonTitle, IonToolbar, IonRange, IonIcon, IonButtons, IonButton, IonProgressBar, IonLabel, IonItem, IonSelect, IonSelectOption, IonGrid, IonCol, IonRow, IonFooter, IonChip, IonModal, IonToggle, IonList, useIonViewDidEnter, IonHeader, IonSegment, IonSegmentButton, IonLoading } from '@ionic/react';
 import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource} from "cesium";
 import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer, CzmlDataSource, Clock, Camera } from "resium";
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, ReferenceLine, CartesianGrid } from "recharts";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, ReferenceLine } from "recharts";
 
 import {
     stop, stopOutline,
@@ -11,8 +11,7 @@ import {
     folder
 } from "ionicons/icons";
 
-import { io } from "socket.io-client";
-const socket = io("http://localhost:5000");
+import socket from "../utils/websocket"
 
 Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
@@ -30,7 +29,7 @@ const Simulation: React.FC = () => {
     const simulationDataSource = new cesiumCzmlDataSource();
     // Data - graph
     const [graphData, setGraphData] = useState([]);
-
+    const [simulationGraphData, setSimulationGraphData] = useState<any>([]);
     // Clock
     const [clockDirection, setClockDirection] = useState(0);
     const [clockMultiplier, setClockMultiplier] = useState(1);
@@ -45,12 +44,12 @@ const Simulation: React.FC = () => {
     const [graph, setGraph] = useState<string>('None');
     const [graphHeader, setGraphHeader] = useState(['None']);
     const [stateliteMode, setStateliteMode] = useState(false);
+    const [progressbar, setProgressBar] = useState(0);
     // UI - Pop up modal
     const [replayList, setReplayList] = useState<any>();
     const [replayCategory, setReplayCategory] = useState('historic')
     const [replayFile, setReplayFile] = useState('')
     const [simulationList, setSimulationList] = useState<any>();
-    const [simulationFile, setSimulationFile] = useState('')
     const [isLoading, setIsLoading] = useState(false);
     const [showReplayModal, setShowReplayModal] = useState(false);
     const [showSimulationModal, setShowSimulationModal] = useState(false);
@@ -63,17 +62,33 @@ const Simulation: React.FC = () => {
             console.log(viewer)
             viewer.dataSources.add(simulationDataSource);
         }
-    })
+
+        socket.on("connect", () => {
+            console.log("SocketIO connected", socket.connected); // True
+        });
+          
+        socket.on("disconnect", () => {
+            console.log("SocketIO connected", socket.connected); // False
+        });
     
-    const onCameraChange = (viewer:CesiumViewer) => {
-        console.log(viewer);
-        var currentMagnitude = viewer.camera.getMagnitude();
-        console.log('current magnitude - ', currentMagnitude);
-        var direction = viewer.camera.direction;
-        console.log("camera direction", direction.x, direction.y, direction.z);
-        var rectangle = viewer.camera.computeViewRectangle();
-        console.log("camera rectangle", rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, rectangle!.south/Math.PI*180);
-    }
+        socket.on("simulationData", (msg) => {
+            console.log(msg);
+            if (viewerRef.current?.cesiumElement) {
+                simulationDataSource.process(msg.czml);
+                setSimulationGraphData(simulationGraphData.push(msg.graph))
+                setProgressBar(msg.progress);
+                if (msg.progress === 1){
+                    setProgressBar(0);
+                }
+            }
+        })
+
+        socket.on("simulationGraphHeader", (msg) => {
+            console.log(msg);
+            setGraphHeader(msg)
+        })
+    })
+
 
     function getReplayDirs(){
         socket.emit("getReplayDir", (res :any) => {
@@ -109,6 +124,7 @@ const Simulation: React.FC = () => {
 
     function runSimulation(file :string){
         setGraph('None')
+        setSimulationGraphData([])
         socket.emit("runSimulation", file);
     }
 
@@ -130,14 +146,6 @@ const Simulation: React.FC = () => {
             }
         }
     }
-
-    socket.on("simulationData", (msg) => {
-        console.log(msg);
-        if (viewerRef.current?.cesiumElement) {
-            const viewer = viewerRef.current.cesiumElement;
-            simulationDataSource.process(msg);
-        }
-    })
 
     return (
         <IonPage>
@@ -169,7 +177,7 @@ const Simulation: React.FC = () => {
             <IonLoading isOpen={isLoading} spinner="crescent" message="Loading..."/>
 
             <IonFooter>
-                {/* <IonProgressBar value={0.25} buffer={0.5} color='dark'/>    */}
+                {progressbar > 0 && <IonProgressBar buffer={progressbar} color='dark'/>}
                 <IonToolbar> 
                     <IonGrid fixed style={{"--ion-grid-padding": "0px",  "--ion-grid-column-padding":"0px", "--ion-grid-width-xl":"90%", "--ion-grid-width-lg":"100%", "--ion-grid-width-md":"100%", "--ion-grid-width-sm": "100%", "--ion-grid-width-xs":"100%"}} >
                         <IonRow class="ion-align-items-center ion-justify-content-center">
@@ -228,7 +236,7 @@ const Simulation: React.FC = () => {
                                         {simulationList &&
                                             <IonList>
                                                 {simulationList.map((file: string) =>
-                                                    <IonItem key={file} button={true} onClick={()=>{setShowSimulationModal(false); setSimulationFile(file); runSimulation(file);}}>
+                                                    <IonItem key={file} button={true} onClick={()=>{setShowSimulationModal(false); runSimulation(file);}}>
                                                         <IonIcon icon={folder} slot="start"/>
                                                         <IonLabel>{file}</IonLabel>
                                                     </IonItem>

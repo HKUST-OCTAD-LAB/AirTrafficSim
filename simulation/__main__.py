@@ -1,20 +1,9 @@
 import sys
 import os
-import subprocess
 from zipfile import ZipFile
-from contextlib import contextmanager
 from importlib import import_module
 
 import server.server as server
-
-@contextmanager
-def cd(newdir):
-    prevdir = os.getcwd()
-    os.chdir(os.path.expanduser(newdir))
-    try:
-        yield
-    finally:
-        os.chdir(prevdir)
 
 
 if len(sys.argv) > 1:
@@ -33,6 +22,3 @@ if len(sys.argv) > 1:
         else:
             server.run_server()
  
-    
-else:
-    print('simulation')

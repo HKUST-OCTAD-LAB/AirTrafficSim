@@ -1,5 +1,4 @@
 import time
-from flask_socketio import emit
 from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
@@ -11,6 +10,9 @@ from traffic.traffic import Traffic
 
 
 class Environment:
+    """
+    Base class for simulation environment
+    """
 
     def __init__(self, N=1000, file_name="default"):
         # User setting
@@ -24,7 +26,6 @@ class Environment:
         self.global_time = 0                    # [s]
 
         # Handle io
-        self.socket = False                    # Whether to send message to client through socket
         self.datetime = datetime.utcnow()
         self.last_sent_time = time.time()
         # Buffer
@@ -37,11 +38,12 @@ class Environment:
         # File IO
         self.folder_path = Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+file_name+'-'+self.datetime.isoformat(timespec='seconds'))
         self.folder_path.mkdir()
-        self.file_path = Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+file_name+'-'+self.datetime.isoformat(timespec='seconds')+'.csv')
+        self.file_path =  self.folder_path.joinpath(file_name+'-'+self.datetime.isoformat(timespec='seconds')+'.csv')
         self.writer = csv.writer(open(self.file_path, 'w+'))
-        header = ['timestep','timestamp', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
-                    'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode']
-        self.writer.writerow(header)
+        self.writer.writerow(['timestep','timestamp', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
+                    'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode'])
+        self.header=['None', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed', 
+                     'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode']
 
 
     def atc_command(self):
@@ -49,7 +51,9 @@ class Environment:
 
 
     def run(self, socketio=None):
-        for i in range(self.end_time):
+        socketio.emit('simulationGraphHeader', self.header)
+
+        for i in range(self.end_time+1):
             # One timestep
             start_time = time.time()
             print("")
@@ -62,8 +66,10 @@ class Environment:
             self.traffic.update()
             print("Save to file")
             self.save()
+
+            print("Environment - step() finish at", time.time() - start_time)
             
-            if(self.socket):
+            if(socketio):
                 # Save to buffer
                 self.time.append((self.datetime + timedelta(seconds=self.global_time)).isoformat())
                 self.lat.append(self.traffic.lat)
@@ -72,9 +78,9 @@ class Environment:
                 self.cas.append(self.traffic.cas)
 
                 now = time.time()
-                if ((now - self.last_sent_time) > 5) or (self.global_time == (self.end_time-1)):
+                if ((now - self.last_sent_time) > 1) or (self.global_time == self.end_time):
                     self.send_to_client(socketio)
-                    # socketio.sleep(0)
+                    socketio.sleep(0)
                     self.last_sent_time = now
                     self.time = []
                     self.lat = []
@@ -83,7 +89,7 @@ class Environment:
                     self.cas = []
 
             self.global_time += 1
-            print("Environment - step() finish at", time.time() - start_time)
+            
 
         print("")
         print("Export to CSVs")
@@ -106,10 +112,11 @@ class Environment:
         df = pd.read_csv(self.file_path)
         for id in df['id'].unique():
             df[df['id'] == id].to_csv(self.folder_path.joinpath(str(id)+'.csv'), index=False)
+        self.file_path.unlink()
 
 
     def send_to_client(self, socketio):
-        # print("send to client")
+        print("send to client")
         if self.global_time == 0:
             document = [{
                     "id": "document",
@@ -178,5 +185,5 @@ class Environment:
                 }
             document.append(trajectory)
         
-        emit('simulationData', document)
+        socketio.emit('simulationData', {'czml': document, 'progress': self.global_time/self.end_time})
         

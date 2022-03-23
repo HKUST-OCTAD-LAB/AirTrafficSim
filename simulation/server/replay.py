@@ -126,7 +126,8 @@ class Replay:
     def get_graph_header(mode, replayCategory, replayFile):
         header = ['None']
         if mode == 'replay' and replayCategory == 'simulation':
-            header.extend(next(csv.reader(open(Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile+'.csv')))))
+            header.extend(next(csv.reader(open(next(Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile).glob('*.csv'))))))
+            header.remove('timestep')
             header.remove('timestamp')
             header.remove('id')
             header.remove('callsign')
