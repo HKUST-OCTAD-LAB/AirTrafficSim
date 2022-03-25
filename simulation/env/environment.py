@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import csv
 from pathlib import Path
+from itertools import cycle
 
 from utils.unit import Unit_conversion
 from traffic.traffic import Traffic
@@ -28,6 +29,8 @@ class Environment:
         # Handle io
         self.datetime = datetime.utcnow()
         self.last_sent_time = time.time()
+        self.graph_type = 'None'
+        self.packet_id = 0
         # Buffer
         self.time = []
         self.lat = []
@@ -36,9 +39,10 @@ class Environment:
         self.cas = []
 
         # File IO
+        self.file_name = file_name+'-'+self.datetime.isoformat(timespec='seconds')
         self.folder_path = Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+file_name+'-'+self.datetime.isoformat(timespec='seconds'))
         self.folder_path.mkdir()
-        self.file_path =  self.folder_path.joinpath(file_name+'-'+self.datetime.isoformat(timespec='seconds')+'.csv')
+        self.file_path =  self.folder_path.joinpath(self.file_name+'.csv')
         self.writer = csv.writer(open(self.file_path, 'w+'))
         self.writer.writerow(['timestep','timestamp', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
                     'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode'])
@@ -51,7 +55,8 @@ class Environment:
 
 
     def run(self, socketio=None):
-        socketio.emit('simulationGraphHeader', self.header)
+        if socketio:
+            socketio.emit('simulationEnvironment', {'header': self.header, 'file': self.file_name})
 
         for i in range(self.end_time+1):
             # One timestep
@@ -77,6 +82,10 @@ class Environment:
                 self.alt.append(self.traffic.alt)
                 self.cas.append(self.traffic.cas)
 
+                @socketio.on('setSimulationGraphType')
+                def set_simulation_graph_type(graph_type):
+                    self.graph_type = graph_type
+
                 now = time.time()
                 if ((now - self.last_sent_time) > 1) or (self.global_time == self.end_time):
                     self.send_to_client(socketio)
@@ -90,7 +99,6 @@ class Environment:
 
             self.global_time += 1
             
-
         print("")
         print("Export to CSVs")
         self.export_to_csv()
@@ -112,31 +120,22 @@ class Environment:
         df = pd.read_csv(self.file_path)
         for id in df['id'].unique():
             df[df['id'] == id].to_csv(self.folder_path.joinpath(str(id)+'.csv'), index=False)
-        self.file_path.unlink()
+        # self.file_path.unlink()
 
 
     def send_to_client(self, socketio):
         print("send to client")
-        if self.global_time == 0:
-            document = [{
-                    "id": "document",
-                    "name": "simulation",
-                    "version": "1.0",
-                    "clock": {
-                        "interval": self.datetime.isoformat()+"/"+(self.datetime + timedelta(seconds=self.end_time)).isoformat(),
-                        "currentTime": self.datetime.isoformat(),
-                    }
-                }]
-        else:
-            document = [{
-                    "id": "document",
-                    "name": "simulation",
-                    "version": "1.0",
-                    "clock": {
-                        "interval": self.datetime.isoformat()+"/"+(self.datetime + timedelta(seconds=self.end_time)).isoformat(),
-                        "currentTime": self.datetime.isoformat(),
-                    }
-                }]
+
+        document = [{
+                "id": "document",
+                "name": "simulation",
+                "version": "1.0",
+                "clock": {
+                    "interval": self.datetime.isoformat()+"/"+(self.datetime + timedelta(seconds=self.end_time)).isoformat(),
+                    "currentTime": self.datetime.isoformat(),
+                }
+            }]
+
 
         lat = np.vstack(tuple(self.lat))
         long = np.vstack(tuple(self.long))
@@ -184,6 +183,21 @@ class Environment:
                     }
                 }
             document.append(trajectory)
-        
-        socketio.emit('simulationData', {'czml': document, 'progress': self.global_time/self.end_time})
+
+        graph_data = []
+        if self.graph_type != 'None':
+            color = cycle(["#ea5545", "#f46a9b", "#ef9b20", "#edbf33", "#ede15b", "#bdcf32", "#87bc45", "#27aeef", "#b33dc6"])
+            df = pd.read_csv(self.file_path)
+            for id in df['id'].unique():
+                content = df[df['id'] == id]
+                graph_data.append({
+                    "name": content.iloc[0]['callsign'],
+                    "color": next(color),
+                    "data": [{"time": time, 
+                              "value": graph} 
+                              for time, graph in zip(content['timestep'], content[self.graph_type])]
+            })  
+
+        socketio.emit('simulationData', {'czml': document, 'progress': self.global_time/self.end_time, 'packet_id': self.packet_id,'graph': graph_data})
+        self.packet_id = self.packet_id + 1
         

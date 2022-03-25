@@ -1,6 +1,5 @@
 from pathlib import Path
 from importlib import import_module
-import engineio
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 import eventlet
@@ -11,7 +10,7 @@ from server.utils import Utils
 eventlet.monkey_patch()
 
 app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath('client/build'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('client/build')))
-socketio = SocketIO(app, cors_allowed_origins='*', async_mode='eventlet', logger=True) #engineio_logger=True
+socketio = SocketIO(app, cors_allowed_origins='*', async_mode='eventlet') #engineio_logger=True logger=True
 
 @socketio.on('connect')
 def test_connect():
@@ -34,8 +33,8 @@ def get_graph_header(mode, replayCategory, replayFile):
     return Replay.get_graph_header(mode, replayCategory, replayFile)
 
 @socketio.on('getGraphData')
-def get_graph_data(mode, replayCategory, replayFile, graph):
-    return Replay.get_graph_data(mode, replayCategory, replayFile, graph)
+def get_graph_data(mode, replayCategory, replayFile, simulationFile, graph):
+    return Replay.get_graph_data(mode, replayCategory, replayFile, simulationFile, graph)
 
 @socketio.on('getSimulationFile')
 def get_simulation_file():
@@ -45,14 +44,11 @@ def get_simulation_file():
             simulation_list.append(file.name.removesuffix('.py'))
     return simulation_list
 
-
 @socketio.on('runSimulation')
 def run_simulation(file):
     Env = getattr(import_module('env.'+file), file)
     env = Env()
     env.run(socketio)
-
-
 
 @socketio.on('getNav')
 def get_Nav(lat1, long1, lat2, long2):

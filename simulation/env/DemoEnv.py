@@ -21,7 +21,7 @@ class DemoEnv(Environment):
 
 
     def atc_command(self):
-        print("Set ATC command")
+        # print("Set ATC command")
         if self.global_time == 10:  
             # Right
             self.aircraft_fol.set_heading(220)

@@ -1,14 +1,14 @@
 import React, { useState, useRef,} from "react";
-import { IonContent, IonPage, IonTitle, IonToolbar, IonRange, IonIcon, IonButtons, IonButton, IonProgressBar, IonLabel, IonItem, IonSelect, IonSelectOption, IonGrid, IonCol, IonRow, IonFooter, IonChip, IonModal, IonToggle, IonList, useIonViewDidEnter, IonHeader, IonSegment, IonSegmentButton, IonLoading } from '@ionic/react';
-import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource} from "cesium";
-import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer, CzmlDataSource, Clock, Camera } from "resium";
+import { IonContent, IonPage, IonTitle, IonToolbar, IonRange, IonIcon, IonButtons, IonButton, IonProgressBar, IonLabel, IonItem, IonSelect, IonSelectOption, IonGrid, IonCol, IonRow, IonFooter, IonChip, IonModal, IonToggle, IonList, useIonViewDidEnter, IonHeader, IonSegment, IonSegmentButton, IonLoading, IonToast, IonPopover } from '@ionic/react';
+import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource, HeadingPitchRange} from "cesium";
+import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer, Clock, Camera } from "resium";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, ReferenceLine } from "recharts";
 
 import {
     stop, stopOutline,
     playBack, playBackOutline,
     playForward, playForwardOutline,
-    folder
+    folder, settings
 } from "ionicons/icons";
 
 import socket from "../utils/websocket"
@@ -18,18 +18,14 @@ const terrainProvider = createWorldTerrain();
 const url = IonResource.fromAssetId(96188);
 const bingImagery = createWorldImagery();
 const simpleImagery = new OpenStreetMapImageryProvider({url: 'https://stamen-tiles.a.ssl.fastly.net/toner-background/' });
-
+const replayDataSource = new cesiumCzmlDataSource();
+const simulationDataSource = new cesiumCzmlDataSource();
+const navDataSource = new cesiumCzmlDataSource();
+const defaultZoom = new HeadingPitchRange(0,-90,500000)
 
 const Simulation: React.FC = () => {
     const viewerRef = useRef<CesiumComponentRef<CesiumViewer>>(null);
 
-    // Data - cesium
-    const [replayCzml, setReplayCzml] = useState();
-    const [navCzml, setNavCzml] = useState();
-    const simulationDataSource = new cesiumCzmlDataSource();
-    // Data - graph
-    const [graphData, setGraphData] = useState([]);
-    const [simulationGraphData, setSimulationGraphData] = useState<any>([]);
     // Clock
     const [clockDirection, setClockDirection] = useState(0);
     const [clockMultiplier, setClockMultiplier] = useState(1);
@@ -41,54 +37,67 @@ const Simulation: React.FC = () => {
     const [targetTime, setTargetTime] = useState<any>();
     // UI - toolbar
     const [mode, setMode] = useState('');
-    const [graph, setGraph] = useState<string>('None');
-    const [graphHeader, setGraphHeader] = useState(['None']);
+    const [connected, setConnected] = useState(false);    
     const [stateliteMode, setStateliteMode] = useState(false);
-    const [progressbar, setProgressBar] = useState(0);
+    const [progressBar, setProgressBar] = useState(0);
+    const [graphType, setGraphType] = useState<string>('None');
+    const [graphHeader, setGraphHeader] = useState(['None']);
+    const [graphData, setGraphData] = useState([]);
     // UI - Pop up modal
     const [replayList, setReplayList] = useState<any>();
     const [replayCategory, setReplayCategory] = useState('historic')
     const [replayFile, setReplayFile] = useState('')
     const [simulationList, setSimulationList] = useState<any>();
+    const [simulationFile, setSimulationFile] = useState('')
     const [isLoading, setIsLoading] = useState(false);
     const [showReplayModal, setShowReplayModal] = useState(false);
     const [showSimulationModal, setShowSimulationModal] = useState(false);
+    const [showSettingModal, setShowSettingModal] = useState(false);
+    const [showNavigationData, setShowNavigationData] = useState(false);
 
 
     useIonViewDidEnter(()=> {
-        console.log('ionViewDidEnter event fired');
         if (viewerRef.current?.cesiumElement) {
             const viewer = viewerRef.current.cesiumElement;
-            console.log(viewer)
+            viewer.dataSources.add(replayDataSource);
             viewer.dataSources.add(simulationDataSource);
+            viewer.dataSources.add(navDataSource);
         }
 
         socket.on("connect", () => {
-            console.log("SocketIO connected", socket.connected); // True
+            setConnected(socket.connected)
         });
           
         socket.on("disconnect", () => {
-            console.log("SocketIO connected", socket.connected); // False
+            setConnected(socket.connected)
         });
     
         socket.on("simulationData", (msg) => {
-            console.log(msg);
-            if (viewerRef.current?.cesiumElement) {
-                simulationDataSource.process(msg.czml);
-                setSimulationGraphData(simulationGraphData.push(msg.graph))
-                setProgressBar(msg.progress);
-                if (msg.progress === 1){
-                    setProgressBar(0);
+            simulationDataSource.process(msg.czml).then(ds => {
+                if (viewerRef.current?.cesiumElement) {
+                    setEndTime(JulianDate.secondsDifference(ds.clock.stopTime, ds.clock.startTime));
+                    setStartTime(ds.clock.startTime);
                 }
+            });
+            if (msg.packet_id === 0 && viewerRef.current?.cesiumElement) {
+                const viewer = viewerRef.current.cesiumElement;
+                viewer.clockTrackedDataSource = simulationDataSource;
+                viewer.zoomTo(simulationDataSource, defaultZoom);
+            }
+            setIsLoading(false);
+            setGraphData(msg.graph);
+            if (msg.progress === 1){
+                setProgressBar(0);
+            } else {
+                setProgressBar(msg.progress);
             }
         })
 
-        socket.on("simulationGraphHeader", (msg) => {
-            console.log(msg);
-            setGraphHeader(msg)
+        socket.on("simulationEnvironment", (msg) => {
+            setGraphHeader(msg.header);
+            setSimulationFile(msg.file);
         })
     })
-
 
     function getReplayDirs(){
         socket.emit("getReplayDir", (res :any) => {
@@ -97,9 +106,18 @@ const Simulation: React.FC = () => {
     }
 
     function getReplayCZML(dir :string){
-        setGraph('None')
+        setGraphType('None')
         socket.emit("getReplayCZML", replayCategory, dir, (res :any) => {
-            setReplayCzml(res);
+            replayDataSource.load(res).then(ds => {
+                if (viewerRef.current?.cesiumElement) {
+                    setEndTime(JulianDate.secondsDifference(ds.clock.stopTime, ds.clock.startTime));
+                    setStartTime(ds.clock.startTime);
+                    const viewer = viewerRef.current.cesiumElement;
+                    viewer.clockTrackedDataSource = ds
+                    viewer.zoomTo(ds, defaultZoom)
+                }
+            });
+            setIsLoading(false);
         });
         getGraphHeader(dir)
     }
@@ -111,9 +129,11 @@ const Simulation: React.FC = () => {
     }
 
     function getGraphData(graph_type :string){
-        socket.emit("getGraphData", mode, replayCategory, replayFile, graph_type, (res :any) => {
-            setGraphData(res)
-        });
+        if (progressBar === 0){
+            socket.emit("getGraphData", mode, replayCategory, replayFile, simulationFile, graph_type, (res :any) => {
+                setGraphData(res)
+            });
+        }
     }
 
     function getSimulationFile(){
@@ -123,13 +143,24 @@ const Simulation: React.FC = () => {
     }
 
     function runSimulation(file :string){
-        setGraph('None')
-        setSimulationGraphData([])
+        setGraphType('None')
+        setIsLoading(true)
         socket.emit("runSimulation", file);
     }
 
-    function getNav(){
-        if (viewerRef.current?.cesiumElement) {
+    function clearData(){
+        replayDataSource.entities.removeAll();
+        simulationDataSource.entities.removeAll();
+    }
+
+    function getNav(selected :boolean, value: boolean){
+        let getNav = false
+        if (selected){
+            getNav = value
+        } else {
+            getNav = showNavigationData
+        }
+        if (getNav && viewerRef.current?.cesiumElement) {
             const viewer = viewerRef.current.cesiumElement;
             var currentMagnitude = viewer.camera.getMagnitude();
             // console.log('current magnitude - ', currentMagnitude);
@@ -137,20 +168,22 @@ const Simulation: React.FC = () => {
             // console.log("camera direction", direction.x, direction.y, direction.z);
             var rectangle = viewer.camera.computeViewRectangle();
             // console.log("camera rectangle", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180);
-            if(currentMagnitude < 6700000){
+            if(currentMagnitude < 6800000){
                 socket.emit("getNav", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, (res :any) => {
-                    setNavCzml(res);
+                    navDataSource.load(res)
                 });
             } else {
-                setNavCzml(undefined);
+                navDataSource.entities.removeAll();
             }
+        } else {
+            navDataSource.entities.removeAll();
         }
     }
 
     return (
         <IonPage>
             <IonContent scrollY={false}>
-                <Viewer ref={viewerRef} style={{height:"100%"}} useBrowserRecommendedResolution={true} selectionIndicator={false} imageryProvider={false} homeButton={false} baseLayerPicker={false} sceneModePicker={false} fullscreenButton={false} navigationHelpButton={false} timeline={false} geocoder={false} animation={false}>
+                <Viewer ref={viewerRef} style={{height:"100%"}} animation={false} timeline={false} selectionIndicator={false} imageryProvider={false} homeButton={false} baseLayerPicker={false} sceneModePicker={false} fullscreenButton={false} navigationHelpButton={false} geocoder={false} >
                     <Scene debugShowFramesPerSecond={true}/>
                     {Ion.defaultAccessToken? <Globe baseColor={Color.fromCssColorString('#000000')} terrainProvider={terrainProvider}/> : <Globe baseColor={Color.fromCssColorString('#000000')} />}
                     {stateliteMode ? <ImageryLayer imageryProvider={bingImagery}/> : <ImageryLayer imageryProvider={simpleImagery} alpha={0.2} contrast={-1}/>}
@@ -162,22 +195,16 @@ const Simulation: React.FC = () => {
                         onTick={(clock) => {
                             setClockTime(JulianDate.secondsDifference(clock.currentTime, clock.startTime));
                             setJulianDate(JulianDate.toIso8601(clock.currentTime, 0).replace("T", "\n"));
-                            setEndTime(JulianDate.secondsDifference(clock.stopTime, clock.startTime));
-                            setStartTime(clock.startTime);
                         }} 
                     />
-                    <Camera onMoveEnd={() => {getNav()}}/>
-                    {replayCzml && mode === 'replay' && <CzmlDataSource data={replayCzml} onLoad={() => {
-                        setIsLoading(false);
-                    }}/>}
-                    {navCzml && <CzmlDataSource data={navCzml}/>}
-                </Viewer >
+                    <Camera onMoveEnd={() => {getNav(false, false)}}/>
+                </Viewer>
             </IonContent>
             
             <IonLoading isOpen={isLoading} spinner="crescent" message="Loading..."/>
-
+            <IonToast isOpen={!connected} message="Connecting. Please refresh." position='top' color='light'/>
             <IonFooter>
-                {progressbar > 0 && <IonProgressBar buffer={progressbar} color='dark'/>}
+            {progressBar > 0 && <IonProgressBar value={progressBar} color='dark'/>}
                 <IonToolbar> 
                     <IonGrid fixed style={{"--ion-grid-padding": "0px",  "--ion-grid-column-padding":"0px", "--ion-grid-width-xl":"90%", "--ion-grid-width-lg":"100%", "--ion-grid-width-md":"100%", "--ion-grid-width-sm": "100%", "--ion-grid-width-xs":"100%"}} >
                         <IonRow class="ion-align-items-center ion-justify-content-center">
@@ -188,10 +215,10 @@ const Simulation: React.FC = () => {
                             </IonCol>
                             <IonCol size="auto">
                                 <IonItem class="ion-nowrap ion-no-padding" style={{"width": "200px",  "--inner-padding-end":"0px"}}>
-                                    <IonChip outline={mode === 'replay' ? false : true} color="dark" onClick={() => {setMode('replay'); getReplayDirs(); setShowReplayModal(true);}}>
+                                    <IonChip outline={mode === 'replay' ? false : true} color="dark" onClick={() => {setMode('replay'); getReplayDirs(); setShowReplayModal(true); clearData();}}>
                                         <IonLabel>Replay</IonLabel>
                                     </IonChip>
-                                    <IonChip outline={mode === 'simulation' ? false : true} color="dark" onClick={() => {setMode('simulation'); getSimulationFile(); setShowSimulationModal(true);}}>
+                                    <IonChip outline={mode === 'simulation' ? false : true} color="dark" onClick={() => {setMode('simulation'); getSimulationFile(); setShowSimulationModal(true); clearData();}}>
                                         <IonLabel>Simulation</IonLabel>
                                     </IonChip>
                                 </IonItem>
@@ -215,10 +242,10 @@ const Simulation: React.FC = () => {
                                     <IonContent fullscreen>
                                         {replayList &&
                                             <IonList>
-                                                {replayList[replayCategory].map((dir: any) =>
-                                                    <IonItem key={dir} button={true} onClick={()=>{setShowReplayModal(false); setIsLoading(true); setReplayFile(dir); getReplayCZML(dir);}}>
+                                                {replayList[replayCategory].map((file: any) =>
+                                                    <IonItem key={file} button={true} onClick={()=>{setShowReplayModal(false); setIsLoading(true); setReplayFile(file); getReplayCZML(file);}}>
                                                         <IonIcon icon={folder} slot="start"/>
-                                                        <IonLabel>{dir}</IonLabel>
+                                                        <IonLabel>{file}</IonLabel>
                                                     </IonItem>
                                                 )}
                                             </IonList>
@@ -246,18 +273,34 @@ const Simulation: React.FC = () => {
                                     </IonContent>
                                 </IonModal>
                             </IonCol>
-                            {Ion.defaultAccessToken &&
-                                <IonCol size="auto">
-                                    <IonItem class="ion-no-padding" style={{"width": "150px",  "--inner-padding-end":"0px"}}>
-                                        <IonToggle color="medium" onIonChange={(e) => setStateliteMode(e.detail.checked)}/>
-                                        <IonLabel>Satellite</IonLabel>
-                                    </IonItem>
-                                </IonCol>
-                            }
                             <IonCol size="auto">
-                                <IonItem style={{"width": "120px"}}>
+                                <IonItem class="ion-no-padding" style={{"width": "100px",  "--inner-padding-end":"0px"}} button={true} onClick={() => setShowSettingModal(true)}>
+                                    <IonIcon icon={settings}/>
+                                    <IonLabel class="ion-text-center">Settings</IonLabel>
+                                </IonItem>
+                                <IonModal isOpen={showSettingModal} onDidDismiss={()=>setShowSettingModal(false)} style={{"--width":"300px", "--height": "300px"}}>
+                                    <IonContent>
+                                        <IonHeader translucent>
+                                            <IonToolbar>
+                                                <IonTitle size="large">Settings</IonTitle>
+                                            </IonToolbar>
+                                        </IonHeader>
+                                        <IonItem>
+                                            <IonToggle color="medium" checked={stateliteMode} onIonChange={(e) => setStateliteMode(e.detail.checked)}/>
+                                            <IonLabel>Statelite imagery</IonLabel>
+                                        </IonItem>
+                                        <IonItem>
+                                            <IonToggle color="medium" checked={showNavigationData} onIonChange={(e) => {setShowNavigationData(e.detail.checked); getNav(true, e.detail.checked);}}/>
+                                            <IonLabel>Navigation Data</IonLabel>
+                                        </IonItem>
+                                    </IonContent>
+                                </IonModal>
+                            </IonCol>
+                            <IonCol size="auto">
+                                <IonItem style={{"width": "150px"}}>
                                     <IonLabel position="stacked">Show graph</IonLabel>
-                                    <IonSelect color='dark' interface="alert" placeholder="type" value={graph} onIonChange={e => {getGraphData(e.detail.value); setGraph(e.detail.value);}}>
+                                    <IonSelect color='dark' interface="alert" placeholder="type" value={graphType}
+                                    onIonChange={e => {getGraphData(e.detail.value); setGraphType(e.detail.value); if (mode==='simulation'){socket.emit('setSimulationGraphType', e.detail.value)}}}>
                                         {graphHeader.map((header :string) => 
                                             <IonSelectOption key={header} value={header}>{header}</IonSelectOption>
                                         )}
@@ -312,11 +355,11 @@ const Simulation: React.FC = () => {
                         </IonRow>
                     </IonGrid>                   
                 </IonToolbar>  
-                {graph !== 'None' &&
+                {graphType !== 'None' &&
                     <IonItem>
-                        <ResponsiveContainer height={200}>
+                        <ResponsiveContainer width="100%" height={200}>
                             <LineChart>
-                            <XAxis dataKey="time" type="number" unit="s" tick={{fontSize: 12}}/>
+                            <XAxis dataKey="time" type="number" unit="s" tick={{fontSize: 12}} domain={['min', 'max']}/>
                             <YAxis dataKey="value" tick={{fontSize: 12}} domain={['auto', 'auto']}/>
                             <Tooltip />
                             <Legend verticalAlign="top" height={25} wrapperStyle={{fontSize: 12}}/>
