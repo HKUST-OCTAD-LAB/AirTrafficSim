@@ -1,8 +1,8 @@
 import React, { useState, useRef,} from "react";
-import { IonContent, IonPage, IonTitle, IonToolbar, IonRange, IonIcon, IonButtons, IonButton, IonProgressBar, IonLabel, IonItem, IonSelect, IonSelectOption, IonGrid, IonCol, IonRow, IonFooter, IonChip, IonModal, IonToggle, IonList, useIonViewDidEnter, IonHeader, IonSegment, IonSegmentButton, IonLoading, IonToast, IonPopover } from '@ionic/react';
+import { IonContent, IonPage, IonTitle, IonToolbar, IonRange, IonIcon, IonButtons, IonButton, IonProgressBar, IonLabel, IonItem, IonSelect, IonSelectOption, IonGrid, IonCol, IonRow, IonFooter, IonChip, IonModal, IonToggle, IonList, useIonViewDidEnter, IonHeader, IonSegment, IonSegmentButton, IonLoading, IonToast } from '@ionic/react';
 import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource, HeadingPitchRange} from "cesium";
 import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer, Clock, Camera } from "resium";
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, ReferenceLine } from "recharts";
+import Plot from "react-plotly.js";
 
 import {
     stop, stopOutline,
@@ -359,19 +359,31 @@ const Simulation: React.FC = () => {
                     </IonGrid>                   
                 </IonToolbar>  
                 {graphType !== 'None' &&
-                    <IonItem lines="none">
-                        <ResponsiveContainer width="100%" height={200}>
-                            <LineChart>
-                                <XAxis dataKey="time" type="number" unit="s" tick={{fontSize: 12}} domain={['min', 'max']}/>
-                                <YAxis dataKey="value" tick={{fontSize: 12}} domain={['auto', 'auto']}/>
-                                <Tooltip />
-                                <Legend verticalAlign="top" height={25} wrapperStyle={{fontSize: 12}}/>
-                                {graphData && graphData.map((d:any) => (
-                                    <Line dataKey="value" data={d.data} name={d.name} key={d.name} dot={false} type="linear" stroke={d.color} strokeWidth={1.5}/>
-                                ))}
-                                <ReferenceLine x={Math.trunc(clockTime)} stroke="red" />
-                            </LineChart>
-                      </ResponsiveContainer>  
+                    <IonItem lines="none" >
+                      <div style={{height:"200px", width:"100%"}}>
+                      <Plot
+                        data={graphData}
+                        layout={{
+                            autosize: true, paper_bgcolor: "transparent", plot_bgcolor: "transparent", 
+                            margin:{b:35, t:5, l:30, r: 30,},
+                            legend: {orientation: "v", x:1, y:0.5},
+                            yaxis: {showgrid: false, showline:true, zeroline: false},
+                            xaxis: {showgrid: false, showline:true, title:{text:"time (s)"}},
+                            shapes:[{
+                                type: "line", 
+                                yref: "paper", y0:0, y1: 1,
+                                xref: "x", x0: Math.trunc(clockTime), x1: Math.trunc(clockTime),
+                                line: {color: "red", width:1}
+                            }],
+                            hovermode:"x",
+                            modebar:{bgcolor:"transparent"}
+                        }}
+                        config={{displaylogo: false}}
+                        style={{width:"100%", height:"100%"}}
+                        useResizeHandler={true}
+                      />
+                      </div>
+                      
                     </IonItem>
                 }
             </IonFooter>

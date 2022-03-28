@@ -189,17 +189,16 @@ class Environment:
 
         graph_data = []
         if self.graph_type != 'None':
-            color = cycle(["#ea5545", "#f46a9b", "#ef9b20", "#edbf33", "#ede15b", "#bdcf32", "#87bc45", "#27aeef", "#b33dc6"])
             df = pd.read_csv(self.file_path)
             for id in df['id'].unique():
                 content = df[df['id'] == id]
                 graph_data.append({
-                    "name": content.iloc[0]['callsign'],
-                    "color": next(color),
-                    "data": [{"time": time, 
-                              "value": graph} 
-                              for time, graph in zip(content['timestep'], content[self.graph_type])]
-            })  
+                        "x": content['timestep'].to_list(),
+                        "y": content[self.graph_type].to_list(),
+                        "name": content.iloc[0]['callsign'],
+                        "type": 'scattergl',
+                        "mode": 'lines',
+                    })  
 
         socketio.emit('simulationData', {'czml': document, 'progress': self.global_time/self.end_time, 'packet_id': self.packet_id,'graph': graph_data})
         self.packet_id = self.packet_id + 1
