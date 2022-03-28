@@ -23,16 +23,18 @@ const simulationDataSource = new cesiumCzmlDataSource();
 const navDataSource = new cesiumCzmlDataSource();
 const defaultZoom = new HeadingPitchRange(0,-90,500000)
 
+
 const Simulation: React.FC = () => {
     const viewerRef = useRef<CesiumComponentRef<CesiumViewer>>(null);
 
     // Clock
     const [clockDirection, setClockDirection] = useState(0);
     const [clockMultiplier, setClockMultiplier] = useState(1);
-    const [julianDate, setJulianDate] = useState('');
-    const [clockTime, setClockTime] = useState(0);
     const [startTime, setStartTime] = useState<any>();
     const [endTime, setEndTime] = useState(100);
+
+    const [julianDate, setJulianDate] = useState('');
+    const [clockTime, setClockTime] = useState(0);
     const [changeTime, setChangeTime] = useState(false);
     const [targetTime, setTargetTime] = useState<any>();
     // UI - toolbar
@@ -62,6 +64,7 @@ const Simulation: React.FC = () => {
             viewer.dataSources.add(replayDataSource);
             viewer.dataSources.add(simulationDataSource);
             viewer.dataSources.add(navDataSource);
+            setStartTime(viewer.clock.startTime)
         }
 
         socket.on("connect", () => {
@@ -209,12 +212,12 @@ const Simulation: React.FC = () => {
                     <IonGrid fixed style={{"--ion-grid-padding": "0px",  "--ion-grid-column-padding":"0px", "--ion-grid-width-xl":"90%", "--ion-grid-width-lg":"100%", "--ion-grid-width-md":"100%", "--ion-grid-width-sm": "100%", "--ion-grid-width-xs":"100%"}} >
                         <IonRow class="ion-align-items-center ion-justify-content-center">
                             <IonCol size="auto">
-                                <IonItem class="ion-no-padding" style={{"width": "150px",  "--inner-padding-end":"0px"}} href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim" target="_blank">
+                                <IonItem class="ion-no-padding" lines="none" style={{"width": "150px", "height" : "100%", "--inner-padding-end":"0px", "--background": "transparent"}} href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim" target="_blank">
                                     <IonTitle>AirTrafficSim</IonTitle>
                                 </IonItem>
                             </IonCol>
                             <IonCol size="auto">
-                                <IonItem class="ion-nowrap ion-no-padding" style={{"width": "200px",  "--inner-padding-end":"0px"}}>
+                                <IonItem class="ion-nowrap ion-no-padding" lines="none" style={{"width": "200px",  "--inner-padding-end":"0px", "--background": "transparent"}}>
                                     <IonChip outline={mode === 'replay' ? false : true} color="dark" onClick={() => {setMode('replay'); getReplayDirs(); setShowReplayModal(true); clearData();}}>
                                         <IonLabel>Replay</IonLabel>
                                     </IonChip>
@@ -274,7 +277,7 @@ const Simulation: React.FC = () => {
                                 </IonModal>
                             </IonCol>
                             <IonCol size="auto">
-                                <IonItem class="ion-no-padding" style={{"width": "100px",  "--inner-padding-end":"0px"}} button={true} onClick={() => setShowSettingModal(true)}>
+                                <IonItem class="ion-no-padding" lines="none" style={{"width": "100px",  "--inner-padding-end":"0px", "--background": "transparent"}} button={true} onClick={() => setShowSettingModal(true)}>
                                     <IonIcon icon={settings}/>
                                     <IonLabel class="ion-text-center">Settings</IonLabel>
                                 </IonItem>
@@ -297,7 +300,7 @@ const Simulation: React.FC = () => {
                                 </IonModal>
                             </IonCol>
                             <IonCol size="auto">
-                                <IonItem style={{"width": "150px"}}>
+                                <IonItem lines="none" style={{"width": "150px", "--background": "transparent"}}>
                                     <IonLabel position="stacked">Show graph</IonLabel>
                                     <IonSelect color='dark' interface="alert" placeholder="type" value={graphType}
                                     onIonChange={e => {getGraphData(e.detail.value); setGraphType(e.detail.value); if (mode==='simulation'){socket.emit('setSimulationGraphType', e.detail.value)}}}>
@@ -333,12 +336,12 @@ const Simulation: React.FC = () => {
                                 </IonButtons>
                             </IonCol>
                             <IonCol size="auto">
-                                <IonItem  style={{"width": "100px", "--inner-padding-end":"0px"}}>
+                                <IonItem lines="none" style={{"width": "100px", "--inner-padding-end":"0px", "--background": "transparent"}}>
                                     <IonLabel style={{"whiteSpace": "pre-line"}} class="ion-text-center">{julianDate}</IonLabel>
                                 </IonItem>
                             </IonCol>
                             <IonCol >
-                                <IonItem >
+                                <IonItem lines="none" style={{"--background": "transparent"}}>
                                     <IonRange min={0} max={endTime} value={clockTime} color='dark'
                                         onIonChange={(e) => {if(changeTime){
                                                                 const target:any = e.detail.value;
@@ -356,19 +359,19 @@ const Simulation: React.FC = () => {
                     </IonGrid>                   
                 </IonToolbar>  
                 {graphType !== 'None' &&
-                    <IonItem>
+                    <IonItem lines="none">
                         <ResponsiveContainer width="100%" height={200}>
                             <LineChart>
-                            <XAxis dataKey="time" type="number" unit="s" tick={{fontSize: 12}} domain={['min', 'max']}/>
-                            <YAxis dataKey="value" tick={{fontSize: 12}} domain={['auto', 'auto']}/>
-                            <Tooltip />
-                            <Legend verticalAlign="top" height={25} wrapperStyle={{fontSize: 12}}/>
-                            {graphData && graphData.map((d:any) => (
-                                <Line dataKey="value" data={d.data} name={d.name} key={d.name} dot={false} type="linear" stroke={d.color} strokeWidth={1.5}/>
-                            ))}
-                            <ReferenceLine x={Math.trunc(clockTime)} stroke="red" />
+                                <XAxis dataKey="time" type="number" unit="s" tick={{fontSize: 12}} domain={['min', 'max']}/>
+                                <YAxis dataKey="value" tick={{fontSize: 12}} domain={['auto', 'auto']}/>
+                                <Tooltip />
+                                <Legend verticalAlign="top" height={25} wrapperStyle={{fontSize: 12}}/>
+                                {graphData && graphData.map((d:any) => (
+                                    <Line dataKey="value" data={d.data} name={d.name} key={d.name} dot={false} type="linear" stroke={d.color} strokeWidth={1.5}/>
+                                ))}
+                                <ReferenceLine x={Math.trunc(clockTime)} stroke="red" />
                             </LineChart>
-                        </ResponsiveContainer>
+                      </ResponsiveContainer>  
                     </IonItem>
                 }
             </IonFooter>

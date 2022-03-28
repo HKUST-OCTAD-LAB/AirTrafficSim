@@ -44,10 +44,13 @@ class Environment:
         self.folder_path.mkdir()
         self.file_path =  self.folder_path.joinpath(self.file_name+'.csv')
         self.writer = csv.writer(open(self.file_path, 'w+'))
-        self.writer.writerow(['timestep','timestamp', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
-                    'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode'])
-        self.header=['None', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed', 
-                     'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode']
+        self.header = ['timestep','timestamp', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
+                    'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode', 'ap_track_angle', 'ap_heading', 'ap_nav_index']
+        self.writer.writerow(self.header)
+        self.header.remove('timestep')
+        self.header.remove('timestamp')
+        self.header.remove('id')
+        self.header.remove('callsign')
 
 
     def atc_command(self):
@@ -112,7 +115,7 @@ class Environment:
         """
         data = np.column_stack((np.full(self.traffic.n, self.global_time), np.full(self.traffic.n, (self.datetime + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), np.arange(self.traffic.n), self.traffic.call_sign[:self.traffic.n], self.traffic.lat[:self.traffic.n], self.traffic.long[:self.traffic.n], self.traffic.alt[:self.traffic.n], self.traffic.heading[:self.traffic.n], 
                         self.traffic.cas[:self.traffic.n], self.traffic.tas[:self.traffic.n], self.traffic.mach[:self.traffic.n], self.traffic.vs[:self.traffic.n], self.traffic.mass[:self.traffic.n], self.traffic.fuel_consumed[:self.traffic.n],
-                        self.traffic.bank_angle[:self.traffic.n], self.traffic.trans_alt[:self.traffic.n], self.traffic.accel[:self.traffic.n], self.traffic.drag[:self.traffic.n], self.traffic.esf[:self.traffic.n], self.traffic.thrust[:self.traffic.n], self.traffic.flight_phase[:self.traffic.n], self.traffic.speed_mode[:self.traffic.n], self.traffic.ap.speed_mode[:self.traffic.n])) #debug
+                        self.traffic.bank_angle[:self.traffic.n], self.traffic.trans_alt[:self.traffic.n], self.traffic.accel[:self.traffic.n], self.traffic.drag[:self.traffic.n], self.traffic.esf[:self.traffic.n], self.traffic.thrust[:self.traffic.n], self.traffic.flight_phase[:self.traffic.n], self.traffic.speed_mode[:self.traffic.n], self.traffic.ap.speed_mode[:self.traffic.n], self.traffic.ap.track_angle[:self.traffic.n], self.traffic.ap.heading[:self.traffic.n], self.traffic.ap.flight_plan_index)) #debug
         self.writer.writerows(data)
 
 

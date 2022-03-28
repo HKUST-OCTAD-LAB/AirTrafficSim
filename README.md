@@ -26,6 +26,7 @@ Conda environment is suggested for the installation of AirTrafficSim. All depend
   - Flask
   - Flask-SocketIO
   - Eventlet
+  - cdsapi [installation guide](https://cds.climate.copernicus.eu/api-how-to)
 
 ### Install from Github
 
@@ -37,7 +38,7 @@ pip install Flask flask-socketio eventlet
 git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
 ```
 
-After installation, please also download, unzip, and store BADA data in [data/BADA](data/BADA/)
+After installation, please also download, unzip, and store BADA data in [data/BADA](data/BADA/). In addition follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to setup the API key for ECMWF Climate Data Store.
 
 
 ## Running AirTrafficSim

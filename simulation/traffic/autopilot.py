@@ -49,7 +49,7 @@ class Autopilot:
         # Flight plan
         self.flight_plan_index = np.zeros([N], dtype=int)                  
         """Index of next waypoint in flight plan array [int]"""
-        self.flight_plan_name = [[0.0] for _ in range(N)]          
+        self.flight_plan_name = [[""] for _ in range(N)]          
         """2D array to store the string of waypoints [[string]]"""
         self.flight_plan_lat = [[0.0] for _ in range(N)]           
         """2D array to store the latitude of waypoints [[deg]"""
@@ -162,6 +162,7 @@ class Autopilot:
         self.heading = np.where(self.lateral_mode == AP_lateral_mode.HEADING, self.heading, self.track_angle + np.arcsin(traffic.weather.wind_speed/traffic.tas * np.sin(self.track_angle-traffic.weather.wind_direction))) #https://www.omnicalculator.com/physics/wind-correction-angle
         self.flight_plan_index = np.where(dist > self.dist, self.flight_plan_index+1, self.flight_plan_index)
         self.dist = dist
+        
 
     def update_fms(self):
         pass

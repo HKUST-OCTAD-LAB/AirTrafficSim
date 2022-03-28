@@ -2,6 +2,22 @@ import numpy as np
 from traffic.performance import Performance
 from utils.unit import Unit_conversion
 
+import cdsapi
+c = cdsapi.Client()
+# c.retrieve(
+#     'reanalysis-era5-pressure-levels',
+#     {
+#         'product_type': 'reanalysis',
+#         'format': 'grib',
+#         'variable': 'temperature',
+#         'pressure_level': '1',
+#         'year': '2018',
+#         'month': '09',
+#         'day': '15',
+#         'time': '08:00',
+#     },
+#     'data/weather/download.grib')
+
 class Weather:
     
     def __init__(self, N=1000):

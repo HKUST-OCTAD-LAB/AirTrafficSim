@@ -14,7 +14,7 @@ class DemoEnv(Environment):
 
         # User environment setup
         self.start_time = datetime.fromisoformat('2022-03-22T00:00:00')
-        self.end_time = 5000
+        self.end_time = 1000
 
         self.aircraft_head = Aircraft(self.traffic, "HEAD", "A20N", Flight_phase.CRUISE, 22.387778, 113.428116, 20000.0, 175.0, 310.0, 10000.0, 12000.0, ["SIERA", "CANTO", "MURRY", "GOODI", "SILVA", "LIMES"])
         self.aircraft_fol = Aircraft(self.traffic, "FOLLOW", "A20N", Flight_phase.CRUISE, 21.9, 113.5, 20000.0, 175.0, 310.0, 10000.0, 12000.0)
