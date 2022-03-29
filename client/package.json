@@ -23,7 +23,7 @@
     "cesium": "^1.91.0",
     "craco-cesium": "^1.2.0",
     "ionicons": "^5.4.0",
-    "plotly.js": "^2.11.1",
+    "plotly.js-gl2d-dist-min": "^2.11.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-plotly.js": "^2.5.1",

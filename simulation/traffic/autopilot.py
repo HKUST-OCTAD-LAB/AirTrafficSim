@@ -157,10 +157,10 @@ class Autopilot:
             else:
                 self.lateral_mode[i] = AP_lateral_mode.HEADING
 
-        dist = Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat, self.long)
-        self.track_angle = Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long)
+        dist = np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat, self.long))
+        self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist<1.0, self.track_angle, Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long)))
         self.heading = np.where(self.lateral_mode == AP_lateral_mode.HEADING, self.heading, self.track_angle + np.arcsin(traffic.weather.wind_speed/traffic.tas * np.sin(self.track_angle-traffic.weather.wind_direction))) #https://www.omnicalculator.com/physics/wind-correction-angle
-        self.flight_plan_index = np.where(dist > self.dist, self.flight_plan_index+1, self.flight_plan_index)
+        self.flight_plan_index = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (dist < 1.0) & (dist > self.dist), self.flight_plan_index+1, self.flight_plan_index)
         self.dist = dist
         
 

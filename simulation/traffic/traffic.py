@@ -5,6 +5,7 @@ from traffic.weather import Weather
 from traffic.performance import Performance
 from utils.unit import Unit_conversion
 from utils.enums import Flight_phase, Speed_mode, AP_speed_mode, AP_throttle_mode, AP_vertical_mode, Configuration, Vertical_mode
+from utils.cal import Calculation
 
 class Traffic:
 
@@ -226,7 +227,7 @@ class Traffic:
         self.ap.update(self)
 
         # Bank angle
-        d_heading = np.mod(self.ap.heading - self.heading + 180.0, 360.0) - 180.0  
+        d_heading = Calculation.cal_angle_diff(self.heading, self.ap.heading)
         self.bank_angle = np.select(condlist=[
                                         d_heading == 0.0,
                                         d_heading > 0,

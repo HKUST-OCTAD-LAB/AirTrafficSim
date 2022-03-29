@@ -2,7 +2,8 @@ import React, { useState, useRef,} from "react";
 import { IonContent, IonPage, IonTitle, IonToolbar, IonRange, IonIcon, IonButtons, IonButton, IonProgressBar, IonLabel, IonItem, IonSelect, IonSelectOption, IonGrid, IonCol, IonRow, IonFooter, IonChip, IonModal, IonToggle, IonList, useIonViewDidEnter, IonHeader, IonSegment, IonSegmentButton, IonLoading, IonToast } from '@ionic/react';
 import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource, HeadingPitchRange} from "cesium";
 import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer, Clock, Camera } from "resium";
-import Plot from "react-plotly.js";
+import Plotly from "plotly.js-gl2d-dist-min";
+import createPlotlyComponent from "react-plotly.js/factory";
 
 import {
     stop, stopOutline,
@@ -12,6 +13,8 @@ import {
 } from "ionicons/icons";
 
 import socket from "../utils/websocket"
+
+const Plot = createPlotlyComponent(Plotly);
 
 Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
@@ -66,6 +69,8 @@ const Simulation: React.FC = () => {
             viewer.dataSources.add(navDataSource);
             setStartTime(viewer.clock.startTime)
         }
+
+        setConnected(socket.connected);
 
         socket.on("connect", () => {
             setConnected(socket.connected)
@@ -376,9 +381,10 @@ const Simulation: React.FC = () => {
                                 line: {color: "red", width:1}
                             }],
                             hovermode:"x",
-                            modebar:{bgcolor:"transparent"}
+                            modebar:{bgcolor:"transparent"},
+                            dragmode: "pan"
                         }}
-                        config={{displaylogo: false}}
+                        config={{displaylogo: false, scrollZoom: true, showTips:false}}
                         style={{width:"100%", height:"100%"}}
                         useResizeHandler={true}
                       />

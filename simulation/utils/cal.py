@@ -31,7 +31,7 @@ class Calculation:
         ----
         Haversine distance https://en.wikipedia.org/wiki/Haversine_formula using mean Earth radius 6371.009 for the WGS84 ellipsoid
         """
-        return 2.0 * 6371.0 * np.arcsin(np.sqrt(np.sin(np.deg2rad(lat2 - lat1)/2.0)**2.0 + np.cos(np.deg2rad(lat1)) * np.cos(np.deg2rad(lat2)) * np.sin(np.deg2rad(long2 - long1)/2.0)**2.0))\
+        return 2.0 * 6371.0 * np.arcsin(np.sqrt(np.square(np.sin((np.deg2rad(lat2) - np.deg2rad(lat1))/2.0)) + np.cos(np.deg2rad(lat1)) * np.cos(np.deg2rad(lat2)) * np.square(np.sin((np.deg2rad(long2) - np.deg2rad(long1))/2.0))))
 
     
     @staticmethod
@@ -59,5 +59,18 @@ class Calculation:
         ----
         Forward azimuth https://www.movable-type.co.uk/scripts/latlong.html
         """
-        return np.rad2deg(np.arctan2(np.sin(np.deg2rad(long2-long1)) * np.cos(np.deg2rad(lat2)), np.cos(np.deg2rad(lat1))*np.sin(np.deg2rad(lat2)) - np.sin(np.deg2rad(lat1))*np.cos(np.deg2rad(lat2))*np.cos(np.deg2rad(long2-long1))))
-        # const brng = (θ*180/Math.PI + 360) % 360; // in degrees TODO: need?
+        return np.mod((np.rad2deg(np.arctan2(np.sin(np.deg2rad(long2-long1)) * np.cos(np.deg2rad(lat2)), np.cos(np.deg2rad(lat1))*np.sin(np.deg2rad(lat2)) - np.sin(np.deg2rad(lat1))*np.cos(np.deg2rad(lat2))*np.cos(np.deg2rad(long2-long1)))) + 360.0), 360.0)
+
+    @staticmethod
+    def cal_angle_diff(current_angle, target_angle):
+        """
+        Calculate the difference of two angle (+ve clockwise, -ve anti-clockwise)
+
+        Parameters
+        ----------
+        current_angle : float[]
+            Current angle
+        target_angle : float[]
+            Target angle
+        """
+        return np.mod(target_angle - current_angle + 180.0, 360.0) - 180.0 

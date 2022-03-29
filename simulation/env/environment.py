@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 import csv
 from pathlib import Path
-from itertools import cycle
 
 from utils.unit import Unit_conversion
+from utils.enums import Flight_phase, Configuration, Speed_mode, Vertical_mode, AP_speed_mode, AP_throttle_mode, AP_vertical_mode, AP_lateral_mode
 from traffic.traffic import Traffic
 
 
@@ -44,8 +44,13 @@ class Environment:
         self.folder_path.mkdir()
         self.file_path =  self.folder_path.joinpath(self.file_name+'.csv')
         self.writer = csv.writer(open(self.file_path, 'w+'))
-        self.header = ['timestep','timestamp', 'id', 'callsign', 'lat', 'long', 'alt', 'heading', 'cas', 'tas', 'mach', 'vs', 'weight', 'fuel_consumed',
-                    'bank_angle', 'trans_alt', 'accel', 'drag', 'esf', 'thrust', 'flight_phase', 'speed_mode', 'ap_speed_mode', 'ap_track_angle', 'ap_heading', 'ap_nav_index']
+        self.header = ['timestep','timestamp', 'id', 'callsign', 'lat', 'long', 'alt', 
+                        'cas', 'tas', 'mach', 'vs', 
+                        'heading', 'bank_angle', 
+                        'mass', 'fuel_consumed', 
+                        'thrust', 'drag', 'esf', 'accel',
+                        'ap_track_angle', 'ap_heading', 'ap_nav_index', 'ap_dist_to_next_fix',
+                        'trans_alt', 'flight_phase', 'configuration', 'speed_mode', 'vertical_mode','ap_speed_mode', 'ap_lateral_mode']
         self.writer.writerow(self.header)
         self.header.remove('timestep')
         self.header.remove('timestamp')
@@ -77,7 +82,7 @@ class Environment:
 
             print("Environment - step() finish at", time.time() - start_time)
             
-            if(socketio):
+            if(socketio != None):
                 # Save to buffer
                 self.time.append((self.datetime + timedelta(seconds=self.global_time)).isoformat())
                 self.lat.append(self.traffic.lat)
@@ -113,9 +118,15 @@ class Environment:
         """
         Save all states variable of one timestemp to csv file.
         """
-        data = np.column_stack((np.full(self.traffic.n, self.global_time), np.full(self.traffic.n, (self.datetime + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), np.arange(self.traffic.n), self.traffic.call_sign[:self.traffic.n], self.traffic.lat[:self.traffic.n], self.traffic.long[:self.traffic.n], self.traffic.alt[:self.traffic.n], self.traffic.heading[:self.traffic.n], 
-                        self.traffic.cas[:self.traffic.n], self.traffic.tas[:self.traffic.n], self.traffic.mach[:self.traffic.n], self.traffic.vs[:self.traffic.n], self.traffic.mass[:self.traffic.n], self.traffic.fuel_consumed[:self.traffic.n],
-                        self.traffic.bank_angle[:self.traffic.n], self.traffic.trans_alt[:self.traffic.n], self.traffic.accel[:self.traffic.n], self.traffic.drag[:self.traffic.n], self.traffic.esf[:self.traffic.n], self.traffic.thrust[:self.traffic.n], self.traffic.flight_phase[:self.traffic.n], self.traffic.speed_mode[:self.traffic.n], self.traffic.ap.speed_mode[:self.traffic.n], self.traffic.ap.track_angle[:self.traffic.n], self.traffic.ap.heading[:self.traffic.n], self.traffic.ap.flight_plan_index)) #debug
+        data = np.column_stack((np.full(self.traffic.n, self.global_time), np.full(self.traffic.n, (self.datetime + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), np.arange(self.traffic.n), self.traffic.call_sign[:self.traffic.n], self.traffic.lat[:self.traffic.n], self.traffic.long[:self.traffic.n], self.traffic.alt[:self.traffic.n],
+                                self.traffic.cas[:self.traffic.n], self.traffic.tas[:self.traffic.n], self.traffic.mach[:self.traffic.n], self.traffic.vs[:self.traffic.n], 
+                                self.traffic.heading[:self.traffic.n], self.traffic.bank_angle[:self.traffic.n], 
+                                self.traffic.mass[:self.traffic.n], self.traffic.fuel_consumed[:self.traffic.n],
+                                self.traffic.thrust[:self.traffic.n], self.traffic.drag[:self.traffic.n], self.traffic.esf[:self.traffic.n], self.traffic.accel[:self.traffic.n],
+                                self.traffic.ap.track_angle[:self.traffic.n], self.traffic.ap.heading[:self.traffic.n], self.traffic.ap.flight_plan_index, self.traffic.ap.dist,                  # autopilot variable
+                                self.traffic.trans_alt[:self.traffic.n], [Flight_phase(i).name for i in self.traffic.flight_phase[:self.traffic.n]], [Configuration(i).name for i in self.traffic.configuration[:self.traffic.n]], [Speed_mode(i).name for i in self.traffic.speed_mode[:self.traffic.n]], [Vertical_mode(i).name for i in self.traffic.vertical_mode[:self.traffic.n]], 
+                                [AP_speed_mode(i).name for i in self.traffic.ap.speed_mode[:self.traffic.n]], [AP_lateral_mode(i).name for i in self.traffic.ap.lateral_mode[:self.traffic.n]])) # mode
+        
         self.writer.writerows(data)
 
 
