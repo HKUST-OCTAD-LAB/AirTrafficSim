@@ -15,15 +15,15 @@ class Environment:
     Base class for simulation environment
     """
 
-    def __init__(self, N=1000, file_name="default"):
+    def __init__(self, file_name="default",  number_of_traffic=1000, start_time = datetime.utcnow(), end_time = 60):
         # User setting
-        self.start_time = datetime.utcnow()
+        self.start_time = start_time
         """The simulation start time [datetime object]"""
-        self.end_time = 60
+        self.end_time = end_time
         """The simulation end time [s]"""
 
         # Simulation variable
-        self.traffic = Traffic(N)
+        self.traffic = Traffic(number_of_traffic, start_time, end_time)
         self.global_time = 0                    # [s]
 
         # Handle io
@@ -40,7 +40,7 @@ class Environment:
 
         # File IO
         self.file_name = file_name+'-'+self.datetime.isoformat(timespec='seconds')
-        self.folder_path = Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+file_name+'-'+self.datetime.isoformat(timespec='seconds'))
+        self.folder_path = Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+self.file_name)
         self.folder_path.mkdir()
         self.file_path =  self.folder_path.joinpath(self.file_name+'.csv')
         self.writer = csv.writer(open(self.file_path, 'w+'))
@@ -76,7 +76,7 @@ class Environment:
             self.atc_command()
 
             print("update states")
-            self.traffic.update()
+            self.traffic.update(self.global_time)
             print("Save to file")
             self.save()
 

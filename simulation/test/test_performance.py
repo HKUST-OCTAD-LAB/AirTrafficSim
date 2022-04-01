@@ -4,7 +4,7 @@ import pytest
 from pathlib import Path
 import numpy as np
 
-from simulation.traffic.performance import Performance
+from simulation.traffic.performance.performance import Performance
 
 # class TestPerformance(unittest.TestCase):
 #     """

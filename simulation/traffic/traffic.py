@@ -1,15 +1,15 @@
 import numpy as np
 
 from traffic.autopilot import Autopilot
-from traffic.weather import Weather
-from traffic.performance import Performance
+from traffic.weather.weather import Weather
+from traffic.performance.performance import Performance
 from utils.unit import Unit_conversion
 from utils.enums import Flight_phase, Speed_mode, AP_speed_mode, AP_throttle_mode, AP_vertical_mode, Configuration, Vertical_mode
 from utils.cal import Calculation
 
 class Traffic:
 
-    def __init__(self, N=1000):
+    def __init__(self, N, start_time, end_time):
         """
         Initialize base traffic array to store aircraft state variables for one timestep.
 
@@ -105,7 +105,7 @@ class Traffic:
         """Performance class"""
         self.ap = Autopilot(N)                                  
         """Autopilot class"""
-        self.weather = Weather(N)                               
+        self.weather = Weather(N, start_time, end_time)                               
         """Weather class"""
 
     
@@ -194,7 +194,7 @@ class Traffic:
     
 
     
-    def update(self, d_t = 1):
+    def update(self, global_time, d_t = 1):
         """
         Update aircraft state for each timestep given ATC/autopilot command.
 
@@ -210,7 +210,7 @@ class Traffic:
         # print("Traffic.py - update()")
 
         # Update atmosphere
-        self.weather.update(self.alt, self.perf)
+        self.weather.update(self.lat, self.long, self.alt, self.perf, global_time)
 
         # Ceiling
         max_alt = self.perf.cal_maximum_altitude(self.weather.d_T, self.mass)   # TODO: calculate only once

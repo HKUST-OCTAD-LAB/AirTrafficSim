@@ -1,6 +1,6 @@
 import React, { useState, useRef,} from "react";
 import { IonContent, IonPage, IonTitle, IonToolbar, IonRange, IonIcon, IonButtons, IonButton, IonProgressBar, IonLabel, IonItem, IonSelect, IonSelectOption, IonGrid, IonCol, IonRow, IonFooter, IonChip, IonModal, IonToggle, IonList, useIonViewDidEnter, IonHeader, IonSegment, IonSegmentButton, IonLoading, IonToast } from '@ionic/react';
-import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource, HeadingPitchRange} from "cesium";
+import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource, HeadingPitchRange, WebMapServiceImageryProvider} from "cesium";
 import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer, Clock, Camera } from "resium";
 import Plotly from "plotly.js-gl2d-dist-min";
 import createPlotlyComponent from "react-plotly.js/factory";
@@ -21,10 +21,23 @@ const terrainProvider = createWorldTerrain();
 const url = IonResource.fromAssetId(96188);
 const bingImagery = createWorldImagery();
 const simpleImagery = new OpenStreetMapImageryProvider({url: 'https://stamen-tiles.a.ssl.fastly.net/toner-background/' });
+
 const replayDataSource = new cesiumCzmlDataSource();
 const simulationDataSource = new cesiumCzmlDataSource();
 const navDataSource = new cesiumCzmlDataSource();
-const defaultZoom = new HeadingPitchRange(0,-90,500000)
+const weatherDataSource = new cesiumCzmlDataSource();
+
+const defaultZoom = new HeadingPitchRange(0,-90,500000);
+const nexrad = new WebMapServiceImageryProvider({
+    url:
+      "https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?",
+    layers: "nexrad-n0r",
+    credit: "Radar data courtesy Iowa Environmental Mesonet",
+    parameters: {
+      transparent: "true",
+      format: "image/png",
+    },
+  })
 
 
 const Simulation: React.FC = () => {
@@ -67,6 +80,7 @@ const Simulation: React.FC = () => {
             viewer.dataSources.add(replayDataSource);
             viewer.dataSources.add(simulationDataSource);
             viewer.dataSources.add(navDataSource);
+            viewer.dataSources.add(weatherDataSource);
             setStartTime(viewer.clock.startTime)
         }
 
@@ -188,13 +202,35 @@ const Simulation: React.FC = () => {
         }
     }
 
+    function getWindBard(){
+        if (viewerRef.current?.cesiumElement){
+            const viewer = viewerRef.current.cesiumElement;
+            var currentMagnitude = viewer.camera.getMagnitude();
+            // console.log('current magnitude - ', currentMagnitude);
+            // var direction = viewer.camera.direction;
+            // console.log("camera direction", direction.x, direction.y, direction.z);
+            var rectangle = viewer.camera.computeViewRectangle();
+            if(currentMagnitude < 10000000){
+                console.log("getwindBard");
+                socket.emit("getWindBard", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, (res :any) => {
+                    console.log(res)
+                    weatherDataSource.load(res).then((ds)=>{console.log(ds)})
+                });
+            } else {
+                // weatherDataSource.entities.removeAll();
+            }
+        }
+    }
+
     return (
         <IonPage>
             <IonContent scrollY={false}>
                 <Viewer ref={viewerRef} style={{height:"100%"}} animation={false} timeline={false} selectionIndicator={false} imageryProvider={false} homeButton={false} baseLayerPicker={false} sceneModePicker={false} fullscreenButton={false} navigationHelpButton={false} geocoder={false} >
                     <Scene debugShowFramesPerSecond={true}/>
-                    {Ion.defaultAccessToken? <Globe baseColor={Color.fromCssColorString('#000000')} terrainProvider={terrainProvider}/> : <Globe baseColor={Color.fromCssColorString('#000000')} />}
-                    {stateliteMode ? <ImageryLayer imageryProvider={bingImagery}/> : <ImageryLayer imageryProvider={simpleImagery} alpha={0.2} contrast={-1}/>}
+                    <Globe baseColor={Color.fromCssColorString('#000000')} terrainProvider={Ion.defaultAccessToken ? terrainProvider : undefined} showGroundAtmosphere={false}/>
+                    <ImageryLayer imageryProvider={bingImagery}  show={stateliteMode}/>
+                    <ImageryLayer imageryProvider={simpleImagery} alpha={0.2} contrast={-1} show={!stateliteMode}/>
+                    {/* <ImageryLayer imageryProvider={nexrad}/> */}
                     {Ion.defaultAccessToken && <Cesium3DTileset url={url}/>}
                     <Clock 
                         shouldAnimate={clockDirection !== 0 ? true : false} 
@@ -205,7 +241,7 @@ const Simulation: React.FC = () => {
                             setJulianDate(JulianDate.toIso8601(clock.currentTime, 0).replace("T", "\n"));
                         }} 
                     />
-                    <Camera onMoveEnd={() => {getNav(false, false)}}/>
+                    <Camera onMoveEnd={() => {getNav(false, false); getWindBard();}}/>
                 </Viewer>
             </IonContent>
             

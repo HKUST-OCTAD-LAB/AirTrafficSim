@@ -16,6 +16,8 @@ class Nav:
     if len(os.listdir('data/nav/xplane/')) <= 1:
                 print("Unzipping X-plane navigation data.")
                 ZipFile('data/nav/xplane_default_data.zip').extractall('data/nav/xplane/')
+
+    print("Reading NAV data...")
     
     fix = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_fix.dat'), delimiter='\s+', skiprows=3, header=None)
     """Fixes data https://developer.x-plane.com/wp-content/uploads/2019/01/XP-FIX1101-Spec.pdf"""  

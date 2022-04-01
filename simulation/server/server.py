@@ -54,6 +54,10 @@ def run_simulation(file):
 def get_Nav(lat1, long1, lat2, long2):
     return Utils.get_nav(lat1, long1, lat2, long2)
 
+@socketio.on('getWindBard')
+def get_wind_bard(lat1, long1, lat2, long2):
+    return Utils.get_wind_bard(lat1, long1, lat2, long2)
+
 @app.route("/")
 def serve_client():
     return render_template("index.html")
