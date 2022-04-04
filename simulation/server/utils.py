@@ -51,20 +51,16 @@ class Utils:
 
     @staticmethod
     def get_wind_bard(lat1, long1, lat2, long2):
-        print("get wind bard")
         data = xr.open_dataset('data/weather/2022-03-22T00:00.nc').sel(level=900, time=datetime.fromisoformat('2022-03-22T00:00:00'))
-        # p = data.t.plot(subplot_kws=dict(projection=ccrs.Orthographic(30, 20)),transform=ccrs.PlateCarree(),)
-        # p.axes.set_global()
-        # p.axes.coastlines()
-        # plt.savefig('cartopy_example.png')
-        fig = Figure(figsize=(long2-long1, lat2-lat1),facecolor='none' ) #facecolor='none'
+        data = data.where((((data.latitude >= lat1) & (data.latitude <= lat2)) & ((data.longitude >= (long1+360.0) % 360.0) & (data.longitude <= (long2+360.0) % 360.0))), drop=True)
+        fig = Figure(figsize=(long2-long1, lat2-lat1), facecolor='none', dpi=500)
         ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.PlateCarree(), frameon=False)
         ax.set_extent([long1, long2, lat1, lat2], crs=ccrs.PlateCarree())
         # ax.set_global()
-        ax.coastlines()  
-        skip = 10
-        ax.barbs(data.longitude.values[::skip], data.latitude.values[::skip], data.u.values[::skip, ::skip], data.v.values[::skip, ::skip], 
-                # length=5, sizes=dict(emptybarb=0.25, spacing=0.2, height=0.5), linewidth=0.95, 
+        # ax.coastlines()  
+        ax.barbs(data.longitude.values, data.latitude.values, data.u.values, data.v.values, 
+                flagcolor='grey',
+                # sizes=dict(emptybarb=0.25, spacing=0.2, height=0.5), linewidth=0.95, length=5, 
                 transform=ccrs.PlateCarree())
         buf = BytesIO()
         fig.savefig(buf, format="png")
@@ -76,30 +72,7 @@ class Utils:
                 "version": "1.0",
             },
             {
-                "id": "redRectangle",
-                "name": "extruded red rectangle with black outline",
-                "rectangle": {
-                    "coordinates": {
-                        "wsenDegrees": [-120, 40, -110, 50],
-                        },
-                    "height": 600000,
-                    "extrudedHeight": 0,
-                    "fill": True,
-                    "material": {
-                    "solidColor": {
-                        "color": {
-                        "rgba": [255, 0, 0, 100],
-                        },
-                    },
-                    },
-                    "outline": True,
-                    "outlineColor": {
-                        "rgba": [0, 0, 0, 255],
-                        },
-                },
-            },
-            {
-                "id": "Weather tile",
+                "id": "Weather",
                 "rectangle": {
                     "coordinates": {
                         "wsenDegrees": [long1, lat1, long2, lat2],
@@ -118,4 +91,3 @@ class Utils:
                 },
             },
         ]
-        # fig.savefig('barb.png', transparent=True)

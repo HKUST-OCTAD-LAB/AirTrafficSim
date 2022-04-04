@@ -192,7 +192,7 @@ const Simulation: React.FC = () => {
             // console.log("camera rectangle", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180);
             if(currentMagnitude < 6800000){
                 socket.emit("getNav", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, (res :any) => {
-                    navDataSource.load(res)
+                    navDataSource.load(res);
                 });
             } else {
                 navDataSource.entities.removeAll();
@@ -203,6 +203,7 @@ const Simulation: React.FC = () => {
     }
 
     function getWindBard(){
+        console.log("getwindBard")
         if (viewerRef.current?.cesiumElement){
             const viewer = viewerRef.current.cesiumElement;
             var currentMagnitude = viewer.camera.getMagnitude();
@@ -211,10 +212,9 @@ const Simulation: React.FC = () => {
             // console.log("camera direction", direction.x, direction.y, direction.z);
             var rectangle = viewer.camera.computeViewRectangle();
             if(currentMagnitude < 10000000){
-                console.log("getwindBard");
                 socket.emit("getWindBard", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, (res :any) => {
                     console.log(res)
-                    weatherDataSource.load(res).then((ds)=>{console.log(ds)})
+                    weatherDataSource.process(res);
                 });
             } else {
                 // weatherDataSource.entities.removeAll();
