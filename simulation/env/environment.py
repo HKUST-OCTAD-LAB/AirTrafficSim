@@ -15,7 +15,7 @@ class Environment:
     Base class for simulation environment
     """
 
-    def __init__(self, file_name="default",  number_of_traffic=1000, start_time = datetime.utcnow(), end_time = 60):
+    def __init__(self, file_name="default",  number_of_traffic=1000, start_time = datetime.utcnow(), end_time = 60, weather_mode="ISA", performance_mode="Openap"):
         # User setting
         self.start_time = start_time
         """The simulation start time [datetime object]"""
@@ -23,7 +23,7 @@ class Environment:
         """The simulation end time [s]"""
 
         # Simulation variable
-        self.traffic = Traffic(number_of_traffic, start_time, end_time)
+        self.traffic = Traffic(number_of_traffic, file_name, start_time, end_time, weather_mode, performance_mode)
         self.global_time = 0                    # [s]
 
         # Handle io

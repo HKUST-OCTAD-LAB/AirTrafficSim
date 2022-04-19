@@ -9,7 +9,7 @@ from utils.cal import Calculation
 
 class Traffic:
 
-    def __init__(self, N, start_time, end_time):
+    def __init__(self, N, file_name, start_time, end_time, weather_mode, performance_mode):
         """
         Initialize base traffic array to store aircraft state variables for one timestep.
 
@@ -105,7 +105,7 @@ class Traffic:
         """Performance class"""
         self.ap = Autopilot(N)                                  
         """Autopilot class"""
-        self.weather = Weather(N, start_time, end_time)                               
+        self.weather = Weather(N, start_time, end_time, weather_mode, file_name)                               
         """Weather class"""
 
     
