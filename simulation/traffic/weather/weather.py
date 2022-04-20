@@ -28,7 +28,7 @@ class Weather:
         self.T = np.zeros([N])                                  # Temperature [K]
         self.p = np.zeros([N])                                  # Pressure [Pa]
         self.rho = np.zeros([N])                                # Density [kg/m^3]
-
+    
         # Download ERA5 data
         if self.mode == "ERA5":
             self.weather_data = xr.open_dataset(Era5.download_data(start_time, end_time, file_name))
@@ -44,7 +44,7 @@ class Weather:
     def update(self, lat, long, alt, perf: Performance, global_time):
         if self.mode == "ERA5":
             ds = self.weather_data.sel(longitude=xr.DataArray(long, dims="points"), latitude=xr.DataArray(lat, dims="points"), time=np.datetime64((self.start_time+timedelta(seconds=global_time)).replace(second=0, minute=0),'ns'), method="ffill") # 
-            index = np.array([np.searchsorted(-x, -Unit_conversion.feet_to_meter(alt)*9.80665, side='right') for x, alt in zip(ds['z'].values.T, alt)])
+            index = np.array([np.searchsorted(-x, -Unit_conversion.feet_to_meter(alt)*9.80665, side='right') for x, alt in zip(ds['z'].values.T, alt)]) - 1
             temp = np.array([x[i] for x, i in zip(ds['t'].values.T, index)])
             self.d_T = temp - perf.cal_temperature(Unit_conversion.feet_to_meter(alt), 0.0)
             self.wind_east = Unit_conversion.mps_to_knots(np.array([x[i] for x, i in zip(ds['u'].values.T, index)]))

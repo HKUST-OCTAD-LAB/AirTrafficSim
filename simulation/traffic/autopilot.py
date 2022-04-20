@@ -52,11 +52,13 @@ class Autopilot:
         self.flight_plan_name = [[""] for _ in range(N)]          
         """2D array to store the string of waypoints [[string]]"""
         self.flight_plan_lat = [[0.0] for _ in range(N)]           
-        """2D array to store the latitude of waypoints [[deg]"""
+        """2D array to store the latitude of waypoints [[deg...]]"""
         self.flight_plan_long = [[0.0] for _ in range(N)]          
-        """2D array to store the longitude of waypoints [[deg]"""
-        self.flight_plan_restriction = [[0.0] for _ in range(N)]   
-        """2D array of waypoint restriction (vertical...)"""
+        """2D array to store the longitude of waypoints [[deg...]]"""
+        self.flight_plan_target_alt = [[0.0] for _ in range(N)]   
+        """2D array of target altitude at each waypoint [[ft...]]"""
+        self.flight_plan_target_speed = [[0.0] for _ in range(N)]   
+        """2D array of target speed at each waypoint [[cas/mach...]]"""
 
         # Flight mode
         self.speed_mode = np.zeros([N])                         
@@ -74,7 +76,7 @@ class Autopilot:
         # self.nav = Nav()
 
 
-    def add_aircraft(self, n, lat, long, alt, heading, cas, flight_plan=[]):
+    def add_aircraft(self, n, lat, long, alt, heading, cas, departure_runway, arrival_runway, flight_plan, target_speed, target_alt):
         """
         Add aircraft and init flight plan
 
@@ -105,7 +107,9 @@ class Autopilot:
         self.lateral_mode[n] = AP_lateral_mode.HEADING
 
         if not flight_plan == []:
-            self.flight_plan_name[n] = np.array(flight_plan)
+            self.flight_plan_name[n] = flight_plan
+            self.flight_plan_target_alt[n] = target_alt
+            self.flight_plan_target_speed[n] = target_speed
             for i, val in enumerate(flight_plan):
                 if i == 0:
                     lat_tmp, long_tmp = Nav.get_fix_coordinate(val, lat, long)
@@ -115,6 +119,14 @@ class Autopilot:
                     lat_tmp, long_tmp = Nav.get_fix_coordinate(val, self.flight_plan_lat[n][i-1], self.flight_plan_long[n][i-1])
                     self.flight_plan_lat[n].append(lat_tmp)
                     self.flight_plan_long[n].append(long_tmp)
+            if arrival_runway:
+                self.flight_plan_name[n].append(arrival_runway[0])
+                self.flight_plan_lat[n].append(arrival_runway[1])
+                self.flight_plan_long[n].append(arrival_runway[2])
+                self.flight_plan_target_alt[n].append(0.0)
+                self.flight_plan_target_speed[n].append(0.0)
+
+            
             self.lateral_mode[n] = AP_lateral_mode.LNAV
 
 
@@ -154,6 +166,13 @@ class Autopilot:
             if val < len(self.flight_plan_name[i]):
                 self.lat[i] = self.flight_plan_lat[i][val]
                 self.long[i] = self.flight_plan_long[i][val]
+                if len(self.flight_plan_target_alt[i]) > 1:
+                    self.alt[i] = self.flight_plan_target_alt[i][val]
+                if len(self.flight_plan_target_speed[i]) > 1:
+                    if (self.flight_plan_target_speed[i][val] < 1.0):
+                        self.mach[i] = self.flight_plan_target_speed[i][val]
+                    else:
+                        self.cas[i] = self.flight_plan_target_speed[i][val]
             else:
                 self.lateral_mode[i] = AP_lateral_mode.HEADING
 

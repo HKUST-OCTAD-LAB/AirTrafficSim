@@ -109,7 +109,7 @@ class Traffic:
         """Weather class"""
 
     
-    def add_aircraft(self, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight, flight_plan=[]):
+    def add_aircraft(self, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_runway, arrival_runway, flight_plan, target_speed, target_alt):
         """
         Add an aircraft to traffic array.
 
@@ -137,7 +137,7 @@ class Traffic:
         # Add aircraft in performance, weather, and autopilot array
         self.perf.add_aircraft(aircraft_type, n)
         self.weather.add_aircraft(n, alt, self.perf)
-        self.ap.add_aircraft(n, lat, long, alt, heading, cas, flight_plan)
+        self.ap.add_aircraft(n, lat, long, alt, heading, cas, departure_runway, arrival_runway, flight_plan, target_speed, target_alt)
 
         # Initialize variables
         self.call_sign[n] = call_sign
@@ -158,9 +158,11 @@ class Traffic:
         self.payload_weight[n] = payload_weight
         self.mass[n] = self.empty_weight[n] + fuel_weight + payload_weight
         self.perf.init_procedure_speed(self.mass, n)
-        self.configuration[n] = Configuration.CLEAN
+        if flight_phase == Flight_phase.TAKEOFF:
+            self.configuration[n] = Configuration.TAKEOFF
+        else:
+            self.configuration[n] = Configuration.CLEAN
 
-       
         
         # Increase aircraft count
         self.n = self.n + 1
@@ -351,3 +353,5 @@ class Traffic:
         fuel_burn = self.perf.update_fuel(self.flight_phase, self.tas, self.thrust, self.alt) 
         self.fuel_consumed = self.fuel_consumed + fuel_burn
         self.mass = self.mass - fuel_burn
+
+        # Flight phase and configuration
