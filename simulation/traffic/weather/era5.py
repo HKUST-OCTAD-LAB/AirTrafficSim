@@ -63,7 +63,21 @@ class Era5:
                     # 'area': [ 90, 0, 0, 90,],       #North, West, South, East
                     'format': 'netcdf',
                 },
-                'data/weather/'+file_name+'.nc')
+                'data/weather/'+file_name+'-3D.nc')
+        
+        c.retrieve(
+            'reanalysis-era5-single-levels',
+            {
+                'product_type': 'reanalysis',
+                'format': 'netcdf',
+                'variable': 'total_precipitation',
+                'year': year,
+                'month': month,
+                'day': day,
+                'time': hour,
+            },
+            'data/weather/'+file_name+'-surface.nc')
+        
         return Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/'+file_name+'.nc')
 
 

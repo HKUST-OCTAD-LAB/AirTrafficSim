@@ -48,7 +48,6 @@ const Simulation: React.FC = () => {
     const [clockMultiplier, setClockMultiplier] = useState(1);
     const [startTime, setStartTime] = useState<any>();
     const [endTime, setEndTime] = useState(100);
-
     const [julianDate, setJulianDate] = useState('');
     const [clockTime, setClockTime] = useState(0);
     const [changeTime, setChangeTime] = useState(false);
@@ -57,6 +56,7 @@ const Simulation: React.FC = () => {
     const [mode, setMode] = useState('');
     const [connected, setConnected] = useState(false);    
     const [stateliteMode, setStateliteMode] = useState(false);
+    const [wind, setWind] = useState(false);
     const [progressBar, setProgressBar] = useState(0);
     const [graphType, setGraphType] = useState<string>('None');
     const [graphHeader, setGraphHeader] = useState(['None']);
@@ -202,9 +202,14 @@ const Simulation: React.FC = () => {
         }
     }
 
-    function getWindBard(){
-        console.log("getwindBard")
-        if (viewerRef.current?.cesiumElement){
+    function getWindBard(selected :boolean, value: boolean){
+        let getWind = false
+        if (selected){
+            getWind = value
+        } else {
+            getWind = wind
+        }
+        if (getWind && viewerRef.current?.cesiumElement){
             const viewer = viewerRef.current.cesiumElement;
             var currentMagnitude = viewer.camera.getMagnitude();
             // console.log('current magnitude - ', currentMagnitude);
@@ -217,8 +222,10 @@ const Simulation: React.FC = () => {
                     weatherDataSource.process(res);
                 });
             } else {
-                // weatherDataSource.entities.removeAll();
+                weatherDataSource.entities.removeAll();
             }
+        } else {
+            weatherDataSource.entities.removeAll();
         }
     }
 
@@ -241,7 +248,7 @@ const Simulation: React.FC = () => {
                             setJulianDate(JulianDate.toIso8601(clock.currentTime, 0).replace("T", "\n"));
                         }} 
                     />
-                    <Camera onMoveEnd={() => {getNav(false, false); getWindBard();}}/>
+                    <Camera onMoveEnd={() => {getNav(false, false); getWindBard(false, false);}}/>
                 </Viewer>
             </IonContent>
             
@@ -336,6 +343,10 @@ const Simulation: React.FC = () => {
                                         <IonItem>
                                             <IonToggle color="medium" checked={showNavigationData} onIonChange={(e) => {setShowNavigationData(e.detail.checked); getNav(true, e.detail.checked);}}/>
                                             <IonLabel>Navigation Data</IonLabel>
+                                        </IonItem>
+                                        <IonItem>
+                                            <IonToggle color="medium" checked={wind} onIonChange={(e) => {setWind(e.detail.checked); getWindBard(true, e.detail.checked)}}/>
+                                            <IonLabel>Wind data</IonLabel>
                                         </IonItem>
                                     </IonContent>
                                 </IonModal>

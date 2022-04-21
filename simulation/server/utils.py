@@ -51,7 +51,7 @@ class Utils:
 
     @staticmethod
     def get_wind_bard(lat1, long1, lat2, long2):
-        data = xr.open_dataset('data/weather/2022-03-22T00:00.nc').sel(level=900, time=datetime.fromisoformat('2022-03-22T00:00:00'))
+        data = xr.open_dataset('data/weather/DemoEnv.nc').sel(level=900, time=datetime.fromisoformat('2022-03-22T00:00:00'))
         data = data.where((((data.latitude >= lat1) & (data.latitude <= lat2)) & ((data.longitude >= (long1+360.0) % 360.0) & (data.longitude <= (long2+360.0) % 360.0))), drop=True)
         fig = Figure(figsize=(long2-long1, lat2-lat1), facecolor='none', dpi=500)
         ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.PlateCarree(), frameon=False)

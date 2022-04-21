@@ -61,6 +61,10 @@ class Environment:
     def atc_command(self):
         pass
 
+    def should_end(self):
+        """Return true/false of whether the simulation should end."""
+        return False
+
 
     def run(self, socketio=None):
         if socketio:
@@ -68,11 +72,17 @@ class Environment:
 
         for i in range(self.end_time+1):
             # One timestep
+
+            # Check if the simulation should end
+            if self.should_end():
+                break
+
             start_time = time.time()
             print("")
             print("Environment - step(), time = ", self.global_time)
             print("")
 
+            # Run atc command
             self.atc_command()
 
             print("update states")
