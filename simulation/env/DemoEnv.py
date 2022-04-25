@@ -13,7 +13,7 @@ class DemoEnv(Environment):
                         number_of_traffic = 2,
                         start_time = datetime.fromisoformat('2022-03-22T00:00:00'),
                         end_time = 1000,
-                        weather_mode = "ERA5",
+                        weather_mode = "ISA",
                         performance_mode= "Bada"
                         )
 
@@ -24,6 +24,9 @@ class DemoEnv(Environment):
         self.aircraft_fol = Aircraft(self.traffic, call_sign="FOLLOW", aircraft_type="A20N", flight_phase=Flight_phase.CRUISE, 
                                                     lat=21.9, long=113.5, alt=20000.0, heading=175.0, cas=310.0, fuel_weight=10000.0, payload_weight=12000.0)
 
+
+    def should_end(self):
+        return False
 
     def atc_command(self):
         # User algorithm

@@ -57,6 +57,7 @@ const Simulation: React.FC = () => {
     const [connected, setConnected] = useState(false);    
     const [stateliteMode, setStateliteMode] = useState(false);
     const [wind, setWind] = useState(false);
+    const [radar, setRadar] = useState(false);
     const [progressBar, setProgressBar] = useState(0);
     const [graphType, setGraphType] = useState<string>('None');
     const [graphHeader, setGraphHeader] = useState(['None']);
@@ -176,13 +177,13 @@ const Simulation: React.FC = () => {
     }
 
     function getNav(selected :boolean, value: boolean){
-        let getNav = false
+        let get = false
         if (selected){
-            getNav = value
+            get = value
         } else {
-            getNav = showNavigationData
+            get = showNavigationData
         }
-        if (getNav && viewerRef.current?.cesiumElement) {
+        if (get && viewerRef.current?.cesiumElement) {
             const viewer = viewerRef.current.cesiumElement;
             var currentMagnitude = viewer.camera.getMagnitude();
             // console.log('current magnitude - ', currentMagnitude);
@@ -203,13 +204,13 @@ const Simulation: React.FC = () => {
     }
 
     function getWindBard(selected :boolean, value: boolean){
-        let getWind = false
+        let get = false
         if (selected){
-            getWind = value
+            get = value
         } else {
-            getWind = wind
+            get = wind
         }
-        if (getWind && viewerRef.current?.cesiumElement){
+        if (get && viewerRef.current?.cesiumElement){
             const viewer = viewerRef.current.cesiumElement;
             var currentMagnitude = viewer.camera.getMagnitude();
             // console.log('current magnitude - ', currentMagnitude);
@@ -218,6 +219,33 @@ const Simulation: React.FC = () => {
             var rectangle = viewer.camera.computeViewRectangle();
             if(currentMagnitude < 10000000){
                 socket.emit("getWindBard", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, (res :any) => {
+                    console.log(res)
+                    weatherDataSource.process(res);
+                });
+            } else {
+                weatherDataSource.entities.removeAll();
+            }
+        } else {
+            weatherDataSource.entities.removeAll();
+        }
+    }
+
+    function getRadarImg(selected :boolean, value: boolean){
+        let get = false
+        if (selected){
+            get = value
+        } else {
+            get = radar
+        }
+        if (get && viewerRef.current?.cesiumElement){
+            const viewer = viewerRef.current.cesiumElement;
+            var currentMagnitude = viewer.camera.getMagnitude();
+            // console.log('current magnitude - ', currentMagnitude);
+            // var direction = viewer.camera.direction;
+            // console.log("camera direction", direction.x, direction.y, direction.z);
+            var rectangle = viewer.camera.computeViewRectangle();
+            if(currentMagnitude < 10000000){
+                socket.emit("getRadarImg", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, (res :any) => {
                     console.log(res)
                     weatherDataSource.process(res);
                 });
@@ -248,7 +276,7 @@ const Simulation: React.FC = () => {
                             setJulianDate(JulianDate.toIso8601(clock.currentTime, 0).replace("T", "\n"));
                         }} 
                     />
-                    <Camera onMoveEnd={() => {getNav(false, false); getWindBard(false, false);}}/>
+                    <Camera onMoveEnd={() => {getNav(false, false); getWindBard(false, false); getRadarImg(false, false);}}/>
                 </Viewer>
             </IonContent>
             
@@ -347,6 +375,10 @@ const Simulation: React.FC = () => {
                                         <IonItem>
                                             <IonToggle color="medium" checked={wind} onIonChange={(e) => {setWind(e.detail.checked); getWindBard(true, e.detail.checked)}}/>
                                             <IonLabel>Wind data</IonLabel>
+                                        </IonItem>
+                                        <IonItem>
+                                            <IonToggle color="medium" checked={radar} onIonChange={(e) => {setRadar(e.detail.checked); getRadarImg(true, e.detail.checked)}}/>
+                                            <IonLabel>Radar image</IonLabel>
                                         </IonItem>
                                     </IonContent>
                                 </IonModal>

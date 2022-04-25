@@ -1,3 +1,4 @@
+from traceback import print_tb
 import cdsapi
 from datetime import datetime, timedelta, time
 from pathlib import Path
@@ -15,11 +16,12 @@ class Era5:
     @staticmethod
     def download_data(start_time: datetime, end_time: datetime, file_name):
         c = cdsapi.Client()
-        if Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/'+file_name+'.nc').exists():
+        if Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/'+file_name).exists():
             print ("ERA5 data exists.")
         else :
             print("Downloading ERA5 data.")
             print("Downlad expected to complete in 10 minutes. Visit https://cds.climate.copernicus.eu/cdsapp#!/yourrequests for the status of the request. \n")
+            Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/'+file_name).mkdir()
             tmp = start_time
             year = []
             month = []
@@ -63,69 +65,20 @@ class Era5:
                     # 'area': [ 90, 0, 0, 90,],       #North, West, South, East
                     'format': 'netcdf',
                 },
-                'data/weather/'+file_name+'-3D.nc')
+                'data/weather/'+file_name+'/multilevel.nc')
         
-        c.retrieve(
-            'reanalysis-era5-single-levels',
-            {
-                'product_type': 'reanalysis',
-                'format': 'netcdf',
-                'variable': 'total_precipitation',
-                'year': year,
-                'month': month,
-                'day': day,
-                'time': hour,
-            },
-            'data/weather/'+file_name+'-surface.nc')
+            c.retrieve(
+                'reanalysis-era5-single-levels',
+                {
+                    'product_type': 'reanalysis',
+                    'format': 'netcdf',
+                    'variable': 'total_precipitation',
+                    'year': year,
+                    'month': month,
+                    'day': day,
+                    'time': hour,
+                },
+                'data/weather/'+file_name+'/surface.nc')
         
-        return Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/'+file_name+'.nc')
+        return Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/'+file_name+'/multilevel.nc'), Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/'+file_name+'/surface.nc'), 
 
-
-    @staticmethod
-    def generate_wind_barb(datasource, time, level):
-        
-        data = datasource.sel(level=level, time=time)
-        # p = data.t.plot(subplot_kws=dict(projection=ccrs.Orthographic(30, 20)),transform=ccrs.PlateCarree(),)
-        # p.axes.set_global()
-        # p.axes.coastlines()
-        # plt.savefig('cartopy_example.png')
-        fig = Figure(figsize=(100, 50), ) #facecolor='none'
-        ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.PlateCarree(), frameon=False)
-        # ax.set_extent([-90, 80, 10, 85], crs=ccrs.PlateCarree())
-        ax.set_global()
-        ax.coastlines()  
-        skip = 10
-        ax.barbs(data.longitude.values[::skip], data.latitude.values[::skip], data.u.values[::skip, ::skip], data.v.values[::skip, ::skip], 
-                # length=5, sizes=dict(emptybarb=0.25, spacing=0.2, height=0.5), linewidth=0.95, 
-                transform=ccrs.PlateCarree())
-        buf = BytesIO()
-        fig.savefig(buf, format="png", transparent=True)
-        uri = 'data:image/png;base64,' + base64.b64encode(buf.getbuffer()).decode("ascii")
-        print(uri)
-        fig.savefig('barb.png', transparent=True)
-        return uri
-
-
-    @staticmethod
-    def generate_specific_rain_water_content(datasource, time, level):
-        
-        data = datasource.sel(level=level, time=time)
-        # p = data.t.plot(subplot_kws=dict(projection=ccrs.Orthographic(30, 20)),transform=ccrs.PlateCarree(),)
-        # p.axes.set_global()
-        # p.axes.coastlines()
-        # plt.savefig('cartopy_example.png')
-        fig = Figure(figsize=(100, 50), ) #facecolor='none'
-        ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.PlateCarree(), frameon=False)
-        # ax.set_extent([-90, 80, 10, 85], crs=ccrs.PlateCarree())
-        ax.set_global()
-        ax.coastlines()  
-        skip = 10
-        ax.barbs(data.longitude.values[::skip], data.latitude.values[::skip], data.u.values[::skip, ::skip], data.v.values[::skip, ::skip], 
-                # length=5, sizes=dict(emptybarb=0.25, spacing=0.2, height=0.5), linewidth=0.95, 
-                transform=ccrs.PlateCarree())
-        buf = BytesIO()
-        fig.savefig(buf, format="png", transparent=True)
-        uri = 'data:image/png;base64,' + base64.b64encode(buf.getbuffer()).decode("ascii")
-        print(uri)
-        fig.savefig('barb.png', transparent=True)
-        return uri

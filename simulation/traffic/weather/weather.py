@@ -31,7 +31,9 @@ class Weather:
     
         # Download ERA5 data
         if self.mode == "ERA5":
-            self.weather_data = xr.open_dataset(Era5.download_data(start_time, end_time, file_name))
+            multilevel, surface = Era5.download_data(start_time, end_time, file_name)
+            self.weather_data = xr.open_dataset(multilevel)
+            self.radar_data = xr.open_dataset(surface)
 
 
 

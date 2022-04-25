@@ -28,6 +28,9 @@ class FullFlightDemo(Environment):
                                                     # departure_runway=[22.182675,113.555815], "HOKOU", "TULIP" approach
                                                     # TODO: 0 cas
 
+    def should_end(self):
+        return False
+        
 
     def atc_command(self):
         # User algorithm

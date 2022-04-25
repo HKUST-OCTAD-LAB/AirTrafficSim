@@ -58,6 +58,10 @@ def get_Nav(lat1, long1, lat2, long2):
 def get_wind_bard(lat1, long1, lat2, long2):
     return Utils.get_wind_bard(lat1, long1, lat2, long2)
 
+@socketio.on('getRadarImg')
+def get_radar_img(lat1, long1, lat2, long2):
+    return Utils.get_radar_img(lat1, long1, lat2, long2)
+
 @app.route("/")
 def serve_client():
     return render_template("index.html")
