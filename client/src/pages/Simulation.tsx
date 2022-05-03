@@ -25,7 +25,9 @@ const simpleImagery = new OpenStreetMapImageryProvider({url: 'https://stamen-til
 const replayDataSource = new cesiumCzmlDataSource();
 const simulationDataSource = new cesiumCzmlDataSource();
 const navDataSource = new cesiumCzmlDataSource();
-const weatherDataSource = new cesiumCzmlDataSource();
+const era5WindDataSource = new cesiumCzmlDataSource();
+const era5RainDataSource = new cesiumCzmlDataSource();
+const radarImageDataSource = new cesiumCzmlDataSource();
 
 const defaultZoom = new HeadingPitchRange(0,-90,500000);
 const nexrad = new WebMapServiceImageryProvider({
@@ -56,7 +58,8 @@ const Simulation: React.FC = () => {
     const [mode, setMode] = useState('');
     const [connected, setConnected] = useState(false);    
     const [stateliteMode, setStateliteMode] = useState(false);
-    const [wind, setWind] = useState(false);
+    const [era5Wind, setEra5Wind] = useState(false);
+    const [era5Rain, setEra5Rain] = useState(false);
     const [radar, setRadar] = useState(false);
     const [progressBar, setProgressBar] = useState(0);
     const [graphType, setGraphType] = useState<string>('None');
@@ -81,7 +84,9 @@ const Simulation: React.FC = () => {
             viewer.dataSources.add(replayDataSource);
             viewer.dataSources.add(simulationDataSource);
             viewer.dataSources.add(navDataSource);
-            viewer.dataSources.add(weatherDataSource);
+            viewer.dataSources.add(era5WindDataSource);
+            viewer.dataSources.add(era5RainDataSource);
+            viewer.dataSources.add(radarImageDataSource);
             setStartTime(viewer.clock.startTime)
         }
 
@@ -203,12 +208,12 @@ const Simulation: React.FC = () => {
         }
     }
 
-    function getWindBard(selected :boolean, value: boolean){
+    function getEra5Wind(selected :boolean, value: boolean){
         let get = false
         if (selected){
             get = value
         } else {
-            get = wind
+            get = era5Wind
         }
         if (get && viewerRef.current?.cesiumElement){
             const viewer = viewerRef.current.cesiumElement;
@@ -218,15 +223,40 @@ const Simulation: React.FC = () => {
             // console.log("camera direction", direction.x, direction.y, direction.z);
             var rectangle = viewer.camera.computeViewRectangle();
             if(currentMagnitude < 10000000){
-                socket.emit("getWindBard", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, (res :any) => {
-                    console.log(res)
-                    weatherDataSource.process(res);
+                socket.emit("getEra5Wind", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, (res :any) => {
+                    era5WindDataSource.process(res);
                 });
             } else {
-                weatherDataSource.entities.removeAll();
+                era5WindDataSource.entities.removeAll();
             }
         } else {
-            weatherDataSource.entities.removeAll();
+            era5WindDataSource.entities.removeAll();
+        }
+    }
+
+    function getEra5Rain(selected :boolean, value: boolean){
+        let get = false
+        if (selected){
+            get = value
+        } else {
+            get = era5Rain
+        }
+        if (get && viewerRef.current?.cesiumElement){
+            const viewer = viewerRef.current.cesiumElement;
+            var currentMagnitude = viewer.camera.getMagnitude();
+            // console.log('current magnitude - ', currentMagnitude);
+            // var direction = viewer.camera.direction;
+            // console.log("camera direction", direction.x, direction.y, direction.z);
+            var rectangle = viewer.camera.computeViewRectangle();
+            if(currentMagnitude < 40000000){
+                socket.emit("getEra5Rain", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, (res :any) => {
+                    era5RainDataSource.process(res);
+                });
+            } else {
+                era5RainDataSource.entities.removeAll();
+            }
+        } else {
+            era5RainDataSource.entities.removeAll();
         }
     }
 
@@ -244,16 +274,12 @@ const Simulation: React.FC = () => {
             // var direction = viewer.camera.direction;
             // console.log("camera direction", direction.x, direction.y, direction.z);
             var rectangle = viewer.camera.computeViewRectangle();
-            if(currentMagnitude < 10000000){
-                socket.emit("getRadarImg", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, (res :any) => {
-                    console.log(res)
-                    weatherDataSource.process(res);
-                });
-            } else {
-                weatherDataSource.entities.removeAll();
-            }
+            socket.emit("getRadarImage", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, (res :any) => {
+                console.log(res);
+                radarImageDataSource.process(res);
+            });
         } else {
-            weatherDataSource.entities.removeAll();
+            radarImageDataSource.entities.removeAll();
         }
     }
 
@@ -276,7 +302,7 @@ const Simulation: React.FC = () => {
                             setJulianDate(JulianDate.toIso8601(clock.currentTime, 0).replace("T", "\n"));
                         }} 
                     />
-                    <Camera onMoveEnd={() => {getNav(false, false); getWindBard(false, false); getRadarImg(false, false);}}/>
+                    <Camera onMoveEnd={() => {getNav(false, false); getEra5Wind(false, false); getEra5Rain(false, false);}}/>
                 </Viewer>
             </IonContent>
             
@@ -373,12 +399,16 @@ const Simulation: React.FC = () => {
                                             <IonLabel>Navigation Data</IonLabel>
                                         </IonItem>
                                         <IonItem>
-                                            <IonToggle color="medium" checked={wind} onIonChange={(e) => {setWind(e.detail.checked); getWindBard(true, e.detail.checked)}}/>
-                                            <IonLabel>Wind data</IonLabel>
+                                            <IonToggle color="medium" disabled={mode === ''} checked={era5Wind} onIonChange={(e) => {setEra5Wind(e.detail.checked); getEra5Wind(true, e.detail.checked)}}/>
+                                            <IonLabel>ERA5 Wind</IonLabel>
                                         </IonItem>
                                         <IonItem>
-                                            <IonToggle color="medium" checked={radar} onIonChange={(e) => {setRadar(e.detail.checked); getRadarImg(true, e.detail.checked)}}/>
-                                            <IonLabel>Radar image</IonLabel>
+                                            <IonToggle color="medium" disabled={mode === ''} checked={era5Rain} onIonChange={(e) => {setEra5Rain(e.detail.checked); getEra5Rain(true, e.detail.checked)}}/>
+                                            <IonLabel>ERA5 Rain</IonLabel>
+                                        </IonItem>
+                                        <IonItem>
+                                            <IonToggle color="medium" disabled={mode === ''} checked={radar} onIonChange={(e) => {setRadar(e.detail.checked); getRadarImg(true, e.detail.checked)}}/>
+                                            <IonLabel>Radar Image</IonLabel>
                                         </IonItem>
                                     </IonContent>
                                 </IonModal>

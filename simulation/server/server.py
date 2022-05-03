@@ -5,7 +5,7 @@ from flask_socketio import SocketIO
 import eventlet
 
 from server.replay import Replay
-from server.utils import Utils
+from server.data import Data
 
 # eventlet.monkey_patch()
 
@@ -52,15 +52,19 @@ def run_simulation(file):
 
 @socketio.on('getNav')
 def get_Nav(lat1, long1, lat2, long2):
-    return Utils.get_nav(lat1, long1, lat2, long2)
+    return Data.get_nav(lat1, long1, lat2, long2)
 
-@socketio.on('getWindBard')
-def get_wind_bard(lat1, long1, lat2, long2):
-    return Utils.get_wind_bard(lat1, long1, lat2, long2)
+@socketio.on('getEra5Wind')
+def get_era5_wind(lat1, long1, lat2, long2, file):
+    return Data.get_era5_wind(lat1, long1, lat2, long2, file)
 
-@socketio.on('getRadarImg')
-def get_radar_img(lat1, long1, lat2, long2):
-    return Utils.get_radar_img(lat1, long1, lat2, long2)
+@socketio.on('getEra5Rain')
+def get_era5_rain(lat1, long1, lat2, long2, file):
+    return Data.get_era5_rain(lat1, long1, lat2, long2, file)
+
+@socketio.on('getRadarImage')
+def get_radar_img(lat1, long1, lat2, long2, file):
+    return Data.get_radar_img(lat1, long1, lat2, long2, file)
 
 @app.route("/")
 def serve_client():
