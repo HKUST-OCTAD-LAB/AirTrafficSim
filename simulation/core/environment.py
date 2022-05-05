@@ -7,7 +7,7 @@ from pathlib import Path
 
 from utils.unit import Unit_conversion
 from utils.enums import Flight_phase, Configuration, Speed_mode, Vertical_mode, AP_speed_mode, AP_throttle_mode, AP_vertical_mode, AP_lateral_mode
-from traffic.traffic import Traffic
+from core.traffic import Traffic
 
 
 class Environment:

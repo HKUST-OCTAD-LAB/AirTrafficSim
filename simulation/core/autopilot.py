@@ -3,7 +3,7 @@ from dis import dis
 
 import numpy as np
 
-from traffic.nav import Nav
+from core.nav import Nav
 from utils.enums import AP_speed_mode, Flight_phase, Speed_mode, Vertical_mode, AP_lateral_mode
 from utils.unit import Unit_conversion
 from utils.cal import Calculation
@@ -59,6 +59,8 @@ class Autopilot:
         """2D array of target altitude at each waypoint [[ft...]]"""
         self.flight_plan_target_speed = [[0.0] for _ in range(N)]   
         """2D array of target speed at each waypoint [[cas/mach...]]"""
+        self.procedure_speed = np.zeros([N])
+        """Procedural target speed from BADA"""
 
         # Flight mode
         self.speed_mode = np.zeros([N])                         
@@ -139,6 +141,29 @@ class Autopilot:
         traffic : Traffic
             Traffic class
         """
+        # Update target based on flight plan
+        for i, val in enumerate(self.flight_plan_index):    #TODO: optimization
+            if val < len(self.flight_plan_name[i]):
+                # Target Flight Plan Lat/Long
+                self.lat[i] = self.flight_plan_lat[i][val]
+                self.long[i] = self.flight_plan_long[i][val]
+                # Target Flight Plan Altitude
+                if len(self.flight_plan_target_alt[i]) > 1:
+                    self.alt[i] = self.flight_plan_target_alt[i][val]
+                # Target Flight Plan Speed
+                # if len(self.flight_plan_target_speed[i]) > 1:
+                #     if (self.flight_plan_target_speed[i][val] < 1.0):
+                #         self.mach[i] = self.flight_plan_target_speed[i][val]
+                #     else:
+                #         self.cas[i] = self.flight_plan_target_speed[i][val]
+            else:
+                self.lateral_mode[i] = AP_lateral_mode.HEADING
+        
+        # Procedural speed
+        # After transitions altitude, constant mach 
+        self.procedure_speed = traffic.perf.get_procedure_speed(Unit_conversion.feet_to_meter(traffic.alt), traffic.trans_alt, traffic.flight_phase)
+        self.cas = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (traffic.speed_mode == Speed_mode.CAS), self.procedure_speed, self.cas)      #TODO: Add speed mode atc
+        self.mach = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (traffic.speed_mode == Speed_mode.MACH), self.procedure_speed, self.mach)      #TODO: Add speed mode atc
         # Speed mode
         self.speed_mode = np.where(traffic.speed_mode == Speed_mode.CAS, 
                             np.select([self.cas < traffic.cas, self.cas == traffic.cas, self.cas > traffic.cas],
@@ -162,28 +187,10 @@ class Autopilot:
                                             ])
         
         # Waypoint, track angle, and heading
-        for i, val in enumerate(self.flight_plan_index):    #TODO: optimization
-            if val < len(self.flight_plan_name[i]):
-                self.lat[i] = self.flight_plan_lat[i][val]
-                self.long[i] = self.flight_plan_long[i][val]
-                if len(self.flight_plan_target_alt[i]) > 1:
-                    self.alt[i] = self.flight_plan_target_alt[i][val]
-                if len(self.flight_plan_target_speed[i]) > 1:
-                    if (self.flight_plan_target_speed[i][val] < 1.0):
-                        self.mach[i] = self.flight_plan_target_speed[i][val]
-                    else:
-                        self.cas[i] = self.flight_plan_target_speed[i][val]
-            else:
-                self.lateral_mode[i] = AP_lateral_mode.HEADING
-
         dist = np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat, self.long))
         self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist<1.0, self.track_angle, Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long)))
         self.heading = np.where(self.lateral_mode == AP_lateral_mode.HEADING, self.heading, self.track_angle + np.arcsin(traffic.weather.wind_speed/traffic.tas * np.sin(self.track_angle-traffic.weather.wind_direction))) #https://www.omnicalculator.com/physics/wind-correction-angle
         self.flight_plan_index = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (dist < 1.0) & (dist > self.dist), self.flight_plan_index+1, self.flight_plan_index)
         self.dist = dist
         
-
-    def update_fms(self):
-        pass
-        # After transitions altitude, constant mach 
-        # self.perf.get_procedure_speed(self.unit.feet_to_meter(self.alt), self.trans_alt, self.flight_phase)
+        

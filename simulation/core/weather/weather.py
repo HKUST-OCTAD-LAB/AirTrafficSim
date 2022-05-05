@@ -4,9 +4,9 @@ import xarray as xr
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
-from traffic.performance.performance import Performance
+from core.performance.performance import Performance
 from utils.unit import Unit_conversion
-from traffic.weather.era5 import Era5
+from core.weather.era5 import Era5
 
 
 class Weather:
@@ -45,6 +45,7 @@ class Weather:
 
     def update(self, lat, long, alt, perf: Performance, global_time):
         if self.mode == "ERA5":
+            print(self.weather_data, lat, long, alt)
             ds = self.weather_data.sel(longitude=xr.DataArray(long, dims="points"), latitude=xr.DataArray(lat, dims="points"), time=np.datetime64((self.start_time+timedelta(seconds=global_time)).replace(second=0, minute=0),'ns'), method="ffill") # 
             index = np.array([np.searchsorted(-x, -Unit_conversion.feet_to_meter(alt)*9.80665, side='right') for x, alt in zip(ds['z'].values.T, alt)]) - 1
             temp = np.array([x[i] for x, i in zip(ds['t'].values.T, index)])

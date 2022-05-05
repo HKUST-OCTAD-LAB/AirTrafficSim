@@ -1,4 +1,4 @@
-from traffic.traffic import Traffic
+from core.traffic import Traffic
 
 from utils.enums import AP_lateral_mode
 
@@ -7,12 +7,12 @@ class Aircraft:
     Aircraft class to represent the states of one individual aircraft, including get and set functions.
     """
 
-    def __init__(self, traffic:Traffic, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_runway=[], arrival_runway=[], flight_plan=[], target_speed=[], target_alt=[]):
+    def __init__(self, traffic:Traffic, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_runway=[], arrival_runway=[], flight_plan=[], target_speed=[], target_alt=[]):
         """
         Initialize one aircraft and add the aircraft to traffic array.
         """
         self.traffic = traffic          # Pass traffic array reference
-        self.index = self.traffic.add_aircraft(call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_runway, arrival_runway, flight_plan, target_speed, target_alt)        # Add aircraft. Obtain aircraft index
+        self.index = self.traffic.add_aircraft(call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_runway, arrival_runway, flight_plan, target_speed, target_alt)        # Add aircraft. Obtain aircraft index
 
 
     def set_heading(self, heading):

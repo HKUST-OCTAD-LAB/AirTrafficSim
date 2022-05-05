@@ -4,6 +4,7 @@ import numpy as np
 import os
 
 from utils.enums import AP_speed_mode, Flight_phase, Engine_type, Configuration, Vertical_mode
+from utils.unit import Unit_conversion
 
 class Performance:
     """
@@ -991,7 +992,7 @@ class Performance:
             Acceleration of tur air speed [m/s^2]
         """
         # return rocd / f_M / ((T-d_T)/T) * m*self.__G_0 / (Thr-D)
-        return (Thr - D) / m - self.__G_0 / V_tas * rocd*T/(T-d_T)
+        return np.where(V_tas == 0, (Thr - D) / m, (Thr - D) / m - self.__G_0 / V_tas * rocd*T/(T-d_T))
 
 
     def cal_tem_thrust(self, T, d_T, m, D, f_M, rocd, V_tas):
@@ -1048,7 +1049,7 @@ class Performance:
         V: float[]
             Operating velocity [m/s]
         """
-        return V_ref * np.sqrt(m/self.__m_ref)
+        return V_ref * np.sqrt(m/(self.__m_ref*1000.0))
 
     
     # ----------------------------  Flight envelope section 3.5 -----------------------------------------
@@ -1154,7 +1155,7 @@ class Performance:
                 )
 
         # Drag force
-        return c_D * rho * np.square(V_tas) * self.__S / 2.0 * c_des_exp
+        return np.where(V_tas == 0.0, 0.0, c_D * rho * np.square(V_tas) * self.__S / 2.0 * c_des_exp)
 
 
     def cal_low_speed_buffeting_limit(self, p, M, m):
@@ -1434,7 +1435,7 @@ class Performance:
             Index of performance array.
         """
         # Actual stall speed for takeoff
-        v_stall_to_act = self.__cal_operating_speed(m, self.__v_stall_to)[n]
+        v_stall_to_act = Unit_conversion.mps_to_knots(self.__cal_operating_speed(m, Unit_conversion.knots_to_mps(self.__v_stall_to))[n])
         # Standard climb schedule
         if (self.__engine_type[n] == Engine_type.JET):
             # If Jet (Equation 4.1-1~5)
@@ -1454,7 +1455,7 @@ class Performance:
             self.__cruise_schedule[n] =  [np.minimum(self.__v_cr_1[n], 150), np.minimum(self.__v_cr_1[n], 180), np.minimum(self.__v_cr_1[n], 250), self.__v_cr_2[n], self.__m_cr[n]]
 
         # Actual stall speed for landing TODO: consider fuel mass?
-        v_stall_ld_act = self.__cal_operating_speed(m, self.__v_stall_ld)[n]
+        v_stall_ld_act = Unit_conversion.mps_to_knots(self.__cal_operating_speed(m, Unit_conversion.knots_to_mps(self.__v_stall_ld))[n])
         # Standard descent schedule
         if (self.__engine_type[n] != Engine_type.PISTON):
             # If Jet and Turboprop (Equation 4.3-1~4)
@@ -1501,35 +1502,35 @@ class Performance:
         TODO: Bound the speed schedule form the minimum and maximum speed.
         """
         return np.select([
-            flight_phase == Flight_phase.CLIMB,
+            flight_phase <= Flight_phase.CLIMB,
             flight_phase == Flight_phase.CRUISE,
-            flight_phase == Flight_phase.DESCENT
+            flight_phase >= Flight_phase.DESCENT
         ],[
             # If climb
             np.where(self.__engine_type == Engine_type.JET,
                 # If jet
-                np.select([H_p < 1500, H_p >= 1500 & H_p < 3000, H_p >= 3000 & H_p < 4000, H_p >= 4000 & H_p < 5000, H_p >= 5000 & H_p < 6000, H_p >= 6000 & H_p < 10000, H_p >= 10000 & H_p < H_p_trans, H_p >= H_p_trans],
+                np.select([H_p < 1500, (H_p >= 1500) & (H_p < 3000), (H_p >= 3000) & (H_p < 4000), (H_p >= 4000) & (H_p < 5000), (H_p >= 5000) & (H_p < 6000), (H_p >= 6000) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
                           [self.__climb_schedule[:,0], self.__climb_schedule[:,1], self.__climb_schedule[:,2], self.__climb_schedule[:,3], self.__climb_schedule[:,4], self.__climb_schedule[:,5], self.__climb_schedule[:,6], self.__climb_schedule[:,7]]),
                 # If turboprop and piston
-                np.select([H_p < 500, H_p >= 500 & H_p < 1000, H_p >= 1000 & H_p < 1500, H_p >= 1500 & H_p < 10000, H_p >= 10000 & H_p < H_p_trans, H_p >= H_p_trans],
+                np.select([(H_p < 500), (H_p >= 500) & (H_p < 1000), (H_p >= 1000) & (H_p < 1500), (H_p >= 1500) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
                           [self.__climb_schedule[:,0], self.__climb_schedule[:,1], self.__climb_schedule[:,2], self.__climb_schedule[:,3], self.__climb_schedule[:,4], self.__climb_schedule[:,5]])
             ),
             # If cruise
             np.where(self.__engine_type == Engine_type.JET,
                 # If jet
-                np.select([H_p < 3000, H_p >= 3000 & H_p < 6000, H_p >= 6000 & H_p < 14000, H_p >= 14000 & H_p < H_p_trans, H_p >= H_p_trans],
+                np.select([(H_p < 3000), (H_p >= 3000) & (H_p < 6000), (H_p >= 6000) & (H_p < 14000), (H_p >= 14000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
                           [self.__cruise_schedule[:,0], self.__cruise_schedule[:,1], self.__cruise_schedule[:,2], self.__cruise_schedule[:,3], self.__cruise_schedule[:,4]]),
                 # If turboprop and piston
-                np.select([H_p < 3000, H_p >= 3000 & H_p < 6000, H_p >= 6000 & H_p < 10000, H_p >= 10000 & H_p < H_p_trans, H_p >= H_p_trans],
+                np.select([(H_p < 3000), (H_p >= 3000) & (H_p < 6000), (H_p >= 6000) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
                           [self.__cruise_schedule[:,0], self.__cruise_schedule[:,1], self.__cruise_schedule[:,2], self.__cruise_schedule[:,3], self.__cruise_schedule[:,4]])
             ),
             # If descent
             np.where(self.__engine_type != Engine_type.PISTON,
                 # If jet and turboprop
-                np.select([H_p < 999, H_p >= 1000 & H_p < 1500, H_p >= 1500 & H_p < 2000, H_p >= 2000 & H_p < 3000, H_p >= 3000 & H_p < 6000, H_p >= 6000 & H_p < 10000, H_p >= 10000 & H_p < H_p_trans, H_p >= H_p_trans],
+                np.select([(H_p < 999), (H_p >= 1000) & (H_p < 1500), (H_p >= 1500) & (H_p < 2000), (H_p >= 2000) & (H_p < 3000), (H_p >= 3000) & (H_p < 6000), (H_p >= 6000) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
                           [self.__descent_schedule[:,0], self.__descent_schedule[:,1], self.__descent_schedule[:,2], self.__descent_schedule[:,3], self.__descent_schedule[:,4], self.__descent_schedule[:,5], self.__descent_schedule[:,6], self.__descent_schedule[:,7]]),
                 # If piston
-                np.select([H_p < 500, H_p >= 500 & H_p < 1000, H_p >= 1000 & H_p < 1500, H_p >= 1500 & H_p < 10000, H_p >= 10000 & H_p < H_p_trans, H_p >= H_p_trans],
+                np.select([(H_p < 500), (H_p >= 500) & (H_p < 1000), (H_p >= 1000) & (H_p < 1500), (H_p >= 1500) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
                           [self.__descent_schedule[:,0], self.__descent_schedule[:,1], self.__descent_schedule[:,2], self.__descent_schedule[:,3], self.__descent_schedule[:,4], self.__descent_schedule[:,5]])
             )
         ])

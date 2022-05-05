@@ -1,4 +1,4 @@
-from traffic.nav import Nav
+from core.nav import Nav
 from datetime import datetime
 from matplotlib.figure import Figure
 from matplotlib import colors

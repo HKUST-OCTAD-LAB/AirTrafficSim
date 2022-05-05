@@ -1,8 +1,8 @@
 import numpy as np
 
-from traffic.autopilot import Autopilot
-from traffic.weather.weather import Weather
-from traffic.performance.performance import Performance
+from core.autopilot import Autopilot
+from core.weather.weather import Weather
+from core.performance.performance import Performance
 from utils.unit import Unit_conversion
 from utils.enums import Flight_phase, Speed_mode, AP_speed_mode, AP_throttle_mode, AP_vertical_mode, Configuration, Vertical_mode
 from utils.cal import Calculation
@@ -109,7 +109,7 @@ class Traffic:
         """Weather class"""
 
     
-    def add_aircraft(self, call_sign, aircraft_type, flight_phase, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_runway, arrival_runway, flight_plan, target_speed, target_alt):
+    def add_aircraft(self, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_runway, arrival_runway, flight_plan, target_speed, target_alt):
         """
         Add an aircraft to traffic array.
 
@@ -143,6 +143,7 @@ class Traffic:
         self.call_sign[n] = call_sign
         self.aircraft_type[n] = aircraft_type
         self.flight_phase[n] = flight_phase
+        self.configuration[n] = configuration
         self.lat[n] = lat
         self.long[n] = long
         self.alt[n] = alt
@@ -158,11 +159,6 @@ class Traffic:
         self.payload_weight[n] = payload_weight
         self.mass[n] = self.empty_weight[n] + fuel_weight + payload_weight
         self.perf.init_procedure_speed(self.mass, n)
-        if flight_phase == Flight_phase.TAKEOFF:
-            self.configuration[n] = Configuration.TAKEOFF
-        else:
-            self.configuration[n] = Configuration.CLEAN
-
         
         # Increase aircraft count
         self.n = self.n + 1
@@ -221,8 +217,8 @@ class Traffic:
         # max_d_rocd = self.perf.cal_max_d_rocd(d_t, self.unit.knots_to_mps(self.d_cas), tas, self.unit.ftpm_to_mps(self.vs))
 
         # Transition altitude
-        self.trans_alt = Unit_conversion.meter_to_feet(self.perf.cal_transition_alt(Unit_conversion.knots_to_mps(self.cas), self.mach, self.weather.d_T))
-
+        self.trans_alt = np.where(self.cas == 0, 20000, Unit_conversion.meter_to_feet(self.perf.cal_transition_alt(Unit_conversion.knots_to_mps(self.cas), self.mach, self.weather.d_T)))
+        
         self.speed_mode = np.where(self.alt < self.trans_alt, Speed_mode.CAS, Speed_mode.MACH)
 
         # Update autopilot
@@ -355,3 +351,10 @@ class Traffic:
         self.mass = self.mass - fuel_burn
 
         # Flight phase and configuration
+        # Take off -> climb
+        self.flight_phase = np.where((self.flight_phase == Flight_phase.TAKEOFF) & (self.alt > 1500.0), Flight_phase.CLIMB, self.flight_phase)
+        self.flight_phase = np.where((self.flight_phase != Flight_phase.TAKEOFF) & (self.vertical_mode == Vertical_mode.CLIMB), Flight_phase.CLIMB, self.flight_phase)
+        # Climb -> Cruise
+        self.flight_phase = np.where(self.vertical_mode == Vertical_mode.LEVEL, Flight_phase.CRUISE, self.flight_phase)         #TODO: Or use cruise altitude?
+        # Cruise-Descent
+        self.flight_phase = np.where(self.vertical_mode == Vertical_mode.DESCENT, Flight_phase.DESCENT, self.flight_phase)
