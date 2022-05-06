@@ -19,11 +19,12 @@ class FullFlightDemo(Environment):
 
         # Add aircraft
         self.aircraft_full = Aircraft(self.traffic, call_sign="FULL", aircraft_type="A20N", flight_phase=Flight_phase.TAKEOFF, configuration=Configuration.TAKEOFF,
-                                                    lat=22.307500, long=113.932833, alt=0.0, heading=254.0, cas=0.0, fuel_weight=5273.0, payload_weight=12000.0,
+                                                    lat=22.307500, long=113.932833, alt=0.0, heading=254.0, cas=149.0, fuel_weight=5273.0, payload_weight=12000.0,
                                                     departure_runway=[], arrival_runway=["RCTP/05R", 25.061500, 121.224167, 108],
                                                     flight_plan=["PRAWN", "RUMSY", "TUNNA", "TROUT", "OCEAN", "RASSE", "CONGA", "ENVAR", "DADON", "EXTRA", "RENOT", "TONGA", "BOCCA", "ELBER", "BRAVO", "JAMMY"],
-                                                    target_speed=[   205,     230,    310,      310,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,     300,     300,     300],
-                                                    target_alt=[    5000,   14000,  37000,    37000,   37000,   37000,   37000,   37000,   37000,   37000,   37000,   37000,   29000,    4000,    4000,    4000])
+                                                    target_speed=[   205,     230,    310,      310,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,     300,     200,     200],
+                                                    target_alt=[   37000,   37000,  37000,    37000,   37000,   37000,   37000,   37000,   37000,   37000,   37000,   37000,   37000,    37000,   1000,    1000])
+                                                    # target_alt=[    5000,   14000,  37000,    37000,   37000,   37000,   37000,   37000,   37000,   37000,   37000,   37000,   29000,    4000,    4000,    4000])
                                                     # VHHH/25L OCEAN2B OCEAN V3 ENVAR M750 TONGA TONGA1A RCTP/05R
                                                     # departure_runway=[22.182675,113.555815], "HOKOU", "TULIP" approach
                                                     # TODO: 0 cas

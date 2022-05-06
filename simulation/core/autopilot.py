@@ -159,20 +159,22 @@ class Autopilot:
             else:
                 self.lateral_mode[i] = AP_lateral_mode.HEADING
         
-        # Procedural speed
+        # Procedural speed. Follow procedural speed by default.
         # After transitions altitude, constant mach 
-        self.procedure_speed = traffic.perf.get_procedure_speed(Unit_conversion.feet_to_meter(traffic.alt), traffic.trans_alt, traffic.flight_phase)
-        self.cas = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (traffic.speed_mode == Speed_mode.CAS), self.procedure_speed, self.cas)      #TODO: Add speed mode atc
-        self.mach = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (traffic.speed_mode == Speed_mode.MACH), self.procedure_speed, self.mach)      #TODO: Add speed mode atc
+        self.procedure_speed = traffic.perf.get_procedure_speed(traffic.alt, traffic.trans_alt, traffic.flight_phase)
+        self.cas = np.where(self.procedure_speed >= 5.0, self.procedure_speed, self.cas)      #TODO: Add speed mode atc
+        self.mach = np.where(self.procedure_speed < 5.0, self.procedure_speed, self.mach)      #TODO: Add speed mode atc
+
+        # Handle change in speed mode. 
+        self.mach = np.where(traffic.speed_mode == Speed_mode.CAS, traffic.perf.tas_to_mach(traffic.perf.cas_to_tas(Unit_conversion.knots_to_mps(self.cas), traffic.weather.p, traffic.weather.rho), traffic.weather.T), self.mach)
+        self.cas = np.where(traffic.speed_mode == Speed_mode.MACH, Unit_conversion.mps_to_knots(traffic.perf.tas_to_cas(traffic.perf.mach_to_tas(self.mach, traffic.weather.T), traffic.weather.p, traffic.weather.rho)), self.cas)
+
         # Speed mode
         self.speed_mode = np.where(traffic.speed_mode == Speed_mode.CAS, 
                             np.select([self.cas < traffic.cas, self.cas == traffic.cas, self.cas > traffic.cas],
                                       [AP_speed_mode.DECELERATE, AP_speed_mode.CONSTANT_CAS, AP_speed_mode.ACCELERATE]),
                             np.select([self.mach < traffic.mach, self.mach == traffic.mach, self.mach > traffic.mach],
                                       [AP_speed_mode.DECELERATE, AP_speed_mode.CONSTANT_MACH, AP_speed_mode.ACCELERATE]))
-        # Handle change in speed mode. 
-        self.mach = np.where(traffic.speed_mode == Speed_mode.CAS, traffic.perf.tas_to_mach(traffic.perf.cas_to_tas(Unit_conversion.knots_to_mps(traffic.cas), traffic.weather.p, traffic.weather.rho), traffic.weather.T), self.mach)
-        self.cas = np.where(traffic.speed_mode == Speed_mode.MACH, Unit_conversion.mps_to_knots(traffic.perf.tas_to_cas(traffic.perf.mach_to_tas(traffic.mach, traffic.weather.T), traffic.weather.p, traffic.weather.rho)), self.cas)
 
         # Vertical mode
         traffic.vertical_mode = np.select(condlist=[

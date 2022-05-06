@@ -1475,10 +1475,10 @@ class Performance:
         Parameters
         ----------
         H_p: float[]
-            Geopotential pressuer altitude [m]
+            Geopotential pressuer altitude [ft]
 
         H_p_trans: float[]
-            Transition altitude [m]
+            Transition altitude [ft]
 
         m: float[]
             Aircraft mass [kg]
@@ -1509,7 +1509,7 @@ class Performance:
             # If climb
             np.where(self.__engine_type == Engine_type.JET,
                 # If jet
-                np.select([H_p < 1500, (H_p >= 1500) & (H_p < 3000), (H_p >= 3000) & (H_p < 4000), (H_p >= 4000) & (H_p < 5000), (H_p >= 5000) & (H_p < 6000), (H_p >= 6000) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
+                np.select([(H_p < 1500), (H_p >= 1500) & (H_p < 3000), (H_p >= 3000) & (H_p < 4000), (H_p >= 4000) & (H_p < 5000), (H_p >= 5000) & (H_p < 6000), (H_p >= 6000) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
                           [self.__climb_schedule[:,0], self.__climb_schedule[:,1], self.__climb_schedule[:,2], self.__climb_schedule[:,3], self.__climb_schedule[:,4], self.__climb_schedule[:,5], self.__climb_schedule[:,6], self.__climb_schedule[:,7]]),
                 # If turboprop and piston
                 np.select([(H_p < 500), (H_p >= 500) & (H_p < 1000), (H_p >= 1000) & (H_p < 1500), (H_p >= 1500) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],

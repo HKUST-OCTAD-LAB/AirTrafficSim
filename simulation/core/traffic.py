@@ -159,6 +159,7 @@ class Traffic:
         self.payload_weight[n] = payload_weight
         self.mass[n] = self.empty_weight[n] + fuel_weight + payload_weight
         self.perf.init_procedure_speed(self.mass, n)
+        self.trans_alt = Unit_conversion.meter_to_feet(self.perf.cal_transition_alt(Unit_conversion.knots_to_mps(self.perf._Performance__climb_schedule[n, -2]), self.perf._Performance__climb_schedule[n, -1], self.weather.d_T))
         
         # Increase aircraft count
         self.n = self.n + 1
@@ -216,9 +217,6 @@ class Traffic:
         # max_d_tas = self.perf.cal_max_d_tas(d_t)
         # max_d_rocd = self.perf.cal_max_d_rocd(d_t, self.unit.knots_to_mps(self.d_cas), tas, self.unit.ftpm_to_mps(self.vs))
 
-        # Transition altitude
-        self.trans_alt = np.where(self.cas == 0, 20000, Unit_conversion.meter_to_feet(self.perf.cal_transition_alt(Unit_conversion.knots_to_mps(self.cas), self.mach, self.weather.d_T)))
-        
         self.speed_mode = np.where(self.alt < self.trans_alt, Speed_mode.CAS, Speed_mode.MACH)
 
         # Update autopilot
@@ -227,18 +225,17 @@ class Traffic:
         # Bank angle
         d_heading = Calculation.cal_angle_diff(self.heading, self.ap.heading)
         self.bank_angle = np.select(condlist=[
-                                        d_heading == 0.0,
-                                        d_heading > 0,
-                                        d_heading < 0,
+                                        d_heading > 0.5,
+                                        d_heading < -0.5,
                                     ],
                                     choicelist=[
-                                        0.0,
                                         self.perf.get_nominal_bank_angles(self.flight_phase),                   # Turn right
                                         np.negative(self.perf.get_nominal_bank_angles(self.flight_phase))       # Turn left
-                                    ]
+                                    ],
+                                    default = 0.0
                                 )
                                 
-        tas = Unit_conversion.knots_to_mps(self.tas)
+        tas = Unit_conversion.knots_to_mps(self.tas)   #TAS in m/s
 
         # Drag and Thrust
         self.drag = self.perf.cal_aerodynamic_drag(tas, self.bank_angle, self.mass, self.weather.rho, self.configuration, self.perf.cal_expedite_descend_factor(self.ap.expedite_descent))
@@ -316,7 +313,7 @@ class Traffic:
 
         # Heading
         rate_of_turn = self.perf.cal_rate_of_turn(self.bank_angle, tas)     # TODO: https://skybrary.aero/articles/rate-turn
-        self.heading = np.where(np.abs(d_heading) < np.abs(rate_of_turn), self.ap.heading, self.heading + rate_of_turn)
+        self.heading = np.where((np.abs(d_heading) < np.abs(rate_of_turn)) | (np.abs(d_heading) < 0.5), self.ap.heading, self.heading + rate_of_turn)
         self.heading = np.select(condlist=[
                                     self.heading > 360.0,
                                     self.heading < 0.0
