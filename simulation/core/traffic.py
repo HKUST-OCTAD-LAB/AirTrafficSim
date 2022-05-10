@@ -9,7 +9,7 @@ from utils.cal import Calculation
 
 class Traffic:
 
-    def __init__(self, N, file_name, start_time, end_time, weather_mode, performance_mode):
+    def __init__(self, N, file_name, start_time, end_time, era5_weather=False, bada_perf=False):
         """
         Initialize base traffic array to store aircraft state variables for one timestep.
 
@@ -80,14 +80,6 @@ class Traffic:
         self.vertical_mode = np.zeros([N])
         """Vertical mode [Vertical mode enum 1: LEVEL, 2: CLIMB, 3: DESCENT]"""
 
-        # Aerodynamic
-        self.drag = np.zeros([N])                               
-        """Drag [N]"""
-        self.esf = np.zeros([N])                                
-        """Energy share factor [dimensionless]"""
-        self.thrust = np.zeros([N])
-        """Thrust [N]"""
-
         # Weight and balance
         self.mass = np.zeros([N])                               
         """Aircraft mass [kg]"""
@@ -101,11 +93,11 @@ class Traffic:
         """Fuel consumped [kg]"""
 
         # Sub classes
-        self.perf = Performance(N)                              
+        self.perf = Performance(N, bada_perf)                              
         """Performance class"""
         self.ap = Autopilot(N)                                  
         """Autopilot class"""
-        self.weather = Weather(N, start_time, end_time, weather_mode, file_name)                               
+        self.weather = Weather(N, start_time, end_time, era5_weather, file_name)                               
         """Weather class"""
 
     
@@ -135,7 +127,7 @@ class Traffic:
 
         
         # Add aircraft in performance, weather, and autopilot array
-        self.perf.add_aircraft(aircraft_type, n)
+        self.perf.add_aircraft(n, aircraft_type)
         self.weather.add_aircraft(n, alt, self.perf)
         self.ap.add_aircraft(n, lat, long, alt, heading, cas, departure_runway, arrival_runway, flight_plan, target_speed, target_alt)
 
@@ -154,13 +146,15 @@ class Traffic:
         self.ap.cas[n] = cas
         self.tas[n] = Unit_conversion.mps_to_knots(self.perf.cas_to_tas(Unit_conversion.knots_to_mps(cas), self.weather.p[n], self.weather.rho[n]))
         self.mach[n] = self.perf.tas_to_mach(Unit_conversion.knots_to_mps(self.tas[n]), self.weather.T[n])
-        self.empty_weight[n] = self.perf._Performance__m_min[n] * 1000.0
+        self.empty_weight[n] = self.perf.get_empty_weight(n)
         self.fuel_weight[n] = fuel_weight
         self.payload_weight[n] = payload_weight
         self.mass[n] = self.empty_weight[n] + fuel_weight + payload_weight
-        self.perf.init_procedure_speed(self.mass, n)
-        self.trans_alt = Unit_conversion.meter_to_feet(self.perf.cal_transition_alt(Unit_conversion.knots_to_mps(self.perf._Performance__climb_schedule[n, -2]), self.perf._Performance__climb_schedule[n, -1], self.weather.d_T))
         
+         # Init Procedural speed
+        self.perf.init_procedure_speed(self.mass, n)
+        self.trans_alt = Unit_conversion.meter_to_feet(self.perf.cal_transition_alt(n, self.weather.d_T))
+
         # Increase aircraft count
         self.n = self.n + 1
 
@@ -212,7 +206,7 @@ class Traffic:
         self.weather.update(self.lat, self.long, self.alt, self.perf, global_time)
 
         # Ceiling
-        max_alt = self.perf.cal_maximum_altitude(self.weather.d_T, self.mass)   # TODO: calculate only once
+        self.max_alt = self.perf.cal_maximum_alt(self.weather.d_T, self.mass)   # TODO: calculate only once
         # min_speed = self.perf.cal_minimum_speed(self.flight_phase)
         # max_d_tas = self.perf.cal_max_d_tas(d_t)
         # max_d_rocd = self.perf.cal_max_d_rocd(d_t, self.unit.knots_to_mps(self.d_cas), tas, self.unit.ftpm_to_mps(self.vs))
@@ -229,25 +223,14 @@ class Traffic:
                                         d_heading < -0.5,
                                     ],
                                     choicelist=[
-                                        self.perf.get_nominal_bank_angles(self.flight_phase),                   # Turn right
-                                        np.negative(self.perf.get_nominal_bank_angles(self.flight_phase))       # Turn left
+                                        self.perf.get_bank_angles(self.flight_phase),                   # Turn right
+                                        np.negative(self.perf.get_bank_angles(self.flight_phase))       # Turn left
                                     ],
                                     default = 0.0
                                 )
                                 
         tas = Unit_conversion.knots_to_mps(self.tas)   #TAS in m/s
-
-        # Drag and Thrust
-        self.drag = self.perf.cal_aerodynamic_drag(tas, self.bank_angle, self.mass, self.weather.rho, self.configuration, self.perf.cal_expedite_descend_factor(self.ap.expedite_descent))
-        self.thrust = self.perf.cal_thrust(self.vertical_mode, self.configuration, self.alt, self.tas, self.weather.d_T, self.drag, self.ap.speed_mode)
-
-        # Total Energy Model
-        self.esf = self.perf.cal_energy_share_factor(Unit_conversion.feet_to_meter(self.alt), self.weather.T, self.weather.d_T, self.mach, self.ap.speed_mode, self.vertical_mode)      # Energy share factor 
-        rocd = self.perf.cal_tem_rocd(self.weather.T, self.weather.d_T, self.mass, self.drag, self.esf, self.thrust, tas, self.perf.cal_reduced_climb_power(self.mass, self.alt, max_alt))
-        self.vs = Unit_conversion.mps_to_ftpm(rocd)
-        self.accel = np.where((self.ap.speed_mode == AP_speed_mode.ACCELERATE) | (self.ap.speed_mode == AP_speed_mode.DECELERATE),
-                                self.perf.cal_tem_accel(self.weather.T, self.weather.d_T, self.mass, self.drag, rocd, self.thrust, tas),
-                                0.0)
+        self.vs, self.accel = self.perf.cal_vs_accel(self, tas)
         
         # Air Speed
         # self.tas = self.perf.cas_to_tas(self.cas, self.weather.p, self.weather.rho)
@@ -343,7 +326,7 @@ class Traffic:
                             default=self.alt)
 
         # Fuel        
-        fuel_burn = self.perf.update_fuel(self.flight_phase, self.tas, self.thrust, self.alt) 
+        fuel_burn = self.perf.cal_fuel_burn(self.flight_phase, self.tas, self.alt) 
         self.fuel_consumed = self.fuel_consumed + fuel_burn
         self.mass = self.mass - fuel_burn
 

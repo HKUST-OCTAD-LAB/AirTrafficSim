@@ -15,7 +15,7 @@ class Environment:
     Base class for simulation environment
     """
 
-    def __init__(self, file_name="default",  number_of_traffic=1000, start_time = datetime.utcnow(), end_time = 60, weather_mode="ISA", performance_mode="Openap"):
+    def __init__(self, file_name="default",  number_of_traffic=1000, start_time = datetime.utcnow(), end_time = 60, era5_weather=False, bada_perf=False):
         # User setting
         self.start_time = start_time
         """The simulation start time [datetime object]"""
@@ -23,7 +23,7 @@ class Environment:
         """The simulation end time [s]"""
 
         # Simulation variable
-        self.traffic = Traffic(number_of_traffic, file_name, start_time, end_time, weather_mode, performance_mode)
+        self.traffic = Traffic(number_of_traffic, file_name, start_time, end_time, era5_weather, bada_perf)
         self.global_time = 0                    # [s]
 
         # Handle io
@@ -132,7 +132,7 @@ class Environment:
                                 self.traffic.cas[:self.traffic.n], self.traffic.tas[:self.traffic.n], self.traffic.mach[:self.traffic.n], self.traffic.vs[:self.traffic.n], 
                                 self.traffic.heading[:self.traffic.n], self.traffic.bank_angle[:self.traffic.n], 
                                 self.traffic.mass[:self.traffic.n], self.traffic.fuel_consumed[:self.traffic.n],
-                                self.traffic.thrust[:self.traffic.n], self.traffic.drag[:self.traffic.n], self.traffic.esf[:self.traffic.n], self.traffic.accel[:self.traffic.n],
+                                self.traffic.perf.thrust[:self.traffic.n], self.traffic.perf.drag[:self.traffic.n], self.traffic.perf.esf[:self.traffic.n], self.traffic.accel[:self.traffic.n],
                                 self.traffic.ap.track_angle[:self.traffic.n], self.traffic.ap.heading[:self.traffic.n], self.traffic.ap.alt[:self.traffic.n], self.traffic.ap.cas[:self.traffic.n], self.traffic.ap.mach[:self.traffic.n], self.traffic.ap.procedure_speed [:self.traffic.n],
                                 self.traffic.ap.flight_plan_index, self.traffic.ap.dist,                  # autopilot variable
                                 [Flight_phase(i).name for i in self.traffic.flight_phase[:self.traffic.n]], [Configuration(i).name for i in self.traffic.configuration[:self.traffic.n]], [Speed_mode(i).name for i in self.traffic.speed_mode[:self.traffic.n]], [Vertical_mode(i).name for i in self.traffic.vertical_mode[:self.traffic.n]], 

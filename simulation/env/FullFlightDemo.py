@@ -13,8 +13,8 @@ class FullFlightDemo(Environment):
                         number_of_traffic = 1,
                         start_time = datetime.fromisoformat('2022-03-22T00:00:00'),
                         end_time = 5500,
-                        weather_mode = "ISA",
-                        performance_mode= "Bada"
+                        era5_weather = False,
+                        bada_perf=True 
                         )
 
         # Add aircraft
