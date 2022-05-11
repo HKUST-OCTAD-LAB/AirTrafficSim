@@ -3,7 +3,7 @@ import numpy as np
 from openap import prop, Thrust, Drag, FuelFlow, WRAP
 
 from core.performance.bada import Bada
-from utils.enums import AP_speed_mode, Vertical_mode, Flight_phase
+from utils.enums import AP_speed_mode, Configuration, Vertical_mode
 from utils.unit import Unit_conversion
 
 class Performance:
@@ -139,13 +139,6 @@ class Performance:
         -or-
         M_std: float[]
             Standard Mach [dimensionless] 
-
-        Notes
-        -----
-        TODO: Recommended to determine the speed schedule from the highest altitude to the lowest one, 
-        and to use at each step the speed of the higher altitude range as a ceiling value for the lower altitude range.
-
-        TODO: Bound the speed schedule form the minimum and maximum speed.
         """
         if (self.bada):
             return self.perf_model.get_procedure_speed(H_p, H_p_trans, flight_phase)
@@ -359,20 +352,24 @@ class Performance:
         Note
         ----
         Transition altitude is defined to be the geopotential pressure altitude at which V_CAS and M represent the same TAS value.
+        TODO: Separate climb and descent trans altitude?
         """
         if (self.bada):
-            V_cas = Unit_conversion.knots_to_mps(self.perf_model._Bada__climb_schedule[n, -2]) 
-            M = self.perf_model._Bada__climb_schedule[n, -1]
+            V_cas = Unit_conversion.knots_to_mps(self.perf_model.climb_schedule[n, -2]) 
+            M = self.perf_model.climb_schedule[n, -1]
         
-        p_trans = self.__P_0 * (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(V_cas/self.__A_0), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0) \
-                    / (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0)       #Equation 3.1-28
-        p_trop = self.cal_air_pressure(self.__H_P_TROP, self.cal_temperature(self.__H_P_TROP, d_T),d_T)
+            p_trans = self.__P_0 * (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(V_cas/self.__A_0), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0) \
+                        / (np.power(1.0 + (self.__KAPPA-1.0)/2.0 * np.square(M), self.__KAPPA/(self.__KAPPA-1.0)) - 1.0)       #Equation 3.1-28
+            p_trop = self.cal_air_pressure(self.__H_P_TROP, self.cal_temperature(self.__H_P_TROP, d_T),d_T)
 
-        return np.where(p_trans >= p_trop,
-                # If __p_trans >= __p_trop
-                self.__T_0/self.__BETA_T_BELOW_TROP * (np.power(p_trans/self.__P_0, -self.__BETA_T_BELOW_TROP*self.__R/self.__G_0) - 1.0),
-                # __p_trans < __p_trop
-                self.__H_P_TROP - self.__R*self.cal_temperature(self.__H_P_TROP,0.0)/self.__G_0 * np.log(p_trans/p_trop))
+            return np.where(p_trans >= p_trop,
+                    # If __p_trans >= __p_trop
+                    self.__T_0/self.__BETA_T_BELOW_TROP * (np.power(p_trans/self.__P_0, -self.__BETA_T_BELOW_TROP*self.__R/self.__G_0) - 1.0),
+                    # __p_trans < __p_trop
+                    self.__H_P_TROP - self.__R*self.cal_temperature(self.__H_P_TROP,0.0)/self.__G_0 * np.log(p_trans/p_trop))
+
+        else:
+            return [x.climb_cross_alt_conmach() for x in self.wrap_model]
 
 
     def get_empty_weight(self, n):
@@ -390,7 +387,7 @@ class Performance:
             Empty weight(BADA) or Operating empty weight(OpenAP) [kg]
         """
         if (self.bada):
-            return self.perf_model._Bada__m_min[n] * 1000.0
+            return self.perf_model.m_min[n] * 1000.0
         else:
             return self.prop_model[n]['limits']['OEW']
 
@@ -418,14 +415,14 @@ class Performance:
             return Unit_conversion.meter_to_feet(np.array([x['limits']['ceiling'] for x in self.prop_model]))
 
 
-    def cal_minimum_speed(self, flight_phase):
+    def cal_minimum_speed(self, configuration):
         """
         Calculate minimum speed
 
         Parameters
         ----------
-        flight_phase: float[]
-            Flight phase from Traffic class [Flight_phase enum]
+        configuration: float[]
+            configuration from Traffic class [configuration enum]
 
         Returns
         -------
@@ -433,7 +430,7 @@ class Performance:
             Minimum at speed at specific configuration [knots]
         """
         if (self.bada):
-            return self.perf_model.cal_minimum_speed(flight_phase)
+            return self.perf_model.cal_minimum_speed(configuration)
         else:
             return  0.0 #TODO: OpenAP no minimum/stall speed?
         
@@ -753,14 +750,14 @@ class Performance:
         """
         return np.rad2deg(np.arctan(np.deg2rad(rate_of_turn) * V_tas / self.__G_0))
 
-    def get_bank_angles(self, flight_phase):
+    def get_bank_angles(self, configuration):
         """
         Get standard nominal bank angles (Session 5.3)
 
         Parameters
         ----------
-        flight_phase: float[]
-            Flight phase from Traffic class [Flight_phase enum]
+        configuration: float[]
+            configuration from Traffic class [configuration enum]
 
         Returns
         -------
@@ -768,9 +765,26 @@ class Performance:
             Bank angles [deg]
         """
         if (self.bada):
-            return np.where((flight_phase == Flight_phase.TAKEOFF) | (flight_phase == Flight_phase.LANDING), self.perf_model._Bada__PHI_NORM_CIV_TOLD, self.perf_model._Bada__PHI_NORM_CIV_OTHERS)
+            return np.where((configuration == Configuration.TAKEOFF) | (configuration == Configuration.LANDING), self.perf_model._Bada__PHI_NORM_CIV_TOLD, self.perf_model._Bada__PHI_NORM_CIV_OTHERS)
 
     
-        
+    def update_configuration(self, V_cas, H_p, vertical_mode):
+        """
+        Update Flight Phase (section 3.5)
 
-        
+        V_cas: float[]
+            True air speed [knots]
+
+        H_p: float[]
+            Geopotential pressuer altitude [ft]
+
+        vertical_mode : float[]
+            Vertical mode from Traffic class [Vertical_mode enum]
+
+        Returns
+        -------
+        configuration : float[]
+            configuration from Traffic class [configuration enum]
+        """
+        if (self.bada):
+            return self.perf_model.update_configuration(V_cas, H_p, vertical_mode)

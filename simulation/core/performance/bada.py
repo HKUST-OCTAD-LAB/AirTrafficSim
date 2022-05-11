@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import os
 
-from utils.enums import AP_speed_mode, Flight_phase, Engine_type, Configuration, Vertical_mode
+from utils.enums import AP_speed_mode, Engine_type, Configuration, Flight_phase, Vertical_mode
 from utils.unit import Unit_conversion
 
 class Bada:
@@ -48,7 +48,7 @@ class Bada:
         # Mass
         self.__m_ref = np.zeros([N])                            
         """reference mass [tones]"""
-        self.__m_min = np.zeros([N])                            
+        self.m_min = np.zeros([N])                            
         """minimum mass [tones]"""
         self.__m_max = np.zeros([N])                            
         """maximum mass [tones]"""
@@ -176,11 +176,11 @@ class Bada:
         """standard descent Mach number above Mach transition altitude"""
 
         # Speed schedule
-        self.__climb_schedule = np.zeros([N, 8])                
+        self.climb_schedule = np.zeros([N, 8])                
         """Standard climb CAS schedule [knots*8] (section 4.1)"""
-        self.__cruise_schedule = np.zeros([N, 5])
+        self.cruise_schedule = np.zeros([N, 5])
         """Standard cruise CAS schedule [knots*5] (section 4.2)"""
-        self.__descent_schedule = np.zeros([N,8])
+        self.descent_schedule = np.zeros([N,8])
         """Standard descent CAS schedule [knots*8] (section 4.3)"""
 
 
@@ -381,7 +381,7 @@ class Bada:
         
         # 'CD', 2X, 5 (3X, E10.5) - mass block - 1 data line
         self.__m_ref[n] = OPF[0][3]
-        self.__m_min[n] = OPF[0][4]
+        self.m_min[n] = OPF[0][4]
         self.__m_max[n] = OPF[0][5]
         self.__m_pyld[n] = OPF[0][6]
         self.__g_w[n] = OPF[0][7]
@@ -684,14 +684,14 @@ class Bada:
             np.minimum(self.__h_mo, self.__h_max + self.__g_t*(d_T-self.__c_tc_4) + self.__g_w*(self.__m_max-m)))
     
 
-    def cal_minimum_speed(self, flight_phase):
+    def cal_minimum_speed(self, configuration):
         """
         Calculate minimum speed for aircraft (3.5-2~3)
 
         Parameters
         ----------
-        flight_phase: float[]
-            Flight phase from Traffic class [Flight_phase enum]
+        configuration: float[]
+            configuration from Traffic class [configuration enum]
 
         Returns
         -------
@@ -699,17 +699,17 @@ class Bada:
             Minimum at speed at specific configuration [knots] TODO: need to consider mass using __calculate_operating_speed?
         """
 
-        return np.select([flight_phase == Flight_phase.TAKEOFF, 
-                          flight_phase == Flight_phase.INITIAL_CLIMB, 
-                          flight_phase == Flight_phase.CLIMB & flight_phase == Flight_phase.CRUISE & flight_phase == Flight_phase.DESCENT,
-                          flight_phase == Flight_phase.APPROACH,
-                          flight_phase == Flight_phase.LANDING],
+        return np.select(condlist= [configuration == Configuration.TAKEOFF, 
+                                    configuration == Configuration.INITIAL_CLIMB, 
+                                    configuration == Configuration.APPROACH,
+                                    configuration == Configuration.LANDING],
                              
-                         [self.__C_V_MIN_TO * self.__v_stall_to,
-                          self.__C_V_MIN * self.__v_stall_ic,
-                          self.__C_V_MIN * self.__v_stall_cr,
-                          self.__C_V_MIN * self.__v_stall_ap,
-                          self.__C_V_MIN* self.__v_stall_ld])
+                        choicelist=[self.__C_V_MIN_TO * self.__v_stall_to,
+                                    self.__C_V_MIN * self.__v_stall_ic,
+                                    self.__C_V_MIN * self.__v_stall_ap,
+                                    self.__C_V_MIN* self.__v_stall_ld],
+                        
+                        default=self.__C_V_MIN * self.__v_stall_cr)
 
 
     # ----------------------------  Aerodynamic section 3.6 -----------------------------------------
@@ -925,7 +925,7 @@ class Bada:
                         # Else
                         0.0)
 
-        return 1.0 - c_red * (self.__m_max - m/1000.0) / (self.__m_max - self.__m_min)     # Equation 3.8-1
+        return 1.0 - c_red * (self.__m_max - m/1000.0) / (self.__m_max - self.m_min)     # Equation 3.8-1
 
 
     # ----------------------------  Fuel consumption section 3.9 ----------------------------------------- 
@@ -1046,31 +1046,31 @@ class Bada:
         # Standard climb schedule
         if (self.__engine_type[n] == Engine_type.JET):
             # If Jet (Equation 4.1-1~5)
-            self.__climb_schedule[n] = [self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_1, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_2, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_3,
+            self.climb_schedule[n] = [self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_1, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_2, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_3,
                                         self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_4, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_5, np.minimum(self.__v_cl_1[n], 250), self.__v_cl_2[n], self.__m_cl[n]]
         else:
             # Else if turboprop and piston (Equation 4.1-6~8)
-            self.__climb_schedule[n] = [self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_6, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_7, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_8,
+            self.climb_schedule[n] = [self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_6, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_7, self.__C_V_MIN * v_stall_to_act + self.__V_D_CL_8,
                                         np.minimum(self.__v_cl_1[n], 250), self.__v_cl_2[n], self.__m_cl[n], 0.0, 0.0]
 
         # Standard cruise schedule
         if (self.__engine_type[n] == Engine_type.JET):
             # If Jet
-            self.__cruise_schedule[n] = [np.minimum(self.__v_cr_1[n], 170), np.minimum(self.__v_cr_1[n], 220), np.minimum(self.__v_cr_1[n], 250), self.__v_cr_2[n], self.__m_cr[n]]
+            self.cruise_schedule[n] = [np.minimum(self.__v_cr_1[n], 170), np.minimum(self.__v_cr_1[n], 220), np.minimum(self.__v_cr_1[n], 250), self.__v_cr_2[n], self.__m_cr[n]]
         else:
             # Else if turboprop and piston
-            self.__cruise_schedule[n] =  [np.minimum(self.__v_cr_1[n], 150), np.minimum(self.__v_cr_1[n], 180), np.minimum(self.__v_cr_1[n], 250), self.__v_cr_2[n], self.__m_cr[n]]
+            self.cruise_schedule[n] =  [np.minimum(self.__v_cr_1[n], 150), np.minimum(self.__v_cr_1[n], 180), np.minimum(self.__v_cr_1[n], 250), self.__v_cr_2[n], self.__m_cr[n]]
 
         # Actual stall speed for landing TODO: consider fuel mass?
         v_stall_ld_act = Unit_conversion.mps_to_knots(self.__cal_operating_speed(m, Unit_conversion.knots_to_mps(self.__v_stall_ld))[n])
         # Standard descent schedule
         if (self.__engine_type[n] != Engine_type.PISTON):
             # If Jet and Turboprop (Equation 4.3-1~4)
-            self.__descent_schedule[n] = [self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_1, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_2, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_3,
+            self.descent_schedule[n] = [self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_1, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_2, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_3,
                                           self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_4, np.minimum(self.__v_des_1[n], 220), np.minimum(self.__v_des_1[n], 250), self.__v_des_2[n], self.__m_des[n]]
         else:
             # Else if Piston (Equation 4.3-5~7)
-            self.__descent_schedule[n] = [self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_5, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_6, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_7,
+            self.descent_schedule[n] = [self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_5, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_6, self.__C_V_MIN * v_stall_ld_act + self.__V_D_DSE_7,
                                           self.__v_des_1[n], self.__v_des_2[n], self.__m_des[n], 0.0, 0.0]
 
 
@@ -1117,31 +1117,65 @@ class Bada:
             np.where(self.__engine_type == Engine_type.JET,
                 # If jet
                 np.select([(H_p < 1500), (H_p >= 1500) & (H_p < 3000), (H_p >= 3000) & (H_p < 4000), (H_p >= 4000) & (H_p < 5000), (H_p >= 5000) & (H_p < 6000), (H_p >= 6000) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
-                          [self.__climb_schedule[:,0], self.__climb_schedule[:,1], self.__climb_schedule[:,2], self.__climb_schedule[:,3], self.__climb_schedule[:,4], self.__climb_schedule[:,5], self.__climb_schedule[:,6], self.__climb_schedule[:,7]]),
+                          [self.climb_schedule[:,0], self.climb_schedule[:,1], self.climb_schedule[:,2], self.climb_schedule[:,3], self.climb_schedule[:,4], self.climb_schedule[:,5], self.climb_schedule[:,6], self.climb_schedule[:,7]]),
                 # If turboprop and piston
                 np.select([(H_p < 500), (H_p >= 500) & (H_p < 1000), (H_p >= 1000) & (H_p < 1500), (H_p >= 1500) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
-                          [self.__climb_schedule[:,0], self.__climb_schedule[:,1], self.__climb_schedule[:,2], self.__climb_schedule[:,3], self.__climb_schedule[:,4], self.__climb_schedule[:,5]])
+                          [self.climb_schedule[:,0], self.climb_schedule[:,1], self.climb_schedule[:,2], self.climb_schedule[:,3], self.climb_schedule[:,4], self.climb_schedule[:,5]])
             ),
             # If cruise
             np.where(self.__engine_type == Engine_type.JET,
                 # If jet
                 np.select([(H_p < 3000), (H_p >= 3000) & (H_p < 6000), (H_p >= 6000) & (H_p < 14000), (H_p >= 14000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
-                          [self.__cruise_schedule[:,0], self.__cruise_schedule[:,1], self.__cruise_schedule[:,2], self.__cruise_schedule[:,3], self.__cruise_schedule[:,4]]),
+                          [self.cruise_schedule[:,0], self.cruise_schedule[:,1], self.cruise_schedule[:,2], self.cruise_schedule[:,3], self.cruise_schedule[:,4]]),
                 # If turboprop and piston
                 np.select([(H_p < 3000), (H_p >= 3000) & (H_p < 6000), (H_p >= 6000) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
-                          [self.__cruise_schedule[:,0], self.__cruise_schedule[:,1], self.__cruise_schedule[:,2], self.__cruise_schedule[:,3], self.__cruise_schedule[:,4]])
+                          [self.cruise_schedule[:,0], self.cruise_schedule[:,1], self.cruise_schedule[:,2], self.cruise_schedule[:,3], self.cruise_schedule[:,4]])
             ),
             # If descent
             np.where(self.__engine_type != Engine_type.PISTON,
                 # If jet and turboprop
                 np.select([(H_p < 999), (H_p >= 1000) & (H_p < 1500), (H_p >= 1500) & (H_p < 2000), (H_p >= 2000) & (H_p < 3000), (H_p >= 3000) & (H_p < 6000), (H_p >= 6000) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
-                          [self.__descent_schedule[:,0], self.__descent_schedule[:,1], self.__descent_schedule[:,2], self.__descent_schedule[:,3], self.__descent_schedule[:,4], self.__descent_schedule[:,5], self.__descent_schedule[:,6], self.__descent_schedule[:,7]]),
+                          [self.descent_schedule[:,0], self.descent_schedule[:,1], self.descent_schedule[:,2], self.descent_schedule[:,3], self.descent_schedule[:,4], self.descent_schedule[:,5], self.descent_schedule[:,6], self.descent_schedule[:,7]]),
                 # If piston
                 np.select([(H_p < 500), (H_p >= 500) & (H_p < 1000), (H_p >= 1000) & (H_p < 1500), (H_p >= 1500) & (H_p < 10000), (H_p >= 10000) & (H_p < H_p_trans), (H_p >= H_p_trans)],
-                          [self.__descent_schedule[:,0], self.__descent_schedule[:,1], self.__descent_schedule[:,2], self.__descent_schedule[:,3], self.__descent_schedule[:,4], self.__descent_schedule[:,5]])
+                          [self.descent_schedule[:,0], self.descent_schedule[:,1], self.descent_schedule[:,2], self.descent_schedule[:,3], self.descent_schedule[:,4], self.descent_schedule[:,5]])
             )
         ])
 
+
+    def update_configuration(self, V_cas, H_p, vertical_mode):
+        """
+        Update configuration (section 3.5)
+
+        V_cas: float[]
+            True air speed [knots]
+
+        H_p: float[]
+            Geopotential pressuer altitude [ft]
+
+        vertical_mode : float[]
+            Vertical mode from Traffic class [Vertical_mode enum]
+
+        Returns
+        -------
+        configuration : float[]
+            configuration from Traffic class [configuration enum]
+        """
+        return np.select(condlist=[
+                            (vertical_mode == Vertical_mode.CLIMB) & (H_p <= self.__H_MAX_TO),
+                            (vertical_mode == Vertical_mode.CLIMB) & (H_p > self.__H_MAX_TO) & (H_p < self.__H_MAX_IC),
+                            (H_p > self.__H_MAX_IC) | (vertical_mode == Vertical_mode.DESCENT) & ((V_cas >= (self.__C_V_MIN * self.__v_stall_cr + 10.0))),
+                            (vertical_mode == Vertical_mode.DESCENT) & ((V_cas < self.__C_V_MIN * self.__v_stall_cr + 10.0) & (H_p > self.__H_MAX_LD) & (H_p <= self.__H_MAX_AP)) | ((V_cas < (self.__C_V_MIN * self.__v_stall_cr + 10.0)) & (V_cas >= (self.__C_V_MIN * self.__v_stall_ap + 10.0)) & (H_p <= self.__H_MAX_LD)),
+                            (vertical_mode == Vertical_mode.DESCENT) & (H_p < self.__H_MAX_LD) & (V_cas < (self.__C_V_MIN * self.__v_stall_ap + 10.0))
+                        ],
+                         choicelist=[
+                             Configuration.TAKEOFF,
+                             Configuration.INITIAL_CLIMB,
+                             Configuration.CLEAN,
+                             Configuration.APPROACH,
+                             Configuration.LANDING
+                         ],
+                         default=Configuration.CLEAN)
     
     # ----------------------------  Global aircraft parameters section 5 -----------------------------------------
     def cal_max_d_tas(self, d_t):

@@ -1,10 +1,9 @@
 from __future__ import annotations
-from dis import dis
 
 import numpy as np
 
 from core.nav import Nav
-from utils.enums import AP_speed_mode, Flight_phase, Speed_mode, Vertical_mode, AP_lateral_mode
+from utils.enums import AP_speed_mode, Speed_mode, Vertical_mode, AP_lateral_mode
 from utils.unit import Unit_conversion
 from utils.cal import Calculation
 
@@ -161,7 +160,7 @@ class Autopilot:
         
         # Procedural speed. Follow procedural speed by default.
         # After transitions altitude, constant mach 
-        self.procedure_speed = traffic.perf.get_procedure_speed(traffic.alt, traffic.trans_alt, traffic.flight_phase)
+        self.procedure_speed = traffic.perf.get_procedure_speed(traffic.alt, traffic.trans_alt, traffic.configuration)
         self.cas = np.where(self.procedure_speed >= 5.0, self.procedure_speed, self.cas)      #TODO: Add speed mode atc
         self.mach = np.where(self.procedure_speed < 5.0, self.procedure_speed, self.mach)      #TODO: Add speed mode atc
 

@@ -202,6 +202,16 @@ class Traffic:
 
         # print("Traffic.py - update()")
 
+        # Flight phase and configuration
+        # Take off -> climb
+        # self.flight_phase = np.where((self.flight_phase == Flight_phase.TAKEOFF) & (self.alt > 1500.0), Flight_phase.CLIMB, self.flight_phase)
+        # self.flight_phase = np.where((self.flight_phase != Flight_phase.TAKEOFF) & (self.vertical_mode == Vertical_mode.CLIMB), Flight_phase.CLIMB, self.flight_phase)
+        # # Climb -> Cruise
+        # self.flight_phase = np.where(self.vertical_mode == Vertical_mode.LEVEL, Flight_phase.CRUISE, self.flight_phase)         #TODO: Or use cruise altitude?
+        # # Cruise-Descent
+        # self.flight_phase = np.where(self.vertical_mode == Vertical_mode.DESCENT, Flight_phase.DESCENT, self.flight_phase)
+        self.configuration = self.perf.update_configuration(self.cas, self.alt, self.vertical_mode)
+
         # Update atmosphere
         self.weather.update(self.lat, self.long, self.alt, self.perf, global_time)
 
@@ -223,8 +233,8 @@ class Traffic:
                                         d_heading < -0.5,
                                     ],
                                     choicelist=[
-                                        self.perf.get_bank_angles(self.flight_phase),                   # Turn right
-                                        np.negative(self.perf.get_bank_angles(self.flight_phase))       # Turn left
+                                        self.perf.get_bank_angles(self.configuration),                   # Turn right
+                                        np.negative(self.perf.get_bank_angles(self.configuration))       # Turn left
                                     ],
                                     default = 0.0
                                 )
@@ -326,15 +336,6 @@ class Traffic:
                             default=self.alt)
 
         # Fuel        
-        fuel_burn = self.perf.cal_fuel_burn(self.flight_phase, self.tas, self.alt) 
+        fuel_burn = self.perf.cal_fuel_burn(self.configuration, self.tas, self.alt) 
         self.fuel_consumed = self.fuel_consumed + fuel_burn
         self.mass = self.mass - fuel_burn
-
-        # Flight phase and configuration
-        # Take off -> climb
-        self.flight_phase = np.where((self.flight_phase == Flight_phase.TAKEOFF) & (self.alt > 1500.0), Flight_phase.CLIMB, self.flight_phase)
-        self.flight_phase = np.where((self.flight_phase != Flight_phase.TAKEOFF) & (self.vertical_mode == Vertical_mode.CLIMB), Flight_phase.CLIMB, self.flight_phase)
-        # Climb -> Cruise
-        self.flight_phase = np.where(self.vertical_mode == Vertical_mode.LEVEL, Flight_phase.CRUISE, self.flight_phase)         #TODO: Or use cruise altitude?
-        # Cruise-Descent
-        self.flight_phase = np.where(self.vertical_mode == Vertical_mode.DESCENT, Flight_phase.DESCENT, self.flight_phase)

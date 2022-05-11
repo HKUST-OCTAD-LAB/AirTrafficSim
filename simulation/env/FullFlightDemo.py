@@ -1,5 +1,6 @@
 from datetime import datetime
 from pathlib import Path
+import numpy as np
 
 from core.environment import Environment
 from core.aircraft import Aircraft
@@ -30,7 +31,10 @@ class FullFlightDemo(Environment):
                                                     # TODO: 0 cas
 
     def should_end(self):
-        return False
+        if (self.global_time > 60 and  np.all((self.traffic.alt == 0))):
+            return True
+        else:
+            return False
         
 
     def atc_command(self):
