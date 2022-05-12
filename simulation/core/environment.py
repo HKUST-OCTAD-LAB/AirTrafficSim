@@ -75,7 +75,7 @@ class Environment:
 
             # Check if the simulation should end
             if self.should_end():
-                break
+                self.end_time = self.global_time
 
             start_time = time.time()
             print("")
@@ -105,7 +105,7 @@ class Environment:
                     self.graph_type = graph_type
 
                 now = time.time()
-                if ((now - self.last_sent_time) > 1) or (self.global_time == self.end_time):
+                if ((now - self.last_sent_time) > 0.5) or (self.global_time == self.end_time):
                     self.send_to_client(socketio)
                     socketio.sleep(0)
                     self.last_sent_time = now

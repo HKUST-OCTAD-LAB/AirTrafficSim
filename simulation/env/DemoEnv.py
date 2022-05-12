@@ -13,8 +13,8 @@ class DemoEnv(Environment):
                         number_of_traffic = 2,
                         start_time = datetime.fromisoformat('2022-03-22T00:00:00'),
                         end_time = 1000,
-                        weather_mode = "ERA%",
-                        performance_mode= "Bada"
+                        era5_weather = True,
+                        bada_perf = True 
                         )
 
         # Add aircraft

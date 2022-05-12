@@ -15,12 +15,13 @@ class FullFlightDemo(Environment):
                         start_time = datetime.fromisoformat('2022-03-22T00:00:00'),
                         end_time = 5500,
                         era5_weather = False,
-                        bada_perf=True 
+                        bada_perf = True 
                         )
 
         # Add aircraft
         self.aircraft_full = Aircraft(self.traffic, call_sign="FULL", aircraft_type="A20N", flight_phase=Flight_phase.TAKEOFF, configuration=Configuration.TAKEOFF,
                                                     lat=22.307500, long=113.932833, alt=0.0, heading=254.0, cas=149.0, fuel_weight=5273.0, payload_weight=12000.0,
+                                                    cruise_alt=37000,
                                                     departure_runway=[], arrival_runway=["RCTP/05R", 25.061500, 121.224167, 108],
                                                     flight_plan=["PRAWN", "RUMSY", "TUNNA", "TROUT", "OCEAN", "RASSE", "CONGA", "ENVAR", "DADON", "EXTRA", "RENOT", "TONGA", "BOCCA", "ELBER", "BRAVO", "JAMMY"],
                                                     target_speed=[   205,     230,    310,      310,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,    0.78,     300,     200,     200],

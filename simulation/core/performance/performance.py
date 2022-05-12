@@ -81,7 +81,7 @@ class Performance:
         if (self.bada):
             self.perf_model.add_aircraft(icao, n, mass_class)
         else:
-            self.prop_model[n] = prop(icao)
+            self.prop_model[n] = prop.aircraft(icao)
             self.thrust_model[n] = Thrust(ac=icao, eng=engine)
             self.drag_model[n] = Drag(ac=icao)
             self.fuel_flow_model[n] = FuelFlow(ac=icao, eng=engine)
@@ -663,9 +663,9 @@ class Performance:
             self.drag = self.perf_model.cal_aerodynamic_drag(tas, traffic.bank_angle, traffic.mass, traffic.weather.rho, traffic.configuration, self.perf_model.cal_expedite_descend_factor(traffic.ap.expedite_descent))
             self.thrust = self.perf_model.cal_thrust(traffic.vertical_mode, traffic.configuration, traffic.alt, traffic.tas, traffic.weather.d_T, self.drag, traffic.ap.speed_mode)
         else:
-            self.drag = [x.clean(mass=60000, tas=200, alt=20000, path_angle=5) for x in self.drag_model]
+            self.drag = [x.clean(mass=traffic.mass, tas=traffic.tas, alt=traffic.alt, path_angle=5) for x in self.drag_model]
             # drag.nonclean(mass=60000, tas=150, alt=100, flap_angle=20, path_angle=10, landing_gear=True)
-            self.thrust = [x.cruise(tas = 230, alt = 32000) for x in self.thrust_model]
+            self.thrust = [x.cruise(tas = traffic.cas, alt = traffic.alt) for x in self.thrust_model]
             # T = thrust.takeoff(tas=100, alt=0) T = thrust.climb(tas=200, alt=20000, roc=1000)
         
         # Total Energy Model
@@ -766,6 +766,8 @@ class Performance:
         """
         if (self.bada):
             return np.where((configuration == Configuration.TAKEOFF) | (configuration == Configuration.LANDING), self.perf_model._Bada__PHI_NORM_CIV_TOLD, self.perf_model._Bada__PHI_NORM_CIV_OTHERS)
+        else:
+            np.where((configuration == Configuration.TAKEOFF) | (configuration == Configuration.LANDING), 15.0, 30.0)
 
     
     def update_configuration(self, V_cas, H_p, vertical_mode):

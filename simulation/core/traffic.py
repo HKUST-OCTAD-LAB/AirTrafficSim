@@ -47,6 +47,8 @@ class Traffic:
         """Altitude [ft] Geopotential altitude"""
         self.trans_alt = np.zeros([N])
         """Transaition altitude [ft]"""
+        self.cruise_alt = np.zeros([N])
+        """Cruise altitude [ft]"""
 
         # Orientation
         self.heading = np.zeros([N])                            
@@ -101,7 +103,7 @@ class Traffic:
         """Weather class"""
 
     
-    def add_aircraft(self, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_runway, arrival_runway, flight_plan, target_speed, target_alt):
+    def add_aircraft(self, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, cruise_alt, departure_runway, arrival_runway, flight_plan, target_speed, target_alt):
         """
         Add an aircraft to traffic array.
 
@@ -150,6 +152,7 @@ class Traffic:
         self.fuel_weight[n] = fuel_weight
         self.payload_weight[n] = payload_weight
         self.mass[n] = self.empty_weight[n] + fuel_weight + payload_weight
+        self.cruise_alt[n] = cruise_alt
         
          # Init Procedural speed
         self.perf.init_procedure_speed(self.mass, n)
@@ -200,17 +203,7 @@ class Traffic:
         ----
         """
 
-        # print("Traffic.py - update()")
-
-        # Flight phase and configuration
-        # Take off -> climb
-        # self.flight_phase = np.where((self.flight_phase == Flight_phase.TAKEOFF) & (self.alt > 1500.0), Flight_phase.CLIMB, self.flight_phase)
-        # self.flight_phase = np.where((self.flight_phase != Flight_phase.TAKEOFF) & (self.vertical_mode == Vertical_mode.CLIMB), Flight_phase.CLIMB, self.flight_phase)
-        # # Climb -> Cruise
-        # self.flight_phase = np.where(self.vertical_mode == Vertical_mode.LEVEL, Flight_phase.CRUISE, self.flight_phase)         #TODO: Or use cruise altitude?
-        # # Cruise-Descent
-        # self.flight_phase = np.where(self.vertical_mode == Vertical_mode.DESCENT, Flight_phase.DESCENT, self.flight_phase)
-        self.configuration = self.perf.update_configuration(self.cas, self.alt, self.vertical_mode)
+        print("Traffic.py - update()")
 
         # Update atmosphere
         self.weather.update(self.lat, self.long, self.alt, self.perf, global_time)
@@ -225,6 +218,37 @@ class Traffic:
 
         # Update autopilot
         self.ap.update(self)
+
+         # Flight phase and configuration
+        # Take off -> climb
+        # self.flight_phase = np.where((self.flight_phase == Flight_phase.TAKEOFF) & (self.alt > 1500.0), Flight_phase.CLIMB, self.flight_phase)
+        # self.flight_phase = np.where((self.flight_phase != Flight_phase.TAKEOFF) & (self.vertical_mode == Vertical_mode.CLIMB), Flight_phase.CLIMB, self.flight_phase)
+        # # Climb -> Cruise
+        # self.flight_phase = np.where(self.vertical_mode == Vertical_mode.LEVEL, Flight_phase.CRUISE, self.flight_phase)         #TODO: Or use cruise altitude?
+        # # Cruise-Descent
+        # self.flight_phase = np.where(self.vertical_mode == Vertical_mode.DESCENT, Flight_phase.DESCENT, self.flight_phase)
+        self.configuration = self.perf.update_configuration(self.cas, self.alt, self.vertical_mode)
+        self.flight_phase = np.select(condlist=[
+                                        (self.configuration == Configuration.TAKEOFF) & (self.alt > 0.0),
+                                        self.configuration == Configuration.INITIAL_CLIMB,
+                                        (self.vertical_mode == Vertical_mode.CLIMB) & (self.alt < self.cruise_alt),
+                                        self.alt == self.cruise_alt,
+                                        (self.vertical_mode == Vertical_mode.DESCENT) & (self.alt < self.cruise_alt) & (self.configuration == Configuration.CLEAN),
+                                        self.configuration == Configuration.APPROACH,
+                                        self.configuration == Configuration.LANDING,
+                                        (self.flight_phase == Flight_phase.LANDING) & (self.alt == 0.0)
+                                    ],
+                                    choicelist=[
+                                        Flight_phase.TAKEOFF,
+                                        Flight_phase.INITIAL_CLIMB,
+                                        Flight_phase.CLIMB,
+                                        Flight_phase.CRUISE,
+                                        Flight_phase.DESCENT,
+                                        Flight_phase.APPROACH,
+                                        Flight_phase.LANDING,
+                                        Flight_phase.TAXI_DEST
+                                    ],
+                                    default=Flight_phase.CRUISE)
 
         # Bank angle
         d_heading = Calculation.cal_angle_diff(self.heading, self.ap.heading)
