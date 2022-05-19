@@ -19,7 +19,7 @@ class FullFlightDemo(Environment):
                         )
 
         # Add aircraft
-        self.aircraft_full = Aircraft(self.traffic, call_sign="FULL", aircraft_type="A20N", flight_phase=Flight_phase.TAKEOFF, configuration=Configuration.TAKEOFF,
+        self.aircraft_full = Aircraft(self.traffic, call_sign="FULL", aircraft_type="A320", flight_phase=Flight_phase.TAKEOFF, configuration=Configuration.TAKEOFF,
                                                     lat=22.307500, long=113.932833, alt=0.0, heading=254.0, cas=149.0, fuel_weight=5273.0, payload_weight=12000.0,
                                                     cruise_alt=37000,
                                                     departure_runway=[], arrival_runway=["RCTP/05R", 25.061500, 121.224167, 108],

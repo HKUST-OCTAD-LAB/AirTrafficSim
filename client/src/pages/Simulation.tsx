@@ -1,6 +1,6 @@
 import React, { useState, useRef,} from "react";
 import { IonContent, IonPage, IonTitle, IonToolbar, IonRange, IonIcon, IonButtons, IonButton, IonProgressBar, IonLabel, IonItem, IonSelect, IonSelectOption, IonGrid, IonCol, IonRow, IonFooter, IonChip, IonModal, IonToggle, IonList, useIonViewDidEnter, IonHeader, IonSegment, IonSegmentButton, IonLoading, IonToast } from '@ionic/react';
-import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource, HeadingPitchRange, WebMapServiceImageryProvider} from "cesium";
+import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource, HeadingPitchRange, WebMapServiceImageryProvider, MapboxStyleImageryProvider, Cesium3DTileStyle} from "cesium";
 import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer, Clock, Camera } from "resium";
 import Plotly from "plotly.js-gl2d-dist-min";
 import createPlotlyComponent from "react-plotly.js/factory";
@@ -18,9 +18,16 @@ const Plot = createPlotlyComponent(Plotly);
 
 Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
-const url = IonResource.fromAssetId(96188);
+const osmBuilding = IonResource.fromAssetId(96188);
+const osmBuildingstyle = new Cesium3DTileStyle({
+    color : 'color("grey")'
+});
 const bingImagery = createWorldImagery();
 const simpleImagery = new OpenStreetMapImageryProvider({url: 'https://stamen-tiles.a.ssl.fastly.net/toner-background/' });
+const mapboxImagery = new MapboxStyleImageryProvider({
+    styleId: 'dark-v10',
+    accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN!
+});
 
 const replayDataSource = new cesiumCzmlDataSource();
 const simulationDataSource = new cesiumCzmlDataSource();
@@ -290,9 +297,9 @@ const Simulation: React.FC = () => {
                     <Scene debugShowFramesPerSecond={true}/>
                     <Globe baseColor={Color.fromCssColorString('#000000')} terrainProvider={Ion.defaultAccessToken ? terrainProvider : undefined} showGroundAtmosphere={false}/>
                     <ImageryLayer imageryProvider={bingImagery}  show={stateliteMode}/>
-                    <ImageryLayer imageryProvider={simpleImagery} alpha={0.2} contrast={-1} show={!stateliteMode}/>
+                    {process.env.REACT_APP_MAPBOX_ACCESS_TOKEN ? <ImageryLayer imageryProvider={mapboxImagery} show={!stateliteMode}/> : <ImageryLayer imageryProvider={simpleImagery} alpha={0.3} contrast={-1} show={!stateliteMode}/>}
                     {/* <ImageryLayer imageryProvider={nexrad}/> */}
-                    {Ion.defaultAccessToken && <Cesium3DTileset url={url}/>}
+                    {Ion.defaultAccessToken && <Cesium3DTileset url={osmBuilding} style={osmBuildingstyle}/>}
                     <Clock 
                         shouldAnimate={clockDirection !== 0 ? true : false} 
                         multiplier={clockMultiplier * clockDirection}

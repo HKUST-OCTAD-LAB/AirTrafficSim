@@ -46,7 +46,7 @@ class Environment:
         self.writer = csv.writer(open(self.file_path, 'w+'))
         self.header = ['timestep','timestamp', 'id', 'callsign', 'lat', 'long', 'alt',
                         'cas', 'tas', 'mach', 'vs', 
-                        'heading', 'bank_angle', 
+                        'heading', 'bank_angle', 'path_angle',
                         'mass', 'fuel_consumed', 
                         'thrust', 'drag', 'esf', 'accel',
                         'ap_track_angle', 'ap_heading', 'ap_alt', 'ap_cas', 'ap_mach', 'ap_procedural_speed', 
@@ -130,7 +130,7 @@ class Environment:
         """
         data = np.column_stack((np.full(self.traffic.n, self.global_time), np.full(self.traffic.n, (self.datetime + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), np.arange(self.traffic.n), self.traffic.call_sign[:self.traffic.n], self.traffic.lat[:self.traffic.n], self.traffic.long[:self.traffic.n], self.traffic.alt[:self.traffic.n],
                                 self.traffic.cas[:self.traffic.n], self.traffic.tas[:self.traffic.n], self.traffic.mach[:self.traffic.n], self.traffic.vs[:self.traffic.n], 
-                                self.traffic.heading[:self.traffic.n], self.traffic.bank_angle[:self.traffic.n], 
+                                self.traffic.heading[:self.traffic.n], self.traffic.bank_angle[:self.traffic.n], self.traffic.path_angle[:self.traffic.n], 
                                 self.traffic.mass[:self.traffic.n], self.traffic.fuel_consumed[:self.traffic.n],
                                 self.traffic.perf.thrust[:self.traffic.n], self.traffic.perf.drag[:self.traffic.n], self.traffic.perf.esf[:self.traffic.n], self.traffic.accel[:self.traffic.n],
                                 self.traffic.ap.track_angle[:self.traffic.n], self.traffic.ap.heading[:self.traffic.n], self.traffic.ap.alt[:self.traffic.n], self.traffic.ap.cas[:self.traffic.n], self.traffic.ap.mach[:self.traffic.n], self.traffic.ap.procedure_speed [:self.traffic.n],

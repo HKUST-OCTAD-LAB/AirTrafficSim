@@ -57,6 +57,8 @@ class Traffic:
         """Track angle [deg]"""
         self.bank_angle = np.zeros([N])                         
         """Bank angle [deg]"""
+        self.path_angle = np.zeros([N])
+        """Path angle [deg]"""
 
         # Speed
         self.cas = np.zeros([N])                                
@@ -344,6 +346,8 @@ class Traffic:
         # Ground speed
         self.gs_north = self.tas * np.cos(np.deg2rad(self.heading)) + self.weather.wind_north
         self.gs_east = self.tas * np.sin(np.deg2rad(self.heading)) + self.weather.wind_east
+
+        self.path_angle = np.rad2deg(np.arctan((self.vs/60.0)/(self.tas * 1.68781)))
 
         # Position
         self.lat = self.lat + self.gs_north / 216000.0

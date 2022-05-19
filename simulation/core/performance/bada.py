@@ -1160,6 +1160,8 @@ class Bada:
         -------
         configuration : float[]
             configuration from Traffic class [configuration enum]
+
+        TODO: Make use of Airport Elevation in calculation
         """
         return np.select(condlist=[
                             (vertical_mode == Vertical_mode.CLIMB) & (H_p <= self.__H_MAX_TO),

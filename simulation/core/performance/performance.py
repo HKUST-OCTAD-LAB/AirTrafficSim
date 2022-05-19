@@ -31,11 +31,17 @@ class Performance:
             self.perf_model = Bada(N)
         else:
             # OpenAP
-            self.prop_model = [] * N
-            self.thrust_model = [] * N
-            self.drag_model = [] * N
-            self.fuel_flow_model = [] * N
-            self.wrap_model = [] * N
+            self.prop_model = [None] * N
+            self.thrust_model = [None] * N
+            self.drag_model = [None] * N
+            self.fuel_flow_model = [None] * N
+            self.wrap_model = [None] * N
+
+            # self.prop_model = np.empty([N], dtype=np.void)
+            # self.thrust_model = np.empty([N], dtype=np.void)
+            # self.drag_model = np.empty([N], dtype=np.void)
+            # self.fuel_flow_model = np.empty([N], dtype=np.void)
+            # self.wrap_model = np.empty([N], dtype=np.void)
 
 
         self.drag = np.zeros([N])                               
@@ -142,6 +148,8 @@ class Performance:
         """
         if (self.bada):
             return self.perf_model.get_procedure_speed(H_p, H_p_trans, flight_phase)
+        else:
+            return np.array([0])
 
 
     # ----------------------------  Atmosphere model (Ref: BADA user menu section 3.1) -----------------------------------------
@@ -369,7 +377,7 @@ class Performance:
                     self.__H_P_TROP - self.__R*self.cal_temperature(self.__H_P_TROP,0.0)/self.__G_0 * np.log(p_trans/p_trop))
 
         else:
-            return [x.climb_cross_alt_conmach() for x in self.wrap_model]
+            return np.array([x.climb_cross_alt_conmach()['default'] for x in self.wrap_model])
 
 
     def get_empty_weight(self, n):
@@ -663,9 +671,9 @@ class Performance:
             self.drag = self.perf_model.cal_aerodynamic_drag(tas, traffic.bank_angle, traffic.mass, traffic.weather.rho, traffic.configuration, self.perf_model.cal_expedite_descend_factor(traffic.ap.expedite_descent))
             self.thrust = self.perf_model.cal_thrust(traffic.vertical_mode, traffic.configuration, traffic.alt, traffic.tas, traffic.weather.d_T, self.drag, traffic.ap.speed_mode)
         else:
-            self.drag = [x.clean(mass=traffic.mass, tas=traffic.tas, alt=traffic.alt, path_angle=5) for x in self.drag_model]
+            self.drag = np.array([x.clean(mass=traffic.mass, tas=traffic.tas, alt=traffic.alt, path_angle=traffic.path_angle) for x in self.drag_model])
             # drag.nonclean(mass=60000, tas=150, alt=100, flap_angle=20, path_angle=10, landing_gear=True)
-            self.thrust = [x.cruise(tas = traffic.cas, alt = traffic.alt) for x in self.thrust_model]
+            self.thrust = np.array([x.cruise(tas = traffic.cas, alt = traffic.alt) for x in self.thrust_model])
             # T = thrust.takeoff(tas=100, alt=0) T = thrust.climb(tas=200, alt=20000, roc=1000)
         
         # Total Energy Model
@@ -767,7 +775,7 @@ class Performance:
         if (self.bada):
             return np.where((configuration == Configuration.TAKEOFF) | (configuration == Configuration.LANDING), self.perf_model._Bada__PHI_NORM_CIV_TOLD, self.perf_model._Bada__PHI_NORM_CIV_OTHERS)
         else:
-            np.where((configuration == Configuration.TAKEOFF) | (configuration == Configuration.LANDING), 15.0, 30.0)
+            return np.where((configuration == Configuration.TAKEOFF) | (configuration == Configuration.LANDING), 15.0, 30.0)
 
     
     def update_configuration(self, V_cas, H_p, vertical_mode):
@@ -790,3 +798,5 @@ class Performance:
         """
         if (self.bada):
             return self.perf_model.update_configuration(V_cas, H_p, vertical_mode)
+        else:
+            return np.array([Configuration.CLEAN])
