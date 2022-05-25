@@ -42,6 +42,12 @@ class Autopilot:
         """Autopilot target latitude [deg]"""
         self.long = np.zeros([N])                               
         """Autopilot target longitude [deg]"""
+        self.lat_next = np.zeros([N])                                
+        """Autopilot target latitude for next waypoint [deg]"""
+        self.long_next = np.zeros([N])                               
+        """Autopilot target longitude for next waypoint [deg]"""
+        self.hv_next_wp = np.ones([N], dtype=bool)
+        """Autupilot hv next waypoint [bool]"""
         self.dist = np.zeros([N])
         """Distance to next waypoint [nm]"""
 
@@ -146,6 +152,11 @@ class Autopilot:
                 # Target Flight Plan Lat/Long
                 self.lat[i] = self.flight_plan_lat[i][val]
                 self.long[i] = self.flight_plan_long[i][val]
+                if val < len(self.flight_plan_name[i]) - 1 :
+                    self.lat_next[i] = self.flight_plan_lat[i][val+1]
+                    self.long_next[i] = self.flight_plan_long[i][val+1]
+                else :
+                    self.hv_next_wp[i] = False
                 # Target Flight Plan Altitude
                 if len(self.flight_plan_target_alt[i]) > 1:
                     self.alt[i] = self.flight_plan_target_alt[i][val]
@@ -188,10 +199,19 @@ class Autopilot:
                                             ])
         
         # Waypoint, track angle, and heading
-        dist = np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat, self.long))
-        self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist<1.0, self.track_angle, Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long)))
+        dist = np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat, self.long))   #km
+
+        # Fly by turn
+        turn_radius = traffic.perf.cal_turn_radius(traffic.perf.get_bank_angles(traffic.configuration), Unit_conversion.knots_to_mps(traffic.tas)) / 1000.0     #km
+        self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist<turn_radius, np.where(self.hv_next_wp, Calculation.cal_great_circle_bearing(self.lat, self.long, self.lat_next, self.long_next), self.track_angle), Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long)))
         self.heading = np.where(self.lateral_mode == AP_lateral_mode.HEADING, self.heading, self.track_angle + np.arcsin(traffic.weather.wind_speed/traffic.tas * np.sin(self.track_angle-traffic.weather.wind_direction))) #https://www.omnicalculator.com/physics/wind-correction-angle
-        self.flight_plan_index = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (dist < 1.0) & (dist > self.dist), self.flight_plan_index+1, self.flight_plan_index)
+        self.flight_plan_index = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (dist < turn_radius) & (dist > self.dist), self.flight_plan_index+1, self.flight_plan_index)
         self.dist = dist
+
+        # Fly over turn
+        # self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist<1.0, self.track_angle, Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long)))
+        # self.heading = np.where(self.lateral_mode == AP_lateral_mode.HEADING, self.heading, self.track_angle + np.arcsin(traffic.weather.wind_speed/traffic.tas * np.sin(self.track_angle-traffic.weather.wind_direction))) #https://www.omnicalculator.com/physics/wind-correction-angle
+        # self.flight_plan_index = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (dist < 1.0) & (dist > self.dist), self.flight_plan_index+1, self.flight_plan_index)
+        # self.dist = dist
         
         

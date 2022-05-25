@@ -758,6 +758,26 @@ class Performance:
         """
         return np.rad2deg(np.arctan(np.deg2rad(rate_of_turn) * V_tas / self.__G_0))
 
+
+    def cal_turn_radius(self, bank_angle, V_tas):
+        """
+        Calculate rate of turn (Equation 5.3-1)
+
+        Parameters
+        ----------
+        bank_angle: float[]
+            Bank angle [deg]
+
+        V_tas: float[]
+            True air speed [m/s]
+        
+        Returns
+        -------
+        turn_radius: float[]
+            Turn radius [m]
+        """
+        return np.square(V_tas) / self.__G_0 / np.tan(np.deg2rad(bank_angle))
+
     def get_bank_angles(self, configuration):
         """
         Get standard nominal bank angles (Session 5.3)
