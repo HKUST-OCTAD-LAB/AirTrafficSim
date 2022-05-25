@@ -102,7 +102,7 @@ class Replay:
                         "distanceDisplayCondition": {
                             "distanceDisplayCondition": [0, 1000000]
                         },
-                        "showBackground": "true",
+                        "showBackground": True,
                         "backgroundColor": {
                             "rgba": [0, 0, 0, 50]
                         }

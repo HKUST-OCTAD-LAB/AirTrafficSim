@@ -28,10 +28,11 @@ class Flight_phase(IntEnum):
 
 
 class Configuration(IntEnum):
-    CLEAN = 1,
-    TAKEOFF = 2,
-    APPROACH = 3,
-    LANDING = 4
+    TAKEOFF = 1,
+    INITIAL_CLIMB = 2,
+    CLEAN = 3,
+    APPROACH = 4,
+    LANDING = 5
 
 
 class Speed_mode(IntEnum):

@@ -1,6 +1,6 @@
 import React, { useState, useRef,} from "react";
 import { IonContent, IonPage, IonTitle, IonToolbar, IonRange, IonIcon, IonButtons, IonButton, IonProgressBar, IonLabel, IonItem, IonSelect, IonSelectOption, IonGrid, IonCol, IonRow, IonFooter, IonChip, IonModal, IonToggle, IonList, useIonViewDidEnter, IonHeader, IonSegment, IonSegmentButton, IonLoading, IonToast } from '@ionic/react';
-import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource, HeadingPitchRange} from "cesium";
+import { Ion, IonResource, createWorldTerrain, Viewer as CesiumViewer, createWorldImagery, OpenStreetMapImageryProvider, Color, JulianDate, CzmlDataSource as cesiumCzmlDataSource, HeadingPitchRange, WebMapServiceImageryProvider, MapboxStyleImageryProvider, Cesium3DTileStyle} from "cesium";
 import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer, Clock, Camera } from "resium";
 import Plotly from "plotly.js-gl2d-dist-min";
 import createPlotlyComponent from "react-plotly.js/factory";
@@ -18,13 +18,35 @@ const Plot = createPlotlyComponent(Plotly);
 
 Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
-const url = IonResource.fromAssetId(96188);
+const osmBuilding = IonResource.fromAssetId(96188);
+const osmBuildingstyle = new Cesium3DTileStyle({
+    color : 'color("grey")'
+});
 const bingImagery = createWorldImagery();
 const simpleImagery = new OpenStreetMapImageryProvider({url: 'https://stamen-tiles.a.ssl.fastly.net/toner-background/' });
+const mapboxImagery = new MapboxStyleImageryProvider({
+    styleId: 'dark-v10',
+    accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN!
+});
+
 const replayDataSource = new cesiumCzmlDataSource();
 const simulationDataSource = new cesiumCzmlDataSource();
 const navDataSource = new cesiumCzmlDataSource();
-const defaultZoom = new HeadingPitchRange(0,-90,500000)
+const era5WindDataSource = new cesiumCzmlDataSource();
+const era5RainDataSource = new cesiumCzmlDataSource();
+const radarImageDataSource = new cesiumCzmlDataSource();
+
+const defaultZoom = new HeadingPitchRange(0,-90,500000);
+const nexrad = new WebMapServiceImageryProvider({
+    url:
+      "https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?",
+    layers: "nexrad-n0r",
+    credit: "Radar data courtesy Iowa Environmental Mesonet",
+    parameters: {
+      transparent: "true",
+      format: "image/png",
+    },
+  })
 
 
 const Simulation: React.FC = () => {
@@ -35,7 +57,6 @@ const Simulation: React.FC = () => {
     const [clockMultiplier, setClockMultiplier] = useState(1);
     const [startTime, setStartTime] = useState<any>();
     const [endTime, setEndTime] = useState(100);
-
     const [julianDate, setJulianDate] = useState('');
     const [clockTime, setClockTime] = useState(0);
     const [changeTime, setChangeTime] = useState(false);
@@ -44,6 +65,9 @@ const Simulation: React.FC = () => {
     const [mode, setMode] = useState('');
     const [connected, setConnected] = useState(false);    
     const [stateliteMode, setStateliteMode] = useState(false);
+    const [era5Wind, setEra5Wind] = useState(false);
+    const [era5Rain, setEra5Rain] = useState(false);
+    const [radar, setRadar] = useState(false);
     const [progressBar, setProgressBar] = useState(0);
     const [graphType, setGraphType] = useState<string>('None');
     const [graphHeader, setGraphHeader] = useState(['None']);
@@ -67,6 +91,9 @@ const Simulation: React.FC = () => {
             viewer.dataSources.add(replayDataSource);
             viewer.dataSources.add(simulationDataSource);
             viewer.dataSources.add(navDataSource);
+            viewer.dataSources.add(era5WindDataSource);
+            viewer.dataSources.add(era5RainDataSource);
+            viewer.dataSources.add(radarImageDataSource);
             setStartTime(viewer.clock.startTime)
         }
 
@@ -162,13 +189,13 @@ const Simulation: React.FC = () => {
     }
 
     function getNav(selected :boolean, value: boolean){
-        let getNav = false
+        let get = false
         if (selected){
-            getNav = value
+            get = value
         } else {
-            getNav = showNavigationData
+            get = showNavigationData
         }
-        if (getNav && viewerRef.current?.cesiumElement) {
+        if (get && viewerRef.current?.cesiumElement) {
             const viewer = viewerRef.current.cesiumElement;
             var currentMagnitude = viewer.camera.getMagnitude();
             // console.log('current magnitude - ', currentMagnitude);
@@ -178,7 +205,7 @@ const Simulation: React.FC = () => {
             // console.log("camera rectangle", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180);
             if(currentMagnitude < 6800000){
                 socket.emit("getNav", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, (res :any) => {
-                    navDataSource.load(res)
+                    navDataSource.load(res);
                 });
             } else {
                 navDataSource.entities.removeAll();
@@ -188,14 +215,91 @@ const Simulation: React.FC = () => {
         }
     }
 
+    function getEra5Wind(selected :boolean, value: boolean){
+        let get = false
+        if (selected){
+            get = value
+        } else {
+            get = era5Wind
+        }
+        if (get && viewerRef.current?.cesiumElement){
+            const viewer = viewerRef.current.cesiumElement;
+            var currentMagnitude = viewer.camera.getMagnitude();
+            // console.log('current magnitude - ', currentMagnitude);
+            // var direction = viewer.camera.direction;
+            // console.log("camera direction", direction.x, direction.y, direction.z);
+            var rectangle = viewer.camera.computeViewRectangle();
+            if(currentMagnitude < 10000000){
+                socket.emit("getEra5Wind", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, (res :any) => {
+                    era5WindDataSource.process(res);
+                });
+            } else {
+                era5WindDataSource.entities.removeAll();
+            }
+        } else {
+            era5WindDataSource.entities.removeAll();
+        }
+    }
+
+    function getEra5Rain(selected :boolean, value: boolean){
+        let get = false
+        if (selected){
+            get = value
+        } else {
+            get = era5Rain
+        }
+        if (get && viewerRef.current?.cesiumElement){
+            const viewer = viewerRef.current.cesiumElement;
+            var currentMagnitude = viewer.camera.getMagnitude();
+            // console.log('current magnitude - ', currentMagnitude);
+            // var direction = viewer.camera.direction;
+            // console.log("camera direction", direction.x, direction.y, direction.z);
+            var rectangle = viewer.camera.computeViewRectangle();
+            if(currentMagnitude < 40000000){
+                socket.emit("getEra5Rain", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, (res :any) => {
+                    era5RainDataSource.process(res);
+                });
+            } else {
+                era5RainDataSource.entities.removeAll();
+            }
+        } else {
+            era5RainDataSource.entities.removeAll();
+        }
+    }
+
+    function getRadarImg(selected :boolean, value: boolean){
+        let get = false
+        if (selected){
+            get = value
+        } else {
+            get = radar
+        }
+        if (get && viewerRef.current?.cesiumElement){
+            const viewer = viewerRef.current.cesiumElement;
+            var currentMagnitude = viewer.camera.getMagnitude();
+            // console.log('current magnitude - ', currentMagnitude);
+            // var direction = viewer.camera.direction;
+            // console.log("camera direction", direction.x, direction.y, direction.z);
+            var rectangle = viewer.camera.computeViewRectangle();
+            socket.emit("getRadarImage", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, (res :any) => {
+                console.log(res);
+                radarImageDataSource.process(res);
+            });
+        } else {
+            radarImageDataSource.entities.removeAll();
+        }
+    }
+
     return (
         <IonPage>
             <IonContent scrollY={false}>
                 <Viewer ref={viewerRef} style={{height:"100%"}} animation={false} timeline={false} selectionIndicator={false} imageryProvider={false} homeButton={false} baseLayerPicker={false} sceneModePicker={false} fullscreenButton={false} navigationHelpButton={false} geocoder={false} >
                     <Scene debugShowFramesPerSecond={true}/>
-                    {Ion.defaultAccessToken? <Globe baseColor={Color.fromCssColorString('#000000')} terrainProvider={terrainProvider}/> : <Globe baseColor={Color.fromCssColorString('#000000')} />}
-                    {stateliteMode ? <ImageryLayer imageryProvider={bingImagery}/> : <ImageryLayer imageryProvider={simpleImagery} alpha={0.2} contrast={-1}/>}
-                    {Ion.defaultAccessToken && <Cesium3DTileset url={url}/>}
+                    <Globe baseColor={Color.fromCssColorString('#000000')} terrainProvider={Ion.defaultAccessToken ? terrainProvider : undefined} showGroundAtmosphere={false}/>
+                    <ImageryLayer imageryProvider={bingImagery}  show={stateliteMode}/>
+                    {process.env.REACT_APP_MAPBOX_ACCESS_TOKEN ? <ImageryLayer imageryProvider={mapboxImagery} show={!stateliteMode}/> : <ImageryLayer imageryProvider={simpleImagery} alpha={0.3} contrast={-1} show={!stateliteMode}/>}
+                    {/* <ImageryLayer imageryProvider={nexrad}/> */}
+                    {Ion.defaultAccessToken && <Cesium3DTileset url={osmBuilding} style={osmBuildingstyle}/>}
                     <Clock 
                         shouldAnimate={clockDirection !== 0 ? true : false} 
                         multiplier={clockMultiplier * clockDirection}
@@ -205,7 +309,7 @@ const Simulation: React.FC = () => {
                             setJulianDate(JulianDate.toIso8601(clock.currentTime, 0).replace("T", "\n"));
                         }} 
                     />
-                    <Camera onMoveEnd={() => {getNav(false, false)}}/>
+                    <Camera onMoveEnd={() => {getNav(false, false); getEra5Wind(false, false); getEra5Rain(false, false);}}/>
                 </Viewer>
             </IonContent>
             
@@ -300,6 +404,18 @@ const Simulation: React.FC = () => {
                                         <IonItem>
                                             <IonToggle color="medium" checked={showNavigationData} onIonChange={(e) => {setShowNavigationData(e.detail.checked); getNav(true, e.detail.checked);}}/>
                                             <IonLabel>Navigation Data</IonLabel>
+                                        </IonItem>
+                                        <IonItem>
+                                            <IonToggle color="medium" disabled={mode === ''} checked={era5Wind} onIonChange={(e) => {setEra5Wind(e.detail.checked); getEra5Wind(true, e.detail.checked)}}/>
+                                            <IonLabel>ERA5 Wind</IonLabel>
+                                        </IonItem>
+                                        <IonItem>
+                                            <IonToggle color="medium" disabled={mode === ''} checked={era5Rain} onIonChange={(e) => {setEra5Rain(e.detail.checked); getEra5Rain(true, e.detail.checked)}}/>
+                                            <IonLabel>ERA5 Rain</IonLabel>
+                                        </IonItem>
+                                        <IonItem>
+                                            <IonToggle color="medium" disabled={mode === ''} checked={radar} onIonChange={(e) => {setRadar(e.detail.checked); getRadarImg(true, e.detail.checked)}}/>
+                                            <IonLabel>Radar Image</IonLabel>
                                         </IonItem>
                                     </IonContent>
                                 </IonModal>

@@ -27,6 +27,7 @@ Conda environment is suggested for the installation of AirTrafficSim. All depend
   - Flask-SocketIO
   - Eventlet
   - cdsapi [installation guide](https://cds.climate.copernicus.eu/api-how-to)
+  - eccodes
 
 ### Install from Github
 
@@ -34,7 +35,8 @@ Conda environment is suggested for the installation of AirTrafficSim. All depend
 conda create -n AirTrafficSim python
 conda activate AirTrafficSim
 conda install numpy pandas
-pip install Flask flask-socketio eventlet
+conda install -c conda-forge eccodes
+pip install Flask flask-socketio eventlet pygrib
 git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
 ```
 
