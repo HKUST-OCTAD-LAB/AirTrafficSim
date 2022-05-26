@@ -13,7 +13,7 @@ class Nav:
     # https://developer.x-plane.com/docs/data-development-documentation/
     # https://developer.x-plane.com/article/navdata-in-x-plane-11/
     #         
-    if len(os.listdir('data/nav/xplane/')) <= 1:
+    if len(os.listdir(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/'))) <= 1:
             print("Unzipping X-plane navigation data.")
             ZipFile('data/nav/xplane_default_data.zip').extractall('data/nav/xplane/')
 

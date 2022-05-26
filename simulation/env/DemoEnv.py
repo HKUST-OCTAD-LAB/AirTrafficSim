@@ -19,7 +19,7 @@ class DemoEnv(Environment):
 
         # Add aircraft
         self.aircraft_head = Aircraft(self.traffic, call_sign="HEAD", aircraft_type="A20N", flight_phase=Flight_phase.CRUISE, configuration=Configuration.CLEAN,
-                                                    lat=22.387778, long=113.428116, alt=20000.0, heading=175.0, cas=250.0, fuel_weight=10000.0, payload_weight=12000.0, 
+                                                    lat=22.019213, long=113.539164, alt=20000.0, heading=175.0, cas=250.0, fuel_weight=10000.0, payload_weight=12000.0, 
                                                     flight_plan=["SIERA", "CANTO", "MURRY", "SILVA", "LIMES"])
         self.aircraft_fol = Aircraft(self.traffic, call_sign="FOLLOW", aircraft_type="A20N", flight_phase=Flight_phase.CRUISE, configuration=Configuration.CLEAN,
                                                     lat=21.9, long=113.5, alt=20000.0, heading=175.0, cas=310.0, fuel_weight=10000.0, payload_weight=12000.0)

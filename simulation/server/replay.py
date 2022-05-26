@@ -1,11 +1,8 @@
-from locale import D_FMT
 from pathlib import Path
 import csv
-from time import time
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from itertools import cycle
 
 class Replay:
     @staticmethod
@@ -37,15 +34,35 @@ class Replay:
                 file_content = pd.read_csv(file)
                 
                 if replayCategory == 'historic':
-                    start = datetime.utcfromtimestamp(file_content.iloc[0]['timestamp'])
-                    end = datetime.utcfromtimestamp(file_content.iloc[-1]['timestamp'])
+                    # start = datetime.utcfromtimestamp(file_content.iloc[0]['timestamp'])
+                    # end = datetime.utcfromtimestamp(file_content.iloc[-1]['timestamp'])
 
                     id = file.name
-                    positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.utcfromtimestamp(x).isoformat()), 
-                                            file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
-                    label = [{"interval": datetime.utcfromtimestamp(time).isoformat()+"/"+end.isoformat(), 
-                            "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
-                            for time, alt, gspeed in zip(file_content['timestamp'], file_content['alt'], file_content['gspeed'])]
+                    if ('timestamp' and 'long' and 'lat' and 'alt' and 'gspeed') in file_content:
+                        # FR24
+                        start = datetime.utcfromtimestamp(file_content.iloc[0]['timestamp'])
+                        end = datetime.utcfromtimestamp(file_content.iloc[-1]['timestamp'])
+                        positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.utcfromtimestamp(x).isoformat()), 
+                                                file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
+                        label = [{"interval": datetime.utcfromtimestamp(time).isoformat()+"/"+end.isoformat(), 
+                                "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
+                                for time, alt, gspeed in zip(file_content['timestamp'], file_content['alt'], file_content['gspeed'])]
+
+                    elif ('timestamp' and 'longitude' and 'latitude' and 'altitude' and 'groundspeed') in file_content:
+                        # Opensky
+                        start = datetime.fromisoformat(file_content.iloc[0]['timestamp'])
+                        end = datetime.fromisoformat(file_content.iloc[-1]['timestamp'])
+                        positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.fromisoformat(x).isoformat()), 
+                                                file_content['longitude'].values, file_content['latitude'].values, file_content['altitude'].values/3.2808))[::10].flatten().tolist()
+                        label = [{"interval": datetime.fromisoformat(time).isoformat()+"/"+end.isoformat(), 
+                                "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
+                                for time, alt, gspeed in zip(file_content['timestamp'], file_content['altitude'], file_content['groundspeed'])][0::10]
+
+                    # positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.utcfromtimestamp(x).isoformat()), 
+                    #                         file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
+                    # label = [{"interval": datetime.utcfromtimestamp(time).isoformat()+"/"+end.isoformat(), 
+                    #         "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
+                    #         for time, alt, gspeed in zip(file_content['timestamp'], file_content['alt'], file_content['gspeed'])]
                 
                 elif replayCategory == 'simulation':
                     start = datetime.fromisoformat(file_content.iloc[0]['timestamp'])

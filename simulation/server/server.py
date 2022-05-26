@@ -10,7 +10,7 @@ from server.data import Data
 # eventlet.monkey_patch()
 
 app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath('client/build'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('client/build')))
-socketio = SocketIO(app, cors_allowed_origins='*', async_mode='eventlet', logger=True) #engineio_logger=True 
+socketio = SocketIO(app, cors_allowed_origins='*', max_http_buffer_size=1e8, ping_timeout=60, async_mode='eventlet', logger=True) #engineio_logger=True 
 
 @socketio.on('connect')
 def test_connect():
