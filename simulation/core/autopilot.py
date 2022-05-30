@@ -54,15 +54,15 @@ class Autopilot:
         # Flight plan
         self.flight_plan_index = np.zeros([N], dtype=int)                  
         """Index of next waypoint in flight plan array [int]"""
-        self.flight_plan_name = [[""] for _ in range(N)]          
+        self.flight_plan_name = [[] for _ in range(N)]          
         """2D array to store the string of waypoints [[string]]"""
-        self.flight_plan_lat = [[0.0] for _ in range(N)]           
+        self.flight_plan_lat = [[] for _ in range(N)]           
         """2D array to store the latitude of waypoints [[deg...]]"""
-        self.flight_plan_long = [[0.0] for _ in range(N)]          
+        self.flight_plan_long = [[] for _ in range(N)]          
         """2D array to store the longitude of waypoints [[deg...]]"""
-        self.flight_plan_target_alt = [[0.0] for _ in range(N)]   
+        self.flight_plan_target_alt = [[] for _ in range(N)]   
         """2D array of target altitude at each waypoint [[ft...]]"""
-        self.flight_plan_target_speed = [[0.0] for _ in range(N)]   
+        self.flight_plan_target_speed = [[] for _ in range(N)]   
         """2D array of target speed at each waypoint [[cas/mach...]]"""
         self.procedure_speed = np.zeros([N])
         """Procedural target speed from BADA"""
@@ -83,7 +83,7 @@ class Autopilot:
         # self.nav = Nav()
 
 
-    def add_aircraft(self, n, lat, long, alt, heading, cas, departure_runway, arrival_runway, flight_plan, target_speed, target_alt):
+    def add_aircraft(self, n, lat, long, alt, heading, cas, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt):
         """
         Add aircraft and init flight plan
 
@@ -114,26 +114,75 @@ class Autopilot:
         self.lateral_mode[n] = AP_lateral_mode.HEADING
 
         if not flight_plan == []:
-            self.flight_plan_name[n] = flight_plan
-            self.flight_plan_target_alt[n] = target_alt
-            self.flight_plan_target_speed[n] = target_speed
-            for i, val in enumerate(flight_plan):
+            # Add SID to flight plan
+            if not sid == "":
+                waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(departure_airport, departure_runway, sid)
+                # TODO: Ignored alt restriction 2, alt restriction type, and speed restriction type
+                self.flight_plan_name[n].extend(waypoint)
+                self.flight_plan_target_alt[n].extend(alt_restriction_1)
+                self.flight_plan_target_speed[n].extend(speed_restriction)
+
+            # Add enroute flight plan
+            self.flight_plan_name[n].extend(flight_plan)
+            self.flight_plan_target_alt[n].extend([cruise_alt for _ in flight_plan])
+            self.flight_plan_target_speed[n].extend([-1 for _ in flight_plan])
+
+            # Add STAR to flight plan
+            if not star == "":
+                waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, star)
+                self.flight_plan_name[n].extend(waypoint)
+                self.flight_plan_target_alt[n].extend(alt_restriction_1)
+                self.flight_plan_target_speed[n].extend(speed_restriction)
+
+            if not approach == "":
+                # Add Initial Approach to flight plan
+                waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, approach, appch="A", iaf=self.flight_plan_name[n][-1])
+                # Remove last element of flight plan which should be equal to iaf
+                self.flight_plan_name[n].pop()
+                self.flight_plan_target_alt[n].pop()
+                self.flight_plan_target_speed[n].pop()
+                # Add Initial Approach flight plan 
+                self.flight_plan_name[n].extend(waypoint)
+                self.flight_plan_target_alt[n].extend(alt_restriction_1)
+                self.flight_plan_target_speed[n].extend(speed_restriction)
+
+                # Add Final Approach to flight plan
+                waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, approach, appch="I")
+                # Remove last element of flight plan which should be equal to iaf
+                self.flight_plan_name[n].pop()
+                self.flight_plan_target_alt[n].pop()
+                self.flight_plan_target_speed[n].pop()
+                # Add Final Approach flight plan with missed approach removed)
+                waypoint_idx = waypoint.index(' ')
+                self.flight_plan_name[n].extend(waypoint[:waypoint_idx])
+                self.flight_plan_target_alt[n].extend(alt_restriction_1[:waypoint_idx])
+                self.flight_plan_target_speed[n].extend(speed_restriction[:waypoint_idx])
+                # TODO: For missed approach procedure [waypoint_idx+1:]
+
+            # Get Lat Long of flight plan waypoints
+            for i, val in enumerate(self.flight_plan_name[n]):
                 if i == 0:
                     lat_tmp, long_tmp = Nav.get_fix_coordinate(val, lat, long)
-                    self.flight_plan_lat[n][0] = lat_tmp
-                    self.flight_plan_long[n][0] = long_tmp
+                    self.flight_plan_lat[n].append(lat_tmp)
+                    self.flight_plan_long[n].append(long_tmp)
                 else:
                     lat_tmp, long_tmp = Nav.get_fix_coordinate(val, self.flight_plan_lat[n][i-1], self.flight_plan_long[n][i-1])
                     self.flight_plan_lat[n].append(lat_tmp)
                     self.flight_plan_long[n].append(long_tmp)
-            if arrival_runway:
-                self.flight_plan_name[n].append(arrival_runway[0])
-                self.flight_plan_lat[n].append(arrival_runway[1])
-                self.flight_plan_long[n].append(arrival_runway[2])
-                self.flight_plan_target_alt[n].append(0.0)
-                self.flight_plan_target_speed[n].append(0.0)
 
-            
+            # TODO: Add runway lat long alt
+
+
+            # Populate alt and speed target from last waypoint
+            self.flight_plan_target_alt[n][-1] = 0.0
+            for i, val in reversed(list(enumerate(self.flight_plan_target_alt[n]))):
+                if val == -1:
+                    self.flight_plan_target_alt[n][i] = self.flight_plan_target_alt[n][i+1]
+
+            # for i, val in reversed(list(enumerate(self.flight_plan_target_speed[n]))):
+            #     if val == -1:
+            #         self.flight_plan_target_speed[n][i] = self.flight_plan_target_speed[n][i+1]
+
             self.lateral_mode[n] = AP_lateral_mode.LNAV
 
 
@@ -172,6 +221,8 @@ class Autopilot:
         # Procedural speed. Follow procedural speed by default.
         # After transitions altitude, constant mach 
         self.procedure_speed = traffic.perf.get_procedure_speed(traffic.alt, traffic.trans_alt, traffic.configuration)
+        # TODO: Check procedure speed with SID STAR limitation
+
         self.cas = np.where(self.procedure_speed >= 5.0, self.procedure_speed, self.cas)      #TODO: Add speed mode atc
         self.mach = np.where(self.procedure_speed < 5.0, self.procedure_speed, self.mach)      #TODO: Add speed mode atc
 

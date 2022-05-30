@@ -7,12 +7,12 @@ class Aircraft:
     Aircraft class to represent the states of one individual aircraft, including get and set functions.
     """
 
-    def __init__(self, traffic:Traffic, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, cruise_alt=0.0, departure_runway=[], arrival_runway=[], flight_plan=[], target_speed=[], target_alt=[]):
+    def __init__(self, traffic:Traffic, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_airport="", departure_runway="", sid="", arrival_airport="", arrival_runway="", star="", approach="", flight_plan=[], cruise_alt=0):
         """
         Initialize one aircraft and add the aircraft to traffic array.
         """
         self.traffic = traffic          # Pass traffic array reference
-        self.index = self.traffic.add_aircraft(call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, cruise_alt, departure_runway, arrival_runway, flight_plan, target_speed, target_alt)        # Add aircraft. Obtain aircraft index
+        self.index = self.traffic.add_aircraft(call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt)        # Add aircraft. Obtain aircraft index
 
 
     def set_heading(self, heading):

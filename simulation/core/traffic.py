@@ -105,7 +105,7 @@ class Traffic:
         """Weather class"""
 
     
-    def add_aircraft(self, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, cruise_alt, departure_runway, arrival_runway, flight_plan, target_speed, target_alt):
+    def add_aircraft(self, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt):
         """
         Add an aircraft to traffic array.
 
@@ -133,7 +133,7 @@ class Traffic:
         # Add aircraft in performance, weather, and autopilot array
         self.perf.add_aircraft(n, aircraft_type)
         self.weather.add_aircraft(n, alt, self.perf)
-        self.ap.add_aircraft(n, lat, long, alt, heading, cas, departure_runway, arrival_runway, flight_plan, target_speed, target_alt)
+        self.ap.add_aircraft(n, lat, long, alt, heading, cas, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt)
 
         # Initialize variables
         self.call_sign[n] = call_sign

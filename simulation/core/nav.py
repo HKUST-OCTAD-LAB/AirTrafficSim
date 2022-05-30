@@ -95,50 +95,99 @@ class Nav:
 
 
     @staticmethod
-    def get_procedure(ICAO, procedure, runway=""):
+    def get_procedure(airport, runway, procedure, appch="", iaf=""):
         """
         Get standard procedure
 
         Parameters
         ----------
-        ICAO : string
+        airport : string
             ICAO code of the airport
+
+        runway: string
+            Runway name (RW07L) fpr SID/STAR.
 
         procedure : string
             Procedure name of SID/STAR/APPCH (XXXX7A)
             For Approach: ILS = I07C, Localliser = L25L, RNAV = R25LY/Z
 
-        runway: string
-            Runway name (RW07L) fpr SID/STAR. For APPCH, leave this parameter empty.
+        appch : string
+            Approach procedure type (A = initial approach, I = ILS, "" = None)
+
+        iaf : string
+            Initial approach fix (Please provide when appch = A)
 
         Return
         ------
         Waypoint names : string []
             Waypoint names array
 
-        Altitude restriction : float []
-            Altitude restriction
-
         Altitude restriction type : float []
             Altitude restriction type (+, =, -)
 
-        Speed restriction : float []
-            Speed restriction
+        Altitude restriction : float []
+            Altitude restriction 1 
+
+        Altitude restriction : float []
+            Altitude restriction 2
 
         Speed restriction type : float []
             Speed restriction type (+, =, -)
 
+        Speed restriction : float []
+            Speed restriction
+
         Note
         ----
-            Terminal procedures (SID/STAR/Approach/Runway) https://developer.x-plane.com/wp-content/uploads/2019/01/XP-CIFP1101-Spec.pdf
+            Terminal procedures (SID/STAR/Approach/Runway) https://developer.x-plane.com/wp-content/uploads/2019/01/XP-CIFP1101-Spec.pd f
+            https://wiki.flightgear.org/User:Www2/XP11_Data_Specification
         """ 
-        procedures = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/CIFP/'+ICAO+'.dat'), header=None)
-        if runway == "" :
-            # APPCH
-            return procedures[(procedures[2] == procedure) & (procedures[3] == runway)][4].values
-        else:
+        procedures = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/CIFP/'+airport+'.dat'), header=None)
+
+        if appch == "":
             # SID/STAR
-            return procedures[procedures[2] == procedure][4].values
+            procedure_df = procedures[(procedures[2] == procedure) & (procedures[3] == runway)]
+            if procedure_df.empty:
+                procedure_df = procedures[procedures[2] == procedure]
+        elif appch == "A":
+            # Initial Approach
+            procedure_df = procedures[(procedures[1] == appch) & (procedures[2] == procedure) & (procedure[3] == iaf)]
+        elif appch == "I":
+            # Final Approach
+            procedure_df = procedures[(procedures[1] == appch) & (procedures[2] == procedure)]
+            
+            
+        alt_restriction_1 = []
+        alt_restriction_2 = []
+        speed_restriction = []
+
+        for val in procedure_df[23].values:
+            if "FL" in val:
+                alt_restriction_1.append(float(val.replace("FL", ""))*100.0)
+            else:
+                if val == "     ":
+                    alt_restriction_1.append(-1)
+                else:
+                    alt_restriction_1.append(float(val))
+        
+        for val in procedure_df[24].values:
+            if "FL" in val:
+                alt_restriction_2.append(float(val.replace("FL", ""))*100.0)
+            else:
+                if val == "     ":
+                    alt_restriction_2.append(-1)
+                else:
+                    alt_restriction_2.append(float(val))
+        
+        for val in procedure_df[27].values:
+                if val == "   ":
+                    speed_restriction.append(-1)
+                else:
+                    speed_restriction.append(float(val))
+
+
+        return procedure_df[4].values.tolist(), procedure_df[22].values.tolist(), alt_restriction_1, alt_restriction_2, procedure_df[26].values.tolist(), speed_restriction
+
         
         
 
