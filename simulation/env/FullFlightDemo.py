@@ -4,6 +4,7 @@ import numpy as np
 
 from core.environment import Environment
 from core.aircraft import Aircraft
+from core.nav import Nav
 from utils.enums import Configuration, Flight_phase
 
 class FullFlightDemo(Environment):
@@ -19,8 +20,9 @@ class FullFlightDemo(Environment):
                         )
 
         # Add aircraft
+        lat_dep, long_dep, alt_dep = Nav.get_runway_coordinate("VHHH", "RW25L") #TODO: Convert MSL to Geopotential altitude
         self.aircraft_full = Aircraft(self.traffic, call_sign="FULL", aircraft_type="A320", flight_phase=Flight_phase.TAKEOFF, configuration=Configuration.TAKEOFF,
-                                                    lat=22.307500, long=113.932833, alt=0.0, heading=254.0, cas=149.0, 
+                                                    lat=lat_dep, long=long_dep, alt=alt_dep, heading=254.0, cas=149.0, 
                                                     fuel_weight=5273.0, payload_weight=12000.0,
                                                     departure_airport = "VHHH", departure_runway="RW25L", sid = "OCEA2B",
                                                     arrival_airport="RCTP", arrival_runway="RW05R", star = "TONG1A", approach = "I05R",
@@ -32,13 +34,13 @@ class FullFlightDemo(Environment):
                                                     # TODO: 0 cas
 
     def should_end(self):
-        if (self.global_time > 60 and  np.all((self.traffic.alt == 0))):
-            return True
-        else:
+        # if (self.global_time > 60 and  np.all((self.traffic.alt == 0))):
+        #     return True
+        # else:
             return False
         
 
     def atc_command(self):
         # User algorithm
-        print("Set ATC command")
+        pass
         

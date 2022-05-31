@@ -50,7 +50,8 @@ class Environment:
                         'mass', 'fuel_consumed', 
                         'thrust', 'drag', 'esf', 'accel',
                         'ap_track_angle', 'ap_heading', 'ap_alt', 'ap_cas', 'ap_mach', 'ap_procedural_speed', 
-                        'ap_next_wp', 'ap_dist_to_next_fix', 'flight_phase', 'configuration', 'speed_mode', 'vertical_mode','ap_speed_mode', 'ap_lateral_mode']
+                        'ap_wp_index', 'ap_next_wp', 'ap_dist_to_next_fix', 
+                        'flight_phase', 'configuration', 'speed_mode', 'vertical_mode','ap_speed_mode', 'ap_lateral_mode']
         self.writer.writerow(self.header)
         self.header.remove('timestep')
         self.header.remove('timestamp')
@@ -76,21 +77,18 @@ class Environment:
             # Check if the simulation should end
             if self.should_end():
                 self.end_time = self.global_time
+                break
 
             start_time = time.time()
-            print("")
-            print("Environment - step(), time = ", self.global_time)
-            print("")
 
             # Run atc command
             self.atc_command()
-
-            print("update states")
+            # Run update loop
             self.traffic.update(self.global_time)
-            print("Save to file")
+            # Save to file
             self.save()
 
-            print("Environment - step() finish at", time.time() - start_time)
+            print("Environment - step() for global time", self.global_time, "/", self.end_time, "finished at", time.time() - start_time, "seconds")
             
             if(socketio != None):
                 # Save to buffer
@@ -134,7 +132,7 @@ class Environment:
                                 self.traffic.mass[:self.traffic.n], self.traffic.fuel_consumed[:self.traffic.n],
                                 self.traffic.perf.thrust[:self.traffic.n], self.traffic.perf.drag[:self.traffic.n], self.traffic.perf.esf[:self.traffic.n], self.traffic.accel[:self.traffic.n],
                                 self.traffic.ap.track_angle[:self.traffic.n], self.traffic.ap.heading[:self.traffic.n], self.traffic.ap.alt[:self.traffic.n], self.traffic.ap.cas[:self.traffic.n], self.traffic.ap.mach[:self.traffic.n], self.traffic.ap.procedure_speed [:self.traffic.n],
-                                [self.traffic.ap.flight_plan_name[i][val] for i, val in enumerate(self.traffic.ap.flight_plan_index[:self.traffic.n])], self.traffic.ap.dist[:self.traffic.n],                  # autopilot variable
+                                self.traffic.ap.flight_plan_index[:self.traffic.n], [self.traffic.ap.flight_plan_name[i][val] if (val < len(self.traffic.ap.flight_plan_name[i])) else "NONE" for i, val in enumerate(self.traffic.ap.flight_plan_index[:self.traffic.n])], self.traffic.ap.dist[:self.traffic.n],                  # autopilot variable
                                 [Flight_phase(i).name for i in self.traffic.flight_phase[:self.traffic.n]], [Configuration(i).name for i in self.traffic.configuration[:self.traffic.n]], [Speed_mode(i).name for i in self.traffic.speed_mode[:self.traffic.n]], [Vertical_mode(i).name for i in self.traffic.vertical_mode[:self.traffic.n]], 
                                 [AP_speed_mode(i).name for i in self.traffic.ap.speed_mode[:self.traffic.n]], [AP_lateral_mode(i).name for i in self.traffic.ap.lateral_mode[:self.traffic.n]])) # mode
         

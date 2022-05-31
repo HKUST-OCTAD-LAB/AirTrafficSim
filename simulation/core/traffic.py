@@ -205,8 +205,6 @@ class Traffic:
         ----
         """
 
-        print("Traffic.py - update()")
-
         # Update atmosphere
         self.weather.update(self.lat, self.long, self.alt, self.perf, global_time)
 

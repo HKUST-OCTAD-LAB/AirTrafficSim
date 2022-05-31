@@ -1,5 +1,6 @@
 """Navigation database"""
 import os
+import csv
 from zipfile import ZipFile
 from pathlib import Path
 import numpy as np
@@ -14,16 +15,43 @@ class Nav:
     # https://developer.x-plane.com/article/navdata-in-x-plane-11/
     #         
     if len(os.listdir(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/'))) <= 1:
-            print("Unzipping X-plane navigation data.")
-            ZipFile('data/nav/xplane_default_data.zip').extractall('data/nav/xplane/')
+        print("Unzipping X-plane navigation data.")
+        ZipFile('data/nav/xplane_default_data.zip').extractall('data/nav/xplane/')
 
-            print("Unpacking airport data (apt.dat). This will take a while...")
-            airports = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/apt.dat'), delimiter='\s+', skiprows=3, header=None, names=np.arange(0,88), low_memory=False)
-            airports = np.split(airports, np.where(airports[0] == 1)[0])[1:]
-            Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports').mkdir(parents=True, exist_ok=True)
-            for airport in airports:  
-                airport.to_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports', airport.iloc[0,4]+'.csv'))
-            del airports
+        print("Unpacking airport data (apt.dat). This will take a while...")
+        airports = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/apt.dat'), delimiter='\s+', skiprows=3, header=None, names=np.arange(0,88), low_memory=False)
+        airports = np.split(airports, np.where((airports[0] == 1) | (airports[0] == 16) | (airports[0] == 17))[0])[1:]
+        Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports').mkdir(parents=True, exist_ok=True)
+        writer = csv.writer(open(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports.csv'), 'w'))
+        for airport in airports:  
+            icao = airport.iloc[0,4]
+            alt = airport.iloc[0,1]
+            airport.to_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports', icao+'.csv'))
+            # Land runway
+            if 100 in airport[0].values:
+                tmp = airport[airport[0] == 100].iloc[:, 8:]
+                runway = []
+                for i, val in tmp.iterrows():
+                    runway.append(val[pd.isna(val) == False].values.reshape((-1,9))[:,:3])
+                runway = np.concatenate((runway), axis=0)
+            # Water runway
+            elif 101 in airport[0].values:
+                tmp = airport[airport[0] == 101].iloc[:, 3:]
+                runway = []
+                for i, val in tmp.iterrows():
+                    runway.append(val[pd.isna(val) == False].values.reshape((-1,3)))
+                runway = np.concatenate((runway), axis=0)
+            # Helipad
+            elif 102 in airport[0].values:
+                runway = airport[airport[0] == 102].iloc[:, 1:4].values
+
+            # Write to airport.csv
+            if runway.ndim > 1:
+                writer.writerows(np.column_stack((np.full(runway.shape[0], icao), runway, np.full(runway.shape[0], alt))))
+            else:
+                writer.writerow(np.append(icao, runway, alt))
+        
+        del airports
 
     print("Reading NAV data...")
     
@@ -39,12 +67,8 @@ class Nav:
     # """Minimum off route grid altitudes https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MORA1150-Spec.pdf"""
     # min_sector_alt = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_msa.dat'), delimiter='\s+', skiprows=3, header=None, names=np.arange(0,23))
     # """Minimum sector altitudes for navaids, fixes, airports and runway threshold https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MSA1150-Spec.pdf"""
-    
-    # airports = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/apt.dat'), delimiter='\s+', skiprows=3, header=None, names=np.arange(0,88), low_memory=False)
-    """Airports data https://developer.x-plane.com/article/airport-data-apt-dat-file-format-specification/"""
-    # /home/kyfrankie/AirTrafficSim/data/nav/xplane/apt.dat
-    # airports = pd.read_csv('/home/kyfrankie/AirTrafficSim/data/nav/xplane/apt.dat', delimiter='\s+', skiprows=3, header=None, names=np.arange(0,88), low_memory=False)
-    # airports = np.split(airports, np.where(airports[0] == 1)[0])
+    airports = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports.csv'), header=None)
+    """Airports data (extracted to contain only runway coordinates) https://developer.x-plane.com/article/airport-data-apt-dat-file-format-specification/"""
 
     @staticmethod
     def get_fix_coordinate(fix_name, lat, long):
@@ -93,6 +117,28 @@ class Nav:
         """
         return Nav.fix[(Nav.fix.iloc[:,0].between(lat1, lat2)) & (Nav.fix.iloc[:,1].between(long1, long2))].iloc[:,0:3].values
 
+    
+    @staticmethod
+    def get_runway_coordinate(airport, runway):
+        """
+        Get runway coordinate
+
+        Parameters
+        ----------
+         airport : string
+            ICAO code of the airport
+
+        runway: string
+            Runway name (RW07L).
+
+        Returns
+        -------
+        (lat, Long, alt): (float, float, float)
+            Latitude, Longitude, and Altitude of the runway end
+        """
+        tmp = Nav.airports[(Nav.airports[0] == airport) & (Nav.airports[1] == runway.replace("RW", ""))]
+        return tmp.iloc[0,2], tmp.iloc[0,3], tmp.iloc[0,4]
+
 
     @staticmethod
     def get_procedure(airport, runway, procedure, appch="", iaf=""):
@@ -105,7 +151,7 @@ class Nav:
             ICAO code of the airport
 
         runway: string
-            Runway name (RW07L) fpr SID/STAR.
+            Runway name (RW07L) for SID/STAR.
 
         procedure : string
             Procedure name of SID/STAR/APPCH (XXXX7A)
@@ -151,7 +197,7 @@ class Nav:
                 procedure_df = procedures[procedures[2] == procedure]
         elif appch == "A":
             # Initial Approach
-            procedure_df = procedures[(procedures[1] == appch) & (procedures[2] == procedure) & (procedure[3] == iaf)]
+            procedure_df = procedures[(procedures[1] == appch) & (procedures[2] == procedure) & (procedures[3] == iaf)]
         elif appch == "I":
             # Final Approach
             procedure_df = procedures[(procedures[1] == appch) & (procedures[2] == procedure)]
@@ -188,7 +234,5 @@ class Nav:
 
         return procedure_df[4].values.tolist(), procedure_df[22].values.tolist(), alt_restriction_1, alt_restriction_2, procedure_df[26].values.tolist(), speed_restriction
 
-        
-        
 
  

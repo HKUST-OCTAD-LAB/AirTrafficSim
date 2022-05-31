@@ -171,7 +171,17 @@ class Autopilot:
                     self.flight_plan_long[n].append(long_tmp)
 
             # TODO: Add runway lat long alt
-
+            lat_tmp, long_tmp, alt_tmp = Nav.get_runway_coordinate(arrival_airport, arrival_runway)
+            if self.flight_plan_name[n][-1] == arrival_runway:
+                self.flight_plan_lat[n][-1] = lat_tmp
+                self.flight_plan_long[n][-1] = long_tmp
+                self.flight_plan_target_alt[n][-1] = alt_tmp
+            else:
+                self.flight_plan_lat[n].append(lat_tmp)
+                self.flight_plan_long[n].append(long_tmp)
+                self.flight_plan_target_alt[n].append(alt_tmp)
+                # self.flight_plan_target_speed[n]
+            
 
             # Populate alt and speed target from last waypoint
             self.flight_plan_target_alt[n][-1] = 0.0
@@ -201,11 +211,13 @@ class Autopilot:
                 # Target Flight Plan Lat/Long
                 self.lat[i] = self.flight_plan_lat[i][val]
                 self.long[i] = self.flight_plan_long[i][val]
-                if val < len(self.flight_plan_name[i]) - 1 :
+                if val == len(self.flight_plan_name[i]) - 1 :
+                    self.hv_next_wp[i] = False
+                else :
                     self.lat_next[i] = self.flight_plan_lat[i][val+1]
                     self.long_next[i] = self.flight_plan_long[i][val+1]
-                else :
-                    self.hv_next_wp[i] = False
+                    self.hv_next_wp[i] = True
+                    
                 # Target Flight Plan Altitude
                 if len(self.flight_plan_target_alt[i]) > 1:
                     self.alt[i] = self.flight_plan_target_alt[i][val]
@@ -255,6 +267,7 @@ class Autopilot:
         # Fly by turn
         turn_radius = traffic.perf.cal_turn_radius(traffic.perf.get_bank_angles(traffic.configuration), Unit_conversion.knots_to_mps(traffic.tas)) / 1000.0     #km
         next_track_angle = Calculation.cal_great_circle_bearing(self.lat, self.long, self.lat_next, self.long_next)     # Next track angle to next next waypoint
+        # next_track_angle = np.where(self.hv_next_wp, Calculation.cal_great_circle_bearing(self.lat, self.long, self.lat_next, self.long_next), self.track_angle)
         curr_track_angle = Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long) # Current track angle to next waypoint
         turn_dist = turn_radius * np.tan(np.deg2rad(np.abs(Calculation.cal_angle_diff(next_track_angle, curr_track_angle))/2.0))    # Distance to turn
 
