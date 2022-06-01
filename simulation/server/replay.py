@@ -52,11 +52,12 @@ class Replay:
                         # Opensky
                         start = datetime.fromisoformat(file_content.iloc[0]['timestamp'])
                         end = datetime.fromisoformat(file_content.iloc[-1]['timestamp'])
-                        positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.fromisoformat(x).isoformat()), 
-                                                file_content['longitude'].values, file_content['latitude'].values, file_content['altitude'].values/3.2808))[::10].flatten().tolist()
-                        label = [{"interval": datetime.fromisoformat(time).isoformat()+"/"+end.isoformat(), 
+                        positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.fromisoformat(x).isoformat(timespec='seconds')), 
+                                                file_content['longitude'].values, file_content['latitude'].values, file_content['altitude'].values/3.2808))[::60].flatten().tolist()
+                        label = [{"interval": datetime.fromisoformat(time).isoformat(timespec='seconds')+"/"+end.isoformat(timespec='seconds'), 
                                 "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
-                                for time, alt, gspeed in zip(file_content['timestamp'], file_content['altitude'], file_content['groundspeed'])][0::10]
+                                for time, alt, gspeed in zip(file_content['timestamp'], file_content['altitude'], file_content['groundspeed'])]
+                        label = label[0::60]
 
                     # positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.utcfromtimestamp(x).isoformat()), 
                     #                         file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
@@ -70,7 +71,7 @@ class Replay:
 
                     id = file_content.iloc[0]['callsign']
                     positions =  np.column_stack((file_content['timestamp'], file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
-                    label = [{"interval": time+"/"+end.isoformat(), 
+                    label = [{"interval": time+"/"+end.isoformat(timespec='seconds'), 
                             "string": id+"\n"+str(int(np.round(alt)))+"ft "+str(int(np.round(cas)))+"kt"} 
                             for time, alt, cas in zip(file_content['timestamp'], file_content['alt'], file_content['cas'])]
                 
@@ -88,7 +89,7 @@ class Replay:
 
                 trajectory = {
                     "id": id,
-                    "availability": start.isoformat()+"/"+ end.isoformat(),
+                    "availability": start.isoformat(timespec='seconds')+"/"+ end.isoformat(timespec='seconds'),
                     "position": {
                         "cartographicDegrees": positions
                     },
@@ -133,8 +134,8 @@ class Replay:
             "name": "Replay",
             "version": "1.0",
             "clock": {
-                "interval": start_time.isoformat()+"/"+ end_time.isoformat(),
-                "currentTime": start_time.isoformat(),
+                "interval": start_time.isoformat(timespec='seconds')+"/"+ end_time.isoformat(timespec='seconds'),
+                "currentTime": start_time.isoformat(timespec='seconds'),
             }
         })
         return trajectories
