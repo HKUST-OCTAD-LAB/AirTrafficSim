@@ -88,7 +88,7 @@ class Environment:
             # Save to file
             self.save()
 
-            print("Environment - step() for global time", self.global_time, "/", self.end_time, "finished at", time.time() - start_time, "seconds")
+            print("Environment - step() for global time", self.global_time, "/", self.end_time, "finished at", time.time() - start_time)
             
             if(socketio != None):
                 # Save to buffer

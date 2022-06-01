@@ -266,15 +266,15 @@ class Autopilot:
 
         # Fly by turn
         turn_radius = traffic.perf.cal_turn_radius(traffic.perf.get_bank_angles(traffic.configuration), Unit_conversion.knots_to_mps(traffic.tas)) / 1000.0     #km
-        next_track_angle = Calculation.cal_great_circle_bearing(self.lat, self.long, self.lat_next, self.long_next)     # Next track angle to next next waypoint
-        # next_track_angle = np.where(self.hv_next_wp, Calculation.cal_great_circle_bearing(self.lat, self.long, self.lat_next, self.long_next), self.track_angle)
+        next_track_angle = np.where(self.hv_next_wp, Calculation.cal_great_circle_bearing(self.lat, self.long, self.lat_next, self.long_next), self.track_angle)    # Next track angle to next next waypoint
         curr_track_angle = Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long) # Current track angle to next waypoint
         turn_dist = turn_radius * np.tan(np.deg2rad(np.abs(Calculation.cal_angle_diff(next_track_angle, curr_track_angle))/2.0))    # Distance to turn
-
-        self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist < turn_dist, np.where(self.hv_next_wp, next_track_angle, self.track_angle), curr_track_angle))
+        self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist < turn_dist, np.where(self.hv_next_wp, next_track_angle, self.track_angle), np.where(dist < 1.0, self.track_angle, curr_track_angle)))
         self.heading = np.where(self.lateral_mode == AP_lateral_mode.HEADING, self.heading, self.track_angle + np.arcsin(traffic.weather.wind_speed/traffic.tas * np.sin(self.track_angle-traffic.weather.wind_direction))) #https://www.omnicalculator.com/physics/wind-correction-angle
-        self.flight_plan_index = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (dist > self.dist) & (np.abs(Calculation.cal_angle_diff(self.track_angle, next_track_angle)) < 1.0), self.flight_plan_index+1, self.flight_plan_index)
-        self.dist = dist
+        
+        update_next_wp = (self.lateral_mode == AP_lateral_mode.LNAV) & (dist > self.dist) & (np.abs(Calculation.cal_angle_diff(traffic.heading, next_track_angle)) < 1.0)
+        self.flight_plan_index = np.where(update_next_wp, self.flight_plan_index+1, self.flight_plan_index)
+        self.dist = np.where(update_next_wp, Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat_next, self.long_next),dist)
 
         # Fly over turn
         # self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist<1.0, self.track_angle, Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long)))

@@ -14,7 +14,7 @@ class FullFlightDemo(Environment):
         super().__init__(file_name = Path(__file__).name.removesuffix('.py'), #File name (do not change)
                         number_of_traffic = 1,
                         start_time = datetime.fromisoformat('2022-03-22T00:00:00'),
-                        end_time = 10000,
+                        end_time = 7000,
                         era5_weather = False,
                         bada_perf = True 
                         )
