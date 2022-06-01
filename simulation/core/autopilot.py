@@ -171,16 +171,17 @@ class Autopilot:
                     self.flight_plan_long[n].append(long_tmp)
 
             # TODO: Add runway lat long alt
-            lat_tmp, long_tmp, alt_tmp = Nav.get_runway_coordinate(arrival_airport, arrival_runway)
-            if self.flight_plan_name[n][-1] == arrival_runway:
-                self.flight_plan_lat[n][-1] = lat_tmp
-                self.flight_plan_long[n][-1] = long_tmp
-                self.flight_plan_target_alt[n][-1] = alt_tmp
-            else:
-                self.flight_plan_lat[n].append(lat_tmp)
-                self.flight_plan_long[n].append(long_tmp)
-                self.flight_plan_target_alt[n].append(alt_tmp)
-                # self.flight_plan_target_speed[n]
+            if not arrival_runway == "":
+                lat_tmp, long_tmp, alt_tmp = Nav.get_runway_coordinate(arrival_airport, arrival_runway)
+                if self.flight_plan_name[n][-1] == arrival_runway:
+                    self.flight_plan_lat[n][-1] = lat_tmp
+                    self.flight_plan_long[n][-1] = long_tmp
+                    self.flight_plan_target_alt[n][-1] = alt_tmp
+                else:
+                    self.flight_plan_lat[n].append(lat_tmp)
+                    self.flight_plan_long[n].append(long_tmp)
+                    self.flight_plan_target_alt[n].append(alt_tmp)
+                    # self.flight_plan_target_speed[n]
             
 
             # Populate alt and speed target from last waypoint

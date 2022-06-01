@@ -355,9 +355,22 @@ const Simulation: React.FC = () => {
                                         {replayList &&
                                             <IonList>
                                                 {replayList[replayCategory].map((file: any) =>
-                                                    <IonItem key={file} button={true} onClick={()=>{setShowReplayModal(false); setIsLoading(true); setReplayFile(file); getReplayCZML(file);}}>
+                                                    <IonItem key={file} button={replayCategory === "historic"? true: false} 
+                                                        onClick={()=>{
+                                                            if (replayCategory === "historic"){
+                                                                setShowReplayModal(false); setIsLoading(true); setReplayFile(file); getReplayCZML(file);
+                                                            }
+                                                    }}>
                                                         <IonIcon icon={folder} slot="start"/>
                                                         <IonLabel>{file}</IonLabel>
+                                                        {replayCategory === "simulation" &&
+                                                            <IonSelect color='dark' interface="alert"
+                                                                onIonChange={e => {setShowReplayModal(false); setIsLoading(true); setReplayFile(file+"/"+e.detail.value); getReplayCZML(file+"/"+e.detail.value);}}>
+                                                                    {replayList["simulation_files"][file].map((f :string) => 
+                                                                        <IonSelectOption key={f} value={f}>{f}</IonSelectOption>
+                                                                    )}
+                                                            </IonSelect>
+                                                        }
                                                     </IonItem>
                                                 )}
                                             </IonList>
