@@ -21,6 +21,7 @@ class DemoEnv(Environment):
         self.aircraft_head = Aircraft(self.traffic, call_sign="HEAD", aircraft_type="A20N", flight_phase=Flight_phase.CRUISE, configuration=Configuration.CLEAN,
                                                     lat=22.019213, long=113.539164, alt=20000.0, heading=175.0, cas=250.0, fuel_weight=10000.0, payload_weight=12000.0, 
                                                     flight_plan=["SIERA", "CANTO", "MURRY", "SILVA", "LIMES"])
+        self.aircraft_head.set_speed(250.0) # To set the aircraft to follow given speed command instead of auto procedural
         self.aircraft_fol = Aircraft(self.traffic, call_sign="FOLLOW", aircraft_type="A20N", flight_phase=Flight_phase.CRUISE, configuration=Configuration.CLEAN,
                                                     lat=21.9, long=113.5, alt=20000.0, heading=175.0, cas=310.0, fuel_weight=10000.0, payload_weight=12000.0)
 
@@ -39,7 +40,7 @@ class DemoEnv(Environment):
         if self.global_time == 100:
             # Accelerate
             # self.aircraft_fol.set_mach(0.7)
-            self.aircraft_head.set_speed(250)
+            self.aircraft_head.set_speed(500)
 
         if self.global_time == 300:
             # Climb

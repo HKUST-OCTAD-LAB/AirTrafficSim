@@ -54,8 +54,8 @@ class AP_speed_mode(IntEnum):
 
 
 class AP_throttle_mode(IntEnum):
-    SPEED = 1,
-    THRUST = 2
+    AUTO = 1,
+    SPEED = 2
 
 
 class AP_vertical_mode(IntEnum):

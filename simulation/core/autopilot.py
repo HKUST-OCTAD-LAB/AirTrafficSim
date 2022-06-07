@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from core.nav import Nav
-from utils.enums import AP_speed_mode, Speed_mode, Vertical_mode, AP_lateral_mode
+from utils.enums import AP_speed_mode, AP_throttle_mode, Speed_mode, Vertical_mode, AP_lateral_mode
 from utils.unit import Unit_conversion
 from utils.cal import Calculation
 
@@ -71,7 +71,7 @@ class Autopilot:
         self.speed_mode = np.zeros([N])                         
         """Autopilot speed mode [1: constant Mach, 2: constant CAS, 3: accelerate, 4: decelerate]"""
         self.auto_throttle_mode = np.zeros([N])                 
-        """Autothrottle m,ode [1: Speed, 2: Thrust]"""
+        """Autothrottle mode [1: Auto, 2: Speed]"""
         self.vertical_mode = np.zeros([N])                      
         """Autopilot vertical mode [1: alt hold, 2: vs mode, 3: flc mode (flight level change), 4. VNAV]"""
         self.lateral_mode = np.zeros([N])                       
@@ -124,7 +124,8 @@ class Autopilot:
 
             # Add enroute flight plan
             self.flight_plan_name[n].extend(flight_plan)
-            self.flight_plan_target_alt[n].extend([cruise_alt for _ in flight_plan])
+            if cruise_alt > -1:
+                self.flight_plan_target_alt[n].extend([cruise_alt for _ in flight_plan])
             self.flight_plan_target_speed[n].extend([-1 for _ in flight_plan])
 
             # Add STAR to flight plan
@@ -185,16 +186,18 @@ class Autopilot:
             
 
             # Populate alt and speed target from last waypoint
-            self.flight_plan_target_alt[n][-1] = 0.0
-            for i, val in reversed(list(enumerate(self.flight_plan_target_alt[n]))):
-                if val == -1:
-                    self.flight_plan_target_alt[n][i] = self.flight_plan_target_alt[n][i+1]
+            if len(self.flight_plan_target_alt[n]) > 1:
+                self.flight_plan_target_alt[n][-1] = 0.0
+                for i, val in reversed(list(enumerate(self.flight_plan_target_alt[n]))):
+                    if val == -1:
+                        self.flight_plan_target_alt[n][i] = self.flight_plan_target_alt[n][i+1]
 
             # for i, val in reversed(list(enumerate(self.flight_plan_target_speed[n]))):
             #     if val == -1:
             #         self.flight_plan_target_speed[n][i] = self.flight_plan_target_speed[n][i+1]
 
             self.lateral_mode[n] = AP_lateral_mode.LNAV
+            self.auto_throttle_mode[n] = AP_throttle_mode.AUTO
 
 
     def update(self, traffic: Traffic):
@@ -230,14 +233,18 @@ class Autopilot:
                 #         self.cas[i] = self.flight_plan_target_speed[i][val]
             else:
                 self.lateral_mode[i] = AP_lateral_mode.HEADING
+
+        # self.alt = np.minimum(self.alt, traffic.max_alt)   #Altitude
         
         # Procedural speed. Follow procedural speed by default.
         # After transitions altitude, constant mach 
         self.procedure_speed = traffic.perf.get_procedure_speed(traffic.alt, traffic.trans_alt, traffic.configuration)
         # TODO: Check procedure speed with SID STAR limitation
 
-        self.cas = np.where(self.procedure_speed >= 5.0, self.procedure_speed, self.cas)      #TODO: Add speed mode atc
-        self.mach = np.where(self.procedure_speed < 5.0, self.procedure_speed, self.mach)      #TODO: Add speed mode atc
+        self.cas = np.where((self.auto_throttle_mode == AP_throttle_mode.AUTO) & (self.procedure_speed >= 5.0), self.procedure_speed, self.cas)      #TODO: Add speed mode atc
+        self.cas = np.minimum(self.cas, traffic.max_cas)
+        self.mach = np.where((self.auto_throttle_mode == AP_throttle_mode.AUTO) & (self.procedure_speed < 5.0), self.procedure_speed, self.mach)      #TODO: Add speed mode atc
+        self.mach = np.minimum(self.mach, traffic.max_mach)
 
         # Handle change in speed mode. 
         self.mach = np.where(traffic.speed_mode == Speed_mode.CAS, traffic.perf.tas_to_mach(traffic.perf.cas_to_tas(Unit_conversion.knots_to_mps(self.cas), traffic.weather.p, traffic.weather.rho), traffic.weather.T), self.mach)

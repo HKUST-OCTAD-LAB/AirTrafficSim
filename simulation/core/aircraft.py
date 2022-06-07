@@ -1,13 +1,13 @@
 from core.traffic import Traffic
 
-from utils.enums import AP_lateral_mode
+from utils.enums import AP_lateral_mode, AP_throttle_mode
 
 class Aircraft:
     """
     Aircraft class to represent the states of one individual aircraft, including get and set functions.
     """
 
-    def __init__(self, traffic:Traffic, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_airport="", departure_runway="", sid="", arrival_airport="", arrival_runway="", star="", approach="", flight_plan=[], cruise_alt=0):
+    def __init__(self, traffic:Traffic, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_airport="", departure_runway="", sid="", arrival_airport="", arrival_runway="", star="", approach="", flight_plan=[], cruise_alt=-1):
         """
         Initialize one aircraft and add the aircraft to traffic array.
         """
@@ -24,6 +24,7 @@ class Aircraft:
     def set_speed(self, speed):
         """Set CAS [kt]"""
         self.traffic.ap.cas[self.index] = speed
+        self.traffic.ap.auto_throttle_mode[self.index] = AP_throttle_mode.SPEED
 
     
     # def set_mach(self, mach):
@@ -47,6 +48,7 @@ class Aircraft:
 
     def resume_own_navigation(self):
         self.traffic.ap.lateral_mode[self.index] = AP_lateral_mode.LNAV
+        self.traffic.ap.auto_throttle_mode[self.index] = AP_throttle_mode.AUTO
 
 
     def get_heading(self):

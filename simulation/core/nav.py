@@ -141,6 +141,29 @@ class Nav:
 
 
     @staticmethod
+    def get_instrument_procedures(airport, procedure_type):
+        """
+        Get instrument procedures of a airport.
+
+        Parameters
+        ----------
+        airport : string
+            ICAO code of the airport
+        
+        procedure_type : string
+            Procedure type (SID/STAR/APPCH)
+
+        Returns
+        -------
+        procedure_names : string []
+            Names of all procedures of the airport
+        """
+        procedures = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/CIFP/'+airport+'.dat'), header=None)
+        return procedures[procedures[0].str.contains(procedure_type)][2].unique()
+
+
+
+    @staticmethod
     def get_procedure(airport, runway, procedure, appch="", iaf=""):
         """
         Get standard procedure

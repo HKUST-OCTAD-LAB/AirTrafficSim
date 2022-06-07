@@ -422,6 +422,19 @@ class Performance:
         else:
             return Unit_conversion.meter_to_feet(np.array([x['limits']['ceiling'] for x in self.prop_model]))
 
+    
+    def cal_maximum_speed(self):
+        """
+        Calculate maximum altitude
+
+        Returns
+        -------
+        speed, mach: float[]
+            Maximum speed and mach
+        """
+        if (self.bada):
+            return self.perf_model.v_mo, self.perf_model.m_mo
+
 
     def cal_minimum_speed(self, configuration):
         """

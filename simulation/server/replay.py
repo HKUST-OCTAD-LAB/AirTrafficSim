@@ -228,7 +228,7 @@ class Replay:
                 })
                 
         elif mode == 'simulation' and graph != 'None':
-            df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath('data/replay/simulation',replayCategory,replayFile))
+            df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath('data/replay/simulation',simulationFile,simulationFile+'.csv'))
             for id in df['id'].unique():
                 content = df[df['id'] == id]
                 data.append({

@@ -56,9 +56,9 @@ class Bada:
         """maximum payload mass [tones]"""
 
         # Flight envelope
-        self.__v_mo = np.zeros([N])                             
+        self.v_mo = np.zeros([N])                             
         """maximum operating speed [knots (CAS)]"""
-        self.__m_mo = np.zeros([N])                            
+        self.m_mo = np.zeros([N])                            
         """maximum operating Mach number [dimensionless]"""
         self.__h_mo = np.zeros([N])                             
         """maximum opearting altitude [feet]"""
@@ -387,8 +387,8 @@ class Bada:
         self.__g_w[n] = OPF[0][7]
 
         # 'CD', 2X, 5 (3X, E10.5) - flight envelope block - 1 data line
-        self.__v_mo[n] = OPF[1][3]
-        self.__m_mo[n] = OPF[1][4]
+        self.v_mo[n] = OPF[1][3]
+        self.m_mo[n] = OPF[1][4]
         self.__h_mo[n] = OPF[1][5]
         self.__h_max[n] = OPF[1][6]
         self.__g_t[n] = OPF[1][7]

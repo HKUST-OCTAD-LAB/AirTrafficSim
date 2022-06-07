@@ -76,6 +76,14 @@ class Traffic:
         self.speed_mode = np.zeros([N])
         """Speed mode [Traffic.speed_mode enum 1: CAS, 2: MACH]"""
 
+        # Ceiling
+        self.max_alt = np.zeros([N])
+        """Maximum altitude [feet]"""
+        self.max_cas = np.zeros([N])
+        """Maximum calibrated air speed [knot]"""
+        self.max_mach = np.zeros([N])
+        """Maximum mach number [dimensionless]"""
+
         # Vertical speed
         self.vs = np.zeros([N])                                 
         """Vertical speed [feet/min]"""
@@ -155,6 +163,8 @@ class Traffic:
         self.payload_weight[n] = payload_weight
         self.mass[n] = self.empty_weight[n] + fuel_weight + payload_weight
         self.cruise_alt[n] = cruise_alt
+        self.max_alt = self.perf.cal_maximum_alt(self.weather.d_T, self.mass)
+        self.max_cas, self.max_mach = self.perf.cal_maximum_speed()
         
          # Init Procedural speed
         self.perf.init_procedure_speed(self.mass, n)
@@ -209,7 +219,6 @@ class Traffic:
         self.weather.update(self.lat, self.long, self.alt, self.perf, global_time)
 
         # Ceiling
-        self.max_alt = self.perf.cal_maximum_alt(self.weather.d_T, self.mass)   # TODO: calculate only once
         # min_speed = self.perf.cal_minimum_speed(self.flight_phase)
         # max_d_tas = self.perf.cal_max_d_tas(d_t)
         # max_d_rocd = self.perf.cal_max_d_rocd(d_t, self.unit.knots_to_mps(self.d_cas), tas, self.unit.ftpm_to_mps(self.vs))
