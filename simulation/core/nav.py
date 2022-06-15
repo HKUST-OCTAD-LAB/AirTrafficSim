@@ -57,7 +57,7 @@ class Nav:
     
     fix = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_fix.dat'), delimiter='\s+', skiprows=3, header=None)
     """Fixes data https://developer.x-plane.com/wp-content/uploads/2019/01/XP-FIX1101-Spec.pdf"""   
-    nav = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_nav.dat'), delimiter='\s+', skiprows=3, header=None, names=np.arange(0,18), low_memory=False)  
+    nav = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_nav.dat'), delimiter='\s+', skiprows=3, header=None, names=np.arange(0,18), low_memory=False).apply(pd.to_numeric, errors='ignore')  
     """Radio navigation data https://developer.x-plane.com/wp-content/uploads/2020/03/XP-NAV1150-Spec.pdf"""
     airway = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_awy.dat'), delimiter='\s+', skiprows=3, header=None)
     """Airway data https://developer.x-plane.com/wp-content/uploads/2019/01/XP-AWY1101-Spec.pdf"""
@@ -94,9 +94,15 @@ class Nav:
         # Find lat and long of all fixes that match the name
         fix_lat = np.extract(Nav.fix.values[:,2] == fix_name, Nav.fix.values[:,0]).astype(np.float)
         fix_long = np.extract(Nav.fix.values[:,2] == fix_name, Nav.fix.values[:,1]).astype(np.float)
+        # Find lat and long of all navaids that match the name
+        nav_lat = np.extract(Nav.nav.values[:,7] == fix_name, Nav.nav.values[:,1]).astype(np.float)
+        nav_long = np.extract(Nav.nav.values[:,7] == fix_name, Nav.nav.values[:,2]).astype(np.float)
+        # Combine fix and nav
+        wp_lat = np.append(fix_lat, nav_lat)
+        wp_long = np.append(fix_long, nav_long)
         # Find index of minimum distance
-        index = np.argmin(Calculation.cal_great_circle_distance(lat, long, fix_lat, fix_long))
-        return fix_lat[index], fix_long[index]
+        index = np.argmin(Calculation.cal_great_circle_distance(lat, long, wp_lat, wp_long))
+        return wp_lat[index], wp_long[index]
 
     
     @staticmethod
@@ -107,16 +113,22 @@ class Nav:
         Parameters
         ----------
         lat1 : float
-            Latitude 1 of camera
+            Latitude 1 of area
         long1 : float
-            Longitude 1 of camera
+            Longitude 1 of area
         lat2 : float
-            Latitude 2 of camera
+            Latitude 2 of area
         long2 : float
-            Longitude 2 of camera
-        """
-        return Nav.fix[(Nav.fix.iloc[:,0].between(lat1, lat2)) & (Nav.fix.iloc[:,1].between(long1, long2))].iloc[:,0:3].values
+            Longitude 2 of area
 
+        Returns
+        -------
+        [lat, long, name] : [float[], float[], string[]]
+            Latitude, Longitude, Name array of all fixes in the area
+        """
+        fix = Nav.fix[(Nav.fix.iloc[:,0].between(lat1, lat2)) & (Nav.fix.iloc[:,1].between(long1, long2))].iloc[:,0:3].values
+        nav = Nav.nav[(Nav.nav.iloc[:,1].between(lat1, lat2)) & (Nav.nav.iloc[:,2].between(long1, long2))].iloc[:,[1,2,7]].values
+        return np.vstack((fix, nav))
     
     @staticmethod
     def get_runway_coordinate(airport, runway):
@@ -125,7 +137,7 @@ class Nav:
 
         Parameters
         ----------
-         airport : string
+        airport : string
             ICAO code of the airport
 
         runway: string
@@ -138,6 +150,32 @@ class Nav:
         """
         tmp = Nav.airports[(Nav.airports[0] == airport) & (Nav.airports[1] == runway.replace("RW", ""))]
         return tmp.iloc[0,2], tmp.iloc[0,3], tmp.iloc[0,4]
+
+
+    @staticmethod
+    def find_closest_airport_runway(lat, long):
+        """
+        Find closest runway and airport given lat long.
+
+        Parameters
+        ----------
+        lat : float
+            Latitude
+        long : float
+            Longitude
+        alt : float
+            Altitude
+
+        Returns
+        -------
+        Airport : string
+            ICAO code of airport
+        Runway : string
+            Runway Name
+        """
+        tmp = Nav.airports[(Nav.airports.iloc[:,2].between(lat-0.1, lat+0.1)) & (Nav.airports.iloc[:,3].between(long-0.1, long+0.1))]
+        dist = Calculation.cal_great_circle_distance(tmp.iloc[:,2], tmp.iloc[:,3], lat, long)
+        return tmp.iloc[np.argmin(dist)].tolist()
 
 
     @staticmethod
@@ -224,7 +262,11 @@ class Nav:
         elif appch == "I":
             # Final Approach
             procedure_df = procedures[(procedures[1] == appch) & (procedures[2] == procedure)]
-            
+        
+        # Remove missed approach waypoints
+        index = procedure_df[procedure_df[8].str.contains('M')].index
+        if len(index) > 0:
+            procedure_df=procedure_df.loc[:index[0]-1, :]
             
         alt_restriction_1 = []
         alt_restriction_2 = []

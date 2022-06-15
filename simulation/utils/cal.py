@@ -61,6 +61,39 @@ class Calculation:
         """
         return np.mod((np.rad2deg(np.arctan2(np.sin(np.deg2rad(long2-long1)) * np.cos(np.deg2rad(lat2)), np.cos(np.deg2rad(lat1))*np.sin(np.deg2rad(lat2)) - np.sin(np.deg2rad(lat1))*np.cos(np.deg2rad(lat2))*np.cos(np.deg2rad(long2-long1)))) + 360.0), 360.0)
 
+
+    @staticmethod
+    def cal_cross_track_distance(path_lat1, path_long1, path_lat2, path_long2, point_lat, point_long):
+        """
+        Calculate the cross track distance between a point and a great circle path
+
+        Parameters
+        ----------
+        path_lat1 : float
+            Latitude of first point of great circle path
+        path_long1 : float
+            Longitude of first point of great circle path
+        path_lat2 : float
+            Latitude of second point of great circle path
+        path_long2 : float
+            Longitude of second point of great circle path
+        point_lat : float[]
+            Latitude of point(s)
+        point_long : float[]
+            Longitude of point(s)
+
+        Returns
+        -------
+        _type_
+            _description_
+
+        Note
+        ----
+        Cross track distance http://www.movable-type.co.uk/scripts/latlong.html
+        """
+        return np.arcsin(np.sin(np.deg2rad(Calculation.cal_great_circle_distance(path_lat1, path_long1, point_lat, point_long) / 6371.0)) * np.sin(np.deg2rad(Calculation.cal_great_circle_bearing(path_lat1, path_long1, point_lat, point_long) - Calculation.cal_great_circle_bearing(path_lat1, path_long1, path_lat2, path_long2)))) * 6371.0
+
+
     @staticmethod
     def cal_angle_diff(current_angle, target_angle):
         """
