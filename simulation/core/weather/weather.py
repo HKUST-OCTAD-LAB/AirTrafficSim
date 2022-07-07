@@ -11,23 +11,23 @@ from core.weather.era5 import Era5
 
 class Weather:
     
-    def __init__(self, N, start_time, end_time, weather_mode, file_name):
+    def __init__(self, start_time, end_time, weather_mode, file_name):
         self.mode = weather_mode
         """Weather mode [ISA, ERA5]"""
         self.start_time = start_time
 
         # Wind speed
-        self.wind_speed = np.zeros([N])                         # Wind speed [knots]
-        self.wind_direction = np.zeros([N])                     # Wind direction [deg]
-        self.wind_north = np.zeros([N])                         # Wind - North [knots]
-        self.wind_east = np.zeros([N])                          # Wind - East [knots]
+        self.wind_speed = np.zeros([0])                         # Wind speed [knots]
+        self.wind_direction = np.zeros([0])                     # Wind direction [deg]
+        self.wind_north = np.zeros([0])                         # Wind - North [knots]
+        self.wind_east = np.zeros([0])                          # Wind - East [knots]
         
         # Atmospheric condition
-        self.d_T = np.zeros([N])                                # Temperature difference compare to ISA [K]
-        self.d_p = np.zeros([N])                                # Pressure difference compare to ISA [Pa]
-        self.T = np.zeros([N])                                  # Temperature [K]
-        self.p = np.zeros([N])                                  # Pressure [Pa]
-        self.rho = np.zeros([N])                                # Density [kg/m^3]
+        self.d_T = np.zeros([0])                                # Temperature difference compare to ISA [K]
+        self.d_p = np.zeros([0])                                # Pressure difference compare to ISA [Pa]
+        self.T = np.zeros([0])                                  # Temperature [K]
+        self.p = np.zeros([0])                                  # Pressure [Pa]
+        self.rho = np.zeros([0])                                # Density [kg/m^3]
     
         # Download ERA5 data
         if self.mode == "ERA5":
@@ -37,10 +37,28 @@ class Weather:
 
 
 
-    def add_aircraft(self, n, alt, perf: Performance):
-        self.T[n] = perf.cal_temperature(Unit_conversion.feet_to_meter(alt), self.d_T[n])
-        self.p[n] = perf.cal_air_pressure(Unit_conversion.feet_to_meter(alt), self.T[n], self.d_T[n])
-        self.rho[n] = perf.cal_air_density(self.p[n], self.T[n])
+    def add_aircraft(self, alt, perf: Performance):
+        self.wind_speed = np.append(self.wind_speed, 0.0)
+        self.wind_direction = np.append(self.wind_direction, 0.0)
+        self.wind_north = np.append(self.wind_north, 0.0)
+        self.wind_east = np.append(self.wind_east, 0.0)
+        self.d_T = np.append(self.d_T, 0.0)
+        self.d_p = np.append(self.d_p, 0.0)
+        self.T = np.append(self.T, perf.cal_temperature(Unit_conversion.feet_to_meter(alt), self.d_T[-1]))
+        self.p = np.append(self.p, perf.cal_air_pressure(Unit_conversion.feet_to_meter(alt), self.T[-1], self.d_T[-1]))
+        self.rho = np.append(self.rho, perf.cal_air_density(self.p[-1], self.T[-1]))
+
+
+    def del_aircraft(self, index):
+        self.wind_speed = np.delete(self.wind_speed, index)
+        self.wind_direction = np.delete(self.wind_direction, index)
+        self.wind_north = np.delete(self.wind_north, index)
+        self.wind_east = np.delete(self.wind_east, index)
+        self.d_T = np.delete(self.d_T, index)
+        self.d_p = np.delete(self.d_p, index)
+        self.T = np.delete(self.T, index)
+        self.p = np.delete(self.p, index)
+        self.rho = np.delete(self.rho, index)
 
 
     def update(self, lat, long, alt, perf: Performance, global_time):

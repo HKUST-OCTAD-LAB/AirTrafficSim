@@ -12,7 +12,6 @@ class FullFlightDemo(Environment):
     def __init__(self):
         # Initialize environment super class
         super().__init__(file_name = Path(__file__).name.removesuffix('.py'), #File name (do not change)
-                        number_of_traffic = 1,
                         start_time = datetime.fromisoformat('2022-03-22T00:00:00'),
                         end_time = 7000,
                         era5_weather = False,
@@ -25,7 +24,7 @@ class FullFlightDemo(Environment):
                                                     lat=lat_dep, long=long_dep, alt=alt_dep, heading=254.0, cas=149.0, 
                                                     fuel_weight=5273.0, payload_weight=12000.0,
                                                     departure_airport = "VHHH", departure_runway="RW25L", sid = "OCEA2B",
-                                                    arrival_airport="RCTP", arrival_runway="RW05R", star = "TONG1A", approach = "I05R",
+                                                    arrival_airport="RCTP", arrival_runway="05R", star = "TONG1A", approach = "I05R",
                                                     flight_plan=["RASSE", "CONGA", "ENVAR", "DADON", "EXTRA", "RENOT"],
                                                     cruise_alt=37000)
                                                     # target_alt=[    5000,   14000,  37000,    37000,   37000,   37000,   37000,   37000,   37000,   37000,   37000,   37000,   29000,    4000,    4000,    4000])

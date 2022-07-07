@@ -9,7 +9,7 @@ from utils.cal import Calculation
 
 class Traffic:
 
-    def __init__(self, N, file_name, start_time, end_time, era5_weather=False, bada_perf=False):
+    def __init__(self, file_name, start_time, end_time, era5_weather=False, bada_perf=False):
         """
         Initialize base traffic array to store aircraft state variables for one timestep.
 
@@ -23,93 +23,112 @@ class Traffic:
         # Memory and index control vairable:
         self.n = 0                                              
         """Aircraft count"""
-        self.N = N                                              
-        """Maximum aircraft count"""
-        self.index = np.zeros([N])                              
+        # self.N = N                                              
+        # """Maximum aircraft count"""
+
+        # self.df = np.empty([0], dtype=[
+        #     ('index', 'i8'), ('callsign', 'U10'), ('type', 'U4'), ('configuration', 'i8'), ('flight_phase', 'i8'), 
+        #     ('lat', 'f8'), ('long', 'f8'), ('alt', 'f8'), ('trans_alt', 'f8'), 
+        #     ('heading', 'f8'), ('track_angle', 'f8'), ('bank_angle', 'f8'), ('path_angle', 'f8'),
+        #     ('cas', 'f8'), ('tas', 'f8'), ('gs_north', 'f8'), ('gs_east', 'f8'), ('mach', 'f8'), ('accel', 'f8'), ('speed_mode', 'i8'),
+        #     ('max_alt', 'f8'), ('max_cas', 'f8'), ('max_mach', 'f8'),
+        #     ('vs', 'f8'), ('fpa', 'f8'), ('vertical_mode', 'i8'),
+        #     ('mass', 'f8'), ('empty_weight', 'f8'), ('fuel_weight', 'f8'), ('payload_weight', 'f8'), ('fuel_consumed', 'f8'),
+        #     # Autopilot
+        #     ('ap_alt', 'f8'), ('ap_heading', 'f8'), ('ap_track_angle', 'f8'), ('ap_rate_of_turn', 'f8'),
+        #     ('ap_cas', 'f8'), ('ap_mach', 'f8'), ('ap_vs', 'f8'), ('ap_fpa', 'f8'), 
+        #     ('ap_lat', 'f8'), ('ap_long', 'f8'), ('ap_lat_next', 'f8'), ('ap_long_next', 'f8'), ('ap_hv_next_wp', '?'), ('ap_dist_wp', 'f8')
+        #     ('ap_flight_plan_index', 'i8'), ('ap_procedure_speed', 'f8')
+        #     # Weather
+        #     ('wind_speed', 'f8'), ('wind_dir', 'f8'), ('wind_north', 'f8'), ('wind_east', 'f8'),
+        #     ('d_T', 'f8'), ('d_p', 'f8'), ('T', 'f8'), ('p', 'f8'), ('rho', 'f8')
+        # ])
+
+        self.index = np.zeros([0])                              
         """Index array to indicate whether there is an aircraft active in each index."""
 
         # General information
-        self.call_sign = np.empty([N], dtype='U10')             
+        self.call_sign = np.empty([0], dtype='U10')             
         """Callsign [string]"""
-        self.aircraft_type = np.empty([N], dtype='U4')          
+        self.aircraft_type = np.empty([0], dtype='U4')          
         """Aircraft type in ICAO format [string]"""
-        self.configuration = np.zeros([N])
+        self.configuration = np.zeros([0])
         """Aircraft configuration [Configuration enum 1: Clean, 2: Take Off, 3: Approach, 4: Landing]"""
-        self.flight_phase = np.zeros([N])                       
+        self.flight_phase = np.zeros([0])                       
         """Flight phase [Flight_phase enum] (BADA section 3.5)"""
 
         # Position
-        self.lat = np.zeros([N])                                
+        self.lat = np.zeros([0])                                
         """Latitude [deg]"""
-        self.long = np.zeros([N])                               
+        self.long = np.zeros([0])                               
         """Longitude [deg]"""
-        self.alt = np.zeros([N])                                
+        self.alt = np.zeros([0])                                
         """Altitude [ft] Geopotential altitude"""
-        self.trans_alt = np.zeros([N])
+        self.trans_alt = np.zeros([0])
         """Transaition altitude [ft]"""
-        self.cruise_alt = np.zeros([N])
+        self.cruise_alt = np.zeros([0])
         """Cruise altitude [ft]"""
 
         # Orientation
-        self.heading = np.zeros([N])                            
+        self.heading = np.zeros([0])                            
         """Heading [deg]"""
-        self.track_angle = np.zeros([N])                        
+        self.track_angle = np.zeros([0])                        
         """Track angle [deg]"""
-        self.bank_angle = np.zeros([N])                         
+        self.bank_angle = np.zeros([0])                         
         """Bank angle [deg]"""
-        self.path_angle = np.zeros([N])
+        self.path_angle = np.zeros([0])
         """Path angle [deg]"""
 
         # Speed
-        self.cas = np.zeros([N])                                
+        self.cas = np.zeros([0])                                
         """Calibrated air speed [knot]"""
-        self.tas = np.zeros([N])                                
+        self.tas = np.zeros([0])                                
         """True air speed [knot]"""
-        self.gs_north = np.zeros([N])                           
+        self.gs_north = np.zeros([0])                           
         """Ground speed - North[knot]"""
-        self.gs_east = np.zeros([N])                            
+        self.gs_east = np.zeros([0])                            
         """Ground speed - East [knot]  """
-        self.mach = np.zeros([N])                               
+        self.mach = np.zeros([0])                               
         """Mach number [dimensionless]"""
-        self.accel = np.zeros([N])
+        self.accel = np.zeros([0])
         """Acceleration [m/s^2]"""
-        self.speed_mode = np.zeros([N])
+        self.speed_mode = np.zeros([0])
         """Speed mode [Traffic.speed_mode enum 1: CAS, 2: MACH]"""
 
         # Ceiling
-        self.max_alt = np.zeros([N])
+        self.max_alt = np.zeros([0])
         """Maximum altitude [feet]"""
-        self.max_cas = np.zeros([N])
+        self.max_cas = np.zeros([0])
         """Maximum calibrated air speed [knot]"""
-        self.max_mach = np.zeros([N])
+        self.max_mach = np.zeros([0])
         """Maximum mach number [dimensionless]"""
 
         # Vertical speed
-        self.vs = np.zeros([N])                                 
+        self.vs = np.zeros([0])                                 
         """Vertical speed [feet/min]"""
-        self.fpa = np.zeros([N])                                
+        self.fpa = np.zeros([0])                                
         """Flight path angle [deg]"""
-        self.vertical_mode = np.zeros([N])
+        self.vertical_mode = np.zeros([0])
         """Vertical mode [Vertical mode enum 1: LEVEL, 2: CLIMB, 3: DESCENT]"""
 
         # Weight and balance
-        self.mass = np.zeros([N])                               
+        self.mass = np.zeros([0])                               
         """Aircraft mass [kg]"""
-        self.empty_weight = np.zeros(([N]))
+        self.empty_weight = np.zeros([0])
         """Empty weight [kg]"""
-        self.fuel_weight = np.zeros([N])                        
+        self.fuel_weight = np.zeros([0])                        
         """Initial fuel weight [kg]"""
-        self.payload_weight = np.zeros([N])                     
+        self.payload_weight = np.zeros([0])                     
         """Payload weight [kg]"""
-        self.fuel_consumed = np.zeros([N])
+        self.fuel_consumed = np.zeros([0])
         """Fuel consumped [kg]"""
 
         # Sub classes
-        self.perf = Performance(N, bada_perf)                              
+        self.perf = Performance(bada_perf)                              
         """Performance class"""
-        self.ap = Autopilot(N)                                  
+        self.ap = Autopilot()                                  
         """Autopilot class"""
-        self.weather = Weather(N, start_time, end_time, era5_weather, file_name)                               
+        self.weather = Weather(start_time, end_time, era5_weather, file_name)                               
         """Weather class"""
 
     
@@ -124,81 +143,103 @@ class Traffic:
         """
 
         print("Traffic.py - add_aircraft()", call_sign, " Type:",  aircraft_type)
-
-        if (self.n >= self.N):
-            # If new index exit maximum aircraft count
-            new_index = np.argwhere(self.index == 0).flatten()
-            if (new_index.size == 0):
-                print ("Traffic array is full. Cannot add aircraft.")
-                return -1
-            else:
-                # Assign new index from empty slots.
-                n = new_index[0]
-        else:
-            n = self.n
-
         
         # Add aircraft in performance, weather, and autopilot array
-        self.perf.add_aircraft(n, aircraft_type)
-        self.weather.add_aircraft(n, alt, self.perf)
-        self.ap.add_aircraft(n, lat, long, alt, heading, cas, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt)
+        self.perf.add_aircraft(aircraft_type)
+        self.weather.add_aircraft(alt, self.perf)
+        self.ap.add_aircraft(lat, long, alt, heading, cas, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt)
 
-        # Initialize variables
-        self.call_sign[n] = call_sign
-        self.aircraft_type[n] = aircraft_type
-        self.flight_phase[n] = flight_phase
-        self.configuration[n] = configuration
-        self.lat[n] = lat
-        self.long[n] = long
-        self.alt[n] = alt
-        self.ap.alt[n] = alt
-        self.heading[n] = heading
-        self.ap.heading[n] = heading
-        self.cas[n] = cas
-        self.ap.cas[n] = cas
-        self.tas[n] = Unit_conversion.mps_to_knots(self.perf.cas_to_tas(Unit_conversion.knots_to_mps(cas), self.weather.p[n], self.weather.rho[n]))
-        self.mach[n] = self.perf.tas_to_mach(Unit_conversion.knots_to_mps(self.tas[n]), self.weather.T[n])
-        self.empty_weight[n] = self.perf.get_empty_weight(n)
-        self.fuel_weight[n] = fuel_weight
-        self.payload_weight[n] = payload_weight
-        self.mass[n] = self.empty_weight[n] + fuel_weight + payload_weight
-        self.cruise_alt[n] = cruise_alt
+        self.index = np.append(self.index, self.n)
+        self.call_sign = np.append(self.call_sign, call_sign)             
+        self.aircraft_type = np.append(self.aircraft_type, aircraft_type)          
+        self.configuration = np.append(self.configuration, configuration)
+        self.flight_phase = np.append(self.flight_phase, flight_phase)                      
+        self.lat = np.append(self.lat, lat)                               
+        self.long = np.append(self.long, long)                              
+        self.alt = np.append(self.alt, alt)                              
+        self.cruise_alt = np.append(self.cruise_alt, cruise_alt)
+        self.heading = np.append(self.heading, heading)                          
+        self.track_angle = np.append(self.track_angle, heading)                       
+        self.bank_angle = np.append(self.bank_angle, 0.0)                       
+        self.path_angle = np.append(self.path_angle, 0.0)
+        self.cas = np.append(self.cas, cas)                               
+        self.tas = np.append(self.tas, Unit_conversion.mps_to_knots(self.perf.cas_to_tas(Unit_conversion.knots_to_mps(cas), self.weather.p[-1], self.weather.rho[-1])))                                
+        self.gs_north = np.append(self.gs_north, 0.0)                          
+        self.gs_east = np.append(self.gs_east, 0.0)                            
+        self.mach = np.append(self.mach, self.perf.tas_to_mach(Unit_conversion.knots_to_mps(self.tas[-1]), self.weather.T[-1]))                               
+        self.accel = np.append(self.accel, 0.0)
+        self.speed_mode = np.append(self.speed_mode, Speed_mode.CAS)
+        self.max_alt = np.append(self.max_alt, 0.0)
+        self.max_cas = np.append(self.max_cas, 0.0)
+        self.max_mach = np.append(self.max_mach, 0.0)
+        self.vs = np.append(self.vs, 0.0)                               
+        self.fpa = np.append(self.fpa, 0.0)                               
+        self.vertical_mode = np.append(self.vertical_mode, Vertical_mode.LEVEL)                  
+        self.empty_weight = np.append(self.empty_weight, self.perf.get_empty_weight(-1))
+        self.fuel_weight = np.append(self.fuel_weight, fuel_weight)                     
+        self.payload_weight = np.append(self.payload_weight, payload_weight)
+        self.mass = np.append(self.mass, self.empty_weight[-1] + fuel_weight + payload_weight)                  
+        self.fuel_consumed = np.append(self.fuel_consumed, 0.0)
+
+        # Init Procedural speed
+        self.perf.init_procedure_speed(self.mass[-1], -1)
+        self.trans_alt = np.append(self.trans_alt, Unit_conversion.meter_to_feet(self.perf.cal_transition_alt(-1, self.weather.d_T[-1])))
+
         self.max_alt = self.perf.cal_maximum_alt(self.weather.d_T, self.mass)
         self.max_cas, self.max_mach = self.perf.cal_maximum_speed()
         
-         # Init Procedural speed
-        self.perf.init_procedure_speed(self.mass, n)
-        self.trans_alt = Unit_conversion.meter_to_feet(self.perf.cal_transition_alt(n, self.weather.d_T))
-
         # Increase aircraft count
         self.n = self.n + 1
 
-        return n
+        return self.n - 1
 
 
-    def del_aircraft(self, n):
+    def del_aircraft(self, index):
         """
         Delete an aircraft from traffic array.
-        TODO:
+
+        Parameters
+        ----------
+        index : int
+            Index of an aircraft
         """
-        self.index[n] = 0
+        i = np.where(self.index == index)[0][0]
+        self.index = np.delete(self.index, i)                      
+        self.call_sign = np.delete(self.call_sign, i)             
+        self.aircraft_type = np.delete(self.aircraft_type, i)          
+        self.configuration = np.delete(self.configuration, i)
+        self.flight_phase = np.delete(self.flight_phase, i)                      
+        self.lat = np.delete(self.lat, i)                               
+        self.long = np.delete(self.long, i)                              
+        self.alt = np.delete(self.alt, i)                              
+        self.trans_alt = np.delete(self.trans_alt, i)
+        self.cruise_alt = np.delete(self.cruise_alt, i)
+        self.heading = np.delete(self.heading, i)                          
+        self.track_angle = np.delete(self.track_angle, i)                       
+        self.bank_angle = np.delete(self.bank_angle, i)                       
+        self.path_angle = np.delete(self.path_angle, i)
+        self.cas = np.delete(self.cas, i)                               
+        self.tas = np.delete(self.tas, i)                                
+        self.gs_north = np.delete(self.gs_north, i)                          
+        self.gs_east = np.delete(self.gs_east, i)                            
+        self.mach = np.delete(self.mach, i)                               
+        self.accel = np.delete(self.accel, i)
+        self.speed_mode = np.delete(self.speed_mode, i)
+        self.max_alt = np.delete(self.max_alt, i)
+        self.max_cas = np.delete(self.max_cas, i)
+        self.max_mach = np.delete(self.max_mach, i)
+        self.vs = np.delete(self.vs, i)                               
+        self.fpa = np.delete(self.fpa, i)                               
+        self.vertical_mode = np.delete(self.vertical_mode, i)
+        self.mass = np.delete(self.mass, i)                               
+        self.empty_weight = np.delete(self.empty_weight, i)
+        self.fuel_weight = np.delete(self.fuel_weight, i)                     
+        self.payload_weight = np.delete(self.payload_weight, i)                   
+        self.fuel_consumed = np.delete(self.fuel_consumed, i)
 
-        self.call_sign[n] = ''
-        self.aircraft_type[n] = ''
-        self.flight_phase[n] = 0
-        self.lat[n] = 0
-        self.long[n] = 0
-        self.alt[n] = 0
-        self.heading[n] = 0
-        self.tas[n] = 0
-        self.mass[n] = 0
-        self.fuel_weight[n] = 0
-        self.payload_weight[n] = 0
-          
-        self.perf.del_aircraft(n)
-
-        # Decrease aircraft count
-        self.n = self.n - 1
+        self.perf.del_aircraft(i)                             
+        self.ap.del_aircraft(i)                               
+        self.weather.del_aircraft(i)                             
     
 
     

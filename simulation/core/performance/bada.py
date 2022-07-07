@@ -26,7 +26,7 @@ class Bada:
     """
 
 
-    def __init__(self, N=1000):
+    def __init__(self):
         """
         Initialize BADA performance parameters 
 
@@ -38,149 +38,149 @@ class Bada:
         """
         # ----------------------------  Operations Performance File (OPF) section 3.11 -----------------------------------------
         # Aircraft type
-        self.__n_eng = np.zeros([N])
+        self.__n_eng = np.zeros([0])
         """Number of engines"""
-        self.__engine_type = np.zeros([N])
+        self.__engine_type = np.zeros([0])
         """engine type [Engine_type enum]"""
-        self.__wake_category = np.zeros([N])                    
+        self.__wake_category = np.zeros([0])                    
         """wake category [Wake_category enum]"""
 
         # Mass
-        self.__m_ref = np.zeros([N])                            
+        self.__m_ref = np.zeros([0])                            
         """reference mass [tones]"""
-        self.m_min = np.zeros([N])                            
+        self.m_min = np.zeros([0])                            
         """minimum mass [tones]"""
-        self.__m_max = np.zeros([N])                            
+        self.__m_max = np.zeros([0])                            
         """maximum mass [tones]"""
-        self.__m_pyld = np.zeros([N])                           
+        self.__m_pyld = np.zeros([0])                           
         """maximum payload mass [tones]"""
 
         # Flight envelope
-        self.v_mo = np.zeros([N])                             
+        self.v_mo = np.zeros([0])                             
         """maximum operating speed [knots (CAS)]"""
-        self.m_mo = np.zeros([N])                            
+        self.m_mo = np.zeros([0])                            
         """maximum operating Mach number [dimensionless]"""
-        self.__h_mo = np.zeros([N])                             
+        self.__h_mo = np.zeros([0])                             
         """maximum opearting altitude [feet]"""
-        self.__h_max = np.zeros([N])                            
+        self.__h_max = np.zeros([0])                            
         """maximum altitude at MTOW and ISA [feet]"""
-        self.__g_w = np.zeros([N])                              
+        self.__g_w = np.zeros([0])                              
         """weight gradient on maximum altitude [feet/kg]"""
-        self.__g_t = np.zeros([N])                              
+        self.__g_t = np.zeros([0])                              
         """temperature gradient on maximum altitude [feet/K]"""
 
         # Aerodynamics
-        self.__S = np.zeros([N])                                
+        self.__S = np.zeros([0])                                
         """reference wing surface area [m^2]"""
-        self.__c_d0_cr = np.zeros([N])                          
+        self.__c_d0_cr = np.zeros([0])                          
         """parasitic drag coefficient (cruise) [dimensionless]"""
-        self.__c_d2_cr = np.zeros([N])                          
+        self.__c_d2_cr = np.zeros([0])                          
         """induced drag coefficient (cruise) [dimensionless]"""
-        self.__c_d0_ap = np.zeros([N])                          
+        self.__c_d0_ap = np.zeros([0])                          
         """parasitic drag coefficient (approach) [dimensionless]"""
-        self.__c_d2_ap = np.zeros([N])                          
+        self.__c_d2_ap = np.zeros([0])                          
         """induced drag coefficient (approach) [dimensionless]"""
-        self.__c_d0_ld = np.zeros([N])                          
+        self.__c_d0_ld = np.zeros([0])                          
         """parasitic drag coefficient (landing) [dimensionless]"""
-        self.__c_d2_ld = np.zeros([N])                          
+        self.__c_d2_ld = np.zeros([0])                          
         """induced drag coefficient (landing) [dimensionless]"""
-        self.__c_d0_ldg = np.zeros([N])                         
+        self.__c_d0_ldg = np.zeros([0])                         
         """parasite darg coefficient (landing gear) [dimensionless]"""
-        self.__v_stall_to = np.zeros([N])                       
+        self.__v_stall_to = np.zeros([0])                       
         """stall speed (TO) [knots (CAS)]"""
-        self.__v_stall_ic = np.zeros([N])                       
+        self.__v_stall_ic = np.zeros([0])                       
         """stall speed (IC) [knots (CAS)]"""
-        self.__v_stall_cr = np.zeros([N])                       
+        self.__v_stall_cr = np.zeros([0])                       
         """stall speed (CR) [knots (CAS)]"""
-        self.__v_stall_ap = np.zeros([N])                       
+        self.__v_stall_ap = np.zeros([0])                       
         """stall speed (AP) [knots (CAS)]"""
-        self.__v_stall_ld = np.zeros([N])                       
+        self.__v_stall_ld = np.zeros([0])                       
         """stall speed (LD) [knots (CAS)]"""
-        self.__c_lbo = np.zeros([N])                            
+        self.__c_lbo = np.zeros([0])                            
         """buffet onset lift coefficient (jet and TBP only) [dimensionless]"""
-        self.__k = np.zeros([N])                                
+        self.__k = np.zeros([0])                                
         """buffeting gradient (Jet & TBP only) [dimensionless]"""
 
         # Engine thrust
-        self.__c_tc_1 = np.zeros([N])                           
+        self.__c_tc_1 = np.zeros([0])                           
         """1st maximum climb thrust coefficient [Newton (jet/piston) knot-Newton (turboprop)]"""
-        self.__c_tc_2 = np.zeros([N])                           
+        self.__c_tc_2 = np.zeros([0])                           
         """2nd maximum climb thrust coefficient [feet]"""
-        self.__c_tc_3 = np.zeros([N])                           
+        self.__c_tc_3 = np.zeros([0])                           
         """3rd maximum climb thrust coefficient [1/feet^2 (jet) Newton (turboprop) knot-Newton (piston)]"""
-        self.__c_tc_4 = np.zeros([N])                           
+        self.__c_tc_4 = np.zeros([0])                           
         """1st thrust temperature coefficient [K]"""
-        self.__c_tc_5 = np.zeros([N])                           
+        self.__c_tc_5 = np.zeros([0])                           
         """2nd thrust temperature coefficient [1/K]"""
-        self.__c_tdes_low = np.zeros([N])                       
+        self.__c_tdes_low = np.zeros([0])                       
         """low altitude descent thrust coefficient [dimensionless]"""
-        self.__c_tdes_high = np.zeros([N])                      
+        self.__c_tdes_high = np.zeros([0])                      
         """high altitude descent thrust coefficient [dimensionless]"""
-        self.__h_p_des = np.zeros([N])                          
+        self.__h_p_des = np.zeros([0])                          
         """transition altitude for calculation of descent thrust [feet]"""
-        self.__c_tdes_app = np.zeros([N])                       
+        self.__c_tdes_app = np.zeros([0])                       
         """approach thrust coefficient [dimensionless]"""
-        self.__c_tdes_ld = np.zeros([N])                        
+        self.__c_tdes_ld = np.zeros([0])                        
         """landing thrust coefficient [dimensionless]"""
-        self.__v_des_ref = np.zeros([N])                        
+        self.__v_des_ref = np.zeros([0])                        
         """reference descent speed [knots (CAS)]"""
-        self.__m_des_ref = np.zeros([N])                        
+        self.__m_des_ref = np.zeros([0])                        
         """reference descent Mach number [dimensionless]"""
 
         # Fuel flow
-        self.__c_f1 = np.zeros([N])                             
+        self.__c_f1 = np.zeros([0])                             
         """1st thrust specific fuel consumption coefficient [kg/(min*kN) (jet) kg/(min*kN*knot) (turboprop) kg/min (piston)]"""
-        self.__c_f2 = np.zeros([N])                             
+        self.__c_f2 = np.zeros([0])                             
         """2nd thrust specific fuel consumption coefficient [knots]"""
-        self.__c_f3 = np.zeros([N])                             
+        self.__c_f3 = np.zeros([0])                             
         """1st descent fuel flow coefficient [kg/min]"""
-        self.__c_f4 = np.zeros([N])                             
+        self.__c_f4 = np.zeros([0])                             
         """2nd descent fuel flow coefficient [feet]"""
-        self.__c_fcr = np.zeros([N])                            
+        self.__c_fcr = np.zeros([0])                            
         """cruise fuel flow correction coefficient [dimensionless]"""
 
         # Ground movement
-        self.__tol = np.zeros([N])                              
+        self.__tol = np.zeros([0])                              
         """take-off length [m]"""
-        self.__ldl = np.zeros([N])                              
+        self.__ldl = np.zeros([0])                              
         """landing length [m]"""
-        self.__span = np.zeros([N])                             
+        self.__span = np.zeros([0])                             
         """wingspan [m]"""
-        self.__length = np.zeros([N])                           
+        self.__length = np.zeros([0])                           
         """length [m]"""
 
 
         # ----------------------------  Airline Procedure Models (APF) section 4 -----------------------------------------
         # Climb
-        self.__v_cl_1 = np.zeros([N])                           
+        self.__v_cl_1 = np.zeros([0])                           
         """standard climb CAS [knots] between 1,500/6,000 and 10,000 ft"""
-        self.__v_cl_2 = np.zeros([N])                           
+        self.__v_cl_2 = np.zeros([0])                           
         """standard climb CAS [knots] between 10,000 ft and Mach transition altitude"""
-        self.__m_cl = np.zeros([N])                             
+        self.__m_cl = np.zeros([0])                             
         """standard climb Mach number above Mach transition altitude"""
 
         # Cruise
-        self.__v_cr_1 = np.zeros([N])                           
+        self.__v_cr_1 = np.zeros([0])                           
         """standard cruise CAS [knots] between 3,000 and 10,000 ft"""
-        self.__v_cr_2 = np.zeros([N])                           
+        self.__v_cr_2 = np.zeros([0])                           
         """standard cruise CAS [knots] between 10,000 ft and Mach transition altitude"""
-        self.__m_cr = np.zeros([N])                             
+        self.__m_cr = np.zeros([0])                             
         """standard cruise Mach number above Mach transition altitude"""
 
         # Descent
-        self.__v_des_1 = np.zeros([N])                          
+        self.__v_des_1 = np.zeros([0])                          
         """standard descent CAS [knots] between 3,000/6,000 and 10,000 ft"""
-        self.__v_des_2 = np.zeros([N])                          
+        self.__v_des_2 = np.zeros([0])                          
         """standard descent CAS [knots] between 10,000 ft and Mach transition altitude"""
-        self.__m_des = np.zeros([N])                            
+        self.__m_des = np.zeros([0])                            
         """standard descent Mach number above Mach transition altitude"""
 
         # Speed schedule
-        self.climb_schedule = np.zeros([N, 8])                
+        self.climb_schedule = np.zeros([0, 8])                
         """Standard climb CAS schedule [knots*8] (section 4.1)"""
-        self.cruise_schedule = np.zeros([N, 5])
+        self.cruise_schedule = np.zeros([0, 5])
         """Standard cruise CAS schedule [knots*5] (section 4.2)"""
-        self.descent_schedule = np.zeros([N,8])
+        self.descent_schedule = np.zeros([0,8])
         """Standard descent CAS schedule [knots*8] (section 4.3)"""
 
 
@@ -336,7 +336,7 @@ class Bada:
         self.__SYNONYM = np.genfromtxt(Path(__file__).parent.parent.parent.parent.resolve().joinpath('./data/BADA/SYNONYM.NEW'), delimiter=[3,2,7,20,25,8,5], names=['CD','ST','ACCODE','MANUFACTURER','MODEL','FILENAME','ICAO'], dtype="U2,U1,U4,U18,U25,U6,U1", comments="CC", autostrip=True, skip_footer=1, encoding= 'unicode_escape')
 
 
-    def add_aircraft(self, icao, n, mass_class=2):
+    def add_aircraft(self, icao, mass_class=2):
         """
         Add one specific aircraft performance data to the performance array according to index.
 
@@ -347,9 +347,6 @@ class Bada:
 
         ICAO: string
             ICAO code of the specific aircraft.
-
-        n: int
-            Index of array.
 
         mass: int
             Mass of aircraft [kg]
@@ -375,105 +372,81 @@ class Bada:
         # 'CD', 3X, A6, 9X, I1, 12X, A9, 17X, A1 - aircraft type block - 1 data line
         # | 'CD' | ICAO | # of engine | 'engines' | engine type ( Jet,  Turboprop  or  Piston) | wake category ( J (jumbo), H (heavy), M (medium) or L (light))
         OPF_Actype = np.genfromtxt(Path(__file__).parent.parent.parent.parent.resolve().joinpath('./data/BADA/', file_name+'.OPF'), delimiter=[5,15,1,12,26,1], dtype="U2,U6,i1,U7,U9,U1", comments="CC", autostrip=True, max_rows=1)
-        self.__n_eng[n] = OPF_Actype.item()[2]
-        self.__engine_type[n] = {'Jet':1, 'Turboprop':2, 'Piston':3}.get(OPF_Actype.item()[4])
-        self.__wake_category[n] = {'J': 1, 'H':2, 'M':3, 'L': 4}.get(OPF_Actype.item()[5])
-        
-        # 'CD', 2X, 5 (3X, E10.5) - mass block - 1 data line
-        self.__m_ref[n] = OPF[0][3]
-        self.m_min[n] = OPF[0][4]
-        self.__m_max[n] = OPF[0][5]
-        self.__m_pyld[n] = OPF[0][6]
-        self.__g_w[n] = OPF[0][7]
-
-        # 'CD', 2X, 5 (3X, E10.5) - flight envelope block - 1 data line
-        self.v_mo[n] = OPF[1][3]
-        self.m_mo[n] = OPF[1][4]
-        self.__h_mo[n] = OPF[1][5]
-        self.__h_max[n] = OPF[1][6]
-        self.__g_t[n] = OPF[1][7]
-
-        # 'CD', 2X, 4 (3X, E10.5) - aerodynamic block - 12 data lines
-        self.__S[n] = OPF[2][3]
-        self.__c_lbo[n] = OPF[2][4]
-        self.__k[n] = OPF[2][5]
-        # __c_m16 is removed from drag expression
-
-        self.__v_stall_cr[n] = OPF[3][4]
-        self.__c_d0_cr[n] = OPF[3][5]
-        self.__c_d2_cr[n] = OPF[3][6]
-
-        self.__v_stall_ic[n] = OPF[4][4] 
-        # self.__c_d0_ic[n] = OPF[3][5]     TODO: Initial climb not used?
-        # self.__c_d2_ic[n] = OPF[3][6]     TODO: Initial climb not used?
-
-        self.__v_stall_to[n] = OPF[5][4]
-        # self.__c_d0_to[n] = OPF[5][5]     TODO: Initial climb not used?
-        # self.__c_d2_to[n] = OPF[5][6]     TODO: Initial climb not used?
-
-        self.__v_stall_ap[n] = OPF[6][4]
-        self.__c_d0_ap[n] = OPF[6][5]
-        self.__c_d2_ap[n] = OPF[6][6]
-
-        self.__v_stall_ld[n] = OPF[7][4]
-        self.__c_d0_ld[n] = OPF[7][5]
-        self.__c_d2_ld[n] = OPF[7][6]
-
-        self.__c_d0_ldg[n] = OPF[11][5]
-
-        # 'CD', 2X, 5 (3X, E10.5) - engine thrust block - 3 data lines
-        self.__c_tc_1[n] = OPF[14][3]
-        self.__c_tc_2[n] = OPF[14][4]
-        self.__c_tc_3[n] = OPF[14][5]
-        self.__c_tc_4[n] = OPF[14][6]
-        self.__c_tc_5[n] = OPF[14][7]
-
-        self.__c_tdes_low[n] = OPF[15][3]
-        self.__c_tdes_high[n] = OPF[15][4]
-        self.__h_p_des[n] = OPF[15][5]
-        self.__c_tdes_app[n] = OPF[15][6]
-        self.__c_tdes_ld[n] = OPF[15][7]
-
-        self.__v_des_ref[n] = OPF[16][3]
-        self.__m_des_ref[n] = OPF[16][4]
-
-        # 'CD', 2X, 2 (3X, E10.5) - fuel consumption block - 3 data lines
-        self.__c_f1[n] = OPF[17][3]
-        self.__c_f2[n] = OPF[17][4]
-
-        self.__c_f3[n] = OPF[18][3]
-        self.__c_f4[n] = OPF[18][4]
-
-        self.__c_fcr[n] = OPF[19][3]
-        
-        # 'CD', 2X, 4 (3X, E10.5) - ground movement block - 1 data line
-        self.__tol[n] = OPF[20][3]
-        self.__ldl[n] = OPF[20][4]
-        self.__span[n] = OPF[20][5]
-        self.__length[n] = OPF[20][6]
-
-        # Delete variable to free memory
-        del OPF_Actype
-        del OPF
 
         # Get data from Airlines Procedures File (Section 6.5)
         # 'CD', 25X, 2(I3, 1X), I2, 10X, 2(Ix, 1X), I2, 2X, I2, 2(1X, I3) - procedures specification block - 3 dataline
         APF = np.genfromtxt(Path(__file__).parent.parent.parent.parent.resolve().joinpath('./data/BADA/', file_name+'.APF'), delimiter=[6,8,9,4,4,4,3,5,4,4,4,4,3,4,4,5,4,4,4,5,7], dtype="U2,U7,U7,U2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,U6", comments="CC", autostrip=True)
-        self.__v_cl_1[n] = APF[mass_class][4]
-        self.__v_cl_2[n] = APF[mass_class][5]
-        self.__m_cl[n] = APF[mass_class][6]/100
-        self.__v_cr_1[n] = APF[mass_class][9]
-        self.__v_cr_2[n] = APF[mass_class][10]
-        self.__m_cr[n] = APF[mass_class][11]/100
-        self.__m_des[n] = APF[mass_class][12]/100
-        self.__v_des_2[n] = APF[mass_class][13]
-        self.__v_des_1[n] = APF[mass_class][14]
+
+        self.__n_eng = np.append(self.__n_eng, OPF_Actype.item()[2])
+        self.__engine_type = np.append(self.__engine_type, {'Jet':1, 'Turboprop':2, 'Piston':3}.get(OPF_Actype.item()[4]))
+        self.__wake_category = np.append(self.__wake_category, {'J': 1, 'H':2, 'M':3, 'L': 4}.get(OPF_Actype.item()[5]))                    
+        self.__m_ref = np.append(self.__m_ref, OPF[0][3])                           
+        self.m_min = np.append(self.m_min, OPF[0][4])                           
+        self.__m_max = np.append(self.__m_max, OPF[0][5])                          
+        self.__m_pyld = np.append(self.__m_pyld, OPF[0][6])                        
+        self.v_mo = np.append(self.v_mo, OPF[1][3])                           
+        self.m_mo = np.append(self.m_mo, OPF[1][4])                            
+        self.__h_mo = np.append(self.__h_mo, OPF[1][5])                           
+        self.__h_max = np.append(self.__h_max, OPF[1][6])                         
+        self.__g_w = np.append(self.__g_w, OPF[0][7])                              
+        self.__g_t = np.append(self.__g_t, OPF[1][7])                         
+        self.__S = np.append(self.__S, OPF[2][3])                              
+        self.__c_d0_cr = np.append(self.__c_d0_cr, OPF[3][5])                        
+        self.__c_d2_cr = np.append(self.__c_d2_cr, OPF[3][6])                        
+        self.__c_d0_ap = np.append(self.__c_d0_ap, OPF[6][5])                        
+        self.__c_d2_ap = np.append(self.__c_d2_ap, OPF[6][6])                         
+        self.__c_d0_ld = np.append(self.__c_d0_ld, OPF[7][5])                    
+        self.__c_d2_ld = np.append(self.__c_d2_ld, OPF[7][6])                        
+        self.__c_d0_ldg = np.append(self.__c_d0_ldg, OPF[11][5])                       
+        self.__v_stall_to = np.append(self.__v_stall_to, OPF[5][4])                     
+        self.__v_stall_ic = np.append(self.__v_stall_ic, OPF[4][4])                     
+        self.__v_stall_cr = np.append(self.__v_stall_cr, OPF[3][4])                   
+        self.__v_stall_ap = np.append(self.__v_stall_ap, OPF[6][4])                  
+        self.__v_stall_ld = np.append(self.__v_stall_ld, OPF[7][4])                   
+        self.__c_lbo = np.append(self.__c_lbo, OPF[2][4])                          
+        self.__k = np.append(self.__k, OPF[2][5])                              
+        self.__c_tc_1 = np.append(self.__c_tc_1, OPF[14][3])                         
+        self.__c_tc_2 = np.append(self.__c_tc_2, OPF[14][4])                       
+        self.__c_tc_3 = np.append(self.__c_tc_3, OPF[14][5])                       
+        self.__c_tc_4 = np.append(self.__c_tc_4, OPF[14][6])                        
+        self.__c_tc_5 = np.append(self.__c_tc_5, OPF[14][7])                        
+        self.__c_tdes_low = np.append(self.__c_tdes_low, OPF[15][3])                      
+        self.__c_tdes_high = np.append(self.__c_tdes_high, OPF[15][4])                    
+        self.__h_p_des = np.append(self.__h_p_des, OPF[15][5])                        
+        self.__c_tdes_app = np.append(self.__c_tdes_app, OPF[15][6])                
+        self.__c_tdes_ld = np.append(self.__c_tdes_ld, OPF[15][7])                   
+        self.__v_des_ref = np.append(self.__v_des_ref, OPF[16][3])                      
+        self.__m_des_ref = np.append(self.__m_des_ref, OPF[16][4])                     
+        self.__c_f1 = np.append(self.__c_f1, OPF[17][3])                          
+        self.__c_f2 = np.append(self.__c_f2, OPF[17][4])                            
+        self.__c_f3 = np.append(self.__c_f3, OPF[18][3])                          
+        self.__c_f4 = np.append(self.__c_f4, OPF[18][4])                           
+        self.__c_fcr = np.append(self.__c_fcr, OPF[19][3])                      
+        self.__tol = np.append(self.__tol, OPF[20][3])                            
+        self.__ldl = np.append(self.__ldl, OPF[20][4])                             
+        self.__span = np.append(self.__span, OPF[20][5])                          
+        self.__length = np.append(self.__length, OPF[20][6])                           
+        self.__v_cl_1 = np.append(self.__v_cl_1, APF[mass_class][4])                        
+        self.__v_cl_2 = np.append(self.__v_cl_2, APF[mass_class][5])                        
+        self.__m_cl = np.append(self.__m_cl, APF[mass_class][6]/100)                            
+        self.__v_cr_1 = np.append(self.__v_cr_1, APF[mass_class][9])                          
+        self.__v_cr_2 = np.append(self.__v_cr_2, APF[mass_class][10])                           
+        self.__m_cr = np.append(self.__m_cr, APF[mass_class][11]/100)                          
+        self.__v_des_1 = np.append(self.__v_des_1, APF[mass_class][14])                         
+        self.__v_des_2 = np.append(self.__v_des_2, APF[mass_class][13])                         
+        self.__m_des = np.append(self.__m_des, APF[mass_class][12]/100)                           
+        self.climb_schedule = np.append(self.climb_schedule, [[0.,0.,0.,0.,0.,0.,0.,0.]], axis=0)               
+        self.cruise_schedule = np.append(self.cruise_schedule, [[0.,0.,0.,0.,0.]], axis=0)
+        self.descent_schedule = np.append(self.descent_schedule, [[0.,0.,0.,0.,0.,0.,0.,0.]], axis=0)
 
         # Delete variable to free memory
         del APF
+        del OPF_Actype
+        del OPF
 
 
-    def del_aircraft(self, n):
+
+    def del_aircraft(self, index):
         """
         Delete one specific aircraft performance data to the performance array according to index. This is done by setting all parameters to 0 for reuse in future.
 
@@ -482,73 +455,70 @@ class Bada:
         self: Performance class instance
             Used to delete data to the performance array.
 
-        n: int
+        index: int
             Index of array.
-
-        Returns
-        -------
-        TODO:
         """
-        self.__m_ref[n] = 0
-        self.__m_min[n] = 0
-        self.__m_max[n] = 0
-        self.__m_pyld[n] = 0
-        self.__g_w[n] = 0
-        self.__v_mo[n] = 0
-        self.__m_mo[n] = 0
-        self.__h_mo[n] = 0
-        self.__h_max[n] = 0
-        self.__g_t[n] = 0
-        self.__S[n] = 0
-        self.__c_lbo[n] = 0
-        self.__k[n] = 0
-        # __c_m16 is removed from drag expression
-        self.__v_stall_cr[n] = 0
-        self.__c_d0_cr[n] = 0
-        self.__c_d2_cr[n] = 0
-        self.__v_stall_ic[n] = 0.
-        # self.__c_d0_ic[n] = 0.0           TODO: Initial climb not used?
-        # self.__c_d2_ic[n] = 0.0           TODO: Initial climb not used?
-        self.__v_stall_to[n] = 0
-        # self.__c_d0_to[n] = 0.0           TODO: Initial climb not used?
-        # self.__c_d2_to[n] = 0.0           TODO: Initial climb not used?
-        self.__v_stall_ap[n] = 0
-        self.__c_d0_ap[n] = 0
-        self.__c_d2_ap[n] = 0
-        self.__v_stall_ld[n] = 0
-        self.__c_d0_ld[n] = 0
-        self.__c_d2_ld[n] = 0
-        self.__c_d0_ldg[n] = 0
-        self.__c_tc_1[n] = 0
-        self.__c_tc_2[n] = 0
-        self.__c_tc_3[n] = 0
-        self.__c_tc_4[n] = 0
-        self.__c_tc_5[n] = 0
-        self.__c_tdes_low[n] = 0
-        self.__c_tdes_high[n] = 0
-        self.__h_p_des[n] = 0
-        self.__c_tdes_app[n] = 0
-        self.__c_tdes_ld[n] = 0
-        self.__v_des_ref[n] = 0
-        self.__m_des_ref[n] = 0
-        self.__c_f1[n] = 0
-        self.__c_f2[n] = 0
-        self.__c_f3[n] = 0
-        self.__c_f4[n] = 0
-        self.__c_fcr[n] = 0
-        self.__tol[n] = 0
-        self.__ldl[n] = 0
-        self.__span[n] = 0
-        self.__length[n] = 0
-        self.__v_cl_1[n] = 0
-        self.__v_cl_2[n] = 0
-        self.__m_cl[n] = 0
-        self.__v_cr_1[n] = 0
-        self.__v_cr_2[n] = 0
-        self.__m_cr[n] = 0
-        self.__m_des[n] = 0
-        self.__v_des_2[n] = 0
-        self.__v_des_1[n] = 0
+        self.__n_eng = np.delete(self.__n_eng, index)
+        self.__engine_type = np.delete(self.__engine_type, index)
+        self.__wake_category = np.delete(self.__wake_category, index)                    
+        self.__m_ref = np.delete(self.__m_ref, index)                           
+        self.m_min = np.delete(self.m_min, index)                           
+        self.__m_max = np.delete(self.__m_max, index)                          
+        self.__m_pyld = np.delete(self.__m_pyld, index)                        
+        self.v_mo = np.delete(self.v_mo, index)                           
+        self.m_mo = np.delete(self.m_mo, index)                            
+        self.__h_mo = np.delete(self.__h_mo, index)                           
+        self.__h_max = np.delete(self.__h_max, index)                         
+        self.__g_w = np.delete(self.__g_w, index)                              
+        self.__g_t = np.delete(self.__g_t, index)                         
+        self.__S = np.delete(self.__S, index)                              
+        self.__c_d0_cr = np.delete(self.__c_d0_cr, index)                        
+        self.__c_d2_cr = np.delete(self.__c_d2_cr, index)                        
+        self.__c_d0_ap = np.delete(self.__c_d0_ap, index)                        
+        self.__c_d2_ap = np.delete(self.__c_d2_ap, index)                         
+        self.__c_d0_ld = np.delete(self.__c_d0_ld, index)                    
+        self.__c_d2_ld = np.delete(self.__c_d2_ld, index)                        
+        self.__c_d0_ldg = np.delete(self.__c_d0_ldg, index)                       
+        self.__v_stall_to = np.delete(self.__v_stall_to, index)                     
+        self.__v_stall_ic = np.delete(self.__v_stall_ic, index)                     
+        self.__v_stall_cr = np.delete(self.__v_stall_cr, index)                   
+        self.__v_stall_ap = np.delete(self.__v_stall_ap, index)                  
+        self.__v_stall_ld = np.delete(self.__v_stall_ld, index)                   
+        self.__c_lbo = np.delete(self.__c_lbo, index)                          
+        self.__k = np.delete(self.__k, index)                              
+        self.__c_tc_1 = np.delete(self.__c_tc_1, index)                         
+        self.__c_tc_2 = np.delete(self.__c_tc_2, index)                       
+        self.__c_tc_3 = np.delete(self.__c_tc_3, index)                       
+        self.__c_tc_4 = np.delete(self.__c_tc_4, index)                        
+        self.__c_tc_5 = np.delete(self.__c_tc_5, index)                        
+        self.__c_tdes_low = np.delete(self.__c_tdes_low, index)                      
+        self.__c_tdes_high = np.delete(self.__c_tdes_high, index)                    
+        self.__h_p_des = np.delete(self.__h_p_des, index)                        
+        self.__c_tdes_app = np.delete(self.__c_tdes_app, index)                
+        self.__c_tdes_ld = np.delete(self.__c_tdes_ld, index)                   
+        self.__v_des_ref = np.delete(self.__v_des_ref, index)                      
+        self.__m_des_ref = np.delete(self.__m_des_ref, index)                     
+        self.__c_f1 = np.delete(self.__c_f1, index)                          
+        self.__c_f2 = np.delete(self.__c_f2, index)                            
+        self.__c_f3 = np.delete(self.__c_f3, index)                          
+        self.__c_f4 = np.delete(self.__c_f4, index)                           
+        self.__c_fcr = np.delete(self.__c_fcr, index)                      
+        self.__tol = np.delete(self.__tol, index)                            
+        self.__ldl = np.delete(self.__ldl, index)                             
+        self.__span = np.delete(self.__span, index)                          
+        self.__length = np.delete(self.__length, index)                           
+        self.__v_cl_1 = np.delete(self.__v_cl_1, index)                        
+        self.__v_cl_2 = np.delete(self.__v_cl_2, index)                        
+        self.__m_cl = np.delete(self.__m_cl, index)                            
+        self.__v_cr_1 = np.delete(self.__v_cr_1, index)                          
+        self.__v_cr_2 = np.delete(self.__v_cr_2, index)                           
+        self.__m_cr = np.delete(self.__m_cr, index)                          
+        self.__v_des_1 = np.delete(self.__v_des_1, index)                         
+        self.__v_des_2 = np.delete(self.__v_des_2, index)                         
+        self.__m_des = np.delete(self.__m_des, index)                           
+        self.climb_schedule = np.delete(self.climb_schedule, index, axis=0)               
+        self.cruise_schedule = np.delete(self.cruise_schedule, index, axis=0)
+        self.descent_schedule = np.delete(self.descent_schedule, index, axis=0)
 
 
     def cal_fuel_burn(self, flight_phase, tas, thrust, alt):

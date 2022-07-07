@@ -11,7 +11,7 @@ class Performance:
     Performance base class
     """
 
-    def __init__(self, N=1000, bada=False):
+    def __init__(self, bada=False):
         """
         Initialize Performance base class
 
@@ -28,14 +28,14 @@ class Performance:
         """Whether BADA performance model is used [Boolean]"""
 
         if (self.bada):
-            self.perf_model = Bada(N)
+            self.perf_model = Bada()
         else:
             # OpenAP
-            self.prop_model = [None] * N
-            self.thrust_model = [None] * N
-            self.drag_model = [None] * N
-            self.fuel_flow_model = [None] * N
-            self.wrap_model = [None] * N
+            self.prop_model = []
+            self.thrust_model = []
+            self.drag_model = []
+            self.fuel_flow_model = []
+            self.wrap_model = []
 
             # self.prop_model = np.empty([N], dtype=np.void)
             # self.thrust_model = np.empty([N], dtype=np.void)
@@ -44,11 +44,11 @@ class Performance:
             # self.wrap_model = np.empty([N], dtype=np.void)
 
 
-        self.drag = np.zeros([N])                               
+        self.drag = np.zeros([0])                               
         """Drag [N]"""
-        self.thrust = np.zeros([N])
+        self.thrust = np.zeros([0])
         """Thrust [N]"""
-        self.esf = np.zeros([N])                                
+        self.esf = np.zeros([0])                                
         """Energy share factor [dimensionless]"""
 
         # ----------------------------  Atmosphere model (Ref: BADA user menu section 3.1) -----------------------------------------
@@ -75,7 +75,7 @@ class Performance:
         """Geopotential pressure altitude [m]"""
 
     
-    def add_aircraft(self, n, icao, engine=None, mass_class=2):
+    def add_aircraft(self, icao, engine=None, mass_class=2):
         """
         Add an aircraft to traffic array.
 
@@ -84,24 +84,35 @@ class Performance:
         n: int
             Index of the added aircraft
         """
+        self.drag = np.append(self.drag, 0.0)                              
+        self.thrust = np.append(self.thrust, 0.0)
+        self.esf = np.append(self.esf, 0.0)                               
+
         if (self.bada):
-            self.perf_model.add_aircraft(icao, n, mass_class)
+            self.perf_model.add_aircraft(icao, mass_class)
         else:
-            self.prop_model[n] = prop.aircraft(icao)
-            self.thrust_model[n] = Thrust(ac=icao, eng=engine)
-            self.drag_model[n] = Drag(ac=icao)
-            self.fuel_flow_model[n] = FuelFlow(ac=icao, eng=engine)
-            self.wrap_model[n] = WRAP(ac=icao)
+            self.prop_model.append(prop.aircraft(icao))
+            self.thrust_model.append(Thrust(ac=icao, eng=engine))
+            self.drag_model.append(Drag(ac=icao))
+            self.fuel_flow_model.append(FuelFlow(ac=icao, eng=engine))
+            self.wrap_model.append(WRAP(ac=icao))
 
 
-    def del_aircraft(self, n):
+    def del_aircraft(self, index):
         """
         Delete an aircraft from traffic array.
         """
+        self.drag = np.delete(self.drag, index)                              
+        self.thrust = np.delete(self.thrust, index)
+        self.esf = np.delete(self.esf, index) 
         if (self.bada):
-            self.perf_model.del_aircraft(n)
+            self.perf_model.del_aircraft(index)
         else:
-            pass    #TODO: OpenAP
+            del self.prop_model[index]
+            del self.thrust_model[index]
+            del self.drag_model[index]
+            del self.fuel_flow_model[index]
+            del self.wrap_model[index]
 
     
     def init_procedure_speed(self, mass, n):

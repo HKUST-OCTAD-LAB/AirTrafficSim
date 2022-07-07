@@ -1,4 +1,5 @@
 """Navigation database"""
+from cProfile import run
 import os
 import csv
 from zipfile import ZipFile
@@ -148,7 +149,7 @@ class Nav:
         (lat, Long, alt): (float, float, float)
             Latitude, Longitude, and Altitude of the runway end
         """
-        tmp = Nav.airports[(Nav.airports[0] == airport) & (Nav.airports[1] == runway.replace("RW", ""))]
+        tmp = Nav.airports[(Nav.airports[0] == airport) & (Nav.airports[1].str.contains(runway))]
         return tmp.iloc[0,2], tmp.iloc[0,3], tmp.iloc[0,4]
 
 
@@ -253,7 +254,7 @@ class Nav:
 
         if appch == "":
             # SID/STAR
-            procedure_df = procedures[(procedures[2] == procedure) & (procedures[3] == runway)]
+            procedure_df = procedures[(procedures[2] == procedure) & (procedures[3].str.contains(runway))]
             if procedure_df.empty:
                 procedure_df = procedures[procedures[2] == procedure]
         elif appch == "A":

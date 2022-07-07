@@ -12,84 +12,81 @@ class Autopilot:
     Autopilot class
     """
 
-    def __init__(self, N=1000):
+    def __init__(self):
         # Target altitude
-        self.alt = np.zeros([N])                                
+        self.alt = np.zeros([0])                                
         """Autopilot target altitude [feet]"""
 
         # Target orientation
-        self.heading = np.zeros([N])                            
+        self.heading = np.zeros([0])                            
         """Autopilot target heading [deg]"""
-        self.track_angle = np.zeros([N])                        
+        self.track_angle = np.zeros([0])                        
         """Autopilot target track angle [deg]"""
-        self.ap_rate_of_turn = np.zeros([N])                    
+        self.ap_rate_of_turn = np.zeros([0])                    
         """Rate of turn [deg/s]"""
 
         # Target speed
-        self.cas = np.zeros([N])                                
+        self.cas = np.zeros([0])                                
         """Autopilot target calibrated air speed [knots]"""
-        self.mach = np.zeros([N])                               
+        self.mach = np.zeros([0])                               
         """Autopilot target Mach number [dimensionless]"""
 
         # Target vertical speed
-        self.vs = np.zeros([N])                                 
+        self.vs = np.zeros([0])                                 
         """Autopilot target vertical speed (feet/min)"""
-        self.fpa = np.zeros([N])                                
+        self.fpa = np.zeros([0])                                
         """Flight path angle [deg]"""
 
         # Target position
-        self.lat = np.zeros([N])                                
+        self.lat = np.zeros([0])                                
         """Autopilot target latitude [deg]"""
-        self.long = np.zeros([N])                               
+        self.long = np.zeros([0])                               
         """Autopilot target longitude [deg]"""
-        self.lat_next = np.zeros([N])                                
+        self.lat_next = np.zeros([0])                                
         """Autopilot target latitude for next waypoint [deg]"""
-        self.long_next = np.zeros([N])                               
+        self.long_next = np.zeros([0])                               
         """Autopilot target longitude for next waypoint [deg]"""
-        self.hv_next_wp = np.ones([N], dtype=bool)
+        self.hv_next_wp = np.ones([0], dtype=bool)
         """Autupilot hv next waypoint [bool]"""
-        self.dist = np.zeros([N])
+        self.dist = np.zeros([0])
         """Distance to next waypoint [nm]"""
 
         # Flight plan
-        self.flight_plan_index = np.zeros([N], dtype=int)                  
+        self.flight_plan_index = np.zeros([0], dtype=int)                  
         """Index of next waypoint in flight plan array [int]"""
-        self.flight_plan_name = [[] for _ in range(N)]          
+        self.flight_plan_name = []          
         """2D array to store the string of waypoints [[string]]"""
-        self.flight_plan_lat = [[] for _ in range(N)]           
+        self.flight_plan_lat = []           
         """2D array to store the latitude of waypoints [[deg...]]"""
-        self.flight_plan_long = [[] for _ in range(N)]          
+        self.flight_plan_long = []          
         """2D array to store the longitude of waypoints [[deg...]]"""
-        self.flight_plan_target_alt = [[] for _ in range(N)]   
+        self.flight_plan_target_alt = []   
         """2D array of target altitude at each waypoint [[ft...]]"""
-        self.flight_plan_target_speed = [[] for _ in range(N)]   
+        self.flight_plan_target_speed = []   
         """2D array of target speed at each waypoint [[cas/mach...]]"""
-        self.procedure_speed = np.zeros([N])
+        self.procedure_speed = np.zeros([0])
         """Procedural target speed from BADA"""
 
         # Flight mode
-        self.speed_mode = np.zeros([N])                         
+        self.speed_mode = np.zeros([0])                         
         """Autopilot speed mode [1: constant Mach, 2: constant CAS, 3: accelerate, 4: decelerate]"""
-        self.auto_throttle_mode = np.zeros([N])                 
+        self.auto_throttle_mode = np.zeros([0])                 
         """Autothrottle mode [1: Auto, 2: Speed]"""
-        self.vertical_mode = np.zeros([N])                      
+        self.vertical_mode = np.zeros([0])                      
         """Autopilot vertical mode [1: alt hold, 2: vs mode, 3: flc mode (flight level change), 4. VNAV]"""
-        self.lateral_mode = np.zeros([N])                       
+        self.lateral_mode = np.zeros([0])                       
         """Autopilot lateral mode [1: heading, 2: LNAV] ATC only use heading, LNAV -> track angle"""
-        self.expedite_descent = np.zeros([N], dtype=bool)       
+        self.expedite_descent = np.zeros([0], dtype=bool)       
         """Autopilot expedite climb setting [bool]"""
 
         # Init nav class
         # self.nav = Nav()
 
 
-    def add_aircraft(self, n, lat, long, alt, heading, cas, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt):
+    def add_aircraft(self, lat, long, alt, heading, cas, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt):
         """
         Add aircraft and init flight plan
 
-         n : int
-            Index of array.
-        
         lat : float
             Starting latitude of the aircraft
 
@@ -108,96 +105,162 @@ class Autopilot:
         flight_plan : String[] (optional)
             Flight plan of an aircraft
         """
-        self.alt[n] = alt
-        self.heading[n] = heading
-        self.cas[n] = cas
-        self.lateral_mode[n] = AP_lateral_mode.HEADING
 
+        self.alt = np.append(self.alt, alt)                                
+        self.heading = np.append(self.heading, heading)                    
+        self.track_angle = np.append(self.track_angle, heading)                     
+        self.ap_rate_of_turn = np.append(self.ap_rate_of_turn, 0.0)               
+        self.cas = np.append(self.cas, cas)                             
+        self.mach = np.append(self.mach, 0.0)                              
+        self.vs = np.append(self.vs, 0.0)                              
+        self.fpa = np.append(self.fpa, 0.0)                              
+        self.lat = np.append(self.lat, 0.0)                                
+        self.long = np.append(self.long, 0.0)                              
+        self.lat_next = np.append(self.lat_next, 0.0)                              
+        self.long_next = np.append(self.long_next, 0.0)                              
+        self.hv_next_wp = np.append(self.hv_next_wp, False)
+        self.dist = np.append(self.dist, 0.0)
+        self.flight_plan_index = np.append(self.flight_plan_index, 0)               
+        self.flight_plan_name.append([])     
+        self.flight_plan_lat.append([])         
+        self.flight_plan_long.append([])         
+        self.flight_plan_target_alt.append([])  
+        self.flight_plan_target_speed.append([])  
+        self.procedure_speed = np.append(self.procedure_speed, 0.0)
+        self.speed_mode = np.append(self.speed_mode, 0.0)                         
+        self.auto_throttle_mode = np.append(self.auto_throttle_mode, AP_throttle_mode.SPEED)             
+        self.vertical_mode = np.append(self.vertical_mode, 0.0)                      
+        self.lateral_mode = np.append(self.lateral_mode, AP_lateral_mode.HEADING)                   
+        self.expedite_descent = np.append(self.expedite_descent, False) 
+
+        # if not flight_plan == []:
+        # Add SID to flight plan
+        if not sid == "":
+            waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(departure_airport, departure_runway, sid)
+            # TODO: Ignored alt restriction 2, alt restriction type, and speed restriction type
+            self.flight_plan_name[-1].extend(waypoint)
+            self.flight_plan_target_alt[-1].extend(alt_restriction_1)
+            self.flight_plan_target_speed[-1].extend(speed_restriction)
+
+            self.lateral_mode[-1] = AP_lateral_mode.LNAV
+            self.auto_throttle_mode[-1] = AP_throttle_mode.AUTO
+
+        # Add enroute flight plan
         if not flight_plan == []:
-            # Add SID to flight plan
-            if not sid == "":
-                waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(departure_airport, departure_runway, sid)
-                # TODO: Ignored alt restriction 2, alt restriction type, and speed restriction type
-                self.flight_plan_name[n].extend(waypoint)
-                self.flight_plan_target_alt[n].extend(alt_restriction_1)
-                self.flight_plan_target_speed[n].extend(speed_restriction)
-
-            # Add enroute flight plan
-            self.flight_plan_name[n].extend(flight_plan)
+            self.flight_plan_name[-1].extend(flight_plan)
             if cruise_alt > -1:
-                self.flight_plan_target_alt[n].extend([cruise_alt for _ in flight_plan])
-            self.flight_plan_target_speed[n].extend([-1 for _ in flight_plan])
+                self.flight_plan_target_alt[-1].extend([cruise_alt for _ in flight_plan])
+            self.flight_plan_target_speed[-1].extend([-1 for _ in flight_plan])
 
-            # Add STAR to flight plan
-            if not star == "":
-                waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, star)
-                self.flight_plan_name[n].extend(waypoint)
-                self.flight_plan_target_alt[n].extend(alt_restriction_1)
-                self.flight_plan_target_speed[n].extend(speed_restriction)
+            self.lateral_mode[-1] = AP_lateral_mode.LNAV
+            self.auto_throttle_mode[-1] = AP_throttle_mode.AUTO
 
-            if not approach == "":
-                # Add Initial Approach to flight plan
-                waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, approach, appch="A", iaf=self.flight_plan_name[n][-1])
-                # Remove last element of flight plan which should be equal to iaf
-                self.flight_plan_name[n].pop()
-                self.flight_plan_target_alt[n].pop()
-                self.flight_plan_target_speed[n].pop()
-                # Add Initial Approach flight plan 
-                self.flight_plan_name[n].extend(waypoint)
-                self.flight_plan_target_alt[n].extend(alt_restriction_1)
-                self.flight_plan_target_speed[n].extend(speed_restriction)
+        # Add STAR to flight plan
+        if not star == "":
+            waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, star)
+            self.flight_plan_name[-1].extend(waypoint)
+            self.flight_plan_target_alt[-1].extend(alt_restriction_1)
+            self.flight_plan_target_speed[-1].extend(speed_restriction)
 
-                # Add Final Approach to flight plan
-                waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, approach, appch="I")
-                # Remove last element of flight plan which should be equal to iaf
-                self.flight_plan_name[n].pop()
-                self.flight_plan_target_alt[n].pop()
-                self.flight_plan_target_speed[n].pop()
-                # Add Final Approach flight plan with missed approach removed)
-                waypoint_idx = waypoint.index(' ')
-                self.flight_plan_name[n].extend(waypoint[:waypoint_idx])
-                self.flight_plan_target_alt[n].extend(alt_restriction_1[:waypoint_idx])
-                self.flight_plan_target_speed[n].extend(speed_restriction[:waypoint_idx])
-                # TODO: For missed approach procedure [waypoint_idx+1:]
+            self.lateral_mode[-1] = AP_lateral_mode.LNAV
+            self.auto_throttle_mode[-1] = AP_throttle_mode.AUTO
 
-            # Get Lat Long of flight plan waypoints
-            for i, val in enumerate(self.flight_plan_name[n]):
-                if i == 0:
-                    lat_tmp, long_tmp = Nav.get_fix_coordinate(val, lat, long)
-                    self.flight_plan_lat[n].append(lat_tmp)
-                    self.flight_plan_long[n].append(long_tmp)
-                else:
-                    lat_tmp, long_tmp = Nav.get_fix_coordinate(val, self.flight_plan_lat[n][i-1], self.flight_plan_long[n][i-1])
-                    self.flight_plan_lat[n].append(lat_tmp)
-                    self.flight_plan_long[n].append(long_tmp)
+        if not approach == "":
+            # Add Initial Approach to flight plan
+            waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, approach, appch="A", iaf=self.flight_plan_name[-1][-1])
+            # Remove last element of flight plan which should be equal to iaf
+            self.flight_plan_name[-1].pop()
+            self.flight_plan_target_alt[-1].pop()
+            self.flight_plan_target_speed[-1].pop()
+            # Add Initial Approach flight plan 
+            self.flight_plan_name[-1].extend(waypoint)
+            self.flight_plan_target_alt[-1].extend(alt_restriction_1)
+            self.flight_plan_target_speed[-1].extend(speed_restriction)
 
-            # TODO: Add runway lat long alt
-            if not arrival_runway == "":
-                lat_tmp, long_tmp, alt_tmp = Nav.get_runway_coordinate(arrival_airport, arrival_runway)
-                if self.flight_plan_name[n][-1] == arrival_runway:
-                    self.flight_plan_lat[n][-1] = lat_tmp
-                    self.flight_plan_long[n][-1] = long_tmp
-                    self.flight_plan_target_alt[n][-1] = alt_tmp
-                else:
-                    self.flight_plan_lat[n].append(lat_tmp)
-                    self.flight_plan_long[n].append(long_tmp)
-                    self.flight_plan_target_alt[n].append(alt_tmp)
-                    # self.flight_plan_target_speed[n]
+            # Add Final Approach to flight plan
+            waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, approach, appch="I")
+            # Remove last element of flight plan which should be equal to iaf
+            self.flight_plan_name[-1].pop()
+            self.flight_plan_target_alt[-1].pop()
+            self.flight_plan_target_speed[-1].pop()
+            # Add Final Approach flight plan with missed approach removed)
+            # waypoint_idx = waypoint.index(' ')
+            # self.flight_plan_name[-1].extend(waypoint[:waypoint_idx])
+            # self.flight_plan_target_alt[-1].extend(alt_restriction_1[:waypoint_idx])
+            # self.flight_plan_target_speed[-1].extend(speed_restriction[:waypoint_idx])
+            self.flight_plan_name[-1].extend(waypoint)
+            self.flight_plan_target_alt[-1].extend(alt_restriction_1)
+            self.flight_plan_target_speed[-1].extend(speed_restriction)
+            # TODO: For missed approach procedure [waypoint_idx+1:]
+
+            self.lateral_mode[-1] = AP_lateral_mode.LNAV
+            self.auto_throttle_mode[-1] = AP_throttle_mode.AUTO
+
+        # Get Lat Long of flight plan waypoints
+        for i, val in enumerate(self.flight_plan_name[-1]):
+            if i == 0:
+                lat_tmp, long_tmp = Nav.get_fix_coordinate(val, lat, long)
+                self.flight_plan_lat[-1].append(lat_tmp)
+                self.flight_plan_long[-1].append(long_tmp)
+            else:
+                lat_tmp, long_tmp = Nav.get_fix_coordinate(val, self.flight_plan_lat[-1][i-1], self.flight_plan_long[-1][i-1])
+                self.flight_plan_lat[-1].append(lat_tmp)
+                self.flight_plan_long[-1].append(long_tmp)
+
+        # TODO: Add runway lat long alt
+        if not arrival_runway == "":
+            lat_tmp, long_tmp, alt_tmp = Nav.get_runway_coordinate(arrival_airport, arrival_runway)
+            if self.flight_plan_name[-1][-1] == arrival_runway:
+                self.flight_plan_lat[-1][-1] = lat_tmp
+                self.flight_plan_long[-1][-1] = long_tmp
+                self.flight_plan_target_alt[-1][-1] = alt_tmp
+            else:
+                self.flight_plan_lat[-1].append(lat_tmp)
+                self.flight_plan_long[-1].append(long_tmp)
+                self.flight_plan_target_alt[-1].append(alt_tmp)
+                # self.flight_plan_target_speed[n]
+
+        # Populate alt and speed target from last waypoint
+        if len(self.flight_plan_target_alt[-1]) > 1:
+            self.flight_plan_target_alt[-1][-1] = 0.0
+            for i, val in reversed(list(enumerate(self.flight_plan_target_alt[-1]))):
+                if val == -1:
+                    self.flight_plan_target_alt[-1][i] = self.flight_plan_target_alt[-1][i+1]
+
+        # for i, val in reversed(list(enumerate(self.flight_plan_target_speed[n]))):
+        #     if val == -1:
+        #         self.flight_plan_target_speed[n][i] = self.flight_plan_target_speed[n][i+1]
+
             
 
-            # Populate alt and speed target from last waypoint
-            if len(self.flight_plan_target_alt[n]) > 1:
-                self.flight_plan_target_alt[n][-1] = 0.0
-                for i, val in reversed(list(enumerate(self.flight_plan_target_alt[n]))):
-                    if val == -1:
-                        self.flight_plan_target_alt[n][i] = self.flight_plan_target_alt[n][i+1]
 
-            # for i, val in reversed(list(enumerate(self.flight_plan_target_speed[n]))):
-            #     if val == -1:
-            #         self.flight_plan_target_speed[n][i] = self.flight_plan_target_speed[n][i+1]
-
-            self.lateral_mode[n] = AP_lateral_mode.LNAV
-            self.auto_throttle_mode[n] = AP_throttle_mode.AUTO
+    def del_aircraft(self, index):
+        self.alt = np.delete(self.alt, index)                                
+        self.heading = np.delete(self.heading, index)                    
+        self.track_angle = np.delete(self.track_angle, index)                     
+        self.ap_rate_of_turn = np.delete(self.ap_rate_of_turn, index)               
+        self.cas = np.delete(self.cas, index)                             
+        self.mach = np.delete(self.mach, index)                              
+        self.vs = np.delete(self.vs, index)                              
+        self.fpa = np.delete(self.fpa, index)                              
+        self.lat = np.delete(self.lat, index)                                
+        self.long = np.delete(self.long, index)                              
+        self.lat_next = np.delete(self.lat_next, index)                              
+        self.long_next = np.delete(self.long_next, index)                              
+        self.hv_next_wp = np.delete(self.hv_next_wp, index)
+        self.dist = np.delete(self.dist, index)
+        self.flight_plan_index = np.delete(self.flight_plan_index, index)               
+        del self.flight_plan_name[index]          
+        del self.flight_plan_lat[index]           
+        del self.flight_plan_long[index]          
+        del self.flight_plan_target_alt[index]   
+        del self.flight_plan_target_speed[index]   
+        self.procedure_speed = np.delete(self.procedure_speed, index)
+        self.speed_mode = np.delete(self.speed_mode, index)                         
+        self.auto_throttle_mode = np.delete(self.auto_throttle_mode, index)             
+        self.vertical_mode = np.delete(self.vertical_mode, index)                      
+        self.lateral_mode = np.delete(self.lateral_mode, index)                   
+        self.expedite_descent =np.delete(self.expedite_descent, index)     
 
 
     def update(self, traffic: Traffic):

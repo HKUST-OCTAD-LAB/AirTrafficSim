@@ -15,7 +15,7 @@ class Environment:
     Base class for simulation environment
     """
 
-    def __init__(self, file_name="default",  number_of_traffic=1000, start_time = datetime.utcnow(), end_time = 60, era5_weather=False, bada_perf=False):
+    def __init__(self, file_name="default", start_time = datetime.utcnow(), end_time = 60, era5_weather=False, bada_perf=False):
         # User setting
         self.start_time = start_time
         """The simulation start time [datetime object]"""
@@ -23,7 +23,7 @@ class Environment:
         """The simulation end time [s]"""
 
         # Simulation variable
-        self.traffic = Traffic(number_of_traffic, file_name, start_time, end_time, era5_weather, bada_perf)
+        self.traffic = Traffic(file_name, start_time, end_time, era5_weather, bada_perf)
         self.global_time = 0                    # [s]
 
         # Handle io
@@ -51,7 +51,7 @@ class Environment:
                         'thrust', 'drag', 'esf', 'accel',
                         'ap_track_angle', 'ap_heading', 'ap_alt', 'ap_cas', 'ap_mach', 'ap_procedural_speed', 
                         'ap_wp_index', 'ap_next_wp', 'ap_dist_to_next_fix', 
-                        'flight_phase', 'configuration', 'speed_mode', 'vertical_mode','ap_speed_mode', 'ap_lateral_mode']
+                        'flight_phase', 'configuration', 'speed_mode', 'vertical_mode','ap_speed_mode', 'ap_lateral_mode', 'ap_throttle_mode']
         self.writer.writerow(self.header)
         self.header.remove('timestep')
         self.header.remove('timestamp')
@@ -126,15 +126,15 @@ class Environment:
         """
         Save all states variable of one timestemp to csv file.
         """
-        data = np.column_stack((np.full(self.traffic.n, self.global_time), np.full(self.traffic.n, (self.datetime + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), np.arange(self.traffic.n), self.traffic.call_sign[:self.traffic.n], self.traffic.lat[:self.traffic.n], self.traffic.long[:self.traffic.n], self.traffic.alt[:self.traffic.n],
-                                self.traffic.cas[:self.traffic.n], self.traffic.tas[:self.traffic.n], self.traffic.mach[:self.traffic.n], self.traffic.vs[:self.traffic.n], 
-                                self.traffic.heading[:self.traffic.n], self.traffic.bank_angle[:self.traffic.n], self.traffic.path_angle[:self.traffic.n], 
-                                self.traffic.mass[:self.traffic.n], self.traffic.fuel_consumed[:self.traffic.n],
-                                self.traffic.perf.thrust[:self.traffic.n], self.traffic.perf.drag[:self.traffic.n], self.traffic.perf.esf[:self.traffic.n], self.traffic.accel[:self.traffic.n],
-                                self.traffic.ap.track_angle[:self.traffic.n], self.traffic.ap.heading[:self.traffic.n], self.traffic.ap.alt[:self.traffic.n], self.traffic.ap.cas[:self.traffic.n], self.traffic.ap.mach[:self.traffic.n], self.traffic.ap.procedure_speed [:self.traffic.n],
-                                self.traffic.ap.flight_plan_index[:self.traffic.n], [self.traffic.ap.flight_plan_name[i][val] if (val < len(self.traffic.ap.flight_plan_name[i])) else "NONE" for i, val in enumerate(self.traffic.ap.flight_plan_index[:self.traffic.n])], self.traffic.ap.dist[:self.traffic.n],                  # autopilot variable
-                                [Flight_phase(i).name for i in self.traffic.flight_phase[:self.traffic.n]], [Configuration(i).name for i in self.traffic.configuration[:self.traffic.n]], [Speed_mode(i).name for i in self.traffic.speed_mode[:self.traffic.n]], [Vertical_mode(i).name for i in self.traffic.vertical_mode[:self.traffic.n]], 
-                                [AP_speed_mode(i).name for i in self.traffic.ap.speed_mode[:self.traffic.n]], [AP_lateral_mode(i).name for i in self.traffic.ap.lateral_mode[:self.traffic.n]])) # mode
+        data = np.column_stack((np.full(len(self.traffic.index), self.global_time), np.full(len(self.traffic.index), (self.datetime + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), self.traffic.index, self.traffic.call_sign, self.traffic.lat, self.traffic.long, self.traffic.alt,
+                                self.traffic.cas, self.traffic.tas, self.traffic.mach, self.traffic.vs, 
+                                self.traffic.heading, self.traffic.bank_angle, self.traffic.path_angle, 
+                                self.traffic.mass, self.traffic.fuel_consumed,
+                                self.traffic.perf.thrust, self.traffic.perf.drag, self.traffic.perf.esf, self.traffic.accel,
+                                self.traffic.ap.track_angle, self.traffic.ap.heading, self.traffic.ap.alt, self.traffic.ap.cas, self.traffic.ap.mach, self.traffic.ap.procedure_speed ,
+                                self.traffic.ap.flight_plan_index, [self.traffic.ap.flight_plan_name[i][val] if (val < len(self.traffic.ap.flight_plan_name[i])) else "NONE" for i, val in enumerate(self.traffic.ap.flight_plan_index)], self.traffic.ap.dist,                  # autopilot variable
+                                [Flight_phase(i).name for i in self.traffic.flight_phase], [Configuration(i).name for i in self.traffic.configuration], [Speed_mode(i).name for i in self.traffic.speed_mode], [Vertical_mode(i).name for i in self.traffic.vertical_mode], 
+                                [AP_speed_mode(i).name for i in self.traffic.ap.speed_mode], [AP_lateral_mode(i).name for i in self.traffic.ap.lateral_mode], [AP_throttle_mode(i).name for i in self.traffic.ap.auto_throttle_mode])) # mode
         
         self.writer.writerows(data)
 
