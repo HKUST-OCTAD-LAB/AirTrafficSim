@@ -19,7 +19,7 @@ class FullFlightDemo(Environment):
                         )
 
         # Add aircraft
-        lat_dep, long_dep, alt_dep = Nav.get_runway_coordinate("VHHH", "RW25L") #TODO: Convert MSL to Geopotential altitude
+        lat_dep, long_dep, alt_dep = Nav.get_runway_coordinate("VHHH", "25L") #TODO: Convert MSL to Geopotential altitude
         self.aircraft_full = Aircraft(self.traffic, call_sign="FULL", aircraft_type="A320", flight_phase=Flight_phase.TAKEOFF, configuration=Configuration.TAKEOFF,
                                                     lat=lat_dep, long=long_dep, alt=alt_dep, heading=254.0, cas=149.0, 
                                                     fuel_weight=5273.0, payload_weight=12000.0,
