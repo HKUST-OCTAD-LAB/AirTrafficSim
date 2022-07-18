@@ -2,11 +2,12 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import pandas as pd
 import numpy as np
+import csv
 
 from core.environment import Environment
 from core.aircraft import Aircraft
 from core.nav import Nav
-from utils.enums import Configuration, Flight_phase
+from utils.enums import AP_lateral_mode, Configuration, Flight_phase
 from utils.cal import Calculation
 from utils.route_detection import rdp, detect_sid_star
 
@@ -16,7 +17,8 @@ class MILP(Environment):
         # Initialize environment super class
         super().__init__(file_name = Path(__file__).name.removesuffix('.py'), #File name (do not change)
                         start_time = datetime.fromisoformat('2018-05-01T00:00:00'),
-                        end_time = 86400,
+                        end_time = 3600,
+                        # end_time = 86400,
                         era5_weather = False,
                         bada_perf = True 
                         )
@@ -75,7 +77,7 @@ class MILP(Environment):
         self.approach = []
         self.position = []
         self.speed = []
-        self.alt = []
+        self.start_alt = []
         self.heading = []
         self.time = []
         
@@ -95,10 +97,10 @@ class MILP(Environment):
                 approach_result, approach_trajectory = detect_sid_star(simplified, approach_dict, approach_waypoints_coord_dict)
                 self.approach.append(approach_result)
 
-                index = np.where(Calculation.cal_great_circle_distance(traj[:,0], traj[:,1], 22.3080, 113.9185) < 100)[0][0]
+                index = np.where(Calculation.cal_great_circle_distance(traj[:,0], traj[:,1], 22.3193, 114.1694) < 150)[0][0]
                 self.position.append(traj[index])
                 self.speed.append(df['gspeed'].iloc[index])
-                self.alt.append(df['alt'].iloc[index])
+                self.start_alt.append(df['alt'].iloc[index])
                 self.heading.append(df['hangle'].iloc[index])
                 self.time.append(df['timestamp'].iloc[index])
 
@@ -106,17 +108,20 @@ class MILP(Environment):
         
         print("Finished analyzing data")
 
+        self.wake = []
 
-        self.aircraft_list = []
+
+        self.aircraft_list = {}
+        self.time = np.array(self.time)
 
         self.start_time = datetime.fromtimestamp(np.min(self.time))
-        i = np.argmin(self.time)
+        # i = np.argmin(self.time)
         
-        self.aircraft_list.append(
-            Aircraft(self.traffic, call_sign=self.call_sign[i], aircraft_type=self.type[i], flight_phase=Flight_phase.CRUISE, configuration=Configuration.CLEAN,
-                    lat=self.position[i][0], long=self.position[i][1], alt=self.alt[i], heading=self.heading[i], cas=self.speed[i], fuel_weight=10000.0, payload_weight=12000.0, 
-                    arrival_airport="VHHH", arrival_runway="07R", star = self.star[i], approach = self.approach[i], cruise_alt=37000)
-        )
+        # self.aircraft_list.append(
+        #     Aircraft(self.traffic, call_sign=self.call_sign[i], aircraft_type=self.type[i], flight_phase=Flight_phase.CRUISE, configuration=Configuration.CLEAN,
+        #             lat=self.position[i][0], long=self.position[i][1], alt=self.alt[i], heading=self.heading[i], cas=self.speed[i], fuel_weight=10000.0, payload_weight=12000.0, 
+        #             arrival_airport="VHHH", arrival_runway="07R", star = self.star[i], approach = self.approach[i], cruise_alt=37000)
+        # )
 
 
     def should_end(self):
@@ -127,11 +132,28 @@ class MILP(Environment):
         time = self.start_time + timedelta(seconds=self.global_time)
         time = int(time.timestamp())
         index = np.where(self.time == time)[0]
-        if (index > 0):
-            print("hi", index)
+        # Add aircraft
         for i in index:
-            self.aircraft_list.append(
-            Aircraft(self.traffic, call_sign=self.call_sign[i], aircraft_type=self.type[i], flight_phase=Flight_phase.CRUISE, configuration=Configuration.CLEAN,
-                    lat=self.position[i][0], long=self.position[i][1], alt=self.alt[i], heading=self.heading[i], cas=self.speed[i], fuel_weight=10000.0, payload_weight=12000.0, 
-                    arrival_airport="VHHH", arrival_runway="07R", star = self.star[i], approach = self.approach[i], cruise_alt=37000)
-        )
+            self.aircraft_list[self.call_sign[i]] = Aircraft(self.traffic, call_sign=self.call_sign[i], aircraft_type=self.type[i], flight_phase=Flight_phase.CRUISE, configuration=Configuration.CLEAN,
+                                            lat=self.position[i][0], long=self.position[i][1], alt=self.start_alt[i], heading=self.heading[i], cas=self.speed[i], fuel_weight=10000.0, payload_weight=12000.0, 
+                                            arrival_airport="VHHH", arrival_runway="07R", star = self.star[i], approach = self.approach[i], cruise_alt=37000)
+            # self.wake.append([self.call_sign[i], self.aircraft_list[self.call_sign[i]].get_wake()])
+
+        # Delete aircraft
+        index = self.traffic.index[self.traffic.ap.hv_next_wp == False]
+        for i in index:
+            self.traffic.del_aircraft(i)
+
+        if "TH3507" in self.aircraft_list:
+            # self.aircraft_list["TH3507"].set_vectoring(60, 195, "GUAVA")
+            if self.global_time == 100:
+                self.aircraft_list["TH3507"].set_holding(2, "BETTY", "VH")
+
+        # if self.global_time == 86400:
+        #     print(self.wake)
+        #     with open("/home/kyfrankie/AirTrafficSim/wake.csv", "w", newline='') as f:
+        #         writer = csv.writer(f)
+        #         writer.writerows(self.wake)
+        
+
+        

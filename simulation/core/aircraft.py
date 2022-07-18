@@ -1,6 +1,9 @@
 from core.traffic import Traffic
 import numpy as np
 
+from core.nav import Nav
+from utils.unit import Unit_conversion
+from utils.cal import Calculation
 from utils.enums import AP_lateral_mode, AP_throttle_mode
 
 class Aircraft:
@@ -14,7 +17,7 @@ class Aircraft:
         """
         self.traffic = traffic          # Pass traffic array reference
         self.index = self.traffic.add_aircraft(call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt)        # Add aircraft. Obtain aircraft index
-
+        self.vectoring = ""
 
     def set_heading(self, heading):
         """Set heading [deg]"""
@@ -50,6 +53,32 @@ class Aircraft:
     def set_direct(self, waypoint):
         index = np.where(self.traffic.index == self.index)[0][0]
         self.traffic.ap.lateral_mode[index] = AP_lateral_mode.LNAV
+
+
+    def set_holding(self, holding_time, holding_fix, region):
+        index = np.where(self.traffic.index == self.index)[0][0]
+        self.traffic.ap.holding_round[index] = holding_time
+        self.traffic.ap.holding_info[index] = Nav.get_holding_procedure(holding_fix, region)
+
+
+    def set_vectoring(self, vectoring_time, v_2, fix):
+        
+        if not self.vectoring == fix and self.get_next_wp() == fix:
+            self.vectoring = fix
+            index = np.where(self.traffic.index == self.index)[0][0]
+
+            new_dist = self.traffic.ap.dist[index] + Unit_conversion.knots_to_mps(self.traffic.cas[index]+v_2)*(vectoring_time)/2000.0
+            bearing = np.mod(self.traffic.ap.heading[index]+np.rad2deg(np.arccos(self.traffic.ap.dist[index]/new_dist)) + 360.0, 360.0)
+            lat, long = Calculation.cal_pos_with_bearing_dist(self.traffic.lat[index], self.traffic.long[index], bearing, new_dist/2)
+
+            # Add new virtual waypoint
+            i = self.traffic.ap.flight_plan_index[index]
+            self.traffic.ap.flight_plan_lat[index].insert(i, lat)
+            self.traffic.ap.flight_plan_long[index].insert(i, long)
+            self.traffic.ap.flight_plan_name[index].insert(i, "VECT")
+            self.traffic.ap.flight_plan_target_alt[index].insert(i, self.traffic.ap.flight_plan_target_alt[index][i])
+            self.traffic.ap.flight_plan_target_speed[index][i] = v_2
+            self.traffic.ap.flight_plan_target_speed[index].insert(i, self.traffic.ap.flight_plan_target_speed[index][i])
 
 
     def resume_own_navigation(self):
@@ -154,3 +183,12 @@ class Aircraft:
         """
         index = np.where(self.traffic.index == self.index)[0][0]
         return self.traffic.fuel_consumed[index]
+
+
+    def get_next_wp(self):
+        index = np.where(self.traffic.index == self.index)[0][0]
+        return self.traffic.ap.flight_plan_name[index][self.traffic.ap.flight_plan_index[index]]
+
+    def get_wake(self):
+        index = np.where(self.traffic.index == self.index)[0][0]
+        return self.traffic.perf.perf_model._Bada__wake_category[index]

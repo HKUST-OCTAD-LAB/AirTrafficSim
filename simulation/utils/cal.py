@@ -63,6 +63,25 @@ class Calculation:
 
 
     @staticmethod
+    def cal_pos_with_bearing_dist(lat, long, bearing, dist):
+        """
+        Calculate destination point given start point, initial bearing, and distance
+
+        Returns
+        -------
+        lat, long : float, float
+           Lat, Long of destination point
+        """
+        lat = np.deg2rad(lat)
+        bearing = np.deg2rad(bearing)
+        dist = dist/6371.0
+
+        lat2 = np.rad2deg(np.arcsin(np.sin(lat)*np.cos(dist) + np.cos(lat)*np.sin(dist)*np.cos(bearing)))
+        long2 = long + np.rad2deg(np.arctan2(np.sin(bearing)*np.sin(dist)*np.cos(lat), np.cos(dist) - np.sin(lat)*np.sin(np.deg2rad(lat2))))
+        return lat2, long2
+               
+
+    @staticmethod
     def cal_cross_track_distance(path_lat1, path_long1, path_lat2, path_long2, point_lat, point_long):
         """
         Calculate the cross track distance between a point and a great circle path

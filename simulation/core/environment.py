@@ -32,7 +32,7 @@ class Environment:
         self.graph_type = 'None'
         self.packet_id = 0
         # Buffer
-        self.time = []
+        self.buffer_time = []
         self.lat = []
         self.long = []
         self.alt = []
@@ -50,7 +50,7 @@ class Environment:
                         'mass', 'fuel_consumed', 
                         'thrust', 'drag', 'esf', 'accel',
                         'ap_track_angle', 'ap_heading', 'ap_alt', 'ap_cas', 'ap_mach', 'ap_procedural_speed', 
-                        'ap_wp_index', 'ap_next_wp', 'ap_dist_to_next_fix', 
+                        'ap_wp_index', 'ap_next_wp', 'ap_dist_to_next_fix', 'ap_holding_round', 
                         'flight_phase', 'configuration', 'speed_mode', 'vertical_mode','ap_speed_mode', 'ap_lateral_mode', 'ap_throttle_mode']
         self.writer.writerow(self.header)
         self.header.remove('timestep')
@@ -92,7 +92,7 @@ class Environment:
             
             if(socketio != None):
                 # Save to buffer
-                self.time.append((self.datetime + timedelta(seconds=self.global_time)).isoformat())
+                self.buffer_time.append((self.datetime + timedelta(seconds=self.global_time)).isoformat())
                 self.lat.append(self.traffic.lat)
                 self.long.append(self.traffic.long)
                 self.alt.append(self.traffic.alt)
@@ -107,7 +107,7 @@ class Environment:
                     self.send_to_client(socketio)
                     socketio.sleep(0)
                     self.last_sent_time = now
-                    self.time = []
+                    self.buffer_time = []
                     self.lat = []
                     self.long = []
                     self.alt = []
@@ -126,13 +126,13 @@ class Environment:
         """
         Save all states variable of one timestemp to csv file.
         """
-        data = np.column_stack((np.full(len(self.traffic.index), self.global_time), np.full(len(self.traffic.index), (self.datetime + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), self.traffic.index, self.traffic.call_sign, self.traffic.lat, self.traffic.long, self.traffic.alt,
+        data = np.column_stack((np.full(len(self.traffic.index), self.global_time), np.full(len(self.traffic.index), (self.start_time + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), self.traffic.index, self.traffic.call_sign, self.traffic.lat, self.traffic.long, self.traffic.alt,
                                 self.traffic.cas, self.traffic.tas, self.traffic.mach, self.traffic.vs, 
                                 self.traffic.heading, self.traffic.bank_angle, self.traffic.path_angle, 
                                 self.traffic.mass, self.traffic.fuel_consumed,
                                 self.traffic.perf.thrust, self.traffic.perf.drag, self.traffic.perf.esf, self.traffic.accel,
                                 self.traffic.ap.track_angle, self.traffic.ap.heading, self.traffic.ap.alt, self.traffic.ap.cas, self.traffic.ap.mach, self.traffic.ap.procedure_speed ,
-                                self.traffic.ap.flight_plan_index, [self.traffic.ap.flight_plan_name[i][val] if (val < len(self.traffic.ap.flight_plan_name[i])) else "NONE" for i, val in enumerate(self.traffic.ap.flight_plan_index)], self.traffic.ap.dist,                  # autopilot variable
+                                self.traffic.ap.flight_plan_index, [self.traffic.ap.flight_plan_name[i][val] if (val < len(self.traffic.ap.flight_plan_name[i])) else "NONE" for i, val in enumerate(self.traffic.ap.flight_plan_index)], self.traffic.ap.dist, self.traffic.ap.holding_round,                # autopilot variable
                                 [Flight_phase(i).name for i in self.traffic.flight_phase], [Configuration(i).name for i in self.traffic.configuration], [Speed_mode(i).name for i in self.traffic.speed_mode], [Vertical_mode(i).name for i in self.traffic.vertical_mode], 
                                 [AP_speed_mode(i).name for i in self.traffic.ap.speed_mode], [AP_lateral_mode(i).name for i in self.traffic.ap.lateral_mode], [AP_throttle_mode(i).name for i in self.traffic.ap.auto_throttle_mode])) # mode
         
@@ -165,11 +165,12 @@ class Environment:
         alt = np.vstack(tuple(self.alt))
         cas = np.vstack(tuple(self.cas))
 
-        for i in range(self.traffic.n):
-            positions = np.column_stack((np.array(self.time, dtype="object"), long[:,i], lat[:,i], Unit_conversion.feet_to_meter(alt[:,i]))).flatten().tolist()
-            label = [{"interval": time+"/"+(self.datetime + timedelta(seconds=self.end_time)).isoformat(), 
+        for i in range(len(self.traffic.index)):
+            print(self.traffic.index)
+            positions = np.column_stack((np.array(self.buffer_time, dtype="object"), long[:,i], lat[:,i], Unit_conversion.feet_to_meter(alt[:,i]))).flatten().tolist()
+            label = [{"interval": time+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat(), 
                     "string": self.traffic.call_sign[i]+"\n"+str(np.floor(alt))+"ft "+str(np.floor(cas))+"kt"} 
-                    for time, alt, cas in zip(self.time, alt[:,i], cas[:,i])]
+                    for time, alt, cas in zip(self.buffer_time, alt[:,i], cas[:,i])]
             
             trajectory = {
                     "id": self.traffic.call_sign[i],

@@ -60,7 +60,7 @@ class Replay:
                             start = datetime.fromisoformat(file_content.iloc[0]['timestamp'])
                             end = datetime.fromisoformat(file_content.iloc[-1]['timestamp'])
                             positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.fromisoformat(x).isoformat(timespec='seconds')), 
-                                                    file_content['longitude'].values, file_content['latitude'].values, file_content['altitude'].values/3.2808))[::60].flatten().tolist()
+                                                    file_content['longitude'].values, file_content['latitude'].values, file_content['altitude'].values/3.2808))[::360].flatten().tolist()
                             label = [{"interval": datetime.fromisoformat(time).isoformat(timespec='seconds')+"/"+end.isoformat(timespec='seconds'), 
                                     "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
                                     for time, alt, gspeed in zip(file_content['timestamp'], file_content['altitude'], file_content['groundspeed'])]

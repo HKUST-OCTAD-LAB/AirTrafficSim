@@ -203,6 +203,7 @@ class Traffic:
         index : int
             Index of an aircraft
         """
+        print("Traffic.py - del_aircraft()", index)
         i = np.where(self.index == index)[0][0]
         self.index = np.delete(self.index, i)                      
         self.call_sign = np.delete(self.call_sign, i)             

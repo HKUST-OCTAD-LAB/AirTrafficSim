@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from core.nav import Nav
+from utils.cal import Calculation
 from utils.enums import AP_speed_mode, AP_throttle_mode, Speed_mode, Vertical_mode, AP_lateral_mode
 from utils.unit import Unit_conversion
 from utils.cal import Calculation
@@ -79,8 +80,10 @@ class Autopilot:
         self.expedite_descent = np.zeros([0], dtype=bool)       
         """Autopilot expedite climb setting [bool]"""
 
-        # Init nav class
-        # self.nav = Nav()
+        # Holding
+        self.holding = np.zeros([0], dtype=bool)
+        self.holding_round = np.zeros([0])  
+        self.holding_info = []
 
 
     def add_aircraft(self, lat, long, alt, heading, cas, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt):
@@ -131,17 +134,21 @@ class Autopilot:
         self.auto_throttle_mode = np.append(self.auto_throttle_mode, AP_throttle_mode.SPEED)             
         self.vertical_mode = np.append(self.vertical_mode, 0.0)                      
         self.lateral_mode = np.append(self.lateral_mode, AP_lateral_mode.HEADING)                   
-        self.expedite_descent = np.append(self.expedite_descent, False) 
+        self.expedite_descent = np.append(self.expedite_descent, False)
+        self.holding = np.append(self.holding, False)  
+        self.holding_round = np.append(self.holding_round, 0.0)  
+        self.holding_info.append([])
 
         # if not flight_plan == []:
         # Add SID to flight plan
         if not sid == "":
-            waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(departure_airport, departure_runway, sid)
+            waypoint, alt_restriction_type, alt_restriction, speed_resctriction_type, speed_restriction = Nav.get_procedure(departure_airport, departure_runway, sid)
             # TODO: Ignored alt restriction 2, alt restriction type, and speed restriction type
             self.flight_plan_name[-1].extend(waypoint)
-            self.flight_plan_target_alt[-1].extend(alt_restriction_1)
+            self.flight_plan_target_alt[-1].extend(alt_restriction)
             self.flight_plan_target_speed[-1].extend(speed_restriction)
 
+            self.hv_next_wp[-1] = True
             self.lateral_mode[-1] = AP_lateral_mode.LNAV
             self.auto_throttle_mode[-1] = AP_throttle_mode.AUTO
 
@@ -152,33 +159,35 @@ class Autopilot:
                 self.flight_plan_target_alt[-1].extend([cruise_alt for _ in flight_plan])
             self.flight_plan_target_speed[-1].extend([-1 for _ in flight_plan])
 
+            self.hv_next_wp[-1] = True
             self.lateral_mode[-1] = AP_lateral_mode.LNAV
             self.auto_throttle_mode[-1] = AP_throttle_mode.AUTO
 
         # Add STAR to flight plan
         if not star == "":
-            waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, star)
+            waypoint, alt_restriction_type, alt_restriction, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, star)
             self.flight_plan_name[-1].extend(waypoint)
-            self.flight_plan_target_alt[-1].extend(alt_restriction_1)
+            self.flight_plan_target_alt[-1].extend(alt_restriction)
             self.flight_plan_target_speed[-1].extend(speed_restriction)
 
+            self.hv_next_wp[-1] = True
             self.lateral_mode[-1] = AP_lateral_mode.LNAV
             self.auto_throttle_mode[-1] = AP_throttle_mode.AUTO
 
         if not approach == "":
             # Add Initial Approach to flight plan
-            waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, approach, appch="A", iaf=self.flight_plan_name[-1][-1])
+            waypoint, alt_restriction_type, alt_restriction, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, approach, appch="A", iaf=self.flight_plan_name[-1][-1])
             # Remove last element of flight plan which should be equal to iaf
             self.flight_plan_name[-1].pop()
             self.flight_plan_target_alt[-1].pop()
             self.flight_plan_target_speed[-1].pop()
             # Add Initial Approach flight plan 
             self.flight_plan_name[-1].extend(waypoint)
-            self.flight_plan_target_alt[-1].extend(alt_restriction_1)
+            self.flight_plan_target_alt[-1].extend(alt_restriction)
             self.flight_plan_target_speed[-1].extend(speed_restriction)
 
             # Add Final Approach to flight plan
-            waypoint, alt_restriction_type, alt_restriction_1, alt_restriction_2, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, approach, appch="I")
+            waypoint, alt_restriction_type, alt_restriction, speed_resctriction_type, speed_restriction = Nav.get_procedure(arrival_airport, arrival_runway, approach, appch="I")
             # Remove last element of flight plan which should be equal to iaf
             self.flight_plan_name[-1].pop()
             self.flight_plan_target_alt[-1].pop()
@@ -189,10 +198,11 @@ class Autopilot:
             # self.flight_plan_target_alt[-1].extend(alt_restriction_1[:waypoint_idx])
             # self.flight_plan_target_speed[-1].extend(speed_restriction[:waypoint_idx])
             self.flight_plan_name[-1].extend(waypoint)
-            self.flight_plan_target_alt[-1].extend(alt_restriction_1)
+            self.flight_plan_target_alt[-1].extend(alt_restriction)
             self.flight_plan_target_speed[-1].extend(speed_restriction)
             # TODO: For missed approach procedure [waypoint_idx+1:]
 
+            self.hv_next_wp[-1] = True
             self.lateral_mode[-1] = AP_lateral_mode.LNAV
             self.auto_throttle_mode[-1] = AP_throttle_mode.AUTO
 
@@ -260,7 +270,10 @@ class Autopilot:
         self.auto_throttle_mode = np.delete(self.auto_throttle_mode, index)             
         self.vertical_mode = np.delete(self.vertical_mode, index)                      
         self.lateral_mode = np.delete(self.lateral_mode, index)                   
-        self.expedite_descent =np.delete(self.expedite_descent, index)     
+        self.expedite_descent =np.delete(self.expedite_descent, index)
+        self.holding = np.delete(self.holding, index) 
+        self.holding_round = np.delete(self.holding_round, index)  
+        del self.holding_info[index]
 
 
     def update(self, traffic: Traffic):
@@ -333,24 +346,48 @@ class Autopilot:
                                             ])
         
         # Waypoint, track angle, and heading
-        dist = np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat, self.long))   #km
+        # dist = np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat, self.long))   #km
+        dist = Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat, self.long)   #km
 
         # Fly by turn
         turn_radius = traffic.perf.cal_turn_radius(traffic.perf.get_bank_angles(traffic.configuration), Unit_conversion.knots_to_mps(traffic.tas)) / 1000.0     #km
         next_track_angle = np.where(self.hv_next_wp, Calculation.cal_great_circle_bearing(self.lat, self.long, self.lat_next, self.long_next), self.track_angle)    # Next track angle to next next waypoint
         curr_track_angle = Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long) # Current track angle to next waypoint
         turn_dist = turn_radius * np.tan(np.deg2rad(np.abs(Calculation.cal_angle_diff(next_track_angle, curr_track_angle))/2.0))    # Distance to turn
-        self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist < turn_dist, np.where(self.hv_next_wp, next_track_angle, self.track_angle), np.where(dist < 1.0, self.track_angle, curr_track_angle)))
+        self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist < turn_dist, np.where(self.hv_next_wp, next_track_angle, self.track_angle), np.where(dist < 1.0, self.track_angle, curr_track_angle)))       
         self.heading = np.where(self.lateral_mode == AP_lateral_mode.HEADING, self.heading, self.track_angle + np.arcsin(traffic.weather.wind_speed/traffic.tas * np.sin(self.track_angle-traffic.weather.wind_direction))) #https://www.omnicalculator.com/physics/wind-correction-angle
         
         update_next_wp = (self.lateral_mode == AP_lateral_mode.LNAV) & (dist > self.dist) & (np.abs(Calculation.cal_angle_diff(traffic.heading, next_track_angle)) < 1.0)
         self.flight_plan_index = np.where(update_next_wp, self.flight_plan_index+1, self.flight_plan_index)
-        self.dist = np.where(update_next_wp, Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat_next, self.long_next),dist)
+        self.dist = np.where(update_next_wp, Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat_next, self.long_next), dist)
 
         # Fly over turn
         # self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist<1.0, self.track_angle, Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long)))
         # self.heading = np.where(self.lateral_mode == AP_lateral_mode.HEADING, self.heading, self.track_angle + np.arcsin(traffic.weather.wind_speed/traffic.tas * np.sin(self.track_angle-traffic.weather.wind_direction))) #https://www.omnicalculator.com/physics/wind-correction-angle
         # self.flight_plan_index = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (dist < 1.0) & (dist > self.dist), self.flight_plan_index+1, self.flight_plan_index)
         # self.dist = dist
+
+        # Holding
+        for i, val in enumerate(self.holding):
+            if self.holding[i] == False:
+                if self.holding_info[i] and np.abs(Calculation.cal_angle_diff(self.heading[i], self.holding_info[i][4])) < 90.0 and self.flight_plan_index[i] > self.flight_plan_name[i].index(self.holding_info[i][0]):   # Turn outbound
+                    self.heading[i] = np.mod(self.holding_info[i][4] + 180, 360)
+                    self.holding_round[i] -= 1
+                    self.flight_plan_index[i] -= 1
+                    self.lateral_mode[i] = AP_lateral_mode.HEADING
+                    self.holding[i] = True        
+            else:
+                if np.abs(Calculation.cal_angle_diff(self.heading[i], self.holding_info[i][4])) < 90.0 and dist[i] < 1:   # Turn outbound
+                    self.heading[i] = np.mod(self.holding_info[i][4] + 180, 360)
+                    self.holding_round[i] -= 1
+
+                if np.abs(Calculation.cal_angle_diff(self.heading[i], self.holding_info[i][4] + 180.0)) < 90.0 and dist[i] > Unit_conversion.nm_to_meter(self.holding_info[i][6])/1000.0: # Turn inbound
+                    self.heading[i] = self.holding_info[i][4]
+                    if self.holding_round[i] <= 0:
+                        self.lateral_mode[i] = AP_lateral_mode.LNAV
+                        self.holding[i] = False
+                        self.holding_info[i] = []
+                
+                    # update_next_wp[i] = False
         
         

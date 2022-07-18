@@ -297,8 +297,34 @@ class Nav:
                 else:
                     speed_restriction.append(float(val))
 
+        # Assume lowest alt restriction
+        alt_restriction = np.where(np.array(alt_restriction_2) != -1, np.minimum(alt_restriction_1, alt_restriction_2), alt_restriction_1)
 
-        return procedure_df[4].values.tolist(), procedure_df[22].values.tolist(), alt_restriction_1, alt_restriction_2, procedure_df[26].values.tolist(), speed_restriction
+        return procedure_df[4].values.tolist(), procedure_df[22].values.tolist(), alt_restriction, procedure_df[26].values.tolist(), speed_restriction
+
+
+    @staticmethod
+    def get_holding_procedure(fix, region):
+        """
+        Get holding procedure
+
+        Parameters
+        ----------
+        fix : string
+            Fix name
+        region : string
+            ICAO region
+
+        Returns
+        -------
+        [inbound holding course, legtime, leg length, direction, min alt, max alt, speed] : []
+
+        Note
+        ----
+        https://developer.x-plane.com/wp-content/uploads/2018/12/XP-HOLD1140-Spec.pdf
+        """
+        holding = Nav.holding[(Nav.holding[1] == region) & (Nav.holding[0] == fix)]
+        return holding.iloc[0,:].tolist()
 
 
  

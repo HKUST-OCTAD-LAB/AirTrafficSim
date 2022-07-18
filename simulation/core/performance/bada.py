@@ -42,7 +42,7 @@ class Bada:
         """Number of engines"""
         self.__engine_type = np.zeros([0])
         """engine type [Engine_type enum]"""
-        self.__wake_category = np.zeros([0])                    
+        self.__wake_category = np.zeros([0], dtype="U1")                    
         """wake category [Wake_category enum]"""
 
         # Mass
@@ -379,7 +379,7 @@ class Bada:
 
         self.__n_eng = np.append(self.__n_eng, OPF_Actype.item()[2])
         self.__engine_type = np.append(self.__engine_type, {'Jet':1, 'Turboprop':2, 'Piston':3}.get(OPF_Actype.item()[4]))
-        self.__wake_category = np.append(self.__wake_category, {'J': 1, 'H':2, 'M':3, 'L': 4}.get(OPF_Actype.item()[5]))                    
+        self.__wake_category = np.append(self.__wake_category, OPF_Actype.item()[5])                    
         self.__m_ref = np.append(self.__m_ref, OPF[0][3])                           
         self.m_min = np.append(self.m_min, OPF[0][4])                           
         self.__m_max = np.append(self.__m_max, OPF[0][5])                          
