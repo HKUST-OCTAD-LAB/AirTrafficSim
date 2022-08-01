@@ -4,7 +4,7 @@ import numpy as np
 
 from airtrafficsim.core.environment import Environment
 from airtrafficsim.core.aircraft import Aircraft
-from airtrafficsim.core.nav import Nav
+from airtrafficsim.core.navigation import Nav
 from airtrafficsim.utils.enums import Config, FlightPhase
 
 class FullFlightDemo(Environment):
@@ -19,7 +19,7 @@ class FullFlightDemo(Environment):
                         )
 
         # Add aircraft
-        lat_dep, long_dep, alt_dep = Nav.get_runway_coordinate("VHHH", "25L") #TODO: Convert MSL to Geopotential altitude
+        lat_dep, long_dep, alt_dep = Nav.get_runway_coord("VHHH", "25L") #TODO: Convert MSL to Geopotential altitude
         self.aircraft_full = Aircraft(self.traffic, call_sign="FULL", aircraft_type="A320", flight_phase=FlightPhase.TAKEOFF, configuration=Config.TAKEOFF,
                                       lat=lat_dep, long=long_dep, alt=alt_dep, heading=254.0, cas=149.0,
                                       fuel_weight=5273.0, payload_weight=12000.0,

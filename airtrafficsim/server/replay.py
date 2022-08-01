@@ -166,15 +166,17 @@ class Replay:
                                 "rgba": [39, 245, 106, 215]
                             }
                         },
-                        # "billboard": {
-                        #     "image":{
-                        #         "interval": content.iloc[0]['timestamp']+"/"+ content.iloc[-1]['timestamp'],
-                        #         "uri": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjU5MiIgeT0iMzEyIiB3aWR0aD0iOTYiIGhlaWdodD0iOTYiLz48L2NsaXBQYXRoPjwvZGVmcz48ZyBjbGlwLXBhdGg9InVybCgjY2xpcDApIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNTkyIC0zMTIpIj48cGF0aCBkPSJNNjc0IDM3OCA2NzQgMzY5IDY0NSAzNDguNSA2NDUgMzI5QzY0NSAzMjUuMSA2NDMgMzIwIDY0MCAzMjAgNjM3LjEgMzIwIDYzNSAzMjUuMSA2MzUgMzI5TDYzNSAzNDguNSA2MDYgMzY5IDYwNiAzNzggNjM1IDM2My41IDYzNSAzODUuMyA2MjUgMzk0IDYyNSA0MDAgNjQwIDM5NCA2NTUgNDAwIDY1NSAzOTQgNjQ1IDM4NS4zIDY0NSAzNjMuNSA2NzQgMzc4WiIgZmlsbD0iIzAwQ0MzMyIvPjwvZz48L3N2Zz4="
-                        #     },
-                        #     "scale": 1.0,
-                        #     # "rotation": 1.3,
-                        #     "alignedAxis": "velocityReference"
-                        # },
+                        "billboard": {
+                            "image":{
+                                "interval": content.iloc[0]['timestamp']+"/"+ content.iloc[-1]['timestamp'],
+                                "uri": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjU5MiIgeT0iMzEyIiB3aWR0aD0iOTYiIGhlaWdodD0iOTYiLz48L2NsaXBQYXRoPjwvZGVmcz48ZyBjbGlwLXBhdGg9InVybCgjY2xpcDApIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNTkyIC0zMTIpIj48cGF0aCBkPSJNNjc0IDM3OCA2NzQgMzY5IDY0NSAzNDguNSA2NDUgMzI5QzY0NSAzMjUuMSA2NDMgMzIwIDY0MCAzMjAgNjM3LjEgMzIwIDYzNSAzMjUuMSA2MzUgMzI5TDYzNSAzNDguNSA2MDYgMzY5IDYwNiAzNzggNjM1IDM2My41IDYzNSAzODUuMyA2MjUgMzk0IDYyNSA0MDAgNjQwIDM5NCA2NTUgNDAwIDY1NSAzOTQgNjQ1IDM4NS4zIDY0NSAzNjMuNSA2NzQgMzc4WiIgZmlsbD0iIzAwQ0MzMyIvPjwvZz48L3N2Zz4="
+                            },
+                            "scale": 1.0,
+                            # "rotation": 1.3,
+                            "alignedAxis": {
+                                "velocityReference": id+"#position"
+                            }
+                        },
                         "path": {
                             "leadTime": 0,
                             "trailTime": 20,

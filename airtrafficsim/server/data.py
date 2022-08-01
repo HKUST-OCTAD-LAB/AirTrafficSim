@@ -1,4 +1,4 @@
-from airtrafficsim.core.nav import Nav
+from airtrafficsim.core.navigation import Nav
 from datetime import datetime
 from matplotlib.figure import Figure
 from matplotlib import colors
@@ -18,7 +18,7 @@ class Data:
             "version": "1.0",
         }]
 
-        fixes = Nav.get_fix_in_area(lat1, long1, lat2, long2)
+        fixes = Nav.get_wp_in_area(lat1, long1, lat2, long2)
 
         for fix in fixes:
             document.append({

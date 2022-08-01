@@ -3,9 +3,9 @@ import numpy as np
 from airtrafficsim.core.autopilot import Autopilot
 from airtrafficsim.core.weather.weather import Weather
 from airtrafficsim.core.performance.performance import Performance
-from airtrafficsim.utils.unit import Unit
+from airtrafficsim.utils.unit_conversion import Unit
 from airtrafficsim.utils.enums import FlightPhase, SpeedMode, APSpeedMode, APThrottleMode, APVerticalMode, Config, VerticalMode
-from airtrafficsim.utils.cal import Cal
+from airtrafficsim.utils.calculation import Cal
 
 class Traffic:
 

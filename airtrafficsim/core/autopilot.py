@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import numpy as np
 
-from airtrafficsim.core.nav import Nav
-from airtrafficsim.utils.cal import Cal
+from airtrafficsim.core.navigation import Nav
+from airtrafficsim.utils.calculation import Cal
 from airtrafficsim.utils.enums import APSpeedMode, APThrottleMode, SpeedMode, VerticalMode, APLateralMode
-from airtrafficsim.utils.unit import Unit
-from airtrafficsim.utils.cal import Cal
+from airtrafficsim.utils.unit_conversion import Unit
+from airtrafficsim.utils.calculation import Cal
 
 class Autopilot:
     """
@@ -209,17 +209,17 @@ class Autopilot:
         # Get Lat Long of flight plan waypoints
         for i, val in enumerate(self.flight_plan_name[-1]):
             if i == 0:
-                lat_tmp, long_tmp = Nav.get_fix_coordinate(val, lat, long)
+                lat_tmp, long_tmp = Nav.get_wp_coord(val, lat, long)
                 self.flight_plan_lat[-1].append(lat_tmp)
                 self.flight_plan_long[-1].append(long_tmp)
             else:
-                lat_tmp, long_tmp = Nav.get_fix_coordinate(val, self.flight_plan_lat[-1][i-1], self.flight_plan_long[-1][i-1])
+                lat_tmp, long_tmp = Nav.get_wp_coord(val, self.flight_plan_lat[-1][i - 1], self.flight_plan_long[-1][i - 1])
                 self.flight_plan_lat[-1].append(lat_tmp)
                 self.flight_plan_long[-1].append(long_tmp)
 
         # TODO: Add runway lat long alt
         if not arrival_runway == "":
-            lat_tmp, long_tmp, alt_tmp = Nav.get_runway_coordinate(arrival_airport, arrival_runway)
+            lat_tmp, long_tmp, alt_tmp = Nav.get_runway_coord(arrival_airport, arrival_runway)
             if self.flight_plan_name[-1][-1] == arrival_runway:
                 self.flight_plan_lat[-1][-1] = lat_tmp
                 self.flight_plan_long[-1][-1] = long_tmp

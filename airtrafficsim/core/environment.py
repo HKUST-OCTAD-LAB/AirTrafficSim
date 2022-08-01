@@ -5,7 +5,7 @@ import pandas as pd
 import csv
 from pathlib import Path
 
-from airtrafficsim.utils.unit import Unit
+from airtrafficsim.utils.unit_conversion import Unit
 from airtrafficsim.utils.enums import FlightPhase, Config, SpeedMode, VerticalMode, APSpeedMode, APThrottleMode, APVerticalMode, APLateralMode
 from airtrafficsim.core.traffic import Traffic
 

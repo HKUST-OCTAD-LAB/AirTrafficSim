@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
-from airtrafficsim.utils.cal import Cal
+from airtrafficsim.utils.calculation import Cal
 
 def distance(a, b):
     return  np.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)

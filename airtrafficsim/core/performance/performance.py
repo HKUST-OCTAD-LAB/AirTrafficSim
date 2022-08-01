@@ -4,7 +4,7 @@ from openap import prop, Thrust, Drag, FuelFlow, WRAP
 
 from airtrafficsim.core.performance.bada import Bada
 from airtrafficsim.utils.enums import APSpeedMode, Config, VerticalMode
-from airtrafficsim.utils.unit import Unit
+from airtrafficsim.utils.unit_conversion import Unit
 
 class Performance:
     """
