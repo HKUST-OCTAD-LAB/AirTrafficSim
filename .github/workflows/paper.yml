@@ -27,7 +27,7 @@ jobs:
       
       # Geneate PDF
       - name: Build draft PDF
-        uses: openjournals/openjournals-draft-action@v.1.0
+        uses: openjournals/openjournals-draft-action@master
         with:
           # Target journal, must be either "joss" or "jose"
           journal: joss # optional, default is joss
