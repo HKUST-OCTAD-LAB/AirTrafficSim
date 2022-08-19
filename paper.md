@@ -38,17 +38,17 @@ AirTrafficSim is a web-based air traffic simulation software written in python a
 
 AirTrafficSim contains a web-based frontend written in javascript with Ionic React framework to provide an easy-to-use user interface to visualize both historic and simulated air traffic in a browser. The 3D globes are powered by the CesiumJS library to stream high-resolution maps, terrain, and 3D building data. It also provides a rich API library to visualize dynamic geospatial data from the simulation. It can also plot simulation parameters using the Plotly.js library.
 
-On the other hand, the backend of AirTrafficSim consists of several modules which are navigation, weather, autopilot, performance, and flight route detection as shown in \autoref{fig:UI}. 
+On the other hand, the backend of AirTrafficSim consists of several modules which are navigation, weather, autopilot, performance, and flight route detection. 
 
-The **navigation** module provides global airports, waypoints, navigation aids and fixes, airways, Standard Instrument Departures (SIDs), Standard Terminal Arrival Routes (STARs), and approach procedures information using the navigation database from x-plane 11 [@xplane11]. 
+The navigation module provides global airports, waypoints, navigation aids and fixes, airways, Standard Instrument Departures (SIDs), Standard Terminal Arrival Routes (STARs), and approach procedures information using the navigation database from x-plane 11 [@xplane11]. 
 
-The **weather** module provides historic weather information including multi-level wind, pressure, temperature, and single-level surface precipitation data from the ECMWF ERA5 weather database [@era5]. It also processes radar images provided by users as a source of high-resolution convective weather information.
+The weather module provides historic weather information including multi-level wind, pressure, temperature, and single-level surface precipitation data from the ECMWF ERA5 weather database [@era5]. It also processes radar images provided by users as a source of high-resolution convective weather information.
 
-The **autopilot** module processes the flight plan and control the aircraft to follow the plan from take-off to landing in a full flight simulation. It can also control the aircraft based on the inputted target state (ATC command) by the user and algorithm. Non-standard manoeuvres that are sometimes used by air traffic controllers such as vectoring and holding can also be commanded.
+Theautopilot module processes the flight plan and control the aircraft to follow the plan from take-off to landing in a full flight simulation. It can also control the aircraft based on the inputted target state (ATC command) by the user and algorithm. Non-standard manoeuvres that are sometimes used by air traffic controllers such as vectoring and holding can also be commanded.
 
-The **performance** module calculates the aircraft state, such as speed, heading, vertical rate, and fuel consumption, for each timestep. Currently, `AirtrafficSim` makes use of the licensed BADA performance model data from Eurocontrol [@bada] but it is extensible to other performance models such as the open-source OpenMP model [@openap].
+The performance module calculates the aircraft state, such as speed, heading, vertical rate, and fuel consumption, for each timestep. Currently, `AirtrafficSim` makes use of the licensed BADA performance model data from Eurocontrol [@bada] but it is extensible to other performance models such as the open-source OpenMP model [@openap].
 
-The **flight route detection** module detects the flight route including origin and destination airports, SIDs, STARs, and airways from historic flight data to generate a complete flight plan for simulation.
+The flight route detection module detects the flight route including origin and destination airports, SIDs, and STARs from historic flight data and generates a complete flight plan for simulation. A robust algorithm is being developed to detect the airways to generate a complete flight plan.
 
 ![UI of AirTrafficSim showcasing different features. (Upper left: Fuel consumption of simulated flight. Upper right: Navigation waypoints. Lower left: ECMWF ERA5 Wind data. Lower right: HKO 256km radar image.)\label{fig:UI}](figures/UI.png){ width=100% }
 
