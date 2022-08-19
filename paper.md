@@ -2,16 +2,19 @@
 title: 'AirTrafficSim: An open-source web-based air traffic simulation platform.'
 tags:
   - Python
-  - air traffic management
+  - Aviation
+  - Air traffic management
+  - Multi-agent simulation
+  - Data visualization
 authors:
-  - name: Ka Yiu HUI
+  - name: Ka Yiu Hui
     # orcid: 0000-0000-0000-0000
     affiliation: 1
-  - name: Chris HC. NGUYEN
+  - name: Chris HC. Nguyen
     affiliation: 1
-  - name: Go Nam LUI
+  - name: Go Nam Lui
     affiliation: 1
-  - name: Rhea P. LIEM
+  - name: Rhea P. Liem
     corresponding: true # (This is how to denote the corresponding author)
     affiliation: 1
 affiliations:
@@ -23,9 +26,9 @@ bibliography: paper.bib
 
 # Statement of need
 
-Air traffic management (ATM) research traditionally focuses on the macroscopic aspect of air transportation such as airspace design research, traffic flow management, airport planning and scheduling, and more [@ATM]. Recently, as new aerial vehicles concepts, including urban air mobility (UAM) and unmanned aircraft system (UAS) or drones, are being developed as well as raising consideration for sustainability, there has been a growing interest in performing microscopic ATM research such as conflict resolution using reinforcement learning [@Conflict], 4D-trajectory optimization [@4D], and even unmanned traffic management (UTM) development. Eurocontrol U-space [@uspace] and FAA/NASA UTM project [@nasa] are some of the examples that the industry and authorities are focusing more on such research. 
+Air traffic management (ATM) research traditionally focuses on the macroscopic aspect of air transportation such as airspace design research, traffic flow management, airport planning and scheduling, and more [@ATM]. Recently, as new aerial vehicles concepts, including urban air mobility (UAM) and unmanned aircraft system (UAS) or drones, are being developed as well as raising consideration for sustainability, there has been a growing interest in performing microscopic ATM research, for example, conflict resolution using reinforcement learning [@Conflict], 4D-trajectory optimization [@4D], and even unmanned traffic management (UTM) development. Eurocontrol U-space [@uspace] and FAA/NASA UTM project [@nasa] are some of the examples that the industry and authorities are focusing more on such research. 
 
-However, most ATM simulation tools are commercial products aimed at training air traffic controllers. ATM simulation tools for research purposes that are easily accessible and open-source, such as Bluesky [@BlueSky], are still scarce. Therefore, AirTrafficSim was developed to facilitate ATM research. 
+To facilitate microscopic ATM research, an agent-based simulation and visualization software is needed. However, most ATM simulation tools are commercial products aimed at training air traffic controllers. ATM simulation tools for research purposes that are easily accessible and open-source, such as Bluesky [@BlueSky], are still scarce. Therefore, AirTrafficSim was developed to assist researchers to perform ATM research with an easy-to-use and comprehensive software environment. It is also an open-source package that welcomes everyone to contribute to further development and adjust it to their needs.
 
 # Summary
 
@@ -37,13 +40,13 @@ AirTrafficSim contains a **user interface** (UI) frontend written in javascript 
 
 On the other hand, the backend of AirTrafficSim consists of several modules which are navigation, weather, autopilot, performance, and flight route detection as shown in \autoref{fig:UI}. 
 
-The **navigation** module provides global airports, Fixes, Navaids, Airways, Standard Instrument Departures (SIDs), Standard Terminal Arrival Routes (STARs), and Approaches procedure information using the navigation database from x-plane 11 [@xplane11]. 
+The **navigation** module provides global airports, waypoints, navigation aids and fixes, airways, Standard Instrument Departures (SIDs), Standard Terminal Arrival Routes (STARs), and approach procedures information using the navigation database from x-plane 11 [@xplane11]. 
 
-The **weather** module provides historic weather information including multi-level wind, pressure, temperature, and single-level surface precipitation data from the ECMWF ERA5 weather database [@era5]. It also processes radar images provided by users as a source of high-resolution abnormal weather information.
+The **weather** module provides historic weather information including multi-level wind, pressure, temperature, and single-level surface precipitation data from the ECMWF ERA5 weather database [@era5]. It also processes radar images provided by users as a source of high-resolution convective weather information.
 
 The **autopilot** module processes the flight plan and control the aircraft to follow the plan from take-off to landing in a full flight simulation. It can also control the aircraft based on the inputted target state (ATC command) by the user and ATM algorithm. Non-standard manoeuvres that are sometimes used by Air Traffic Controllers such as vectoring and holding can also be commanded.
 
-The **performance** module calculates the aircraft state, such as speed, heading, vertical rate, and fuel consumption, per each timestep. Currently, `AirtrafficSim` makes use of the licensed BADA performance model data from Eurocontrol [@bada] but it is extensible to other performance models such as the open-source openAP model [@openap].
+The **performance** module calculates the aircraft state, such as speed, heading, vertical rate, and fuel consumption, for each timestep. Currently, `AirtrafficSim` makes use of the licensed BADA performance model data from Eurocontrol [@bada] but it is extensible to other performance models such as the open-source OpenMP model [@openap].
 
 The **flight route detection** module detects the flight route including origin and destination airports, SIDs, and STARs from historic flight data and generates a flight plan for simulation. A more robust algorithm is being developed to detect the airways to generate a complete flight plan.
 
