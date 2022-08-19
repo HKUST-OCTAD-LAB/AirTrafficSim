@@ -48,7 +48,7 @@ The **autopilot** module processes the flight plan and control the aircraft to f
 
 The **performance** module calculates the aircraft state, such as speed, heading, vertical rate, and fuel consumption, for each timestep. Currently, `AirtrafficSim` makes use of the licensed BADA performance model data from Eurocontrol [@bada] but it is extensible to other performance models such as the open-source OpenMP model [@openap].
 
-The **flight route detection** module detects the flight route including origin and destination airports, SIDs, STARs, and airways from historic flight data to generates a complete flight plan for simulation.
+The **flight route detection** module detects the flight route including origin and destination airports, SIDs, STARs, and airways from historic flight data to generate a complete flight plan for simulation.
 
 ![UI of AirTrafficSim showcasing different features. (Upper left: Fuel consumption of simulated flight. Upper right: Navigation waypoints. Lower left: ECMWF ERA5 Wind data. Lower right: HKO 256km radar image.)\label{fig:UI}](figures/UI.png){ width=100% }
 
