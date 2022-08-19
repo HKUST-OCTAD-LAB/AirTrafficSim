@@ -49,7 +49,7 @@ The **flight route detection** module detects the flight route including origin 
 
 ![UI of AirTrafficSim showcasing different features. (Upper left: Fuel consumption of simulated flight. Upper right: Navigation waypoints. Lower left: ECMWF ERA5 Wind data. Lower right: HKO 256km radar image.)\label{fig:UI}](figures/UI.png){ width=100% }
 
-AirTrafficSim can be applied flexibility for different ATM research settings. One of the recent work is to use it to simulate and validate the solutions of arrival sequencing problem in Hong Kong International Airport by applying Mixed-interger linear programming model [@HKIA]. The software can also be used to tackle conflict resolution problem, route coordination and optimization problem, contingency management problem, and more by applying multi-agent simulation and reinforcement learning.
+AirTrafficSim can be applied flexibility for different ATM research settings. One of the recent work is to use it to simulate and validate the solutions of arrival sequencing problem in Hong Kong International Airport by applying Mixed-interger linear programming model [@hkia]. The software can also be used to tackle conflict resolution problem, route coordination and optimization problem, contingency management problem, and more by applying multi-agent simulation and reinforcement learning.
 
 # Acknowledgements
 
