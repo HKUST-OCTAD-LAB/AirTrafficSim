@@ -44,7 +44,7 @@ The navigation module provides global airports, waypoints, navigation aids and f
 
 The weather module provides historic weather information including multi-level wind, pressure, temperature, and single-level surface precipitation data from the ECMWF ERA5 weather database [@era5]. It also processes radar images provided by users as a source of high-resolution convective weather information.
 
-Theautopilot module processes the flight plan and control the aircraft to follow the plan from take-off to landing in a full flight simulation. It can also control the aircraft based on the inputted target state (ATC command) by the user and algorithm. Non-standard manoeuvres that are sometimes used by air traffic controllers such as vectoring and holding can also be commanded.
+The autopilot module processes the flight plan and control the aircraft to follow the plan from take-off to landing in a full flight simulation. It can also control the aircraft based on the inputted target state (ATC command) by the user and algorithm. Non-standard manoeuvres that are sometimes used by air traffic controllers such as vectoring and holding can also be commanded.
 
 The performance module calculates the aircraft state, such as speed, heading, vertical rate, and fuel consumption, for each timestep. Currently, `AirtrafficSim` makes use of the licensed BADA performance model data from Eurocontrol [@bada] but it is extensible to other performance models such as the open-source OpenMP model [@openap].
 
@@ -52,7 +52,7 @@ The flight route detection module detects the flight route including origin and 
 
 ![UI of AirTrafficSim showcasing different features. (Upper left: Fuel consumption of simulated flight. Upper right: Navigation waypoints. Lower left: ECMWF ERA5 Wind data. Lower right: HKO 256km radar image.)\label{fig:UI}](figures/UI.png){ width=100% }
 
-AirTrafficSim can be applied flexibility for different ATM research settings. One of the recent works is to use it to simulate and validate the solutions to the arrival sequencing problem in Hong Kong International Airport by applying a mixed-integer linear programming model [@hkia]. The software can also be used to tackle conflict resolution problems, route coordination and optimization problems, contingency management problems, and more by applying multi-agent simulation and reinforcement learning.
+AirTrafficSim can be applied flexibility for different ATM research settings. One of the recent works is to simulate and validate the solutions to the arrival sequencing problem in Hong Kong International Airport by applying a mixed-integer linear programming model [@hkia]. The software can also be used to tackle conflict resolution problems, route coordination and optimization problems, contingency management problems, and more.
 
 # Acknowledgements
 
