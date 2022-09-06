@@ -46,7 +46,7 @@ def get_simulation_file():
 
 @socketio.on('runSimulation')
 def run_simulation(file):
-    Env = getattr(import_module('env.'+file), file)
+    Env = getattr(import_module('airtrafficsim.env.'+file), file)
     env = Env()
     env.run(socketio)
 
@@ -70,6 +70,6 @@ def get_radar_img(lat1, long1, lat2, long2, file):
 def serve_client():
     return render_template("index.html")
 
-def run_server(port = 6111):
+def run_server(port = 5000):
     print("Running server at http://localhost:"+str(port))
     socketio.run(app, port=port)

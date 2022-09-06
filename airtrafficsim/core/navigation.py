@@ -46,6 +46,10 @@ class Nav:
 
     # Install navigation data
     if not Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/').is_dir():
+        # Create directories
+        Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports').mkdir(parents=True)
+
+        # Unzip files
         print("Unzipping X-plane navigation data.")
         ZipFile('data/nav/xplane_default_data.zip').extractall('data/nav/xplane/')
 
@@ -79,18 +83,20 @@ class Nav:
                         if row[0] == "1000":
                             print("\n"+row[0])
                         for i in range(8, len(row), 9):
-                            runways.append([icao]+row[i:i+3])
+                            runways.append([icao]+row[i:i+4])
                     # If row code equals to water runway
                     if row[0] == "101":
                         for i in range(3, len(row), 3):
-                            runways.append([icao]+row[i:i+3])
+                            runways.append([icao]+row[i:i+4])
                     # If row code equals to helipad runway
                     if row[0] == "102":
-                        runways.append([icao]+row[1:4])
+                        runways.append([icao]+row[1:5])
                     # Add data line to cache
                     airport.append(line)
-        print("\nExporting runways data.")
-        with open(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/runways.csv'), 'w') as f:
+
+        # Write saved runway data to airports.csv
+        print("\nExporting airport runways data.")
+        with open(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports.csv'), 'w') as f:
             writer = csv.writer(f)
             writer.writerows(runways)
         del airport
