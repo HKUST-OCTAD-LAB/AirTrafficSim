@@ -2,8 +2,7 @@ utils
 =====
 
 .. toctree::
-   :maxdepth: 1
 
-   airtrafficsim.utils.enums
-   airtrafficsim.utils.calculation
-   airtrafficsim.utils.unit_conversion
+   utils/airtrafficsim.utils.enums
+   utils/airtrafficsim.utils.calculation
+   utils/airtrafficsim.utils.unit_conversion

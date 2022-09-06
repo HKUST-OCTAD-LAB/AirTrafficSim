@@ -2,10 +2,9 @@ core
 ====
 
 .. toctree::
-   :maxdepth: 2
 
-   airtrafficsim.core.environment
-   airtrafficsim.core.aircraft
-   airtrafficsim.core.traffic
-   airtrafficsim.core.navigation
-   airtrafficsim.core.autopilot
+   core/airtrafficsim.core.environment
+   core/airtrafficsim.core.aircraft
+   core/airtrafficsim.core.traffic
+   core/airtrafficsim.core.navigation
+   core/airtrafficsim.core.autopilot

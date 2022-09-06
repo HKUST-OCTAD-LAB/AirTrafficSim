@@ -13,7 +13,17 @@ dependencies:
   - cdsapi
   - xarray
   - openap
-  - pydata-sphinx-theme
+
+  # Client
+  # - nodejs
+
+  # Documentation
+  # - sphinx
+  # - myst-parser
+  # - furo
+  # - numpydoc
+
+  # Others
   # - pip
   # - pip:
   #   - -r requirements.txt
