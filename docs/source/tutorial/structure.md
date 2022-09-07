@@ -1,46 +1,82 @@
-# Project structure
+# Understanding the project structure
 
-## client/
+AirTrafficSim consists of 4 main folders including `airtrafficsim`, `data`, `client`, and `docs`. This page explains the purpose of each folders. To create a new simulation, you should create a new simulation environment file in `airtrafficsim/env/`. When a simulation is finished, the result will be saved to `data/replay/simulation`.
 
-The client folder contains the UI of the website. It is written in react.js with [Ionic Framework](https://ionicframework.com/). It contains a 3D map using [Cesium.js + Cesium ion](https://cesium.com/) and [Resium](https://resium.reearth.io/). It also contains graph plotting using [Recharts](https://recharts.org/en-US/).
+```{image} ../images/Project_structure.png
+:width: 60%
+:align: center
+```
 
-## data/
+---
 
-The data folder contrains all the data needed for simulation.
+## airtrafficsim 📁
 
-- [x] BADA aircraft Performance data (Not included but obtainable at [eurocontrol](https://www.eurocontrol.int/model/bada) website.)
-- [x] Navigation data at [xplane_default_data.zip](data/nav/xplane_default_data.zip) using [Xplane-11 data](https://developer.x-plane.com/docs/data-development-documentation/) under the terms of the Free Software Foundation General Public License (GPL).
+The airtrafficsim folder contains all Python files for air traffic simulation and data processing. It contains 4 folders and a `__main__.py` file which serves as the main entrance of the program.
 
-[data/replay/historic/](data/replay/historic/) contains the historic data from FlightRadar24. A example is included. Please note that each data set should have its own folder.
+### &emsp;env 📁
 
-[data/replay/simulation/](data/replay/simulation/) contains the output files from simulation. A example is included. The data is stroed in a folder and a master .csv file.
+<ul>
+The env folder stores different Python files to setup simulation environment. The creation of such file will be explained in [Creating a simulation environment](creating_env) page. Two sample files `DemoEnv.py` and `FullFlightDemo.py` are provided.
+</ul>
 
+### &emsp;core 📁
 
-## simulation/
+<ul>
+The core folder contains the simulation code of AirTrafficSim. This includes `aircraft.py`, `traffic.py`, `autopilot.py`, `navigation.py`, `performance.py`, `bada.py`, `weather.py`, and `era5.py`.
+</ul>
 
-The simulation folder contains the python code for air traffic simulation. It contains 4 folders: [server/](simulation/server/), [atm/](simulation/atm/), [env/](simulation/env/), [traffic/](simulation/traffic/), and  [utils/](simulation/utils/) as well as [\_\_main\_\_.py](simulation/__main__.py) which is the main entrance of the program.
+### &emsp;server 📁
 
-### [simulation/server/](simulation/server/)
+<ul>
+The server folder contains the server side programs of AirTrafficSim to serve the web-based UI to and communicate with client. It is written in Python with [Flask](https://flask.palletsprojects.com/en/2.0.x/) and [flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/index.html). This includes `server.py`, `data.py`, and `replay.py`.
+</ul>
 
-The server folder contains the server side program of the website. It is written in Python with [Flask](https://flask.palletsprojects.com/en/2.0.x/) and [flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/index.html).
-### [simulation/atm/](simulation/atm/)
+### &emsp;utils 📁
 
-The atm folder contains the simulation code for air traffic management (ATM) and air traffic controller (ATC). This will be the research focus to improve existing ATM strategies and algorithm.
+<ul>
+The utils folder contains utility programs to assist simulation. This include `calculation.py`, `enums.py`, `unit_conversion.py`, and `route_detection.py`.
+</ul>
 
-### [simulation/env/](simulation/env/)
+---
 
-The environment folder contains the simulation setup for study.
+## data 📁
 
-### [simulation/traffic/](simulation/traffic/)
+The data folder contrains all the data needed for AirTrafficSim.
 
-The traffic folder contains the air traffic simulation code. It is targeted to simulate multiple aircrafts' trajectories per timestep efficiently and accurately using BADA performance data as well as simulate aircraft' autopilot and navigation system. 
+### &emsp;BADA 📁</ul>
 
-[traffic.py](simulation/traffic/traffic.py) contains the implementation of the base traffic array which contains all the state variables for all aircraft at one timestamp. 
+<ul>
+The BADA folder contains the BADA aircraft Performance data. The data is not included in the download but is obtainable at [eurocontrol](https://www.eurocontrol.int/model/bada) website. Please unzip and copy the data files into this folder.
+</ul>
 
-[aircraft.py](simulation/traffic/aircraft.py) contains the class-like implementation of one individual aircraft. 
+### &emsp;nav 📁
 
-[performance.py](simulation/traffic/performance.py) contains the implementation of BADA performance data following BADA user menu. 
+<ul>
+The nav folder includes a navigation data at `data/nav/xplane_default_data.zip` obtained from [Xplane-11 data](https://developer.x-plane.com/docs/data-development-documentation/). The data will be extracted when AirTrafficSim is run for the first time.
+</ul>
 
-[autopilot.py](simulation/traffic/autopilot.py) contains the implementation of aircraft autopilot and flight management system (which includes navigation, flight plan, etc.). 
+### &emsp;weather 📁
 
-[weather.py](simulation/traffic/weather.py) contains implementation of weather for each aircraft.
+<ul>
+The weather folder is empty by default. It servers as the directory to store ECMWF ERA5 data when you decided to use such data for simulation. It also stores user-provided radar image as high-resolution convective weather data. 
+</ul>
+
+### &emsp;replay 📁
+
+<ul>
+The replay folder stores the flight trajectories data. `replay/historic/` stores the user-provided historic data. A example data from FlightRadar24 is included. Please note that each data set should have its own folder.
+
+`data/replay/simulation/` contains the output files from simulation. The data is stored in a folder with this naming convention `<Environment name>-<actual start time of simulation in UTC>`. In each folder, there is a master .csv file with the same name that include every flight in the simulation and multiple separate .csv files for each flight.
+</ul>
+
+---
+
+## client 📁
+
+The `client` folder contains the source and pre-compiled build of AirTrafficSim's UI. It is written in react.js with [Ionic Framework](https://ionicframework.com/). It contains a 3D globe using [Cesium.js + Cesium ion](https://cesium.com/) and [Resium](https://resium.reearth.io/). It also contains a graph UI component using [Plot.js](https://plotly.com/javascript/).
+
+---
+
+## docs 📁
+
+The `docs` folder contains the documentation of AirTrafficSim built using [Sphinx](https://www.sphinx-doc.org/en/master/index.html) with [Furo](https://github.com/pradyunsg/furo) theme.

@@ -12,7 +12,7 @@ AirTrafficSim is a web-based air traffic simulation software written in Python a
 - Weather data from [ECMWF ERA5](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview) and custom radar image
 - Air traffic is controlled with API interface to simulate ATC interaction
 
-![AirTrafficSim](docs/source/images/AirTrafficSim.png)
+![AirTrafficSim](docs/source/images/UI_features.png)
 
 
 ## Credits
