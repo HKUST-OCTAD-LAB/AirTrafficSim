@@ -32,15 +32,16 @@ AirTrafficSim is a web-based air traffic simulation software written in Python a
    Replaying data <tutorial/replay>
    Creating a simulation environment <tutorial/creating_env>
    Running a simulation <tutorial/simulation>
-   Understanding simulation flow <tutorial/flow>
    Converting historic data <tutorial/historic>
+   Understanding simulation flow <tutorial/flow>
 ```
 
 ```{toctree}
    :caption: Development
    :hidden:
    
+   Development guide <development/guide>
    Client <development/client>
-   Documentation <development/doc>
+   Documentation <development/documentation>
    API reference <api/index>
 ```

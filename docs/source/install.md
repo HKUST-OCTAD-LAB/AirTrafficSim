@@ -20,3 +20,15 @@ Then, activate the environment each time you want to use AirTrafficSim.
 ```{code-block} bash
 conda activate airtrafficsim
 ```
+
+## Updating AirTrafficSim
+
+You can update AirTrafficSim with the newest changes by executing the following command.
+
+``` bash
+git pull
+```
+
+```{tip}
+You may git commit and/or push your local changes first before pulling new remote changes to avoid overwriting your changes.
+```

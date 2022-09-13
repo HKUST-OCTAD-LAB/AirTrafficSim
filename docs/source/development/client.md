@@ -1,5 +1,7 @@
 # Client development
 
+AirTrafficSim's web-based client is written with javascript using [React.js](https://reactjs.org/) framework. The UI componenets are created using [Ionic React](https://ionicframework.com/docs/react) library. The 3D globe and air traffic visualization is powered by [Cesium.js](https://cesium.com/) library and [Resium](https://resium.reearth.io/) while the graph is plotted using [Plotly.js](https://plotly.com/javascript/) library. The communication are handled with [Socket.IO](https://socket.io/) library.
+
 ## Installation
 
 If you want to contribute to the development of the client UI, please install [Nodejs](https://nodejs.org/en/) into the environment. You may also use your own nodejs install. Then, please also install [Yarn](https://classic.yarnpkg.com/en/) a package manager for Node.js.
@@ -26,18 +28,9 @@ Please also obtain a Cesium access token from  [Cesium ion portal](https://cesiu
 This allows the UI to properly stream and render the map, terrain, 3D building, and more.
 ```
 
-## Others
-To develop the UI, nodejs (tested with 16.13.0) and yarn is needed. Currently, the client uses port 3000 and the server uses port 5000 for communication. Please open or forward the ports accordingly if needed. 
+## Developing client
 
-To install the development environment: 
-
-```
-cd AirTrafficSim/client/
-yarn
-```
-
-Please also extract a Cesium access token from  [Cesium ion portal](https://cesium.com/platform/cesium-ion/) after signing up a free account and copy it into a new file `.env` in `client/` as follow:
->REACT_APP_CESIUMION_ACCESS_TOKEN=
+The client code base are written in `client/src/pages/Simulation.tsx` with a React functional component called `Simulation`. The `client/src/utils/websocket.ts` file contains the setup of the Socket.IO websocket connection with the server's URL and port number.
 
 To run the UI development environment:
 
@@ -46,18 +39,23 @@ cd AirTrafficSim/client/
 yarn start
 ```
 
-Open a new terminal windows and run a server instance:
+You should be able to open the development UI using any modern browser at http://localhost:3000. It will live-refresh once you made any changes to the UI. In addition, you may want to run the AirTrafficSim backend to run a simulation or generate a replay.
+
+To run AirTrafficSim backend, open a new terminal windows and run a server instance:
 
 ```
 cd AirTrafficSim/
-python simulation run
+conda activate airtrafficsim
+python -m airtrafficsim
 ```
 
-You should be able to open the UI using any modern browser at http://localhost:3000.
+## Building client
 
-To build the UI after development:
+After finishing building the client, you can build the UI by executing the following commands:
 
 ```
 cd AirTrafficSim/client/
 yarn build
 ```
+
+You can then push and merge the client to the GitHub repository.
