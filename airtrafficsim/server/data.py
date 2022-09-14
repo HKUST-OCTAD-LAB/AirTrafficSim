@@ -12,6 +12,26 @@ import base64
 class Data:
     @staticmethod
     def get_nav(lat1, long1, lat2, long2):
+        """
+        Get the navigation waypoint data given
+        
+        Parameters
+        ----------
+        lat1 : float
+            Latitude (South)
+        long1 : float
+            Longitude (West)
+        lat2 : float
+            Latitude (North)
+        long2 : float
+            Longitude (East)
+
+        Returns
+        -------
+        {}
+            JSON CZML file of navigation waypoint data
+        """
+
         document = [{
             "id": "document",
             "name": "Nav",
@@ -54,6 +74,25 @@ class Data:
 
     @staticmethod
     def get_era5_wind(lat1, long1, lat2, long2, file):
+        """
+        Get the ERA5 wind data image to client
+        
+        Parameters
+        ----------
+        lat1 : float
+            Latitude (South)
+        long1 : float
+            Longitude (West)
+        lat2 : float
+            Latitude (North)
+        long2 : float
+            Longitude (East)
+
+        Returns
+        -------
+        {}
+            JSON CZML file of ERA5 wind data image
+        """
         data = xr.open_dataset('data/weather/'+file.split('-', 1)[0]+'/multilevel.nc').sel(level=900, time=datetime.fromisoformat('2022-03-22T00:00:00'))
         data = data.where((((data.latitude >= lat1) & (data.latitude <= lat2)) & ((data.longitude >= (long1+360.0) % 360.0) & (data.longitude <= (long2+360.0) % 360.0))), drop=True)
         fig = Figure(figsize=(long2-long1, lat2-lat1), facecolor='none', dpi=500)
@@ -97,6 +136,25 @@ class Data:
 
     @staticmethod
     def get_era5_rain(lat1, long1, lat2, long2, file):
+        """
+        Get the ERA5 rain data image to client
+        
+        Parameters
+        ----------
+        lat1 : float
+            Latitude (South)
+        long1 : float
+            Longitude (West)
+        lat2 : float
+            Latitude (North)
+        long2 : float
+            Longitude (East)
+
+        Returns
+        -------
+        {}
+            JSON CZML file of ERA5 rain data image
+        """
         data = xr.open_dataset('data/weather/'+file.split('-', 1)[0]+'/surface.nc').sel(time=datetime.fromisoformat('2022-03-22T00:00:00'))
         data = data.where((((data.latitude >= lat1) & (data.latitude <= lat2)) & ((data.longitude >= (long1+360.0) % 360.0) & (data.longitude <= (long2+360.0) % 360.0))), drop=True)
         fig = Figure(figsize=(long2-long1, lat2-lat1), facecolor='none', dpi=500)
@@ -145,6 +203,27 @@ class Data:
 
     @staticmethod
     def get_radar_img(lat1, long1, lat2, long2, file):
+        """
+        Get the radar data image to client
+        
+        Parameters
+        ----------
+        lat1 : float
+            Latitude (South)
+        long1 : float
+            Longitude (West)
+        lat2 : float
+            Latitude (North)
+        long2 : float
+            Longitude (East)
+        file : string
+            File name of the radar image
+
+        Returns
+        -------
+        {}
+            JSON CZML file of radar data image
+        """
         lat1 = 22.3022 - 2.3152
         long1 = 114.1742 - 2.3152
         lat2 = 22.3022 + 2.3152

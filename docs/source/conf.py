@@ -21,10 +21,11 @@ release = '0.0'
 
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.coverage',
-    "sphinx.ext.autosummary",
+    # 'sphinx.ext.napoleon',
+    "myst_parser",
+    # 'sphinx.ext.coverage',
+    # "sphinx.ext.autosummary",
     'numpydoc',
-    "myst_parser"
 ]
 
 templates_path = ['_templates']
@@ -40,3 +41,5 @@ html_static_path = ['_static']
 html_title = "AirTrafficSim"
 
 autoclass_content = 'both'
+
+numpydoc_class_members_toctree = False

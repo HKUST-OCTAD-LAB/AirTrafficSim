@@ -7,7 +7,14 @@ from datetime import datetime
 class Replay:
     @staticmethod
     def get_replay_dir():
-        """Return a list of directories in data/replay given path"""
+        """
+        Return a list of historic/simulation data directories in data/replay
+        
+        Returns
+        -------
+        {}
+            JSON file of historic file list and simulation file list in data/replay directory
+        """
         historic_list = []
         for dir in Path(__file__).parent.parent.parent.joinpath('data/replay/historic').iterdir():
             if dir.is_dir():
@@ -31,7 +38,22 @@ class Replay:
 
     @staticmethod
     def get_replay_czml(replayCategory, replayFile):
-        """Send CZML file of the file name for visualization"""
+        """
+        Generate CZML file for visualization given replay file name.
+        
+        Parameters
+        ----------
+        replayCategory : string
+            The category to replay (historic / simulation)
+        
+        replayFile : string
+            Name of the replay file directory
+
+        Returns
+        -------
+        {}
+            JSON CZML file
+        """
         if replayCategory == 'historic':
             trajectories = []
             start_time = None
@@ -166,17 +188,17 @@ class Replay:
                                 "rgba": [39, 245, 106, 215]
                             }
                         },
-                        "billboard": {
-                            "image":{
-                                "interval": content.iloc[0]['timestamp']+"/"+ content.iloc[-1]['timestamp'],
-                                "uri": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjU5MiIgeT0iMzEyIiB3aWR0aD0iOTYiIGhlaWdodD0iOTYiLz48L2NsaXBQYXRoPjwvZGVmcz48ZyBjbGlwLXBhdGg9InVybCgjY2xpcDApIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNTkyIC0zMTIpIj48cGF0aCBkPSJNNjc0IDM3OCA2NzQgMzY5IDY0NSAzNDguNSA2NDUgMzI5QzY0NSAzMjUuMSA2NDMgMzIwIDY0MCAzMjAgNjM3LjEgMzIwIDYzNSAzMjUuMSA2MzUgMzI5TDYzNSAzNDguNSA2MDYgMzY5IDYwNiAzNzggNjM1IDM2My41IDYzNSAzODUuMyA2MjUgMzk0IDYyNSA0MDAgNjQwIDM5NCA2NTUgNDAwIDY1NSAzOTQgNjQ1IDM4NS4zIDY0NSAzNjMuNSA2NzQgMzc4WiIgZmlsbD0iIzAwQ0MzMyIvPjwvZz48L3N2Zz4="
-                            },
-                            "scale": 1.0,
-                            # "rotation": 1.3,
-                            "alignedAxis": {
-                                "velocityReference": id+"#position"
-                            }
-                        },
+                        # "billboard": {
+                        #     "image":{
+                        #         "interval": content.iloc[0]['timestamp']+"/"+ content.iloc[-1]['timestamp'],
+                        #         "uri": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjU5MiIgeT0iMzEyIiB3aWR0aD0iOTYiIGhlaWdodD0iOTYiLz48L2NsaXBQYXRoPjwvZGVmcz48ZyBjbGlwLXBhdGg9InVybCgjY2xpcDApIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNTkyIC0zMTIpIj48cGF0aCBkPSJNNjc0IDM3OCA2NzQgMzY5IDY0NSAzNDguNSA2NDUgMzI5QzY0NSAzMjUuMSA2NDMgMzIwIDY0MCAzMjAgNjM3LjEgMzIwIDYzNSAzMjUuMSA2MzUgMzI5TDYzNSAzNDguNSA2MDYgMzY5IDYwNiAzNzggNjM1IDM2My41IDYzNSAzODUuMyA2MjUgMzk0IDYyNSA0MDAgNjQwIDM5NCA2NTUgNDAwIDY1NSAzOTQgNjQ1IDM4NS4zIDY0NSAzNjMuNSA2NzQgMzc4WiIgZmlsbD0iIzAwQ0MzMyIvPjwvZz48L3N2Zz4="
+                        #     },
+                        #     "scale": 1.0,
+                        #     # "rotation": 1.3,
+                        #     "alignedAxis": {
+                        #         "velocityReference": id+"#position"
+                        #     }
+                        # },
                         "path": {
                             "leadTime": 0,
                             "trailTime": 20,
@@ -210,6 +232,23 @@ class Replay:
 
     @staticmethod
     def get_graph_header(mode, replayCategory, replayFile):
+        """
+        Get the list of parameters name of a file suitable for plotting graph.
+
+        Parameters
+        ----------
+        mode : string
+            AirTrafficSim mode (replay / simulation)
+        replayCategory : string
+            The category to replay (historic / simulation)
+        replayFile : string
+            Name of the replay file directory
+
+        Returns
+        -------
+        string[]
+            List of graph headers
+        """
         header = ['None']
         if mode == 'replay' and replayCategory == 'simulation':
             with open(Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile), 'r') as file:
@@ -225,6 +264,23 @@ class Replay:
 
     @staticmethod
     def get_graph_data(mode, replayCategory, replayFile, simulationFile, graph):
+        """
+        Get the data for the selected parameters to plot a graph.
+        
+        Parameters
+        ----------
+        mode : string
+            AirTrafficSim mode (replay / simulation)
+        replayCategory : string
+            The category to replay (historic / simulation)
+        replayFile : string
+            Name of the replay file directory
+
+        Returns
+        -------
+        {}
+            JSON file for graph data for Plotly.js
+        """
         data = []
         if mode == 'replay' and replayCategory == 'simulation' and graph != 'None':
             df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile))
