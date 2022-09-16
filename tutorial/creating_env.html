@@ -1,0 +1,502 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Running a simulation" href="simulation.html" /><link rel="prev" title="Replaying data" href="replay.html" />
+
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+        <title>Creating a simulation environment - AirTrafficSim</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">AirTrafficSim</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">AirTrafficSim</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">   Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start.html">   Getting started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="UI.html">   Navigating the UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="replay.html">   Replaying data</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Creating a simulation environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historic data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flow.html">   Understanding simulation flow</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/guide.html">   Development guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/client.html">   Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/documentation.html">   Documentation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.environment.html">environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.aircraft.html">aircraft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.traffic.html">traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.navigation.html">navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.autopilot.html">autopilot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.performance.html">performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.bada.html">bada</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.weather.html">weather</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.era5.html">era5</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.utils.html">utils</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/utils/airtrafficsim.utils.enums.html">enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/utils/airtrafficsim.utils.calculation.html">calculation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/utils/airtrafficsim.utils.unit_conversion.html">unit_conversion</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.server.html">server</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/server/airtrafficsim.server.server.html">server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/server/airtrafficsim.server.replay.html">replay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/server/airtrafficsim.server.data.html">data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="section" id="creating-a-simulation-environment">
+<h1>Creating a simulation environment<a class="headerlink" href="#creating-a-simulation-environment" title="Permalink to this heading">#</a></h1>
+<div class="section" id="creating-the-file">
+<h2>Creating the file<a class="headerlink" href="#creating-the-file" title="Permalink to this heading">#</a></h2>
+<p>The simulation environment files, located at <code class="docutils literal notranslate"><span class="pre">airtrafficsim/env</span></code>, tell AirTrafficSim how to initiate the environment and how to control the traffic during simulation. Two sample environment <code class="docutils literal notranslate"><span class="pre">DemoEnv</span></code> and <code class="docutils literal notranslate"><span class="pre">FullFlightDemo</span></code> are included at <code class="docutils literal notranslate"><span class="pre">airtrafficsim/env/</span></code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>It may be easier to copy one of the sample environment when creating a new one.</p>
+</div>
+<p>To create a simulation environment, create a new Python file under <code class="docutils literal notranslate"><span class="pre">airtrafficsim/env</span></code> with the name you want. Then, create a new Python class in the file with exactly the same name. Note that this new class is actually a subclass of <a class="reference internal" href="../api/core/airtrafficsim.core.environment.html"><span class="doc std std-doc">airtrafficsim.core.environment</span></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Please note that the file name should be <strong>exactly equal</strong> to the class name including the capitals as it is used for the UI to select and refer the simulation environment.</p>
+</div>
+</div>
+<div class="section" id="creating-the-class-content">
+<h2>Creating the class content<a class="headerlink" href="#creating-the-class-content" title="Permalink to this heading">#</a></h2>
+<p>We will discuss the setup of an environment file by referencing <code class="docutils literal notranslate"><span class="pre">DemoEnv.py</span></code>. Notice that <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">DemoEnv(Environment):</span></code> is a subclass of <code class="docutils literal notranslate"><span class="pre">Environment</span></code> at <a class="reference internal" href="../api/core/airtrafficsim.core.environment.html"><span class="doc std std-doc">airtrafficsim.core.environment</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">airtrafficsim.core.environment</span> <span class="kn">import</span> <span class="n">Environment</span>
+<span class="kn">from</span> <span class="nn">airtrafficsim.core.aircraft</span> <span class="kn">import</span> <span class="n">Aircraft</span>
+<span class="kn">from</span> <span class="nn">airtrafficsim.utils.enums</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">FlightPhase</span>
+
+<span class="k">class</span> <span class="nc">DemoEnv</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Section 1</span>
+        <span class="c1"># Initialize environment super class</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">),</span> <span class="c1">#File name (do not change)</span>
+                        <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s1">&#39;2022-03-22T00:00:00&#39;</span><span class="p">),</span>
+                        <span class="n">end_time</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+                        <span class="n">era5_weather</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="n">bada_perf</span> <span class="o">=</span> <span class="kc">True</span> 
+                        <span class="p">)</span>
+
+        <span class="c1"># Section 2</span>
+        <span class="c1"># Add aircraft</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_head</span> <span class="o">=</span> <span class="n">Aircraft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traffic</span><span class="p">,</span> <span class="n">call_sign</span><span class="o">=</span><span class="s2">&quot;HEAD&quot;</span><span class="p">,</span> <span class="n">aircraft_type</span><span class="o">=</span><span class="s2">&quot;A20N&quot;</span><span class="p">,</span> <span class="n">flight_phase</span><span class="o">=</span><span class="n">FlightPhase</span><span class="o">.</span><span class="n">CRUISE</span><span class="p">,</span> <span class="n">configuration</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">CLEAN</span><span class="p">,</span>
+                                      <span class="n">lat</span><span class="o">=</span><span class="mf">22.019213</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="mf">113.539164</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="mf">20000.0</span><span class="p">,</span> <span class="n">heading</span><span class="o">=</span><span class="mf">175.0</span><span class="p">,</span> <span class="n">cas</span><span class="o">=</span><span class="mf">250.0</span><span class="p">,</span> <span class="n">fuel_weight</span><span class="o">=</span><span class="mf">10000.0</span><span class="p">,</span> <span class="n">payload_weight</span><span class="o">=</span><span class="mf">12000.0</span><span class="p">,</span>
+                                      <span class="n">arrival_airport</span><span class="o">=</span><span class="s2">&quot;VHHH&quot;</span><span class="p">,</span> <span class="n">arrival_runway</span><span class="o">=</span><span class="s2">&quot;07R&quot;</span><span class="p">,</span> <span class="n">star</span> <span class="o">=</span> <span class="s2">&quot;SIER7A&quot;</span><span class="p">,</span> <span class="n">approach</span> <span class="o">=</span> <span class="s2">&quot;I07R&quot;</span><span class="p">,</span> <span class="n">cruise_alt</span><span class="o">=</span><span class="mi">37000</span><span class="p">)</span>
+        <span class="c1"># self.aircraft_head.set_speed(250.0) # To set the aircraft to follow given speed command instead of auto procedural</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fol</span> <span class="o">=</span> <span class="n">Aircraft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traffic</span><span class="p">,</span> <span class="n">call_sign</span><span class="o">=</span><span class="s2">&quot;FOLLOW&quot;</span><span class="p">,</span> <span class="n">aircraft_type</span><span class="o">=</span><span class="s2">&quot;A20N&quot;</span><span class="p">,</span> <span class="n">flight_phase</span><span class="o">=</span><span class="n">FlightPhase</span><span class="o">.</span><span class="n">CRUISE</span><span class="p">,</span> <span class="n">configuration</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">CLEAN</span><span class="p">,</span>
+                                     <span class="n">lat</span><span class="o">=</span><span class="mf">21.9</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="mf">113.5</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="mf">20000.0</span><span class="p">,</span> <span class="n">heading</span><span class="o">=</span><span class="mf">175.0</span><span class="p">,</span> <span class="n">cas</span><span class="o">=</span><span class="mf">310.0</span><span class="p">,</span> <span class="n">fuel_weight</span><span class="o">=</span><span class="mf">10000.0</span><span class="p">,</span> <span class="n">payload_weight</span><span class="o">=</span><span class="mf">12000.0</span><span class="p">,</span> <span class="n">cruise_alt</span><span class="o">=</span><span class="mi">37000</span><span class="p">)</span>
+
+
+    <span class="c1"># Section 3</span>
+    <span class="k">def</span> <span class="nf">should_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># Section 4</span>
+    <span class="k">def</span> <span class="nf">atc_command</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># User algorithm</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_time</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>  
+            <span class="c1"># Right</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fol</span><span class="o">.</span><span class="n">set_heading</span><span class="p">(</span><span class="mi">220</span><span class="p">)</span>
+            <span class="c1"># Left</span>
+            <span class="c1"># self.aircraft_head.set_heading(150)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_time</span> <span class="o">==</span> <span class="mi">300</span><span class="p">:</span>
+            <span class="c1"># Climb</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fol</span><span class="o">.</span><span class="n">set_alt</span><span class="p">(</span><span class="mi">30000</span><span class="p">)</span>
+            <span class="c1"># Descend</span>
+            <span class="c1"># self.aircraft_head.set_alt(11000)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_time</span> <span class="o">==</span> <span class="mi">900</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">traffic</span><span class="o">.</span><span class="n">del_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aircraft_head</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="initialize-environment-super-class">
+<h3>1. Initialize environment super class<a class="headerlink" href="#initialize-environment-super-class" title="Permalink to this heading">#</a></h3>
+<p>There are five parameters needed to initialize the basic information of this simulation, which will be explained below.</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">file_name</span></code> is used to name the solution files. Please do not change.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start_time</span></code> is a Python datetime object representing the simulation start time that you want to study. It will be used to search for the historic weather data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">end_time</span></code> is a interger value representing how many seconds you want the simulation to continue.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">era5_weather</span></code> is a boolean value to select whether the weather database will be downloaded and used. If false, standard atmosphere is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bada_perf</span></code> is a boolean value to select whether <a class="reference external" href="https://www.eurocontrol.int/model/bada">BADA</a> performance data is sued.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We are working toward including <a class="reference external" href="https://github.com/TUDelft-CNS-ATM/openap">OpenAP</a> performance data. Right now, only BADA performance model can be used.</p>
+</div>
+</div>
+<div class="section" id="add-aircraft">
+<h3>2. Add aircraft<a class="headerlink" href="#add-aircraft" title="Permalink to this heading">#</a></h3>
+<p>Air traffic are stored in arrays at <code class="docutils literal notranslate"><span class="pre">Traffic</span></code> class in <a class="reference internal" href="../api/core/airtrafficsim.core.traffic.html"><span class="doc std std-doc">airtrafficsim/core/traffic.py</span></a>. Each <code class="docutils literal notranslate"><span class="pre">Aircraft</span></code> in <a class="reference internal" href="../api/core/airtrafficsim.core.aircraft.html"><span class="doc std std-doc">airtrafficsim/core/aircraft.py</span></a> represents an individual aircraft in the traffic array and provides an interface to command the aircraft movement. The parameters to initialize an aircraft is explained below.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="text-center head"><p>Parameters</p></th>
+<th class="text-center head"><p>Meanings</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>traffic</p></td>
+<td class="text-center"><p>This points to the traffic array class. (The value must be <code class="docutils literal notranslate"><span class="pre">self.traffic</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><strong>General:</strong></p></td>
+<td class="text-center"><p></p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>call_sign</p></td>
+<td class="text-center"><p>Call sign of the aircraft (string)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>aircraft_type</p></td>
+<td class="text-center"><p>ICAO aircraft type (string)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>flight_phase</p></td>
+<td class="text-center"><p>Current flight phase (<a class="reference internal" href="../api/utils/airtrafficsim.utils.enums.html"><span class="doc std std-doc">FlightPhase enums</span></a>)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>configuration</p></td>
+<td class="text-center"><p>Current configuration (<a class="reference internal" href="../api/utils/airtrafficsim.utils.enums.html"><span class="doc std std-doc">Configuration enums</span></a>)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><strong>Position:</strong></p></td>
+<td class="text-center"><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>lat</p></td>
+<td class="text-center"><p>Current latitude (degree)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>long</p></td>
+<td class="text-center"><p>Curent longitude (degree)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>alt</p></td>
+<td class="text-center"><p>Current altitude (feet)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>cas</p></td>
+<td class="text-center"><p>Current calibrated air speed (knots)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><strong>Weight:</strong></p></td>
+<td class="text-center"><p></p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>fuel_weight</p></td>
+<td class="text-center"><p>Current fuel weight (kg)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>payload_weight</p></td>
+<td class="text-center"><p>Current payload weight (kg)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><strong>Flight plan:</strong></p></td>
+<td class="text-center"><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>departure_airport</p></td>
+<td class="text-center"><p>OPTIONAL: Departrue airprot (string)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>departure_runway</p></td>
+<td class="text-center"><p>OPTIONAL: Departure runway (string)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>sid</p></td>
+<td class="text-center"><p>OPTIONAL: Standard Instrumnet Departure Procedure (string)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>arrival_airport</p></td>
+<td class="text-center"><p>OPTIONAL: Arrival airprot (string)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>arrival_runway</p></td>
+<td class="text-center"><p>OPTIONAL: Arrival airprot (string)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>star</p></td>
+<td class="text-center"><p>OPTIONAL: Standard Terminal Arrival Procedure (string)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>approach</p></td>
+<td class="text-center"><p>OPTIONAL: ILS approach procedure (string)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>flight_plan</p></td>
+<td class="text-center"><p>OPTIONAL: Array of waypoints that the aircraft will fly ([string])</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>cruise_alt</p></td>
+<td class="text-center"><p>OPTIONAL: Cruise altitude (feet)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="should-end">
+<h3>3. Should end<a class="headerlink" href="#should-end" title="Permalink to this heading">#</a></h3>
+<p>This is an override function for <code class="docutils literal notranslate"><span class="pre">Environment</span></code> super class to allow you to control whether the simulation should end earlier than indicated by <code class="docutils literal notranslate"><span class="pre">end_time</span></code>. For each timestep, AirTrafficSim will check the condition that the function returns. If it returns <code class="docutils literal notranslate"><span class="pre">True</span></code>, the simulation will end.</p>
+</div>
+<div class="section" id="atc-command">
+<h3>4. ATC command<a class="headerlink" href="#atc-command" title="Permalink to this heading">#</a></h3>
+<p>This is an override function for <code class="docutils literal notranslate"><span class="pre">Environment</span></code> super class to allow you to command how traffic move in this timestep. It can be a simple time-based condition in this sample or it can be a more complicated algorithm developed by you.</p>
+</div>
+</div>
+</div>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="simulation.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Running a simulation</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="replay.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Replaying data</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, HKUST OCTAD Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Creating a simulation environment</a><ul>
+<li><a class="reference internal" href="#creating-the-file">Creating the file</a></li>
+<li><a class="reference internal" href="#creating-the-class-content">Creating the class content</a><ul>
+<li><a class="reference internal" href="#initialize-environment-super-class">1. Initialize environment super class</a></li>
+<li><a class="reference internal" href="#add-aircraft">2. Add aircraft</a></li>
+<li><a class="reference internal" href="#should-end">3. Should end</a></li>
+<li><a class="reference internal" href="#atc-command">4. ATC command</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    </body>
+</html>
