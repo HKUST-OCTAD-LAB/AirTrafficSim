@@ -276,6 +276,7 @@ class Traffic:
         # # Cruise-Descent
         # self.flight_phase = np.where(self.vertical_mode == Vertical_mode.DESCENT, Flight_phase.DESCENT, self.flight_phase)
         self.configuration = self.perf.update_configuration(self.cas, self.alt, self.vertical_mode)
+        # !TODO Is flight phase needed anymore?
         self.flight_phase = np.select(condlist=[
             (self.configuration == Config.TAKEOFF) & (self.alt > 0.0),
             self.configuration == Config.INITIAL_CLIMB,

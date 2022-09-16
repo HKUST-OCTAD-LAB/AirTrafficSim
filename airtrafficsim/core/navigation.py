@@ -34,9 +34,6 @@ class Nav:
     Nav.airports : pandas.dataframe
         Airports data (extracted to contain only runway coordinates) https://developer.x-plane.com/article/airport-data-apt-dat-file-format-specification/
 
-    Methods
-    -------
-
     Notes
     -----
     https://developer.x-plane.com/docs/data-development-documentation/
@@ -283,8 +280,8 @@ class Nav:
         iaf : string
             Initial approach fix (Please provide when appch = A)
 
-        Return
-        ------
+        Returns
+        -------
         Waypoint names : string []
             Waypoint names array
 
