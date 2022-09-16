@@ -127,8 +127,8 @@ class Cal:
         float[]
             Cross track distance [km]
 
-        Note
-        ----
+        Notes
+        -----
         Cross track distance using mean Earth radius 6371.009km for the WGS84 ellipsoid.
         https://www.movable-type.co.uk/scripts/latlong.html
         """

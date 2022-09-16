@@ -170,18 +170,18 @@ class Performance:
 
         Parameters
         ----------
-        H_p: float[]
+        H\_p: float[]
             Geopotential pressuer altitude [m]
 
-        d_T: float[]
+        d\_T: float[]
             Temperature differential at MSL [K]
 
         Returns
         -------
-        T_< if below tropopause: float[]
+        T\_< if below tropopause: float[]
             Temperature [K]
 
-        T_trop or T_> if equal to or above tropopause: float[]
+        T\_trop or T\_> if equal to or above tropopause: float[]
             Temperature [K]
         """
         return np.where(H_p < self.__H_P_TROP,
@@ -197,21 +197,21 @@ class Performance:
 
         Parameters
         ----------
-        H_p: float[]
+        H\_p: float[]
             Geopotential pressuer altitude [m]
 
         T: float[]
             Temperature from cal_temperature()[K]
 
-        d_T: float[]
+        d\_T: float[]
             Temperature differential at MSL [K]
 
         Returns
         -------
-        p_< or p_trop if below or equal to tropopause: float[]
+        p\_< or p\_trop if below or equal to tropopause: float[]
             Pressure [Pa]
 
-        p_> if above tropopause: float[]
+        p\_> if above tropopause: float[]
             Pressure [Pa]
         """
         return np.where(H_p <= self.__H_P_TROP,

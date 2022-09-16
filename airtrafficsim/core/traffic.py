@@ -8,20 +8,20 @@ from airtrafficsim.utils.enums import FlightPhase, SpeedMode, APSpeedMode, APThr
 from airtrafficsim.utils.calculation import Cal
 
 class Traffic:
-
     def __init__(self, file_name, start_time, end_time, era5_weather=False, bada_perf=False):
         """
         Initialize base traffic array to store aircraft state variables for one timestep.
 
+        Parameters
+        ----------
         file_name : String
             Output file name
-
         N :  int
             Total number of aircraft
         """
 
         # Memory and index control vairable:
-        self.n = 0                                              
+        self.n = 0
         """Aircraft count"""
         # self.N = N                                              
         # """Maximum aircraft count"""
@@ -252,9 +252,6 @@ class Traffic:
         ----------
         d_t: float
             delta time per timestep [s] TODO: need?
-
-        Note
-        ----
         """
 
         # Update atmosphere

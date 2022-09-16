@@ -580,7 +580,7 @@ class Bada:
             True airspeed [kt]
 
         d_T : float[]
-            Temperature differential from ISA [K]_
+            Temperature differential from ISA [K]
 
         drag : float[]
             Drag forces [N]

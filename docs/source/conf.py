@@ -39,7 +39,10 @@ exclude_patterns = []
 html_theme = "furo"
 html_static_path = ['_static']
 html_title = "AirTrafficSim"
+html_favicon = "images/OCTAD_logo.png"
 
 autoclass_content = 'both'
+autodoc_member_order = 'bysource'
 
 numpydoc_class_members_toctree = False
+# numpydoc_attributes_as_param_list = False
