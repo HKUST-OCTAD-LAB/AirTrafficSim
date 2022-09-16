@@ -7,7 +7,14 @@ from datetime import datetime
 class Replay:
     @staticmethod
     def get_replay_dir():
-        """Return a list of directories in data/replay given path"""
+        """
+        Return a list of historic/simulation data directories in data/replay
+        
+        Returns
+        -------
+        {}
+            JSON file of historic file list and simulation file list in data/replay directory
+        """
         historic_list = []
         for dir in Path(__file__).parent.parent.parent.joinpath('data/replay/historic').iterdir():
             if dir.is_dir():
@@ -31,7 +38,22 @@ class Replay:
 
     @staticmethod
     def get_replay_czml(replayCategory, replayFile):
-        """Send CZML file of the file name for visualization"""
+        """
+        Generate CZML file for visualization given replay file name.
+        
+        Parameters
+        ----------
+        replayCategory : string
+            The category to replay (historic / simulation)
+        
+        replayFile : string
+            Name of the replay file directory
+
+        Returns
+        -------
+        {}
+            JSON CZML file
+        """
         if replayCategory == 'historic':
             trajectories = []
             start_time = None
@@ -173,7 +195,9 @@ class Replay:
                         #     },
                         #     "scale": 1.0,
                         #     # "rotation": 1.3,
-                        #     "alignedAxis": "velocityReference"
+                        #     "alignedAxis": {
+                        #         "velocityReference": id+"#position"
+                        #     }
                         # },
                         "path": {
                             "leadTime": 0,
@@ -208,6 +232,23 @@ class Replay:
 
     @staticmethod
     def get_graph_header(mode, replayCategory, replayFile):
+        """
+        Get the list of parameters name of a file suitable for plotting graph.
+
+        Parameters
+        ----------
+        mode : string
+            AirTrafficSim mode (replay / simulation)
+        replayCategory : string
+            The category to replay (historic / simulation)
+        replayFile : string
+            Name of the replay file directory
+
+        Returns
+        -------
+        string[]
+            List of graph headers
+        """
         header = ['None']
         if mode == 'replay' and replayCategory == 'simulation':
             with open(Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile), 'r') as file:
@@ -223,6 +264,23 @@ class Replay:
 
     @staticmethod
     def get_graph_data(mode, replayCategory, replayFile, simulationFile, graph):
+        """
+        Get the data for the selected parameters to plot a graph.
+        
+        Parameters
+        ----------
+        mode : string
+            AirTrafficSim mode (replay / simulation)
+        replayCategory : string
+            The category to replay (historic / simulation)
+        replayFile : string
+            Name of the replay file directory
+
+        Returns
+        -------
+        {}
+            JSON file for graph data for Plotly.js
+        """
         data = []
         if mode == 'replay' and replayCategory == 'simulation' and graph != 'None':
             df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile))

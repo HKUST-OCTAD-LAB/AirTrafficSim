@@ -5,7 +5,7 @@ import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from airtrafficsim.core.performance.performance import Performance
-from airtrafficsim.utils.unit import Unit
+from airtrafficsim.utils.unit_conversion import Unit
 from airtrafficsim.core.weather.era5 import Era5
 
 

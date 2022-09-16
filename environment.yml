@@ -1,0 +1,29 @@
+name: airtrafficsim
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python >= 3.7
+  - numpy
+  - pandas
+  - Flask
+  - Flask-SocketIO
+  - Eventlet
+  - cartopy
+  - cdsapi
+  - xarray
+  - openap
+
+  # Client
+  # - nodejs
+
+  # Documentation
+  # - sphinx
+  # - myst-parser
+  # - furo
+  # - numpydoc
+
+  # Others
+  # - pip
+  # - pip:
+  #   - -r requirements.txt

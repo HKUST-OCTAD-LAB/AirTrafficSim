@@ -1,9 +1,9 @@
 import numpy as np
 
 from airtrafficsim.core.traffic import Traffic
-from airtrafficsim.core.nav import Nav
-from airtrafficsim.utils.unit import Unit
-from airtrafficsim.utils.cal import Cal
+from airtrafficsim.core.navigation import Nav
+from airtrafficsim.utils.unit_conversion import Unit
+from airtrafficsim.utils.calculation import Cal
 from airtrafficsim.utils.enums import APLateralMode, APThrottleMode
 
 class Aircraft:

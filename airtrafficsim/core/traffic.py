@@ -3,25 +3,25 @@ import numpy as np
 from airtrafficsim.core.autopilot import Autopilot
 from airtrafficsim.core.weather.weather import Weather
 from airtrafficsim.core.performance.performance import Performance
-from airtrafficsim.utils.unit import Unit
+from airtrafficsim.utils.unit_conversion import Unit
 from airtrafficsim.utils.enums import FlightPhase, SpeedMode, APSpeedMode, APThrottleMode, APVerticalMode, Config, VerticalMode
-from airtrafficsim.utils.cal import Cal
+from airtrafficsim.utils.calculation import Cal
 
 class Traffic:
-
     def __init__(self, file_name, start_time, end_time, era5_weather=False, bada_perf=False):
         """
         Initialize base traffic array to store aircraft state variables for one timestep.
 
+        Parameters
+        ----------
         file_name : String
             Output file name
-
         N :  int
             Total number of aircraft
         """
 
         # Memory and index control vairable:
-        self.n = 0                                              
+        self.n = 0
         """Aircraft count"""
         # self.N = N                                              
         # """Maximum aircraft count"""
@@ -252,9 +252,6 @@ class Traffic:
         ----------
         d_t: float
             delta time per timestep [s] TODO: need?
-
-        Note
-        ----
         """
 
         # Update atmosphere

@@ -5,7 +5,7 @@ import pandas as pd
 import csv
 from pathlib import Path
 
-from airtrafficsim.utils.unit import Unit
+from airtrafficsim.utils.unit_conversion import Unit
 from airtrafficsim.utils.enums import FlightPhase, Config, SpeedMode, VerticalMode, APSpeedMode, APThrottleMode, APVerticalMode, APLateralMode
 from airtrafficsim.core.traffic import Traffic
 
@@ -13,6 +13,7 @@ from airtrafficsim.core.traffic import Traffic
 class Environment:
     """
     Base class for simulation environment
+
     """
 
     def __init__(self, file_name="default", start_time = datetime.utcnow(), end_time = 60, era5_weather=False, bada_perf=False):
@@ -66,12 +67,51 @@ class Environment:
         """Return true/false of whether the simulation should end."""
         return False
 
+    def step(self, socketio=None):
+        """
+        Conduct one simulation timestep.
+        """
+        start_time = time.time()
+
+        # Run atc command
+        self.atc_command()
+        # Run update loop
+        self.traffic.update(self.global_time)
+        # Save to file
+        self.save()
+
+        print("Environment - step() for global time", self.global_time, "/", self.end_time, "finished at", time.time() - start_time)
+        
+        if(socketio != None):
+            # Save to buffer
+            self.buffer_time.append((self.datetime + timedelta(seconds=self.global_time)).isoformat())
+            self.lat.append(self.traffic.lat)
+            self.long.append(self.traffic.long)
+            self.alt.append(self.traffic.alt)
+            self.cas.append(self.traffic.cas)
+
+            @socketio.on('setSimulationGraphType')
+            def set_simulation_graph_type(graph_type):
+                self.graph_type = graph_type
+
+            now = time.time()
+            if ((now - self.last_sent_time) > 0.5) or (self.global_time == self.end_time):
+                self.send_to_client(socketio)
+                socketio.sleep(0)
+                self.last_sent_time = now
+                self.buffer_time = []
+                self.lat = []
+                self.long = []
+                self.alt = []
+                self.cas = []
+
+        self.global_time += 1
 
     def run(self, socketio=None):
         if socketio:
             socketio.emit('simulationEnvironment', {'header': self.header, 'file': self.file_name})
 
-        for i in range(self.end_time+1):
+        for _ in range(self.end_time+1):
             # One timestep
 
             # Check if the simulation should end
@@ -79,41 +119,7 @@ class Environment:
                 self.end_time = self.global_time
                 break
 
-            start_time = time.time()
-
-            # Run atc command
-            self.atc_command()
-            # Run update loop
-            self.traffic.update(self.global_time)
-            # Save to file
-            self.save()
-
-            print("Environment - step() for global time", self.global_time, "/", self.end_time, "finished at", time.time() - start_time)
-            
-            if(socketio != None):
-                # Save to buffer
-                self.buffer_time.append((self.datetime + timedelta(seconds=self.global_time)).isoformat())
-                self.lat.append(self.traffic.lat)
-                self.long.append(self.traffic.long)
-                self.alt.append(self.traffic.alt)
-                self.cas.append(self.traffic.cas)
-
-                @socketio.on('setSimulationGraphType')
-                def set_simulation_graph_type(graph_type):
-                    self.graph_type = graph_type
-
-                now = time.time()
-                if ((now - self.last_sent_time) > 0.5) or (self.global_time == self.end_time):
-                    self.send_to_client(socketio)
-                    socketio.sleep(0)
-                    self.last_sent_time = now
-                    self.buffer_time = []
-                    self.lat = []
-                    self.long = []
-                    self.alt = []
-                    self.cas = []
-
-            self.global_time += 1
+            self.step(socketio)
             
         print("")
         print("Export to CSVs")

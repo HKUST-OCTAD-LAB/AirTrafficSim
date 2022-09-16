@@ -26,6 +26,12 @@
                 "-o", "tmp/profile.prof", "simulation/__main__.py", "--headless"
             ]
             // snakeviz tmp/profile.prof to visuzlie the profile
+
+            // Build documentations
+            // sphinx-build -b html docs/source/ docs/build/html
+
+            // View documentations through ssh and http server
+            // python3 -m http.server 8000
         },
     ]
 }

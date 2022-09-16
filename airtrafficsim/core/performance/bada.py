@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 from airtrafficsim.utils.enums import APSpeedMode, EngineType, Config, FlightPhase, VerticalMode
-from airtrafficsim.utils.unit import Unit
+from airtrafficsim.utils.unit_conversion import Unit
 
 class Bada:
     """
@@ -580,7 +580,7 @@ class Bada:
             True airspeed [kt]
 
         d_T : float[]
-            Temperature differential from ISA [K]_
+            Temperature differential from ISA [K]
 
         drag : float[]
             Drag forces [N]
