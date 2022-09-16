@@ -1,0 +1,46 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Paper
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push event for paper branch
+  push:
+    branches: [ "paper" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "paper"
+  paper:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Paper Draft
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      # Geneate PDF
+      - name: Build draft PDF
+        uses: openjournals/openjournals-draft-action@master
+        with:
+          # Target journal, must be either "joss" or "jose"
+          journal: joss # optional, default is joss
+          # Path to the main paper Markdown file, relative to the project's root directory.
+          paper-path: paper.md # optional, default is paper.md
+    
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          name: paper
+          # This is the output path where Pandoc will write the compiled
+          # PDF. Note, this should be the same directory as the input
+          # paper.md
+          path: paper.pdf
+      
