@@ -17,11 +17,11 @@ jobs:
       uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: html-docs
-        path: docs/build/html/
+#     - name: Upload artifacts
+#       uses: actions/upload-artifact@v3
+#       with:
+#         name: html-docs
+#         path: docs/build/html/
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/master'
