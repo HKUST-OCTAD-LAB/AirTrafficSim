@@ -18,7 +18,7 @@ authors:
     corresponding: true # (This is how to denote the corresponding author)
     affiliation: 1
 affiliations:
- - name: Department of Mechanical and Aerospace Engineering, The Hong Kong University of Science and Technology, Hong Kong
+ - name: Department of Mechanical and Aerospace Engineering, The Hong Kong University of Science and Technology, Hong Kong SAR
    index: 1
 date: 16 September 2022
 bibliography: paper.bib
@@ -28,7 +28,7 @@ bibliography: paper.bib
 
 Air traffic management (ATM) research traditionally focuses on the macroscopic aspect of air transportation such as airspace design research, traffic flow management, airport planning and scheduling, and more [@ATM]. Recently, with the new development of aerial vehicle concepts, including urban air mobility (UAM) and unmanned aircraft system (UAS), there has been a growing interest in performing microscopic ATM research, for example, conflict resolution using reinforcement learning [@Conflict], 4D-trajectory optimization [@4D], and even unmanned traffic management (UTM) development. Eurocontrol U-space [@uspace] and FAA/NASA UTM project [@nasa] are some of the examples that the industry is focusing more on such research. 
 
-To facilitate microscopic ATM research, an agent-based simulation and visualization software is needed. However, most ATM simulation tools are commercial products aimed at training air traffic controllers. ATM simulation tools for research purposes that are easily accessible and open-source, such as Bluesky [@BlueSky], are still scarce. Therefore, AirTrafficSim was developed to assist researchers to perform ATM research with an easy-to-use and comprehensive software environment to simulate air traffic movement and visualize the result. It is an open-source package that welcomes everyone to access and contribute.
+To facilitate microscopic ATM research, an agent-based simulation and visualization software is needed. However, most ATM simulation tools are commercial products aimed at training air traffic controllers. ATM simulation tools for research purposes that are easily accessible and open-source, such as Bluesky [@BlueSky], are still scarce. Therefore, we develop AirTrafficSim to assist researchers to perform ATM research with an easy-to-use and comprehensive software environment to simulate air traffic movement and visualize the results. It is an open-source package that welcomes everyone to access and contribute.
 
 # Summary
 
