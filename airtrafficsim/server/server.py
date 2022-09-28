@@ -115,8 +115,8 @@ def get_simulation_file():
         List of simulation environment file names
     """
     simulation_list=[]
-    for file in Path(__file__).parent.parent.joinpath('env/').glob('*.py'):
-        if file.name != 'environment.py' and file.name != '__init__.py':
+    for file in Path(__file__).parent.parent.parent.joinpath('environment/').glob('*.py'):
+        if file.name != '__init__.py':
             simulation_list.append(file.name.removesuffix('.py'))
     return simulation_list
 
@@ -130,7 +130,7 @@ def run_simulation(file):
     file : string
         Environment file name
     """
-    Env = getattr(import_module('airtrafficsim.env.'+file), file)
+    Env = getattr(import_module('environment.'+file, '...'), file)
     env = Env()
     env.run(socketio)
 

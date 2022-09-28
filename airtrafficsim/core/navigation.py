@@ -42,20 +42,20 @@ class Nav:
     """
 
     # Install navigation data
-    if not Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/').is_dir():
+    if not Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/').is_dir():
         # Create directories
-        Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports').mkdir(parents=True)
+        Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/airports').mkdir(parents=True)
 
         # Unzip files
         print("Unzipping X-plane navigation data.")
-        ZipFile('data/nav/xplane_default_data.zip').extractall('data/nav/xplane/')
+        ZipFile(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane_default_data.zip')).extractall(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/'))
 
         # Extract apt.dat to runways.csv and individual csv in xplane/airports/
         print("Unpacking airport data (apt.dat). This will take a while...")
         airport = []
         icao = ""
         runways = []
-        with open(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/apt.dat'), 'r') as file:
+        with open(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/apt.dat'), 'r') as file:
             # Skip 3 lines
             next(file)
             next(file)
@@ -69,7 +69,7 @@ class Nav:
                         # Write previous airport
                         if not icao == "":
                             print("\r"+"Extracting information from airport "+icao, end="", flush=True)
-                            with open(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports', icao+'.csv'), 'w') as f:
+                            with open(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/airports', icao+'.csv'), 'w') as f:
                                 f.writelines(airport)
                         # Reset if not the end
                         if not row[0] == "99":
@@ -93,7 +93,7 @@ class Nav:
 
         # Write saved runway data to airports.csv
         print("\nExporting airport runways data.")
-        with open(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports.csv'), 'w') as f:
+        with open(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/airports.csv'), 'w') as f:
             writer = csv.writer(f)
             writer.writerows(runways)
         del airport
@@ -102,19 +102,19 @@ class Nav:
 
     # Static variables
     print("Reading NAV data...")
-    fix = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_fix.dat'), delimiter='\s+', skiprows=3, header=None)
+    fix = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/earth_fix.dat'), delimiter='\s+', skiprows=3, header=None)
     """Fixes data https://developer.x-plane.com/wp-content/uploads/2019/01/XP-FIX1101-Spec.pdf"""
-    nav = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_nav.dat'), delimiter='\s+', skiprows=3, header=None, names=np.arange(0,18), low_memory=False).apply(pd.to_numeric, errors='ignore')
+    nav = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/earth_nav.dat'), delimiter='\s+', skiprows=3, header=None, names=np.arange(0,18), low_memory=False).apply(pd.to_numeric, errors='ignore')
     """Radio navigation data https://developer.x-plane.com/wp-content/uploads/2020/03/XP-NAV1150-Spec.pdf"""
-    airway = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_awy.dat'), delimiter='\s+', skiprows=3, header=None)
+    airway = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/earth_awy.dat'), delimiter='\s+', skiprows=3, header=None)
     """Airway data https://developer.x-plane.com/wp-content/uploads/2019/01/XP-AWY1101-Spec.pdf"""
-    holding = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_hold.dat'), delimiter='\s+', skiprows=3, header=None)
+    holding = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/earth_hold.dat'), delimiter='\s+', skiprows=3, header=None)
     """Holding data https://developer.x-plane.com/wp-content/uploads/2018/12/XP-HOLD1140-Spec.pdf"""
-    min_off_route_alt = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_mora.dat'), delimiter='\s+', skiprows=3, header=None)
+    min_off_route_alt = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/earth_mora.dat'), delimiter='\s+', skiprows=3, header=None)
     """Minimum off route grid altitudes https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MORA1150-Spec.pdf"""
-    min_sector_alt = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/earth_msa.dat'), delimiter='\s+', skiprows=3, header=None, names=np.arange(0,26))
+    min_sector_alt = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/earth_msa.dat'), delimiter='\s+', skiprows=3, header=None, names=np.arange(0,26))
     """Minimum sector altitudes for navaids, fixes, airports and runway threshold https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MSA1150-Spec.pdf"""
-    airports = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/airports.csv'), header=None)
+    airports = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/airports.csv'), header=None)
     """Airports data (extracted to contain only runway coordinates) https://developer.x-plane.com/article/airport-data-apt-dat-file-format-specification/"""
 
     @staticmethod
@@ -305,7 +305,7 @@ class Nav:
             Terminal procedures (SID/STAR/Approach/Runway) https://developer.x-plane.com/wp-content/uploads/2019/01/XP-CIFP1101-Spec.pd f
             https://wiki.flightgear.org/User:Www2/XP11_Data_Specification
         """ 
-        procedures = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/CIFP/'+airport+'.dat'), header=None)
+        procedures = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/CIFP/'+airport+'.dat'), header=None)
 
         if appch == "":
             # SID/STAR
