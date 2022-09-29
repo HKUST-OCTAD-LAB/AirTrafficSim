@@ -21,7 +21,7 @@ from airtrafficsim.server.data import Data
 
 # eventlet.monkey_patch()
 
-app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath('client/build'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('client/build')))
+app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath('data/client'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('data/client')))
 socketio = SocketIO(app, cors_allowed_origins='*', max_http_buffer_size=1e8, ping_timeout=60, async_mode='eventlet', logger=True) #engineio_logger=True 
 
 @socketio.on('connect')
@@ -233,7 +233,7 @@ def serve_client():
     """Serve client folder to user"""
     return render_template("index.html")
 
-def run_server(port = 5000):
+def run_server(port = 6111):
     """Start the backend server."""
     print("Running server at http://localhost:"+str(port))
     socketio.run(app, port=port)

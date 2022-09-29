@@ -20,7 +20,7 @@ Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
 const osmBuilding = IonResource.fromAssetId(96188);
 const osmBuildingstyle = new Cesium3DTileStyle({
-    color : 'color("grey")'
+    color : 'color("grey")'z
 });
 const bingImagery = createWorldImagery();
 const simpleImagery = new OpenStreetMapImageryProvider({url: 'https://stamen-tiles.a.ssl.fastly.net/toner-background/' });
