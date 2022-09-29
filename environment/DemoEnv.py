@@ -12,8 +12,8 @@ class DemoEnv(Environment):
         super().__init__(file_name = Path(__file__).name.removesuffix('.py'), #File name (do not change)
                         start_time = datetime.fromisoformat('2022-03-22T00:00:00'),
                         end_time = 1000,
-                        era5_weather = True,
-                        bada_perf = True 
+                        weather_mode = "ERA5",
+                        performance_mode = "BADA" 
                         )
 
         # Add aircraft

@@ -14,12 +14,13 @@ class FullFlightDemo(Environment):
         super().__init__(file_name = Path(__file__).name.removesuffix('.py'), #File name (do not change)
                         start_time = datetime.fromisoformat('2022-03-22T00:00:00'),
                         end_time = 7000,
-                        era5_weather = False,
-                        bada_perf = True 
+                        weather_mode = "",
+                        performance_mode = "BADA" 
                         )
 
         # Add aircraft
         lat_dep, long_dep, alt_dep = Nav.get_runway_coord("VHHH", "25L") #TODO: Convert MSL to Geopotential altitude
+        print(Nav.get_runway_coord("VHHH", "25L"))
         self.aircraft_full = Aircraft(self.traffic, call_sign="FULL", aircraft_type="A320", flight_phase=FlightPhase.TAKEOFF, configuration=Config.TAKEOFF,
                                       lat=lat_dep, long=long_dep, alt=alt_dep, heading=254.0, cas=149.0,
                                       fuel_weight=5273.0, payload_weight=12000.0,

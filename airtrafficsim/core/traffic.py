@@ -8,7 +8,7 @@ from airtrafficsim.utils.enums import FlightPhase, SpeedMode, APSpeedMode, APThr
 from airtrafficsim.utils.calculation import Cal
 
 class Traffic:
-    def __init__(self, file_name, start_time, end_time, era5_weather=False, bada_perf=False):
+    def __init__(self, file_name, start_time, end_time, weather_mode, performance_mode):
         """
         Initialize base traffic array to store aircraft state variables for one timestep.
 
@@ -124,11 +124,11 @@ class Traffic:
         """Fuel consumped [kg]"""
 
         # Sub classes
-        self.perf = Performance(bada_perf)                              
+        self.perf = Performance(performance_mode)                              
         """Performance class"""
         self.ap = Autopilot()                                  
         """Autopilot class"""
-        self.weather = Weather(start_time, end_time, era5_weather, file_name)                               
+        self.weather = Weather(start_time, end_time, weather_mode, file_name)                               
         """Weather class"""
 
     

@@ -16,11 +16,11 @@ class ConvertHistoricDemo(Environment):
     def __init__(self):
         # Initialize environment super class
         super().__init__(file_name = Path(__file__).name.removesuffix('.py'), #File name (do not change)
-                        start_time = datetime.fromisoformat('cl2018-05-01T00:00:00'),
+                        start_time = datetime.fromisoformat('2018-05-01T00:00:00'),
                         end_time = 3600,
                         # end_time = 86400,
-                        era5_weather = False,
-                        bada_perf = True 
+                        weather_mode = "",
+                        performance_mode = "BADA" 
                         )
 
         # Detect arrival route, position, and time for all aircraft in a day
@@ -81,7 +81,7 @@ class ConvertHistoricDemo(Environment):
         self.heading = []
         self.time = []
         
-        for file in Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/historic/20180501/').iterdir():
+        for file in Path(__file__).parent.parent.resolve().joinpath('data/flight_data/2018-05-01/').iterdir():
             if file.name.removesuffix('.csv') in target:
                 self.call_sign.append(file.name.removesuffix('.csv'))
                 

@@ -16,7 +16,7 @@ class Environment:
 
     """
 
-    def __init__(self, file_name="default", start_time = datetime.utcnow(), end_time = 60, era5_weather=False, bada_perf=False):
+    def __init__(self, file_name="default", start_time = datetime.utcnow(), end_time = 60, weather_mode="ISA", performance_mode="BADA"):
         # User setting
         self.start_time = start_time
         """The simulation start time [datetime object]"""
@@ -24,7 +24,7 @@ class Environment:
         """The simulation end time [s]"""
 
         # Simulation variable
-        self.traffic = Traffic(file_name, start_time, end_time, era5_weather, bada_perf)
+        self.traffic = Traffic(file_name, start_time, end_time, weather_mode, performance_mode)
         self.global_time = 0                    # [s]
 
         # Handle io
@@ -165,7 +165,7 @@ class Environment:
                 }
             }]
 
-
+        print(self.lat)
         lat = np.vstack(tuple(self.lat))
         long = np.vstack(tuple(self.long))
         alt = np.vstack(tuple(self.alt))

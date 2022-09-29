@@ -54,6 +54,8 @@ class Nav:
         print("Unpacking airport data (apt.dat). This will take a while...")
         airport = []
         icao = ""
+        alt = 0.0
+
         runways = []
         with open(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/apt.dat'), 'r') as file:
             # Skip 3 lines
@@ -74,20 +76,19 @@ class Nav:
                         # Reset if not the end
                         if not row[0] == "99":
                             icao = row[4]
+                            alt = row[1]
                             airport = []
                     # If row code equals to land runway
                     if row[0] == "100":
-                        if row[0] == "1000":
-                            print("\n"+row[0])
                         for i in range(8, len(row), 9):
-                            runways.append([icao]+row[i:i+4])
+                            runways.append([icao]+row[i:i+3]+[alt])
                     # If row code equals to water runway
                     if row[0] == "101":
                         for i in range(3, len(row), 3):
-                            runways.append([icao]+row[i:i+4])
+                            runways.append([icao]+row[i:i+3]+[alt])
                     # If row code equals to helipad runway
                     if row[0] == "102":
-                        runways.append([icao]+row[1:5])
+                        runways.append([icao]+row[1:4]+[alt])
                     # Add data line to cache
                     airport.append(line)
 
@@ -254,7 +255,7 @@ class Nav:
         procedure_names : string []
             Names of all procedures of the airport
         """
-        procedures = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/nav/xplane/CIFP/'+airport+'.dat'), header=None)
+        procedures = pd.read_csv(Path(__file__).parent.parent.parent.resolve().joinpath('./data/navigation/xplane/CIFP/'+airport+'.dat'), header=None)
         return procedures[procedures[0].str.contains(procedure_type)][2].unique()
 
     @staticmethod
