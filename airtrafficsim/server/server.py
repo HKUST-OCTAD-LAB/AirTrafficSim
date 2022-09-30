@@ -158,7 +158,7 @@ def get_Nav(lat1, long1, lat2, long2):
     return Data.get_nav(lat1, long1, lat2, long2)
 
 @socketio.on('getEra5Wind')
-def get_era5_wind(lat1, long1, lat2, long2, file):
+def get_era5_wind(lat1, long1, lat2, long2, file, time):
     """
     Get the ERA5 wind data image to client
     
@@ -178,10 +178,10 @@ def get_era5_wind(lat1, long1, lat2, long2, file):
     {}
         JSON CZML file of ERA5 wind data image
     """
-    return Data.get_era5_wind(lat1, long1, lat2, long2, file)
+    return Data.get_era5_wind(file, lat1, long1, lat2, long2, time)
 
 @socketio.on('getEra5Rain')
-def get_era5_rain(lat1, long1, lat2, long2, file):
+def get_era5_rain(lat1, long1, lat2, long2, file, time):
     """
     Get the ERA5 rain data image to client
     
@@ -201,10 +201,10 @@ def get_era5_rain(lat1, long1, lat2, long2, file):
     {}
         JSON CZML file of ERA5 rain data image
     """
-    return Data.get_era5_rain(lat1, long1, lat2, long2, file)
+    return Data.get_era5_rain(file, lat1, long1, lat2, long2, time)
 
 @socketio.on('getRadarImage')
-def get_radar_img(lat1, long1, lat2, long2, file):
+def get_radar_img(lat1, long1, lat2, long2, file, time):
     """
     Get the radar data image to client
     
@@ -218,6 +218,8 @@ def get_radar_img(lat1, long1, lat2, long2, file):
         Latitude (North)
     long2 : float
         Longitude (East)
+    time : string
+        Time in ISO format
     file : string
         File name of the radar image
 
@@ -226,7 +228,7 @@ def get_radar_img(lat1, long1, lat2, long2, file):
     {}
         JSON CZML file of radar data image
     """
-    return Data.get_radar_img(lat1, long1, lat2, long2, file)
+    return Data.get_radar_img(file, lat1, long1, lat2, long2, time)
 
 @app.route("/")
 def serve_client():

@@ -84,7 +84,7 @@ class Environment:
         
         if(socketio != None):
             # Save to buffer
-            self.buffer_time.append((self.datetime + timedelta(seconds=self.global_time)).isoformat())
+            self.buffer_time.append((self.start_time + timedelta(seconds=self.global_time)).isoformat()+'Z')
             self.lat.append(self.traffic.lat)
             self.long.append(self.traffic.long)
             self.alt.append(self.traffic.alt)
@@ -132,7 +132,7 @@ class Environment:
         """
         Save all states variable of one timestemp to csv file.
         """
-        data = np.column_stack((np.full(len(self.traffic.index), self.global_time), np.full(len(self.traffic.index), (self.start_time + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), self.traffic.index, self.traffic.call_sign, self.traffic.lat, self.traffic.long, self.traffic.alt,
+        data = np.column_stack((np.full(len(self.traffic.index), self.global_time), np.full(len(self.traffic.index), (self.start_time + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')+'Z'), self.traffic.index, self.traffic.call_sign, self.traffic.lat, self.traffic.long, self.traffic.alt,
                                 self.traffic.cas, self.traffic.tas, self.traffic.mach, self.traffic.vs,
                                 self.traffic.heading, self.traffic.bank_angle, self.traffic.path_angle,
                                 self.traffic.mass, self.traffic.fuel_consumed,
@@ -160,8 +160,8 @@ class Environment:
                 "name": "simulation",
                 "version": "1.0",
                 "clock": {
-                    "interval": self.datetime.isoformat()+"/"+(self.datetime + timedelta(seconds=self.end_time)).isoformat(),
-                    "currentTime": self.datetime.isoformat(),
+                    "interval": self.start_time.isoformat()+'Z'+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat()+'Z',
+                    "currentTime": self.start_time.isoformat()+'Z',
                 }
             }]
 
@@ -174,7 +174,7 @@ class Environment:
         for i in range(len(self.traffic.index)):
             print(self.traffic.index)
             positions = np.column_stack((np.array(self.buffer_time, dtype="object"), long[:,i], lat[:,i], Unit.ft2m(alt[:, i]))).flatten().tolist()
-            label = [{"interval": time+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat(), 
+            label = [{"interval": time+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat()+'Z', 
                     "string": self.traffic.call_sign[i]+"\n"+str(np.floor(alt))+"ft "+str(np.floor(cas))+"kt"} 
                     for time, alt, cas in zip(self.buffer_time, alt[:,i], cas[:,i])]
             

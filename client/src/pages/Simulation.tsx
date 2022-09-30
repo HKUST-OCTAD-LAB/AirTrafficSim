@@ -20,7 +20,7 @@ Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
 const terrainProvider = createWorldTerrain();
 const osmBuilding = IonResource.fromAssetId(96188);
 const osmBuildingstyle = new Cesium3DTileStyle({
-    color : 'color("grey")'z
+    color : 'color("grey")'
 });
 const bingImagery = createWorldImagery();
 const simpleImagery = new OpenStreetMapImageryProvider({url: 'https://stamen-tiles.a.ssl.fastly.net/toner-background/' });
@@ -230,7 +230,7 @@ const Simulation: React.FC = () => {
             // console.log("camera direction", direction.x, direction.y, direction.z);
             var rectangle = viewer.camera.computeViewRectangle();
             if(currentMagnitude < 10000000){
-                socket.emit("getEra5Wind", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, (res :any) => {
+                socket.emit("getEra5Wind", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, julianDate.replace('Z',''), (res :any) => {
                     era5WindDataSource.process(res);
                 });
             } else {
@@ -256,7 +256,7 @@ const Simulation: React.FC = () => {
             // console.log("camera direction", direction.x, direction.y, direction.z);
             var rectangle = viewer.camera.computeViewRectangle();
             if(currentMagnitude < 40000000){
-                socket.emit("getEra5Rain", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, (res :any) => {
+                socket.emit("getEra5Rain", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, julianDate.replace('Z',''), (res :any) => {
                     era5RainDataSource.process(res);
                 });
             } else {
@@ -281,7 +281,7 @@ const Simulation: React.FC = () => {
             // var direction = viewer.camera.direction;
             // console.log("camera direction", direction.x, direction.y, direction.z);
             var rectangle = viewer.camera.computeViewRectangle();
-            socket.emit("getRadarImage", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, (res :any) => {
+            socket.emit("getRadarImage", rectangle!.south/Math.PI*180, rectangle!.west/Math.PI*180, rectangle!.north/Math.PI*180, rectangle!.east/Math.PI*180, mode==='replay'?replayFile:simulationFile, julianDate.replace('Z',''), (res :any) => {
                 console.log(res);
                 radarImageDataSource.process(res);
             });
@@ -306,10 +306,13 @@ const Simulation: React.FC = () => {
                         currentTime={targetTime}
                         onTick={(clock) => {
                             setClockTime(JulianDate.secondsDifference(clock.currentTime, clock.startTime));
-                            setJulianDate(JulianDate.toIso8601(clock.currentTime, 0).replace("T", "\n"));
+                            setJulianDate(JulianDate.toIso8601(clock.currentTime, 0));
+                            if(Math.floor(clock.currentTime.secondsOfDay) % 1800 === 300){
+                                getEra5Wind(false, false); getEra5Rain(false, false); getRadarImg(false, false);
+                            }
                         }} 
                     />
-                    <Camera onMoveEnd={() => {getNav(false, false); getEra5Wind(false, false); getEra5Rain(false, false);}}/>
+                    <Camera onMoveEnd={() => {getNav(false, false); getEra5Wind(false, false); getEra5Rain(false, false); getRadarImg(false, false);}}/>
                 </Viewer>
             </IonContent>
             
@@ -471,7 +474,7 @@ const Simulation: React.FC = () => {
                             </IonCol>
                             <IonCol size="auto">
                                 <IonItem lines="none" style={{"width": "100px", "--inner-padding-end":"0px", "--background": "transparent"}}>
-                                    <IonLabel style={{"whiteSpace": "pre-line"}} class="ion-text-center">{julianDate}</IonLabel>
+                                    <IonLabel style={{"whiteSpace": "pre-line"}} class="ion-text-center">{julianDate.replace("T", "\n")}</IonLabel>
                                 </IonItem>
                             </IonCol>
                             <IonCol >
