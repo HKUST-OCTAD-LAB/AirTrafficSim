@@ -110,20 +110,11 @@ class ConvertHistoricDemo(Environment):
         
         print("Finished analyzing data")
 
-        self.wake = []
-
 
         self.aircraft_list = {}
         self.time = np.array(self.time)
 
         self.start_time = datetime.fromtimestamp(np.min(self.time))
-        # i = np.argmin(self.time)
-        
-        # self.aircraft_list.append(
-        #     Aircraft(self.traffic, call_sign=self.call_sign[i], aircraft_type=self.type[i], flight_phase=Flight_phase.CRUISE, configuration=Configuration.CLEAN,
-        #             lat=self.position[i][0], long=self.position[i][1], alt=self.alt[i], heading=self.heading[i], cas=self.speed[i], fuel_weight=10000.0, payload_weight=12000.0, 
-        #             arrival_airport="VHHH", arrival_runway="07R", star = self.star[i], approach = self.approach[i], cruise_alt=37000)
-        # )
 
 
     def should_end(self):
@@ -134,28 +125,23 @@ class ConvertHistoricDemo(Environment):
         time = self.start_time + timedelta(seconds=self.global_time)
         time = int(time.timestamp())
         index = np.where(self.time == time)[0]
+
         # Add aircraft
         for i in index:
             self.aircraft_list[self.call_sign[i]] = Aircraft(self.traffic, call_sign=self.call_sign[i], aircraft_type=self.type[i], flight_phase=FlightPhase.CRUISE, configuration=Config.CLEAN,
                                                              lat=self.position[i][0], long=self.position[i][1], alt=self.start_alt[i], heading=self.heading[i], cas=self.speed[i], fuel_weight=10000.0, payload_weight=12000.0,
                                                              arrival_airport="VHHH", arrival_runway="07R", star = self.star[i], approach = self.approach[i], cruise_alt=37000)
-            # self.wake.append([self.call_sign[i], self.aircraft_list[self.call_sign[i]].get_wake()])
 
         # Delete aircraft
         index = self.traffic.index[self.traffic.ap.hv_next_wp == False]
         for i in index:
             self.traffic.del_aircraft(i)
 
+        # Holding and vectoring
         if "TH3507" in self.aircraft_list:
             # self.aircraft_list["TH3507"].set_vectoring(60, 195, "GUAVA")
             if self.global_time == 100:
                 self.aircraft_list["TH3507"].set_holding(2, "BETTY", "VH")
-
-        # if self.global_time == 86400:
-        #     print(self.wake)
-        #     with open("/home/kyfrankie/AirTrafficSim/wake.csv", "w", newline='') as f:
-        #         writer = csv.writer(f)
-        #         writer.writerows(self.wake)
         
 
         
