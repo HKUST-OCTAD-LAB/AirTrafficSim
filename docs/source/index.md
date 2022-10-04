@@ -1,21 +1,33 @@
 # AirTrafficSim
 
-AirTrafficSim is a web-based air traffic simulation software written in Python and javascript. It is designed to visualize historic and research data, perform microscopic studies of air traffic movement with the integration of a historic weather database, and evaluate the performance of ATM algorithms.
+AirTrafficSim is a web-based air traffic simulation software written in Python and Javascript. It is designed to visualize historic and research data, perform microscopic studies of air traffic movement with the integration of a historic weather database, and evaluate the performance of ATM algorithms.
 
 AirTrafficSim is open-sourced at [https://github.com/HKUST-OCTAD-LAB/AirTrafficSim](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim).
 
 ## Features
 
-- Replay histortic flights given data (FlightRadar 24 and simulated flights)
+- Replay historic flights given data (FlightRadar 24 and simulated flights)
 - Air traffic simulation using [BADA performance data](https://www.eurocontrol.int/model/bada) and OpenAP (WIP)
 - Navigation data simulation and visualization from [x-plane 11](https://developer.x-plane.com/docs/data-development-documentation/)
 - Autopilot and Flight Management System simulation
-- Holding, vectoring, direct to maneuvers simulated
+- Holding, vectoring, direct to maneuvers simulation
 - Weather data from [ECMWF ERA5](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview) and custom radar image
-- Air traffic is controlled with API interface to simulate ATC interaction
+- Air traffic is controlled with Python API interface to simulate ATC interaction
 
 ```{image} images/UI_features.png
 ```
+
+## Usages
+
+> **Tactical routing for air transportation in HKIA terminal manuevering area.**
+> 
+> The 26th HKSTS International Conference, 2022
+> 
+> Nguyen, H. C., Lui, G. N., Hui, K. Y., & Liem, R. P.
+
+<div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Vq62IG-sNQY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
 
 ```{toctree}
@@ -34,8 +46,10 @@ AirTrafficSim is open-sourced at [https://github.com/HKUST-OCTAD-LAB/AirTrafficS
    Replaying data <tutorial/replay>
    Creating a simulation environment <tutorial/creating_env>
    Running a simulation <tutorial/simulation>
-   Converting historic data <tutorial/historic>
    Understanding simulation flow <tutorial/flow>
+   Adding flight plan <tutorial/flight_plan>
+   Using historic weather database <tutorial/weather>
+   Converting historic data <tutorial/historic>
 ```
 
 ```{toctree}
