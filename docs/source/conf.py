@@ -53,6 +53,14 @@ html_theme_options = {
             "class": "",
         },
     ],
+    "light_css_variables": {
+        "color-brand-primary": "#357960",
+        "color-brand-content": "#357960",
+    },
+    "dark_css_variables": {
+        "color-brand-primary": "#92a143",
+        "color-brand-content": "#92a143",
+    },
 }
 
 autoclass_content = 'both'
