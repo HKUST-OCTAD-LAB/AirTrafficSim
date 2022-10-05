@@ -23,7 +23,7 @@ AirTrafficSim is open-sourced at [https://github.com/HKUST-OCTAD-LAB/AirTrafficS
 > 
 > The 26th HKSTS International Conference, 2022
 > 
-> Nguyen, H. C., Lui, G. N., Hui, K. Y., & Liem, R. P.
+> Chris HC. NGUYEN, Go Nam LUI, Ka Yiu HUI, and Rhea P. LIEM
 
 <div>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/Vq62IG-sNQY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -46,7 +46,6 @@ AirTrafficSim is open-sourced at [https://github.com/HKUST-OCTAD-LAB/AirTrafficS
    Replaying data <tutorial/replay>
    Creating a simulation environment <tutorial/creating_env>
    Running a simulation <tutorial/simulation>
-   Understanding simulation flow <tutorial/flow>
    Adding flight plan <tutorial/flight_plan>
    Using historic weather database <tutorial/weather>
    Converting historic data <tutorial/historic>

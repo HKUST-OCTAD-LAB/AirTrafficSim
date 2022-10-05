@@ -211,6 +211,7 @@ class Nav:
         (lat, Long, alt): (float, float, float)
             Latitude, Longitude, and Altitude of the runway end
         """
+        # TODO: Convert MSL to Geopotentail altitude
         airport = Nav.airports[(Nav.airports[0].to_numpy() == airport)]
         return tuple(airport[airport[1].str.contains(runway)].iloc[0,2:5])
 

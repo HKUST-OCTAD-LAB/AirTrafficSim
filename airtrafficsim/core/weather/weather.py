@@ -63,7 +63,6 @@ class Weather:
 
     def update(self, lat, long, alt, perf: Performance, global_time):
         if self.mode == "ERA5":
-            # print(self.weather_data, lat, long, alt)
             ds = self.weather_data.sel(longitude=xr.DataArray(long, dims="points"), latitude=xr.DataArray(lat, dims="points"), time=np.datetime64((self.start_time+timedelta(seconds=global_time)).replace(second=0, minute=0),'ns'), method="ffill") # 
             index = np.array([np.searchsorted(-x, -Unit.ft2m(alt) * 9.80665, side='right') for x, alt in zip(ds['z'].values.T, alt)]) - 1
             temp = np.array([x[i] for x, i in zip(ds['t'].values.T, index)])
