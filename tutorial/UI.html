@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Understanding the project structure" href="structure.html" /><link rel="prev" title="Getting started" href="../start.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
         <title>Navigating the UI - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -17,18 +17,24 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
+  --color-brand-primary: #357960;
+  --color-brand-content: #357960;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
       }
     }
@@ -164,8 +170,9 @@
 <li class="toctree-l1"><a class="reference internal" href="replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historic weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historic data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="flow.html">   Understanding simulation flow</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -218,7 +225,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -234,11 +242,11 @@
         <article role="main">
           <div class="section" id="navigating-the-ui">
 <h1>Navigating the UI<a class="headerlink" href="#navigating-the-ui" title="Permalink to this heading">#</a></h1>
-<p>The web-based user interface contains two main part: the globe viewport at the top and the toolbar at the bottom. This page will explains the usage of different component in the UI.</p>
+<p>The web-based user interface contains two main parts: the globe viewport at the top and the toolbar at the bottom. This page will explain the usage of the different components in the UI.</p>
 <img alt="../_images/UI_intro.png" src="../_images/UI_intro.png" />
 <div class="section" id="globe-viewport">
 <h2>1. Globe viewport<a class="headerlink" href="#globe-viewport" title="Permalink to this heading">#</a></h2>
-<p>The globe viewport provides a 3D globe for user to intereact with. You can operate the camera with mouse or with touch following these methods.</p>
+<p>The globe viewport provides a 3D globe for a user to interact with. You can operate the camera with a mouse or with touch gestures following these methods.</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="colwidths-auto docutils align-default">
 <thead>
@@ -266,24 +274,24 @@
 </div>
 <div class="section" id="mode-selector">
 <h2>2. Mode selector<a class="headerlink" href="#mode-selector" title="Permalink to this heading">#</a></h2>
-<p>You can select different AirTrafficSim mode (Replay/Simulation) by clicking on one of the buttons. <strong>Replay</strong> mode will replay historic or simulation flight trajectory data stored in <code class="docutils literal notranslate"><span class="pre">data/replay</span></code> while <strong>Simulation</strong> mode will initiate a simulation and show the flight trajectory live.</p>
+<p>You can select different AirTrafficSim modes (Replay/Simulation) by clicking on one of the buttons. <strong>Replay</strong> mode will replay historic or simulation flight trajectory data stored in <code class="docutils literal notranslate"><span class="pre">data/flight_data</span></code> while <strong>Simulation</strong> mode will initiate a simulation and show the flight trajectory live.</p>
 <div class="figure align-left" id="id1" style="width: 45%">
 <img alt="../_images/UI_replay.png" src="../_images/UI_replay.png" />
 <p class="caption"><span class="caption-text">In Replay mode, select the reply data file which can be historic or simulation data.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
 </div>
 <div class="figure align-right" id="id2" style="width: 45%">
 <img alt="../_images/UI_simulation.png" src="../_images/UI_simulation.png" />
-<p class="caption"><span class="caption-text">In Simulation mode, select a simulation environment to begin simulation.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+<p class="caption"><span class="caption-text">In Simulation mode, select a simulation environment to begin the simulation.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
 </div>
 </div>
 <div class="section" id="setting">
 <h2>3. Setting<a class="headerlink" href="#setting" title="Permalink to this heading">#</a></h2>
-<p>In setting, you can select different visualization modes including showing satellite imagery, showing navigation data, showing ERA5 wind and rain data, and showing weather radar images.</p>
+<p>In the setting, you can select different visualization modes including showing satellite imagery, showing navigation data, showing ERA5 wind and rain data, and showing weather radar images.</p>
 <img alt="../_images/UI_setting.png" src="../_images/UI_setting.png" />
 </div>
 <div class="section" id="show-graph">
 <h2>4. Show graph<a class="headerlink" href="#show-graph" title="Permalink to this heading">#</a></h2>
-<p>In <strong>Simulation</strong> mode or <strong>Replay</strong> mode with simulation data, you can show different simulation parameters’ graph by clicking the Show graph button.</p>
+<p>In <strong>Simulation</strong> mode or <strong>Replay</strong> mode with simulation data, you can view the graph of different simulation parameters by clicking the Show graph button.</p>
 <img alt="../_images/UI_graph.png" src="../_images/UI_graph.png" />
 </div>
 <div class="section" id="play-buttons">
@@ -316,7 +324,7 @@
 </div>
 <div class="section" id="timeline">
 <h2>8. Timeline<a class="headerlink" href="#timeline" title="Permalink to this heading">#</a></h2>
-<p>The timeline represents the full duration of the data file. You can drag the timeline to different position to quickly go through different moments.</p>
+<p>The timeline represents the full duration of the data file. You can drag the timeline to different positions to quickly go through different moments.</p>
 </div>
 </div>
 
@@ -407,6 +415,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>

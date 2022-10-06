@@ -10,7 +10,7 @@ cd AirTrafficSim
 python -m airtrafficsim
 ```
 
-If you are running AirTrafficSim for the first time, it will unpack the navigation data which will take few minutes to complete. After executing the commands, you will see the following output in your console.
+If you are running AirTrafficSim for the first time, it will unpack the navigation data which will take a few minutes to complete. After executing the commands, you will see the following output in your console.
 
 ```{code-block} bash
 Reading NAV data...
@@ -28,7 +28,7 @@ You should then be able to open the UI using any modern browser at <http://local
 
 ## Running AirTrafficSim without UI
 
-You can also run AirTrafficSim without the UI by providing the name of an environment listed in `airtrafficsim/env`. The environment name should be identical to the file name.
+You can also run AirTrafficSim without the UI by providing the name of an environment listed in `environments/`. The environment name should be identical to the file name.
 
 ```{code-block} bash
 conda activate airtrafficsim
@@ -36,4 +36,4 @@ cd AirTrafficSim
 python -m airtrafficsim --headless <environment name>
 ```
 
-This will run the simulation without the UI with the specified environment. The output data will be stored in `data/replay/simulation` as a CSV file. More details will be discussed in the tutorial.
+These commands will execute the specified simulation environment without running the UI. The output data will be stored in `result/` as a CSV file. More details will be discussed in the tutorial.

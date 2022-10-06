@@ -2,10 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="airtrafficsim" href="../api/index.html" /><link rel="prev" title="Client development" href="client.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Converting historic data" href="historic.html" /><link rel="prev" title="Adding flight plan" href="flight_plan.html" />
 
     <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
-        <title>Documentation development - AirTrafficSim</title>
+        <title>Using historic weather database - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -164,21 +164,21 @@
 <li class="toctree-l1"><a class="reference internal" href="../start.html">   Getting started</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/UI.html">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/structure.html">   Understanding the project structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/replay.html">   Replaying data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/creating_env.html">   Creating a simulation environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/simulation.html">   Running a simulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using historic weather database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/historic.html">   Converting historic data</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="UI.html">   Navigating the UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="replay.html">   Replaying data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Using historic weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historic data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="guide.html">   Development guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="client.html">   Client</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Documentation</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/guide.html">   Development guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/client.html">   Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/documentation.html">   Documentation</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.environment.html">environment</a></li>
@@ -240,29 +240,38 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="documentation-development">
-<h1>Documentation development<a class="headerlink" href="#documentation-development" title="Permalink to this heading">#</a></h1>
-<p>This documentation is written using the <a class="reference external" href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> Python library. The theme <a class="reference external" href="https://pradyunsg.me/furo/">Furo</a> is used and each page is written with an extended MarkDown syntax called <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/index.html">MyST</a>.</p>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
-<p>To contribute to the development of the documentation, please set up the environment with the following commands. This will install <a class="reference external" href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> and related themes and libraries for this project.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
-conda install -c conda-forge sphinx myst-parser furo numpydoc
+          <div class="section" id="using-historic-weather-database">
+<h1>Using historic weather database<a class="headerlink" href="#using-historic-weather-database" title="Permalink to this heading">#</a></h1>
+<p>AirTrafficSim can use <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview">ECMWF ERA5</a> as a weather data source. The <code class="docutils literal notranslate"><span class="pre">WeatherDemo</span></code> class in <code class="docutils literal notranslate"><span class="pre">environment/WeatherDemo.py</span></code> demonstrates how to set up <code class="docutils literal notranslate"><span class="pre">ERA5</span></code> weather mode in AirTrafficSim.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">11</span><span class="c1"># Initialize environment super class</span>
+<span class="linenos">12</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">),</span> <span class="c1">#File name (do not change)</span>
+<span class="linenos">13</span>                <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s1">&#39;2018-05-01T00:00:00+00:00&#39;</span><span class="p">),</span>
+<span class="linenos">14</span>                <span class="n">end_time</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+<span class="hll"><span class="linenos">15</span>                <span class="n">weather_mode</span> <span class="o">=</span> <span class="s2">&quot;ERA5&quot;</span><span class="p">,</span>
+</span><span class="linenos">16</span>                <span class="n">performance_mode</span> <span class="o">=</span> <span class="s2">&quot;BADA&quot;</span> 
+<span class="linenos">17</span>                <span class="p">)</span>
 </pre></div>
 </div>
+<p>To use the historic weather database, set <code class="docutils literal notranslate"><span class="pre">weather_mode</span></code> to “ERA5”. This will download the weather data in netCDF format to <code class="docutils literal notranslate"><span class="pre">data/weather/erea5/&lt;environment</span> <span class="pre">name&gt;/</span></code>. By default, it is an empty string <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> which will use the International Standard Atmosphere (ISA) for computation and assume 0 winds.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Please ensure that the API key for the weather database from ECMWF Climate Data Store has been set up following <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">this guide</a> to set up .</p>
 </div>
-<div class="section" id="building-and-previewing-documentation">
-<h2>Building and previewing documentation<a class="headerlink" href="#building-and-previewing-documentation" title="Permalink to this heading">#</a></h2>
-<p>A GitHub action is set up to automatically build and publish this documentation to the GitHub page. However, you may also want to preview the documentation during development.</p>
-<p>First, you can build the documentation locally by executing the following commands.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sphinx-build -b html docs/source/ docs/build/html
-</pre></div>
+<div class="section" id="usage-of-historic-weather-data">
+<h2>Usage of historic weather data<a class="headerlink" href="#usage-of-historic-weather-data" title="Permalink to this heading">#</a></h2>
+<p>The downloaded data will be loaded and for each timestep, AirTrafficSim will find the related temperature and wind data at the location and altitude of each aircraft. Then, the temperature temperature information difference with ISA will be used for further atmosphere condition calculation.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">weather.py</span><a class="headerlink" href="#id1" title="Permalink to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">65</span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ERA5&quot;</span><span class="p">:</span>
+<span class="linenos">66</span>    <span class="n">ds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weather_data</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">longitude</span><span class="o">=</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">long</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="s2">&quot;points&quot;</span><span class="p">),</span> <span class="n">latitude</span><span class="o">=</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="s2">&quot;points&quot;</span><span class="p">),</span> <span class="n">time</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">global_time</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span><span class="s1">&#39;ns&#39;</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span> <span class="c1"># </span>
+<span class="linenos">67</span>    <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">Unit</span><span class="o">.</span><span class="n">ft2m</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span> <span class="o">*</span> <span class="mf">9.80665</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">alt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">alt</span><span class="p">)])</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="linenos">68</span>    <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">index</span><span class="p">)])</span>
+<span class="hll"><span class="linenos">69</span>    <span class="bp">self</span><span class="o">.</span><span class="n">d_T</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">-</span> <span class="n">perf</span><span class="o">.</span><span class="n">cal_temperature</span><span class="p">(</span><span class="n">Unit</span><span class="o">.</span><span class="n">ft2m</span><span class="p">(</span><span class="n">alt</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos">70</span>    <span class="bp">self</span><span class="o">.</span><span class="n">wind_east</span> <span class="o">=</span> <span class="n">Unit</span><span class="o">.</span><span class="n">mps2kts</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">index</span><span class="p">)]))</span>
+</span><span class="hll"><span class="linenos">71</span>    <span class="bp">self</span><span class="o">.</span><span class="n">wind_north</span> <span class="o">=</span> <span class="n">Unit</span><span class="o">.</span><span class="n">mps2kts</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">index</span><span class="p">)]))</span>
+</span></pre></div>
 </div>
-<p>Then, you may preview the documentation by executing the following commands.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m http.server <span class="m">8000</span>
-</pre></div>
 </div>
-<p>This will open a Python server. Navigate to <a class="reference external" href="http://localhost:8000/docs/build/html/"><code class="docutils literal notranslate"><span class="pre">http://localhost:8000/docs/build/html</span></code></a> in your browser to preview the website.</p>
 </div>
 </div>
 
@@ -271,23 +280,23 @@ conda install -c conda-forge sphinx myst-parser furo numpydoc
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../api/index.html">
+          <a class="next-page" href="historic.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">airtrafficsim</div>
+                <div class="title">Converting historic data</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="client.html">
+          <a class="prev-page" href="flight_plan.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Client development</div>
+                <div class="title">Adding flight plan</div>
                 
               </div>
             </a>
@@ -328,9 +337,8 @@ conda install -c conda-forge sphinx myst-parser furo numpydoc
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Documentation development</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#building-and-previewing-documentation">Building and previewing documentation</a></li>
+<li><a class="reference internal" href="#">Using historic weather database</a><ul>
+<li><a class="reference internal" href="#usage-of-historic-weather-data">Usage of historic weather data</a></li>
 </ul>
 </li>
 </ul>

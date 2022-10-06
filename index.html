@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Installation" href="install.html" />
 
-    <link rel="shortcut icon" href="_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+    <link rel="shortcut icon" href="_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
         <title>AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -17,18 +17,24 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
+  --color-brand-primary: #357960;
+  --color-brand-content: #357960;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
       }
     }
@@ -164,8 +170,9 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial/replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/simulation.html">   Running a simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/flight_plan.html">   Adding flight plan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/weather.html">   Using historic weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/historic.html">   Converting historic data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/flow.html">   Understanding simulation flow</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -218,7 +225,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -234,20 +242,31 @@
         <article role="main">
           <div class="section" id="airtrafficsim">
 <h1>AirTrafficSim<a class="headerlink" href="#airtrafficsim" title="Permalink to this heading">#</a></h1>
-<p>AirTrafficSim is a web-based air traffic simulation software written in Python and javascript. It is designed to visualize historic and research data, perform microscopic studies of air traffic movement with the integration of a historic weather database, and evaluate the performance of ATM algorithms.</p>
+<p>AirTrafficSim is a web-based air traffic simulation software written in Python and Javascript. It is designed to visualize historic and research data, perform microscopic studies of air traffic movement with the integration of a historic weather database, and evaluate the performance of ATM algorithms.</p>
 <p>AirTrafficSim is open-sourced at <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim">https://github.com/HKUST-OCTAD-LAB/AirTrafficSim</a>.</p>
 <div class="section" id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Replay histortic flights given data (FlightRadar 24 and simulated flights)</p></li>
+<li><p>Replay historic flights given data (FlightRadar 24 and simulated flights)</p></li>
 <li><p>Air traffic simulation using <a class="reference external" href="https://www.eurocontrol.int/model/bada">BADA performance data</a> and OpenAP (WIP)</p></li>
 <li><p>Navigation data simulation and visualization from <a class="reference external" href="https://developer.x-plane.com/docs/data-development-documentation/">x-plane 11</a></p></li>
 <li><p>Autopilot and Flight Management System simulation</p></li>
-<li><p>Holding, vectoring, direct to maneuvers simulated</p></li>
+<li><p>Holding, vectoring, direct to maneuvers simulation</p></li>
 <li><p>Weather data from <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview">ECMWF ERA5</a> and custom radar image</p></li>
-<li><p>Air traffic is controlled with API interface to simulate ATC interaction</p></li>
+<li><p>Air traffic is controlled with Python API interface to simulate ATC interaction</p></li>
 </ul>
 <img alt="_images/UI_features.png" src="_images/UI_features.png" />
+</div>
+<div class="section" id="usages">
+<h2>Usages<a class="headerlink" href="#usages" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p><strong>Tactical routing for air transportation in HKIA terminal manuevering area.</strong></p>
+<p>The 26th HKSTS International Conference, 2022</p>
+<p>Chris HC. NGUYEN, Go Nam LUI, Ka Yiu HUI, and Rhea P. LIEM</p>
+</div></blockquote>
+<div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Vq62IG-sNQY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -310,7 +329,8 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">AirTrafficSim</a><ul>
-<li><a class="reference internal" href="#features">Features</a><ul>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#usages">Usages</a><ul>
 </ul>
 </li>
 </ul>
@@ -329,6 +349,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>
 </html>

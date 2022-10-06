@@ -2,12 +2,12 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Converting historic data" href="historic.html" /><link rel="prev" title="Creating a simulation environment" href="creating_env.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Adding flight plan" href="flight_plan.html" /><link rel="prev" title="Creating a simulation environment" href="creating_env.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
         <title>Running a simulation - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -17,18 +17,24 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
+  --color-brand-primary: #357960;
+  --color-brand-content: #357960;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
       }
     }
@@ -164,8 +170,9 @@
 <li class="toctree-l1"><a class="reference internal" href="replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Running a simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historic weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historic data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="flow.html">   Understanding simulation flow</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -218,7 +225,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -234,10 +242,10 @@
         <article role="main">
           <div class="section" id="running-a-simulation">
 <h1>Running a simulation<a class="headerlink" href="#running-a-simulation" title="Permalink to this heading">#</a></h1>
-<p>After setting up the simulation environment, you may run the simulation by either using the UI to select the simulation environment or by running AirTrafficSim without the UI with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">airtrafficsim</span> <span class="pre">--headless</span> <span class="pre">&lt;environment</span> <span class="pre">name&gt;</span></code>.</p>
+<p>After setting up the simulation environment, you may run the simulation by either using the UI to select the simulation environment or by running AirTrafficSim in standalone mode with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">airtrafficsim</span> <span class="pre">--headless</span> <span class="pre">&lt;environment</span> <span class="pre">name&gt;</span></code>.</p>
 <img alt="../_images/Simulation_select.png" src="../_images/Simulation_select.png" />
-<p>Then, the selected environment will be dynamically imported and initialized and the <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">run(self):</span></code> function in its <code class="docutils literal notranslate"><span class="pre">Environment</span></code> super class will be executed to run simulation for all timesteps. The data will be saved to <code class="docutils literal notranslate"><span class="pre">data/replay/simulation/</span></code>.</p>
-<p>This is what the UI will looks like if the you start the simulation using the UI. Note that there is a progress bar at the bottom to indicate the status of the simulation and the data will be sent to the UI every 1 second.</p>
+<p>Then, the selected environment will be dynamically imported and initialized and the <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">run(self):</span></code> function in its <code class="docutils literal notranslate"><span class="pre">Environment</span></code> base class will be executed to run the simulation for all timesteps. The data will be saved to <code class="docutils literal notranslate"><span class="pre">result</span></code>.</p>
+<p>This is what the UI will look like if you start the simualation using the UI. Note that there is a progress bar at the bottom to indicate the status of the simulation and the data will be sent to the UI every 0.5 seconds.</p>
 <img alt="../_images/Simulation_UI.png" src="../_images/Simulation_UI.png" />
 </div>
 
@@ -246,12 +254,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="historic.html">
+          <a class="next-page" href="flight_plan.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Converting historic data</div>
+                <div class="title">Adding flight plan</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -302,6 +310,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>

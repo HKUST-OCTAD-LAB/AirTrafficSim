@@ -2,12 +2,12 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Development guide" href="../development/guide.html" /><link rel="prev" title="Converting historic data" href="historic.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Using historic weather database" href="weather.html" /><link rel="prev" title="Running a simulation" href="simulation.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
-        <title>Understanding simulation flow - AirTrafficSim</title>
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
+        <title>Adding flight plan - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -17,18 +17,24 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
+  --color-brand-primary: #357960;
+  --color-brand-content: #357960;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
       }
     }
@@ -133,7 +139,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -164,8 +170,9 @@
 <li class="toctree-l1"><a class="reference internal" href="replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Adding flight plan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historic weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historic data</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Understanding simulation flow</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -218,7 +225,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -226,16 +234,39 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <div class="section" id="understanding-simulation-flow">
-<h1>Understanding simulation flow<a class="headerlink" href="#understanding-simulation-flow" title="Permalink to this heading">#</a></h1>
-<p>The flow of the simulation is shown below.</p>
-<img alt="../_images/Flow.png" src="../_images/Flow.png" />
+          <div class="section" id="adding-flight-plan">
+<h1>Adding flight plan<a class="headerlink" href="#adding-flight-plan" title="Permalink to this heading">#</a></h1>
+<p>AirTrafficSim can simulate flights following a user-defined flight plan. The <code class="docutils literal notranslate"><span class="pre">FullFlightDemo</span></code> class in <code class="docutils literal notranslate"><span class="pre">environment/FullFlightDemo.py</span></code> demonstrates how to set up a flight plan in AirTrafficSim.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">20</span><span class="c1"># Add aircraft</span>
+<span class="hll"><span class="linenos">21</span><span class="n">lat_dep</span><span class="p">,</span> <span class="n">long_dep</span><span class="p">,</span> <span class="n">alt_dep</span> <span class="o">=</span> <span class="n">Nav</span><span class="o">.</span><span class="n">get_runway_coord</span><span class="p">(</span><span class="s2">&quot;VHHH&quot;</span><span class="p">,</span> <span class="s2">&quot;25L&quot;</span><span class="p">)</span>
+</span><span class="linenos">22</span><span class="bp">self</span><span class="o">.</span><span class="n">aircraft_full</span> <span class="o">=</span> <span class="n">Aircraft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traffic</span><span class="p">,</span> <span class="n">call_sign</span><span class="o">=</span><span class="s2">&quot;FULL&quot;</span><span class="p">,</span> <span class="n">aircraft_type</span><span class="o">=</span><span class="s2">&quot;A320&quot;</span><span class="p">,</span> <span class="n">flight_phase</span><span class="o">=</span><span class="n">FlightPhase</span><span class="o">.</span><span class="n">TAKEOFF</span><span class="p">,</span> <span class="n">configuration</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">TAKEOFF</span><span class="p">,</span>
+<span class="linenos">23</span>                                <span class="n">lat</span><span class="o">=</span><span class="n">lat_dep</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="n">long_dep</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="n">alt_dep</span><span class="p">,</span> <span class="n">heading</span><span class="o">=</span><span class="mf">254.0</span><span class="p">,</span> <span class="n">cas</span><span class="o">=</span><span class="mf">149.0</span><span class="p">,</span>
+<span class="linenos">24</span>                                <span class="n">fuel_weight</span><span class="o">=</span><span class="mf">5273.0</span><span class="p">,</span> <span class="n">payload_weight</span><span class="o">=</span><span class="mf">12000.0</span><span class="p">,</span>
+<span class="hll"><span class="linenos">25</span>                                <span class="n">departure_airport</span> <span class="o">=</span> <span class="s2">&quot;VHHH&quot;</span><span class="p">,</span> <span class="n">departure_runway</span><span class="o">=</span><span class="s2">&quot;RW25L&quot;</span><span class="p">,</span> <span class="n">sid</span> <span class="o">=</span> <span class="s2">&quot;OCEA2B&quot;</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">26</span>                                <span class="n">arrival_airport</span><span class="o">=</span><span class="s2">&quot;RCTP&quot;</span><span class="p">,</span> <span class="n">arrival_runway</span><span class="o">=</span><span class="s2">&quot;05R&quot;</span><span class="p">,</span> <span class="n">star</span> <span class="o">=</span> <span class="s2">&quot;TONG1A&quot;</span><span class="p">,</span> <span class="n">approach</span> <span class="o">=</span> <span class="s2">&quot;I05R&quot;</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">27</span>                                <span class="n">flight_plan</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;RASSE&quot;</span><span class="p">,</span> <span class="s2">&quot;CONGA&quot;</span><span class="p">,</span> <span class="s2">&quot;ENVAR&quot;</span><span class="p">,</span> <span class="s2">&quot;DADON&quot;</span><span class="p">,</span> <span class="s2">&quot;EXTRA&quot;</span><span class="p">,</span> <span class="s2">&quot;RENOT&quot;</span><span class="p">],</span>
+</span><span class="hll"><span class="linenos">28</span>                                <span class="n">cruise_alt</span><span class="o">=</span><span class="mi">37000</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
+<p>In the add aircraft section of the <code class="docutils literal notranslate"><span class="pre">FullFlightDemo</span></code> class, you may see that you can get the runway coordinate through <code class="docutils literal notranslate"><span class="pre">Nav.get_runway_coord()</span></code>. In this sample, it is used to set up the initial condition <code class="docutils literal notranslate"><span class="pre">lat,</span> <span class="pre">long,</span> <span class="pre">alt</span></code>.</p>
+<p>In addition, some optional parameter are passed in this demo including, <code class="docutils literal notranslate"><span class="pre">departure_airport</span></code>, <code class="docutils literal notranslate"><span class="pre">departure_runway</span></code>, <code class="docutils literal notranslate"><span class="pre">sid</span></code>, <code class="docutils literal notranslate"><span class="pre">arrival_airport</span></code>, <code class="docutils literal notranslate"><span class="pre">arrival_runway</span></code>, <code class="docutils literal notranslate"><span class="pre">star</span></code>, <code class="docutils literal notranslate"><span class="pre">approach</span></code>, <code class="docutils literal notranslate"><span class="pre">flight_plan</span></code>, and <code class="docutils literal notranslate"><span class="pre">cruise_alt</span></code>. These parameters are used for AirTrafficSim to generate a flight plan.</p>
+</div>
+<div class="section" id="departure-arrival">
+<h2>Departure/Arrival<a class="headerlink" href="#departure-arrival" title="Permalink to this heading">#</a></h2>
+<p>The waypoints and related restrictions of a Standard Terminal Arrival Procedure (STAR) and/or Standard Instrument Departure Route (SID) will be generated when the user provides information including airport, runway, and the procedure’s ICAO code.</p>
+</div>
+<div class="section" id="en-route">
+<h2>En-route<a class="headerlink" href="#en-route" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Flight_plan</span></code> and <code class="docutils literal notranslate"><span class="pre">cruise_alt</span></code> are used to generate the related plan for en-route navigation. <code class="docutils literal notranslate"><span class="pre">flight_plan</span></code> is a list of en-route waypoints in ICAO code where <code class="docutils literal notranslate"><span class="pre">cruise_alt</span></code> is the target cruise altitude in feet.</p>
+</div>
 </div>
 
         </article>
@@ -243,23 +274,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../development/guide.html">
+          <a class="next-page" href="weather.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Development guide</div>
+                <div class="title">Using historic weather database</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="historic.html">
+          <a class="prev-page" href="simulation.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Converting historic data</div>
+                <div class="title">Running a simulation</div>
                 
               </div>
             </a>
@@ -288,8 +319,29 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Adding flight plan</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#departure-arrival">Departure/Arrival</a></li>
+<li><a class="reference internal" href="#en-route">En-route</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -299,6 +351,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>

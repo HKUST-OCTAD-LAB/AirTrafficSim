@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Documentation development" href="documentation.html" /><link rel="prev" title="Development guide" href="guide.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
         <title>Client development - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -17,18 +17,24 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
+  --color-brand-primary: #357960;
+  --color-brand-content: #357960;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
       }
     }
@@ -164,8 +170,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/simulation.html">   Running a simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/flight_plan.html">   Adding flight plan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using historic weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/historic.html">   Converting historic data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/flow.html">   Understanding simulation flow</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -218,7 +225,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -234,7 +242,7 @@
         <article role="main">
           <div class="section" id="client-development">
 <h1>Client development<a class="headerlink" href="#client-development" title="Permalink to this heading">#</a></h1>
-<p>AirTrafficSim’s web-based client is written with javascript using <a class="reference external" href="https://reactjs.org/">React.js</a> framework. The UI componenets are created using <a class="reference external" href="https://ionicframework.com/docs/react">Ionic React</a> library. The 3D globe and air traffic visualization is powered by <a class="reference external" href="https://cesium.com/">Cesium.js</a> library and <a class="reference external" href="https://resium.reearth.io/">Resium</a> while the graph is plotted using <a class="reference external" href="https://plotly.com/javascript/">Plotly.js</a> library. The communication are handled with <a class="reference external" href="https://socket.io/">Socket.IO</a> library.</p>
+<p>AirTrafficSim’s web-based client is written with javascript using <a class="reference external" href="https://reactjs.org/">React.js</a> framework. The UI components are created using <a class="reference external" href="https://ionicframework.com/docs/react">Ionic React</a> library. The 3D globe and air traffic visualization are powered by <a class="reference external" href="https://cesium.com/">Cesium.js</a> library and <a class="reference external" href="https://resium.reearth.io/">Resium</a> while the graph is plotted using <a class="reference external" href="https://plotly.com/javascript/">Plotly.js</a> library. The communication is handled with <a class="reference external" href="https://socket.io/">Socket.IO</a> library.</p>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <p>If you want to contribute to the development of the client UI, please install <a class="reference external" href="https://nodejs.org/en/">Nodejs</a> into the environment. You may also use your own nodejs install. Then, please also install <a class="reference external" href="https://classic.yarnpkg.com/en/">Yarn</a> a package manager for Node.js.</p>
@@ -251,7 +259,7 @@ yarn
 </div>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>Please also obtain a Cesium access token from  <a class="reference external" href="https://cesium.com/platform/cesium-ion/">Cesium ion portal</a> after signing up a free account and copy it into a new file <code class="docutils literal notranslate"><span class="pre">.env</span></code> in <code class="docutils literal notranslate"><span class="pre">client/</span></code> with the following line:</p>
+<p>Please also obtain a Cesium access token from  <a class="reference external" href="https://cesium.com/platform/cesium-ion/">Cesium ion portal</a> after signing up for a free account and copy it into a new file <code class="docutils literal notranslate"><span class="pre">.env</span></code> in <code class="docutils literal notranslate"><span class="pre">client/</span></code> with the following line:</p>
 <blockquote>
 <div><p>REACT_APP_CESIUMION_ACCESS_TOKEN= &lt;Cesium Access Token&gt;</p>
 </div></blockquote>
@@ -260,14 +268,14 @@ yarn
 </div>
 <div class="section" id="developing-client">
 <h2>Developing client<a class="headerlink" href="#developing-client" title="Permalink to this heading">#</a></h2>
-<p>The client code base are written in <code class="docutils literal notranslate"><span class="pre">client/src/pages/Simulation.tsx</span></code> with a React functional component called <code class="docutils literal notranslate"><span class="pre">Simulation</span></code>. The <code class="docutils literal notranslate"><span class="pre">client/src/utils/websocket.ts</span></code> file contains the setup of the Socket.IO websocket connection with the server’s URL and port number.</p>
+<p>The client code base are written in <code class="docutils literal notranslate"><span class="pre">client/src/pages/Simulation.tsx</span></code> with a React functional component called <code class="docutils literal notranslate"><span class="pre">Simulation</span></code>. The <code class="docutils literal notranslate"><span class="pre">client/src/utils/websocket.ts</span></code> file contains the setup of the Socket.IO WebSocket connection with the server’s URL and port number.</p>
 <p>To run the UI development environment:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">AirTrafficSim</span><span class="o">/</span><span class="n">client</span><span class="o">/</span>
 <span class="n">yarn</span> <span class="n">start</span>
 </pre></div>
 </div>
-<p>You should be able to open the development UI using any modern browser at http://localhost:3000. It will live-refresh once you made any changes to the UI. In addition, you may want to run the AirTrafficSim backend to run a simulation or generate a replay.</p>
-<p>To run AirTrafficSim backend, open a new terminal windows and run a server instance:</p>
+<p>You should be able to open the development UI using any modern browser at http://localhost:3000. It will live-refresh once you make any changes to the UI. In addition, you may want to run the AirTrafficSim backend to run a simulation or generate a replay.</p>
+<p>To run the AirTrafficSim backend, open a new terminal window and run a server instance:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">AirTrafficSim</span><span class="o">/</span>
 <span class="n">conda</span> <span class="n">activate</span> <span class="n">airtrafficsim</span>
 <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">airtrafficsim</span>
@@ -367,6 +375,7 @@ yarn
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>

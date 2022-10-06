@@ -2,12 +2,12 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Client development" href="client.html" /><link rel="prev" title="Understanding simulation flow" href="../tutorial/flow.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Client development" href="client.html" /><link rel="prev" title="Converting historic data" href="../tutorial/historic.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
         <title>Development guide - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -17,18 +17,24 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
+  --color-brand-primary: #357960;
+  --color-brand-content: #357960;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
       }
     }
@@ -164,8 +170,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/simulation.html">   Running a simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/flight_plan.html">   Adding flight plan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using historic weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/historic.html">   Converting historic data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/flow.html">   Understanding simulation flow</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -218,7 +225,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -234,18 +242,22 @@
         <article role="main">
           <div class="section" id="development-guide">
 <h1>Development guide<a class="headerlink" href="#development-guide" title="Permalink to this heading">#</a></h1>
-<p>AirTrafficSim is published on <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim">GitHub</a> under xxx license. We welcome everyone intersted to contribute to this project by reporting bugs, providing suggestions, participating in development.</p>
+<p>AirTrafficSim is published on <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim">GitHub</a> under <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/blob/main/LICENSE">GPL-3.0 license</a>. We welcome everyone interested to contribute to this project by reporting bugs, providing suggestions, and participating in development.</p>
+<div class="section" id="progress">
+<h2>Progress<a class="headerlink" href="#progress" title="Permalink to this heading">#</a></h2>
+<p>You may check out what are the planned and ongoing development of AirTrafficSim by visiting our <a class="reference external" href="https://github.com/orgs/HKUST-OCTAD-LAB/projects/3/views/2">project board</a>.</p>
+</div>
 <div class="section" id="bugs-and-issues">
 <h2>Bugs and issues<a class="headerlink" href="#bugs-and-issues" title="Permalink to this heading">#</a></h2>
 <p>For any bugs and issues found, please feel free to raise a new issue in the <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/issues">Issue board</a>.</p>
 </div>
 <div class="section" id="suggestions-and-ideas">
 <h2>Suggestions and ideas<a class="headerlink" href="#suggestions-and-ideas" title="Permalink to this heading">#</a></h2>
-<p>For any features suggestion or any ideas in general, please feel free to raise a bew discussion in the <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/discussions">Discussion board</a>.</p>
+<p>For any features suggestion or any ideas in general, please feel free to raise a new discussion in the <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/discussions">Discussion board</a>.</p>
 </div>
 <div class="section" id="code-development">
 <h2>Code development<a class="headerlink" href="#code-development" title="Permalink to this heading">#</a></h2>
-<p>We welcome everyone to contribute to the development of AirTrafficSim. You can open a new item in the <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/discussions">Projects board</a> to let us and others know your goal. Then, please create a new branch to develop your features. Once your work is completed, please raise a pull reqquests for reviewal. Once it is done, you work and branch will be merged to the master branch where everyone will be able to use your new feature.</p>
+<p>We welcome everyone to contribute to the development of AirTrafficSim. You can open a new item in the <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/discussions">Projects board</a> to let us and others know your goal. Then, please create a new branch to develop your features. Once your work is completed, please raise a pull request for reviewal. Once it is done, your work and branch will be merged into the master branch where everyone will be able to use your new feature.</p>
 </div>
 </div>
 
@@ -263,14 +275,14 @@
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="../tutorial/flow.html">
+          <a class="prev-page" href="../tutorial/historic.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Understanding simulation flow</div>
+                <div class="title">Converting historic data</div>
                 
               </div>
             </a>
@@ -312,6 +324,7 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Development guide</a><ul>
+<li><a class="reference internal" href="#progress">Progress</a></li>
 <li><a class="reference internal" href="#bugs-and-issues">Bugs and issues</a></li>
 <li><a class="reference internal" href="#suggestions-and-ideas">Suggestions and ideas</a></li>
 <li><a class="reference internal" href="#code-development">Code development</a></li>
@@ -331,6 +344,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>

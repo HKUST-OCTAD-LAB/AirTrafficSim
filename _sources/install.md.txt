@@ -1,6 +1,6 @@
 # Installation
 
-Conda environment is required to setup AirTrafficSim. First download AirTrafficSim from GitHub and setup conda environment by following commands:
+Conda environment is required to set up AirTrafficSim. First, download AirTrafficSim from GitHub and set up the conda environment by following commands:
 
 ```{code-block} bash
 git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
@@ -8,11 +8,11 @@ cd AirTrafficSim
 conda env create -f environment.yml
 ```
 
-This will install all necessary dependencies. The client has been pre-compile and is ready to use after download.
+This will create a new conda enviornment called `airtrafficsim` and install all necessary dependencies. The web-based client has been pre-compiled and is ready to use directly after download.
 
 ```{attention}
 
-After installation, please also download and unzip the [BADA data](https://www.eurocontrol.int/model/bada) in `data/BADA`. In addition, please follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to setup the API key for the weather database from ECMWF Climate Data Store.
+After installation, please also download and unzip the [BADA data](https://www.eurocontrol.int/model/bada) in `data/BADA`. In addition, please follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to set up the API key for the weather database from ECMWF Climate Data Store.
 ```
 
 Then, activate the environment each time you want to use AirTrafficSim.

@@ -1,13 +1,13 @@
 # Navigating the UI
 
-The web-based user interface contains two main part: the globe viewport at the top and the toolbar at the bottom. This page will explains the usage of different component in the UI.
+The web-based user interface contains two main parts: the globe viewport at the top and the toolbar at the bottom. This page will explain the usage of the different components in the UI.
 
 ```{image} ../images/UI_intro.png
 ```
 
 ## 1. Globe viewport
 
-The globe viewport provides a 3D globe for user to intereact with. You can operate the camera with mouse or with touch following these methods.
+The globe viewport provides a 3D globe for a user to interact with. You can operate the camera with a mouse or with touch gestures following these methods.
 
 |  | Mouse | Touch |
 | --- | --- | --- |
@@ -17,7 +17,7 @@ The globe viewport provides a 3D globe for user to intereact with. You can opera
 
 ## 2. Mode selector
 
-You can select different AirTrafficSim mode (Replay/Simulation) by clicking on one of the buttons. **Replay** mode will replay historic or simulation flight trajectory data stored in `data/replay` while **Simulation** mode will initiate a simulation and show the flight trajectory live.
+You can select different AirTrafficSim modes (Replay/Simulation) by clicking on one of the buttons. **Replay** mode will replay historic or simulation flight trajectory data stored in `data/flight_data` while **Simulation** mode will initiate a simulation and show the flight trajectory live.
 
 ```{figure} ../images/UI_replay.png
 :figwidth: 45%
@@ -29,19 +29,19 @@ In Replay mode, select the reply data file which can be historic or simulation d
 :figwidth: 45%
 :align: right
 
-In Simulation mode, select a simulation environment to begin simulation.
+In Simulation mode, select a simulation environment to begin the simulation.
 ```
 
 ## 3. Setting
 
-In setting, you can select different visualization modes including showing satellite imagery, showing navigation data, showing ERA5 wind and rain data, and showing weather radar images.
+In the setting, you can select different visualization modes including showing satellite imagery, showing navigation data, showing ERA5 wind and rain data, and showing weather radar images.
 
 ```{image} ../images/UI_setting.png
 ```
 
 ## 4. Show graph
 
-In **Simulation** mode or **Replay** mode with simulation data, you can show different simulation parameters' graph by clicking the Show graph button.
+In **Simulation** mode or **Replay** mode with simulation data, you can view the graph of different simulation parameters by clicking the Show graph button.
 
 ```{image} ../images/UI_graph.png
 ```
@@ -64,4 +64,4 @@ The clock indicates the current time of the environment in UTC format.
 
 ## 8. Timeline
 
-The timeline represents the full duration of the data file. You can drag the timeline to different position to quickly go through different moments.
+The timeline represents the full duration of the data file. You can drag the timeline to different positions to quickly go through different moments.

@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Replaying data" href="replay.html" /><link rel="prev" title="Navigating the UI" href="UI.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
         <title>Understanding the project structure - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -17,18 +17,24 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
+  --color-brand-primary: #357960;
+  --color-brand-content: #357960;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #92a143;
+  --color-brand-content: #92a143;
   
       }
     }
@@ -164,8 +170,9 @@
 <li class="toctree-l1"><a class="reference internal" href="replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historic weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historic data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="flow.html">   Understanding simulation flow</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -218,7 +225,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -236,33 +244,26 @@
 <h1>Understanding the project structure<a class="headerlink" href="#understanding-the-project-structure" title="Permalink to this heading">#</a></h1>
 <div class="section" id="architecture">
 <h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this heading">#</a></h2>
-<p>AirTrafficSim consist of a frontend Javascript client and a backend Python sever and simulation program. They communicate using websocket protocol on port 6111.</p>
+<p>AirTrafficSim consists of a frontend Javascript client and a backend Python sever and simulation program. They communicate using WebSocket protocol on port 6111.</p>
 <a class="reference internal image-reference" href="../_images/Architecture.png"><img alt="../_images/Architecture.png" class="align-center" src="../_images/Architecture.png" style="width: 80%;" /></a>
 </div>
 <div class="section" id="file-structure">
 <h2>File structure<a class="headerlink" href="#file-structure" title="Permalink to this heading">#</a></h2>
-<p>AirTrafficSim consists of 4 main folders including <code class="docutils literal notranslate"><span class="pre">airtrafficsim</span></code>, <code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">client</span></code>, and <code class="docutils literal notranslate"><span class="pre">docs</span></code>. This page explains the purpose of each folders. To create a new simulation, you should create a new simulation environment file in <code class="docutils literal notranslate"><span class="pre">airtrafficsim/env/</span></code>. When a simulation is finished, the result will be saved to <code class="docutils literal notranslate"><span class="pre">data/replay/simulation</span></code>.</p>
-<a class="reference internal image-reference" href="../_images/Project_structure.png"><img alt="../_images/Project_structure.png" class="align-center" src="../_images/Project_structure.png" style="width: 60%;" /></a>
-<hr class="docutils" />
+<p>AirTrafficSim consists of 4 main folders including <code class="docutils literal notranslate"><span class="pre">airtrafficsim</span></code>, <code class="docutils literal notranslate"><span class="pre">client</span></code>, <code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">docs</span></code>, <code class="docutils literal notranslate"><span class="pre">environments</span></code>, and <code class="docutils literal notranslate"><span class="pre">result</span></code>. This page explains the purpose of each folder. To create a new simulation, you should create a new simulation environment file in <code class="docutils literal notranslate"><span class="pre">environments/</span></code>. When a simulation is finished, the result will be saved to <code class="docutils literal notranslate"><span class="pre">result/</span></code>.</p>
+<a class="reference internal image-reference" href="../_images/Project_structure.png"><img alt="../_images/Project_structure.png" class="align-center" src="../_images/Project_structure.png" style="width: 70%;" /></a>
 <div class="section" id="airtrafficsim">
 <h3>airtrafficsim 📁<a class="headerlink" href="#airtrafficsim" title="Permalink to this heading">#</a></h3>
-<p>The airtrafficsim folder contains all Python files for air traffic simulation and data processing. It contains 4 folders and a <code class="docutils literal notranslate"><span class="pre">__main__.py</span></code> file which serves as the main entrance of the program.</p>
-<div class="section" id="env">
-<h4> env 📁<a class="headerlink" href="#env" title="Permalink to this heading">#</a></h4>
-<ul>
-<p>The env folder stores different Python files to setup simulation environment. The creation of such file will be explained in <a class="reference internal" href="creating_env.html"><span class="doc std std-doc">Creating a simulation environment</span></a> page. Two sample files <code class="docutils literal notranslate"><span class="pre">DemoEnv.py</span></code> and <code class="docutils literal notranslate"><span class="pre">FullFlightDemo.py</span></code> are provided.</p>
-</ul>
-</div>
+<p>The airtrafficsim folder contains all Python source codes for air traffic simulation and data processing. It contains 3 folders and a <code class="docutils literal notranslate"><span class="pre">__main__.py</span></code> file which serves as the main entrance of the program.</p>
 <div class="section" id="core">
 <h4> core 📁<a class="headerlink" href="#core" title="Permalink to this heading">#</a></h4>
 <ul>
-<p>The core folder contains the simulation code of AirTrafficSim. This includes <code class="docutils literal notranslate"><span class="pre">aircraft.py</span></code>, <code class="docutils literal notranslate"><span class="pre">traffic.py</span></code>, <code class="docutils literal notranslate"><span class="pre">autopilot.py</span></code>, <code class="docutils literal notranslate"><span class="pre">navigation.py</span></code>, <code class="docutils literal notranslate"><span class="pre">performance.py</span></code>, <code class="docutils literal notranslate"><span class="pre">bada.py</span></code>, <code class="docutils literal notranslate"><span class="pre">weather.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">era5.py</span></code>.</p>
+<p>The core folder contains the simulation code of AirTrafficSim. This includes <code class="docutils literal notranslate"><span class="pre">aircraft.py</span></code> (a Python API interface to control each aircraft), <code class="docutils literal notranslate"><span class="pre">traffic.py</span></code> (main simulation loop and data array class), <code class="docutils literal notranslate"><span class="pre">autopilot.py</span></code>, <code class="docutils literal notranslate"><span class="pre">navigation.py</span></code>, <code class="docutils literal notranslate"><span class="pre">performance/performance.py</span></code> (main performance class), <code class="docutils literal notranslate"><span class="pre">performance/bada.py</span></code> (bada implementation class), <code class="docutils literal notranslate"><span class="pre">weather/weather.py</span></code> (main weather class), and <code class="docutils literal notranslate"><span class="pre">waether/era5.py</span></code> (era5 data implementation class).</p>
 </ul>
 </div>
 <div class="section" id="server">
 <h4> server 📁<a class="headerlink" href="#server" title="Permalink to this heading">#</a></h4>
 <ul>
-<p>The server folder contains the server side programs of AirTrafficSim to serve the web-based UI to and communicate with client. It is written in Python with <a class="reference external" href="https://flask.palletsprojects.com/en/2.0.x/">Flask</a> and <a class="reference external" href="https://flask-socketio.readthedocs.io/en/latest/index.html">flask-SocketIO</a>. This includes <code class="docutils literal notranslate"><span class="pre">server.py</span></code>, <code class="docutils literal notranslate"><span class="pre">data.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">replay.py</span></code>.</p>
+<p>The server folder contains the server-side programs of AirTrafficSim to serve the web-based UI and communicate with the client. It is written in Python with <a class="reference external" href="https://flask.palletsprojects.com/en/2.0.x/">Flask</a> and <a class="reference external" href="https://flask-socketio.readthedocs.io/en/latest/index.html">flask-SocketIO</a>. This includes <code class="docutils literal notranslate"><span class="pre">server.py</span></code>, <code class="docutils literal notranslate"><span class="pre">data.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">replay.py</span></code>.</p>
 </ul>
 </div>
 <div class="section" id="utils">
@@ -275,42 +276,57 @@
 <hr class="docutils" />
 <div class="section" id="data">
 <h3>data 📁<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h3>
-<p>The data folder contrains all the data needed for AirTrafficSim.</p>
-<div class="section" id="bada">
-<h4> BADA 📁<a class="headerlink" href="#bada" title="Permalink to this heading">#</a></h4>
+<p>The data folder contains all the data needed for AirTrafficSim.</p>
+<div class="section" id="client">
+<h4> client 📁<a class="headerlink" href="#client" title="Permalink to this heading">#</a></h4>
 <ul>
-<p>The BADA folder contains the BADA aircraft Performance data. The data is not included in the download but is obtainable at <a class="reference external" href="https://www.eurocontrol.int/model/bada">eurocontrol</a> website. Please unzip and copy the data files into this folder.</p>
+<p>The client folder stores the pre-compiled build of AirTrafficSim’s UI. It is used for AirTrafficSim to serve the client code to users.</p>
 </ul>
 </div>
-<div class="section" id="nav">
-<h4> nav 📁<a class="headerlink" href="#nav" title="Permalink to this heading">#</a></h4>
+<div class="section" id="flight-data">
+<h4> flight_data 📁<a class="headerlink" href="#flight-data" title="Permalink to this heading">#</a></h4>
 <ul>
-<p>The nav folder includes a navigation data at <code class="docutils literal notranslate"><span class="pre">data/nav/xplane_default_data.zip</span></code> obtained from <a class="reference external" href="https://developer.x-plane.com/docs/data-development-documentation/">Xplane-11 data</a>. The data will be extracted when AirTrafficSim is run for the first time.</p>
+<p>The flight_data folder stores user-provided historic flight trajectory data. An example of a data set from FlightRadar24 is included. Please note that each data set should have its own folder.</p>
+</ul>
+</div>
+<div class="section" id="performance">
+<h4> performance 📁<a class="headerlink" href="#performance" title="Permalink to this heading">#</a></h4>
+<ul>
+<p>The performance folder is intended to contain any necessary data for different performance models. The performance/BADA folder contains the BADA aircraft Performance data. The data is not included in the download but is obtainable at <a class="reference external" href="https://www.eurocontrol.int/model/bada">eurocontrol</a> website. Please unzip and copy the data files into this folder.</p>
+</ul>
+</div>
+<div class="section" id="navigation">
+<h4> navigation 📁<a class="headerlink" href="#navigation" title="Permalink to this heading">#</a></h4>
+<ul>
+<p>The navigation folder includes navigation data at <code class="docutils literal notranslate"><span class="pre">data/navigation/xplane_default_data.zip</span></code> obtained from <a class="reference external" href="https://developer.x-plane.com/docs/data-development-documentation/">Xplane-11 data</a>. The data will be extracted when AirTrafficSim is run for the first time.</p>
 </ul>
 </div>
 <div class="section" id="weather">
 <h4> weather 📁<a class="headerlink" href="#weather" title="Permalink to this heading">#</a></h4>
 <ul>
-<p>The weather folder is empty by default. It servers as the directory to store ECMWF ERA5 data when you decided to use such data for simulation. It also stores user-provided radar image as high-resolution convective weather data.</p>
-</ul>
-</div>
-<div class="section" id="replay">
-<h4> replay 📁<a class="headerlink" href="#replay" title="Permalink to this heading">#</a></h4>
-<ul>
-<p>The replay folder stores the flight trajectories data. <code class="docutils literal notranslate"><span class="pre">replay/historic/</span></code> stores the user-provided historic data. A example data from FlightRadar24 is included. Please note that each data set should have its own folder.</p>
-<p><code class="docutils literal notranslate"><span class="pre">data/replay/simulation/</span></code> contains the output files from simulation. The data is stored in a folder with this naming convention <code class="docutils literal notranslate"><span class="pre">&lt;Environment</span> <span class="pre">name&gt;-&lt;actual</span> <span class="pre">start</span> <span class="pre">time</span> <span class="pre">of</span> <span class="pre">simulation</span> <span class="pre">in</span> <span class="pre">UTC&gt;</span></code>. In each folder, there is a master .csv file with the same name that include every flight in the simulation and multiple separate .csv files for each flight.</p>
+<p>The weather folder is empty by default. It serves as the directory to store ECMWF ERA5 data when you decided to use such data for simulation. It also stores user-provided radar images as high-resolution convective weather data. The folders are named after the environment name.</p>
 </ul>
 </div>
 </div>
 <hr class="docutils" />
-<div class="section" id="client">
-<h3>client 📁<a class="headerlink" href="#client" title="Permalink to this heading">#</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">client</span></code> folder contains the source and pre-compiled build of AirTrafficSim’s UI. It is written in react.js with <a class="reference external" href="https://ionicframework.com/">Ionic Framework</a>. It contains a 3D globe using <a class="reference external" href="https://cesium.com/">Cesium.js + Cesium ion</a> and <a class="reference external" href="https://resium.reearth.io/">Resium</a>. It also contains a graph UI component using <a class="reference external" href="https://plotly.com/javascript/">Plot.js</a>.</p>
+<div class="section" id="id1">
+<h3>client 📁<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">client</span></code> folder contains the source code of AirTrafficSim’s UI. It is written in react.js with <a class="reference external" href="https://ionicframework.com/">Ionic Framework</a>. It contains a 3D globe using <a class="reference external" href="https://cesium.com/">Cesium.js + Cesium ion</a> and <a class="reference external" href="https://resium.reearth.io/">Resium</a>. It also contains a graph UI component using <a class="reference external" href="https://plotly.com/javascript/">Plot.js</a>.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="docs">
 <h3>docs 📁<a class="headerlink" href="#docs" title="Permalink to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">docs</span></code> folder contains the documentation of AirTrafficSim built using <a class="reference external" href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> with <a class="reference external" href="https://github.com/pradyunsg/furo">Furo</a> theme.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="environment">
+<h3>environment 📁<a class="headerlink" href="#environment" title="Permalink to this heading">#</a></h3>
+<p>The environment folder stores different Python files to set up the simulation environment. The creation of such a file will be explained on the <a class="reference internal" href="creating_env.html"><span class="doc std std-doc">Creating a simulation environment</span></a> page. Four sample tutorial files, including <code class="docutils literal notranslate"><span class="pre">DemoEnv.py</span></code>, <code class="docutils literal notranslate"><span class="pre">FullFlightDemo.py</span></code>, <code class="docutils literal notranslate"><span class="pre">WeatherDemo.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">ConvertHistoricDemo.py</span></code>, are provided.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="result">
+<h3>result 📁<a class="headerlink" href="#result" title="Permalink to this heading">#</a></h3>
+<p>The result folder contains the output files from the simulation. The data is stored in a folder with this naming convention <code class="docutils literal notranslate"><span class="pre">&lt;Environment</span> <span class="pre">name&gt;-&lt;actual</span> <span class="pre">start</span> <span class="pre">time</span> <span class="pre">of</span> <span class="pre">simulation</span> <span class="pre">in</span> <span class="pre">UTC&gt;</span></code>. In each folder, there is a master .csv file with the same name that includes every flight in the simulation.</p>
 </div>
 </div>
 </div>
@@ -381,21 +397,23 @@
 <li><a class="reference internal" href="#architecture">Architecture</a></li>
 <li><a class="reference internal" href="#file-structure">File structure</a><ul>
 <li><a class="reference internal" href="#airtrafficsim">airtrafficsim 📁</a><ul>
-<li><a class="reference internal" href="#env"> env 📁</a></li>
 <li><a class="reference internal" href="#core"> core 📁</a></li>
 <li><a class="reference internal" href="#server"> server 📁</a></li>
 <li><a class="reference internal" href="#utils"> utils 📁</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#data">data 📁</a><ul>
-<li><a class="reference internal" href="#bada"> BADA 📁</a></li>
-<li><a class="reference internal" href="#nav"> nav 📁</a></li>
+<li><a class="reference internal" href="#client"> client 📁</a></li>
+<li><a class="reference internal" href="#flight-data"> flight_data 📁</a></li>
+<li><a class="reference internal" href="#performance"> performance 📁</a></li>
+<li><a class="reference internal" href="#navigation"> navigation 📁</a></li>
 <li><a class="reference internal" href="#weather"> weather 📁</a></li>
-<li><a class="reference internal" href="#replay"> replay 📁</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#client">client 📁</a></li>
+<li><a class="reference internal" href="#id1">client 📁</a></li>
 <li><a class="reference internal" href="#docs">docs 📁</a></li>
+<li><a class="reference internal" href="#environment">environment 📁</a></li>
+<li><a class="reference internal" href="#result">result 📁</a></li>
 </ul>
 </li>
 </ul>
@@ -414,6 +432,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>
