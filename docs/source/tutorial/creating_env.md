@@ -33,7 +33,7 @@ class DemoEnv(Environment):
         # Section 1
         # Initialize environment base class
         super().__init__(file_name = Path(__file__).name.removesuffix('.py'), #File name (do not change)
-                        start_time = datetime.fromisoformat('2022-03-22T00:00:00'),
+                        start_time = datetime.fromisoformat('2022-03-22T00:00:00+00:00'),
                         end_time = 1000,
                         weather_mode = "",
                         performance_mode = "BADA" 

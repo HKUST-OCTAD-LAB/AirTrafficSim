@@ -14,8 +14,8 @@
             "name": "Python: AirTrafficSim --headless",
             "type": "python",
             "request": "launch",
-            "program": "airtrafficsim",
-            "args" : ["--headless", "FullFlightDemo"]
+            "module": "airtrafficsim",
+            "args" : ["--headless", "ConvertHistoricDemo"]
         },
         {
             "name": "Python: Profiling",

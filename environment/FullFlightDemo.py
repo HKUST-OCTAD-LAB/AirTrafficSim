@@ -11,7 +11,7 @@ class FullFlightDemo(Environment):
     def __init__(self):
         # Initialize environment super class
         super().__init__(file_name = Path(__file__).name.removesuffix('.py'), #File name (do not change)
-                        start_time = datetime.fromisoformat('2022-03-22T00:00:00'),
+                        start_time = datetime.fromisoformat('2022-03-22T00:00:00+00:00'),
                         end_time = 7000,
                         weather_mode = "",
                         performance_mode = "BADA" 

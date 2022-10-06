@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import numpy as np
 import pandas as pd
 import csv
@@ -28,7 +28,7 @@ class Environment:
         self.global_time = 0                    # [s]
 
         # Handle io
-        self.datetime = datetime.utcnow()
+        self.datetime = datetime.now(timezone.utc)
         self.last_sent_time = time.time()
         self.graph_type = 'None'
         self.packet_id = 0
@@ -81,7 +81,7 @@ class Environment:
             # Save to buffer
             data = np.column_stack((self.traffic.index,
                                     self.traffic.call_sign, 
-                                    np.full(len(self.traffic.index), (self.start_time + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')+'Z'), 
+                                    np.full(len(self.traffic.index), (self.start_time + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), 
                                     self.traffic.long, 
                                     self.traffic.lat,
                                     Unit.ft2m(self.traffic.alt), 
@@ -126,7 +126,7 @@ class Environment:
         """
         Save all states variable of one timestemp to csv file.
         """
-        data = np.column_stack((np.full(len(self.traffic.index), self.global_time), np.full(len(self.traffic.index), (self.start_time + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')+'Z'), self.traffic.index, self.traffic.call_sign, self.traffic.lat, self.traffic.long, self.traffic.alt,
+        data = np.column_stack((np.full(len(self.traffic.index), self.global_time), np.full(len(self.traffic.index), (self.start_time + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), self.traffic.index, self.traffic.call_sign, self.traffic.lat, self.traffic.long, self.traffic.alt,
                                 self.traffic.cas, self.traffic.tas, self.traffic.mach, self.traffic.vs,
                                 self.traffic.heading, self.traffic.bank_angle, self.traffic.path_angle,
                                 self.traffic.mass, self.traffic.fuel_consumed,
@@ -154,57 +154,57 @@ class Environment:
                 "name": "simulation",
                 "version": "1.0",
                 "clock": {
-                    "interval": self.start_time.isoformat()+'Z'+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat()+'Z',
-                    "currentTime": self.start_time.isoformat()+'Z',
+                    "interval": self.start_time.isoformat()+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat(),
+                    "currentTime": self.start_time.isoformat(),
                 }
             }]
 
         df_buffer = pd.DataFrame(self.buffer_data)
+        if self.buffer_data:
+            for id in df_buffer.iloc[:,0].unique():
+                    content = df_buffer[df_buffer.iloc[:,0] == id]
 
-        for id in df_buffer.iloc[:,0].unique():
-                content = df_buffer[df_buffer.iloc[:,0] == id]
-
-                call_sign = content.iloc[0, 1]
-                positions = content.iloc[:, [2,3,4,5]].to_numpy().flatten().tolist()
-                label = [{"interval": time+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat()+'Z', 
-                        "string": call_sign+"\n"+str(np.floor(alt))+"ft "+str(np.floor(cas))+"kt"} 
-                        for time, alt, cas in zip(content.iloc[:,2].to_numpy(), content.iloc[:,5].to_numpy(dtype=np.float), content.iloc[:,6].to_numpy(dtype=np.float))]
-                
-                trajectory = {
-                        "id": call_sign,
-                        "position": {
-                            "cartographicDegrees": positions
-                        },
-                        "point": {
-                            "pixelSize": 5,
-                            "color": {
-                                "rgba": [39, 245, 106, 215]
-                            }
-                        },
-                        "path": {
-                            "leadTime": 0,
-                            "trailTime": 20,
-                            "distanceDisplayCondition": {
-                                "distanceDisplayCondition": [0, 1500000]
-                            }
-                        },
-                        "label": {
-                            "text": label,
-                            "font": "9px sans-serif",
-                            "horizontalOrigin": "LEFT",
-                            "pixelOffset": {
-                                "cartesian2": [20, 20],
+                    call_sign = content.iloc[0, 1]
+                    positions = content.iloc[:, [2,3,4,5]].to_numpy().flatten().tolist()
+                    label = [{"interval": time+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat(), 
+                            "string": call_sign+"\n"+str(np.floor(alt))+"ft "+str(np.floor(cas))+"kt"} 
+                            for time, alt, cas in zip(content.iloc[:,2].to_numpy(), content.iloc[:,5].to_numpy(dtype=np.float), content.iloc[:,6].to_numpy(dtype=np.float))]
+                    
+                    trajectory = {
+                            "id": call_sign,
+                            "position": {
+                                "cartographicDegrees": positions
                             },
-                            "distanceDisplayCondition": {
-                                "distanceDisplayCondition": [0, 1500000]
+                            "point": {
+                                "pixelSize": 5,
+                                "color": {
+                                    "rgba": [39, 245, 106, 215]
+                                }
                             },
-                            "showBackground": "false",
-                            "backgroundColor": {
-                                "rgba": [0, 0, 0, 50]
+                            "path": {
+                                "leadTime": 0,
+                                "trailTime": 20,
+                                "distanceDisplayCondition": {
+                                    "distanceDisplayCondition": [0, 1500000]
+                                }
+                            },
+                            "label": {
+                                "text": label,
+                                "font": "9px sans-serif",
+                                "horizontalOrigin": "LEFT",
+                                "pixelOffset": {
+                                    "cartesian2": [20, 20],
+                                },
+                                "distanceDisplayCondition": {
+                                    "distanceDisplayCondition": [0, 1500000]
+                                },
+                                "showBackground": "false",
+                                "backgroundColor": {
+                                    "rgba": [0, 0, 0, 50]
+                                }
                             }
                         }
-                    }
-                document.append(trajectory)
+                    document.append(trajectory)
 
         graph_data = []
         if self.graph_type != 'None':

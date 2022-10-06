@@ -2,7 +2,7 @@ from pathlib import Path
 import csv
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timezone
 
 class Replay:
     @staticmethod
@@ -69,21 +69,21 @@ class Replay:
                         id = file.name
                         if ('timestamp' and 'long' and 'lat' and 'alt' and 'gspeed') in file_content:
                             # FR24
-                            start = datetime.utcfromtimestamp(file_content.iloc[0]['timestamp'])
-                            end = datetime.utcfromtimestamp(file_content.iloc[-1]['timestamp'])
-                            positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.utcfromtimestamp(x).isoformat()+'Z'), 
+                            start = datetime.fromtimestamp(file_content.iloc[0]['timestamp'], timezone.utc)
+                            end = datetime.fromtimestamp(file_content.iloc[-1]['timestamp'], timezone.utc)
+                            positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.fromtimestamp(x, timezone.utc).isoformat()), 
                                                     file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
-                            label = [{"interval": datetime.utcfromtimestamp(time).isoformat()+'Z'+"/"+end.isoformat()+'Z', 
+                            label = [{"interval": datetime.fromtimestamp(time, timezone.utc).isoformat()+"/"+end.isoformat(), 
                                     "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
                                     for time, alt, gspeed in zip(file_content['timestamp'], file_content['alt'], file_content['gspeed'])]
 
                         elif ('timestamp' and 'longitude' and 'latitude' and 'altitude' and 'groundspeed') in file_content:
                             # Opensky
-                            start = datetime.fromisoformat(file_content.iloc[0]['timestamp'])
-                            end = datetime.fromisoformat(file_content.iloc[-1]['timestamp'])
-                            positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.fromisoformat(x).isoformat(timespec='seconds')+'Z'), 
+                            start = datetime.fromisoformat(file_content.iloc[0]['timestamp']+'+00:00')
+                            end = datetime.fromisoformat(file_content.iloc[-1]['timestamp']+'+00:00')
+                            positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.fromisoformat(x+'+00:00').isoformat(timespec='seconds')), 
                                                     file_content['longitude'].values, file_content['latitude'].values, file_content['altitude'].values/3.2808))[::360].flatten().tolist()
-                            label = [{"interval": datetime.fromisoformat(time).isoformat(timespec='seconds')+'Z'+"/"+end.isoformat(timespec='seconds')+'Z', 
+                            label = [{"interval": datetime.fromisoformat(time+'+00:00').isoformat(timespec='seconds')+"/"+end.isoformat(timespec='seconds'), 
                                     "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
                                     for time, alt, gspeed in zip(file_content['timestamp'], file_content['altitude'], file_content['groundspeed'])]
                             label = label[0::60]
@@ -107,7 +107,7 @@ class Replay:
 
                     trajectory = {
                         "id": id,
-                        "availability": start.isoformat(timespec='seconds')+'Z'+"/"+ end.isoformat(timespec='seconds')+'Z',
+                        "availability": start.isoformat(timespec='seconds')+"/"+ end.isoformat(timespec='seconds'),
                         "position": {
                             "cartographicDegrees": positions
                         },
@@ -150,8 +150,8 @@ class Replay:
                 "name": "Replay",
                 "version": "1.0",
                 "clock": {
-                    "interval": start_time.isoformat(timespec='seconds')+'Z'+"/"+ end_time.isoformat(timespec='seconds')+'Z',
-                    "currentTime": start_time.isoformat(timespec='seconds')+'Z',
+                    "interval": start_time.isoformat(timespec='seconds')+"/"+ end_time.isoformat(timespec='seconds'),
+                    "currentTime": start_time.isoformat(timespec='seconds'),
                 }
             })
             return trajectories

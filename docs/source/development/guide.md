@@ -1,6 +1,6 @@
 # Development guide
 
-AirTrafficSim is published on [GitHub](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim) under xxx license. We welcome everyone interested to contribute to this project by reporting bugs, providing suggestions, and participating in development.
+AirTrafficSim is published on [GitHub](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim) under [GPL-3.0 license](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/blob/main/LICENSE). We welcome everyone interested to contribute to this project by reporting bugs, providing suggestions, and participating in development.
 
 ## Progress
 

@@ -10,17 +10,13 @@ AirTrafficSim can detect the arrival and approach procedure of each flight base 
 ```{code-block} python
 ---
 lineno-start: 23
-emphasize-lines: 38, 40, 44, 45, 46, 47, 48, 49
+emphasize-lines: 33, 35, 39, 40, 41, 42, 43, 44
 caption: ConvertHistoricDemo.py
 ---
 # Location of the historic data
 self.historic_data_path = Path(__file__).parent.parent.resolve().joinpath('data/flight_data/2018-05-01/')
 
-# Detect arrival route, position, and time for all aircraft in a day
 print("Analyzing flight data")
-# Sample target
-target = [...]
-
 # Set up arrival and approach data
 arrivals_dict, arrival_waypoints_coord_dict = get_arrival_data("VHHH", "07R")
 approach_dict, approach_waypoints_coord_dict = get_approach_data("VHHH", "07R")
@@ -39,7 +35,6 @@ self.aircraft_list = {}
 
 # Loop all historic data files
 for file in self.historic_data_path.iterdir():
-    if file.name.removesuffix('.csv') in target:
         self.call_sign.append(file.name.removesuffix('.csv'))
         
         # Read and simplify flight trajectory
@@ -56,7 +51,7 @@ for file in self.historic_data_path.iterdir():
         self.approach.append(approach_result)
 
         # Determine aircraft appearance point (150km to hong kong)
-        index = np.where(Cal.cal_great_circle_dist(traj[:, 0], traj[:, 1], 22.3193, 114.1694) < 150)[0][0]
+        index = np.where(Cal.cal_great_circle_dist(traj[:, 0], traj[:, 1], 22.3193, 114.1694) < 200)[0][0]
         self.position.append(traj[index])
         self.speed.append(df['gspeed'].iloc[index])
         self.start_alt.append(df['alt'].iloc[index])
@@ -69,12 +64,11 @@ print("Finished analyzing data")
 
 # Get starting time
 self.time = np.array(self.time)
-self.start_time = datetime.fromtimestamp(np.min(self.time))
 ```
 
 ## Adding and deleting aircraft
 
-After converting historic flight data, AirTrafficSim will add at each timestep based on the stored entry time information. The aircraft will also be deleted if the aircraft has completed its flight plan and there is no next waypoint.
+After converting historic flight data, AirTrafficSim will add aircraft at each timestep based on the stored entry time information. The aircraft will also be deleted if the aircraft has completed its flight plan and there is no next waypoint.
 
 ```{code-block} python
 ---
@@ -95,4 +89,21 @@ def atc_command(self):
     index = self.traffic.index[self.traffic.ap.hv_next_wp == False]
     for i in index:
         self.traffic.del_aircraft(i)
+```
+
+## Holding and vectoring
+
+A demo program is written to demonstrate the control of vectoring and holding.
+
+```{code-block} python
+---
+lineno-start: 94
+caption: ConvertHistoricDemo.py
+---
+# User algorithm
+# Holding and vectoring
+if "5J150" in self.aircraft_list:
+    # self.aircraft_list["5J150"].set_vectoring(60, 195, "GUAVA")
+    if self.global_time == 1600:
+        self.aircraft_list["5J150"].set_holding(2, "BETTY", "VH")
 ```
