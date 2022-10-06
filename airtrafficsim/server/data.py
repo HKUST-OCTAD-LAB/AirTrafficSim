@@ -1,4 +1,4 @@
-from airtrafficsim.core.navigation import Nav
+from pathlib import Path
 from datetime import datetime
 from matplotlib.figure import Figure
 from matplotlib import colors
@@ -8,6 +8,7 @@ import cartopy.crs as ccrs
 from PIL import Image
 from io import BytesIO
 import base64
+from airtrafficsim.core.navigation import Nav
 
 class Data:
     @staticmethod
@@ -73,7 +74,7 @@ class Data:
 
 
     @staticmethod
-    def get_era5_wind(lat1, long1, lat2, long2, file):
+    def get_era5_wind(file, lat1, long1, lat2, long2, time):
         """
         Get the ERA5 wind data image to client
         
@@ -93,7 +94,8 @@ class Data:
         {}
             JSON CZML file of ERA5 wind data image
         """
-        data = xr.open_dataset('data/weather/'+file.split('-', 1)[0]+'/multilevel.nc').sel(level=900, time=datetime.fromisoformat('2022-03-22T00:00:00'))
+        # TODO: Improve data loading to avoid repetitive loading
+        data = xr.open_dataset(Path(__file__).parent.parent.parent.joinpath('data/weather/era5/',file.split('-', 1)[0]+'/multilevel.nc')).sel(level=900, time=datetime.fromisoformat(time+'+00:00'), method="pad")
         data = data.where((((data.latitude >= lat1) & (data.latitude <= lat2)) & ((data.longitude >= (long1+360.0) % 360.0) & (data.longitude <= (long2+360.0) % 360.0))), drop=True)
         fig = Figure(figsize=(long2-long1, lat2-lat1), facecolor='none', dpi=500)
         ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.PlateCarree(), frameon=False)
@@ -135,7 +137,7 @@ class Data:
         ]
 
     @staticmethod
-    def get_era5_rain(lat1, long1, lat2, long2, file):
+    def get_era5_rain(file, lat1, long1, lat2, long2, time):
         """
         Get the ERA5 rain data image to client
         
@@ -155,7 +157,8 @@ class Data:
         {}
             JSON CZML file of ERA5 rain data image
         """
-        data = xr.open_dataset('data/weather/'+file.split('-', 1)[0]+'/surface.nc').sel(time=datetime.fromisoformat('2022-03-22T00:00:00'))
+        # TODO: Improve data loading to avoid repetitive loading
+        data = xr.open_dataset(Path(__file__).parent.parent.parent.joinpath('data/weather/era5/',file.split('-', 1)[0]+'/surface.nc')).sel(time=datetime.fromisoformat(time+'+00:00'), method="pad")
         data = data.where((((data.latitude >= lat1) & (data.latitude <= lat2)) & ((data.longitude >= (long1+360.0) % 360.0) & (data.longitude <= (long2+360.0) % 360.0))), drop=True)
         fig = Figure(figsize=(long2-long1, lat2-lat1), facecolor='none', dpi=500)
         # fig = Figure(figsize=(360, 180), facecolor='none', dpi=100)
@@ -202,7 +205,7 @@ class Data:
 
 
     @staticmethod
-    def get_radar_img(lat1, long1, lat2, long2, file):
+    def get_radar_img(file, lat1, long1, lat2, long2, time):
         """
         Get the radar data image to client
         
@@ -216,6 +219,8 @@ class Data:
             Latitude (North)
         long2 : float
             Longitude (East)
+        time : string
+            Time in ISO format
         file : string
             File name of the radar image
 
@@ -224,6 +229,7 @@ class Data:
         {}
             JSON CZML file of radar data image
         """
+        # TODO: Expand to other data source
         lat1 = 22.3022 - 2.3152
         long1 = 114.1742 - 2.3152
         lat2 = 22.3022 + 2.3152
@@ -239,64 +245,64 @@ class Data:
         scale = [0, 0.15, 0.5, 1, 2, 3, 5, 7, 10, 15, 30, 50, 75, 100, 150, 200, 300]
 
         # Input
-        img = Image.open('data/weather/'+file.split('-', 1)[0]+'/radar_201806061000.jpg', 'r')
-        #Cut the color bar and description
-        left = 0
-        top = 0
-        right = 400
-        bottom = 400
-        img = img.crop((left, top, right, bottom)) 
-        data = np.array(img)
+        for file in Path(__file__).parent.parent.parent.joinpath('data/weather/radar/',file.split('-', 1)[0]).iterdir():
+            if (datetime.fromisoformat(time+'+00:00') - datetime.fromisoformat(file.stem+'+00:00')).seconds < 3600:
+                img = Image.open(file, 'r')
+                #Cut the color bar and description
+                left = 0
+                top = 0
+                right = 400
+                bottom = 400
+                img = img.crop((left, top, right, bottom)) 
+                data = np.array(img)
 
-        # Computer square distance of color https://en.wikipedia.org/wiki/Color_difference
-        distant = [np.square(data[:,:,0].flatten() - rain_fall_r[i]) + np.square(data[:,:,1].flatten() - rain_fall_g[i]) + np.square(data[:,:,2].flatten() - rain_fall_b[i]) for i in range(len(rain_fall))]
-        distant = np.stack(distant, axis=-1)
-        # Find the index of minimum element row-wise in distance array
-        index = np.argmin(distant, axis = 1)
-        # Grab the rain_fall category value given index of rain_fall array
-        result = np.take(rain_fall, index)
-        # Check if the minimum distance is smaller than a confidence interval
-        CONFIDENCE = 6000.0
-        min_distant = np.amin(distant, axis=1)
-        result = np.where(min_distant < CONFIDENCE, result, 0)
-        result = result.reshape(np.abs(bottom-top), np.abs(right-left))
+                # Computer square distance of color https://en.wikipedia.org/wiki/Color_difference
+                distant = [np.square(data[:,:,0].flatten() - rain_fall_r[i]) + np.square(data[:,:,1].flatten() - rain_fall_g[i]) + np.square(data[:,:,2].flatten() - rain_fall_b[i]) for i in range(len(rain_fall))]
+                distant = np.stack(distant, axis=-1)
+                # Find the index of minimum element row-wise in distance array
+                index = np.argmin(distant, axis = 1)
+                # Grab the rain_fall category value given index of rain_fall array
+                result = np.take(rain_fall, index)
+                # Check if the minimum distance is smaller than a confidence interval
+                CONFIDENCE = 6000.0
+                min_distant = np.amin(distant, axis=1)
+                result = np.where(min_distant < CONFIDENCE, result, 0)
+                result = result.reshape(np.abs(bottom-top), np.abs(right-left))
 
-        # Plot 
-        fig = Figure(figsize=(long2-long1, lat2-lat1), facecolor='none', dpi=500)
-        ax = fig.add_axes([0, 0, 1, 1], frameon=False)
-        # ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.PlateCarree(), frameon=False)
-        # ax.set_extent([long1, long2, lat1, lat2], crs=ccrs.PlateCarree())
-        cmap=colors.ListedColormap(colorsList)
-        norm=colors.BoundaryNorm(scale, len(colorsList))
-        ax.imshow(result, cmap=cmap, norm=norm)
-        buf = BytesIO()
-        fig.savefig(buf, format="png")
-        uri = "data:image/png;base64," + base64.b64encode(buf.getbuffer()).decode("ascii")
-        return [
-            {
-                "id": "document",
-                "name": "Weather",
-                "version": "1.0",
-            },
-            {
-                "id": "Weather",
-                "rectangle": {
-                    "coordinates": {
-                        "wsenDegrees": [long1, lat1, long2, lat2],
+                # Plot 
+                fig = Figure(figsize=(long2-long1, lat2-lat1), facecolor='none', dpi=500)
+                ax = fig.add_axes([0, 0, 1, 1], frameon=False)
+                # ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.PlateCarree(), frameon=False)
+                # ax.set_extent([long1, long2, lat1, lat2], crs=ccrs.PlateCarree())
+                cmap=colors.ListedColormap(colorsList)
+                norm=colors.BoundaryNorm(scale, len(colorsList))
+                ax.imshow(result, cmap=cmap, norm=norm)
+                buf = BytesIO()
+                fig.savefig(buf, format="png")
+                uri = "data:image/png;base64," + base64.b64encode(buf.getbuffer()).decode("ascii")
+                return [
+                    {
+                        "id": "document",
+                        "name": "Weather",
+                        "version": "1.0",
                     },
-                    "height": 0,
-                    "fill": True,
-                    "material": {
-                        "image": {
-                            "image": { "uri": uri },
-                            "color": {
-                                "rgba": [255, 255, 255, 128],
+                    {
+                        "id": "Weather",
+                        "rectangle": {
+                            "coordinates": {
+                                "wsenDegrees": [long1, lat1, long2, lat2],
                             },
-                            "transparent": True,
+                            "height": 0,
+                            "fill": True,
+                            "material": {
+                                "image": {
+                                    "image": { "uri": uri },
+                                    "color": {
+                                        "rgba": [255, 255, 255, 128],
+                                    },
+                                    "transparent": True,
+                                },
+                            },
                         },
                     },
-                },
-            },
-        ]
-
-        
+                ]

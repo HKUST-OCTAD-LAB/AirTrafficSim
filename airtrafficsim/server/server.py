@@ -21,7 +21,7 @@ from airtrafficsim.server.data import Data
 
 # eventlet.monkey_patch()
 
-app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath('client/build'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('client/build')))
+app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath('data/client'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('data/client')))
 socketio = SocketIO(app, cors_allowed_origins='*', max_http_buffer_size=1e8, ping_timeout=60, async_mode='eventlet', logger=True) #engineio_logger=True 
 
 @socketio.on('connect')
@@ -115,8 +115,8 @@ def get_simulation_file():
         List of simulation environment file names
     """
     simulation_list=[]
-    for file in Path(__file__).parent.parent.joinpath('env/').glob('*.py'):
-        if file.name != 'environment.py' and file.name != '__init__.py':
+    for file in Path(__file__).parent.parent.parent.joinpath('environment/').glob('*.py'):
+        if file.name != '__init__.py':
             simulation_list.append(file.name.removesuffix('.py'))
     return simulation_list
 
@@ -130,7 +130,7 @@ def run_simulation(file):
     file : string
         Environment file name
     """
-    Env = getattr(import_module('airtrafficsim.env.'+file), file)
+    Env = getattr(import_module('environment.'+file, '...'), file)
     env = Env()
     env.run(socketio)
 
@@ -158,7 +158,7 @@ def get_Nav(lat1, long1, lat2, long2):
     return Data.get_nav(lat1, long1, lat2, long2)
 
 @socketio.on('getEra5Wind')
-def get_era5_wind(lat1, long1, lat2, long2, file):
+def get_era5_wind(lat1, long1, lat2, long2, file, time):
     """
     Get the ERA5 wind data image to client
     
@@ -178,10 +178,10 @@ def get_era5_wind(lat1, long1, lat2, long2, file):
     {}
         JSON CZML file of ERA5 wind data image
     """
-    return Data.get_era5_wind(lat1, long1, lat2, long2, file)
+    return Data.get_era5_wind(file, lat1, long1, lat2, long2, time)
 
 @socketio.on('getEra5Rain')
-def get_era5_rain(lat1, long1, lat2, long2, file):
+def get_era5_rain(lat1, long1, lat2, long2, file, time):
     """
     Get the ERA5 rain data image to client
     
@@ -201,10 +201,10 @@ def get_era5_rain(lat1, long1, lat2, long2, file):
     {}
         JSON CZML file of ERA5 rain data image
     """
-    return Data.get_era5_rain(lat1, long1, lat2, long2, file)
+    return Data.get_era5_rain(file, lat1, long1, lat2, long2, time)
 
 @socketio.on('getRadarImage')
-def get_radar_img(lat1, long1, lat2, long2, file):
+def get_radar_img(lat1, long1, lat2, long2, file, time):
     """
     Get the radar data image to client
     
@@ -218,6 +218,8 @@ def get_radar_img(lat1, long1, lat2, long2, file):
         Latitude (North)
     long2 : float
         Longitude (East)
+    time : string
+        Time in ISO format
     file : string
         File name of the radar image
 
@@ -226,14 +228,14 @@ def get_radar_img(lat1, long1, lat2, long2, file):
     {}
         JSON CZML file of radar data image
     """
-    return Data.get_radar_img(lat1, long1, lat2, long2, file)
+    return Data.get_radar_img(file, lat1, long1, lat2, long2, time)
 
 @app.route("/")
 def serve_client():
     """Serve client folder to user"""
     return render_template("index.html")
 
-def run_server(port = 5000):
+def run_server(port = 6111):
     """Start the backend server."""
     print("Running server at http://localhost:"+str(port))
     socketio.run(app, port=port)

@@ -11,7 +11,7 @@ class Performance:
     Performance base class
     """
 
-    def __init__(self, bada=False):
+    def __init__(self, performance_mode):
         """
         Initialize Performance base class
 
@@ -24,10 +24,10 @@ class Performance:
             Whether to use BADA Performance model, by default False
         """
 
-        self.bada = bada
+        self.performance_mode = performance_mode
         """Whether BADA performance model is used [Boolean]"""
 
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             self.perf_model = Bada()
         else:
             # OpenAP
@@ -88,7 +88,7 @@ class Performance:
         self.thrust = np.append(self.thrust, 0.0)
         self.esf = np.append(self.esf, 0.0)                               
 
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             self.perf_model.add_aircraft(icao, mass_class)
         else:
             self.prop_model.append(prop.aircraft(icao))
@@ -105,7 +105,7 @@ class Performance:
         self.drag = np.delete(self.drag, index)                              
         self.thrust = np.delete(self.thrust, index)
         self.esf = np.delete(self.esf, index) 
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             self.perf_model.del_aircraft(index)
         else:
             del self.prop_model[index]
@@ -127,7 +127,7 @@ class Performance:
         n: int
             Index of performance array.
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             self.perf_model.init_procedure_speed(mass, n)
 
 
@@ -157,7 +157,7 @@ class Performance:
         M_std: float[]
             Standard Mach [dimensionless] 
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             return self.perf_model.get_procedure_speed(H_p, H_p_trans, flight_phase)
         else:
             return np.array([0])
@@ -373,7 +373,7 @@ class Performance:
         Transition altitude is defined to be the geopotential pressure altitude at which V_CAS and M represent the same TAS value.
         TODO: Separate climb and descent trans altitude?
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             V_cas = Unit.kts2mps(self.perf_model.climb_schedule[n, -2])
             M = self.perf_model.climb_schedule[n, -1]
         
@@ -405,7 +405,7 @@ class Performance:
         Weight: float
             Empty weight(BADA) or Operating empty weight(OpenAP) [kg]
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             return self.perf_model.m_min[n] * 1000.0
         else:
             return self.prop_model[n]['limits']['OEW']
@@ -428,7 +428,7 @@ class Performance:
         h_max: float[]
             Maximum altitude for any given mass [ft]
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             return self.perf_model.cal_maximum_altitude(d_T, m)
         else:
             return Unit.m2ft(np.array([x['limits']['ceiling'] for x in self.prop_model]))
@@ -443,7 +443,7 @@ class Performance:
         speed, mach: float[]
             Maximum speed and mach
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             return self.perf_model.v_mo, self.perf_model.m_mo
 
 
@@ -461,7 +461,7 @@ class Performance:
         v_min: float[]
             Minimum at speed at specific configuration [knots]
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             return self.perf_model.cal_minimum_speed(configuration)
         else:
             return  0.0 #TODO: OpenAP no minimum/stall speed?
@@ -481,7 +481,7 @@ class Performance:
         d_v: float[]
             Max delta velocity for time step [ft/s^2]
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             return self.perf_model.cal_max_d_tas(d_t)
         else:
             return 2 * d_t
@@ -507,7 +507,7 @@ class Performance:
         d_rocd: float[]
             Delta rate of climb or descent [ft/s^2]
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             return self.perf_model.cal_max_d_rocd(d_t, V_tas, rocd)
         else:
             return np.sin(np.arcsin(rocd/V_tas) - 5.0 * d_t / V_tas) * (V_tas+d_t)
@@ -690,7 +690,7 @@ class Performance:
 
         
     def cal_vs_accel(self, traffic, tas):
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             # Drag and Thrust
             self.drag = self.perf_model.cal_aerodynamic_drag(tas, traffic.bank_angle, traffic.mass, traffic.weather.rho, traffic.configuration, self.perf_model.cal_expedite_descend_factor(traffic.ap.expedite_descent))
             self.thrust = self.perf_model.cal_thrust(traffic.vertical_mode, traffic.configuration, traffic.alt, traffic.tas, traffic.weather.d_T, self.drag, traffic.ap.speed_mode)
@@ -702,7 +702,7 @@ class Performance:
         
         # Total Energy Model
         self.esf = self.cal_energy_share_factor(Unit.ft2m(traffic.alt), traffic.weather.T, traffic.weather.d_T, traffic.mach, traffic.ap.speed_mode, traffic.vertical_mode)      # Energy share factor
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             rocd = self.cal_tem_rocd(traffic.weather.T, traffic.weather.d_T, traffic.mass, self.drag, self.esf, self.thrust, tas, self.perf_model.cal_reduced_climb_power(traffic.mass, traffic.alt, traffic.max_alt))
         else:
             rocd = self.cal_tem_rocd(traffic.weather.T, traffic.weather.d_T, traffic.mass, self.drag, self.esf, self.thrust, tas, 1.0)
@@ -734,7 +734,7 @@ class Performance:
         Fuel burn : float[]
             Fuel burn [kg/s]
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             return self.perf_model.cal_fuel_burn(flight_phase, tas, self.thrust, alt)
         else:
             return [x.at_thrust(acthr=self.thrust, alt=alt) for x in self.fuel_flow_model]
@@ -816,7 +816,7 @@ class Performance:
         bank_angles :float 
             Bank angles [deg]
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             return np.where((configuration == Config.TAKEOFF) | (configuration == Config.LANDING), self.perf_model._Bada__PHI_NORM_CIV_TOLD, self.perf_model._Bada__PHI_NORM_CIV_OTHERS)
         else:
             return np.where((configuration == Config.TAKEOFF) | (configuration == Config.LANDING), 15.0, 30.0)
@@ -840,7 +840,7 @@ class Performance:
         configuration : float[]
             configuration from Traffic class [configuration enum]
         """
-        if (self.bada):
+        if (self.performance_mode == "BADA"):
             return self.perf_model.update_configuration(V_cas, H_p, vertical_mode)
         else:
             return np.array([Config.CLEAN])

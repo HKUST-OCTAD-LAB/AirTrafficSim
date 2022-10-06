@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import numpy as np
 import pandas as pd
 import csv
@@ -16,7 +16,7 @@ class Environment:
 
     """
 
-    def __init__(self, file_name="default", start_time = datetime.utcnow(), end_time = 60, era5_weather=False, bada_perf=False):
+    def __init__(self, file_name, start_time, end_time, weather_mode="ISA", performance_mode="BADA"):
         # User setting
         self.start_time = start_time
         """The simulation start time [datetime object]"""
@@ -24,24 +24,19 @@ class Environment:
         """The simulation end time [s]"""
 
         # Simulation variable
-        self.traffic = Traffic(file_name, start_time, end_time, era5_weather, bada_perf)
+        self.traffic = Traffic(file_name, start_time, end_time, weather_mode, performance_mode)
         self.global_time = 0                    # [s]
 
         # Handle io
-        self.datetime = datetime.utcnow()
+        self.datetime = datetime.now(timezone.utc)
         self.last_sent_time = time.time()
         self.graph_type = 'None'
         self.packet_id = 0
-        # Buffer
-        self.buffer_time = []
-        self.lat = []
-        self.long = []
-        self.alt = []
-        self.cas = []
+        self.buffer_data = []
 
         # File IO
         self.file_name = file_name+'-'+self.datetime.isoformat(timespec='seconds')
-        self.folder_path = Path(__file__).parent.parent.parent.resolve().joinpath('data/replay/simulation/'+self.file_name)
+        self.folder_path = Path(__file__).parent.parent.parent.resolve().joinpath('result/'+self.file_name)
         self.folder_path.mkdir()
         self.file_path =  self.folder_path.joinpath(self.file_name+'.csv')
         self.writer = csv.writer(open(self.file_path, 'w+'))
@@ -84,11 +79,14 @@ class Environment:
         
         if(socketio != None):
             # Save to buffer
-            self.buffer_time.append((self.datetime + timedelta(seconds=self.global_time)).isoformat())
-            self.lat.append(self.traffic.lat)
-            self.long.append(self.traffic.long)
-            self.alt.append(self.traffic.alt)
-            self.cas.append(self.traffic.cas)
+            data = np.column_stack((self.traffic.index,
+                                    self.traffic.call_sign, 
+                                    np.full(len(self.traffic.index), (self.start_time + timedelta(seconds=self.global_time)).isoformat(timespec='seconds')), 
+                                    self.traffic.long, 
+                                    self.traffic.lat,
+                                    Unit.ft2m(self.traffic.alt), 
+                                    self.traffic.cas))
+            self.buffer_data.extend(data)
 
             @socketio.on('setSimulationGraphType')
             def set_simulation_graph_type(graph_type):
@@ -99,11 +97,7 @@ class Environment:
                 self.send_to_client(socketio)
                 socketio.sleep(0)
                 self.last_sent_time = now
-                self.buffer_time = []
-                self.lat = []
-                self.long = []
-                self.alt = []
-                self.cas = []
+                self.buffer_data = []
 
         self.global_time += 1
 
@@ -121,9 +115,9 @@ class Environment:
 
             self.step(socketio)
             
-        print("")
-        print("Export to CSVs")
-        self.export_to_csv()
+        # print("")
+        # print("Export to CSVs")
+        # self.export_to_csv()
         print("")
         print("Simulation finished")
 
@@ -160,59 +154,57 @@ class Environment:
                 "name": "simulation",
                 "version": "1.0",
                 "clock": {
-                    "interval": self.datetime.isoformat()+"/"+(self.datetime + timedelta(seconds=self.end_time)).isoformat(),
-                    "currentTime": self.datetime.isoformat(),
+                    "interval": self.start_time.isoformat()+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat(),
+                    "currentTime": self.start_time.isoformat(),
                 }
             }]
 
+        df_buffer = pd.DataFrame(self.buffer_data)
+        if self.buffer_data:
+            for id in df_buffer.iloc[:,0].unique():
+                    content = df_buffer[df_buffer.iloc[:,0] == id]
 
-        lat = np.vstack(tuple(self.lat))
-        long = np.vstack(tuple(self.long))
-        alt = np.vstack(tuple(self.alt))
-        cas = np.vstack(tuple(self.cas))
-
-        for i in range(len(self.traffic.index)):
-            print(self.traffic.index)
-            positions = np.column_stack((np.array(self.buffer_time, dtype="object"), long[:,i], lat[:,i], Unit.ft2m(alt[:, i]))).flatten().tolist()
-            label = [{"interval": time+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat(), 
-                    "string": self.traffic.call_sign[i]+"\n"+str(np.floor(alt))+"ft "+str(np.floor(cas))+"kt"} 
-                    for time, alt, cas in zip(self.buffer_time, alt[:,i], cas[:,i])]
-            
-            trajectory = {
-                    "id": self.traffic.call_sign[i],
-                    "position": {
-                        "cartographicDegrees": positions
-                    },
-                    "point": {
-                        "pixelSize": 5,
-                        "color": {
-                            "rgba": [39, 245, 106, 215]
+                    call_sign = content.iloc[0, 1]
+                    positions = content.iloc[:, [2,3,4,5]].to_numpy().flatten().tolist()
+                    label = [{"interval": time+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat(), 
+                            "string": call_sign+"\n"+str(np.floor(alt))+"ft "+str(np.floor(cas))+"kt"} 
+                            for time, alt, cas in zip(content.iloc[:,2].to_numpy(), content.iloc[:,5].to_numpy(dtype=np.float), content.iloc[:,6].to_numpy(dtype=np.float))]
+                    
+                    trajectory = {
+                            "id": call_sign,
+                            "position": {
+                                "cartographicDegrees": positions
+                            },
+                            "point": {
+                                "pixelSize": 5,
+                                "color": {
+                                    "rgba": [39, 245, 106, 215]
+                                }
+                            },
+                            "path": {
+                                "leadTime": 0,
+                                "trailTime": 20,
+                                "distanceDisplayCondition": {
+                                    "distanceDisplayCondition": [0, 1500000]
+                                }
+                            },
+                            "label": {
+                                "text": label,
+                                "font": "9px sans-serif",
+                                "horizontalOrigin": "LEFT",
+                                "pixelOffset": {
+                                    "cartesian2": [20, 20],
+                                },
+                                "distanceDisplayCondition": {
+                                    "distanceDisplayCondition": [0, 1500000]
+                                },
+                                "showBackground": "false",
+                                "backgroundColor": {
+                                    "rgba": [0, 0, 0, 50]
+                                }
+                            }
                         }
-                    },
-                    "path": {
-                        "leadTime": 0,
-                        "trailTime": 20,
-                        "distanceDisplayCondition": {
-                            "distanceDisplayCondition": [0, 1500000]
-                        }
-                    },
-                    "label": {
-                        "text": label,
-                        "font": "9px sans-serif",
-                        "horizontalOrigin": "LEFT",
-                        "pixelOffset": {
-                            "cartesian2": [20, 20],
-                        },
-                        "distanceDisplayCondition": {
-                            "distanceDisplayCondition": [0, 1500000]
-                        },
-                        "showBackground": "false",
-                        "backgroundColor": {
-                            "rgba": [0, 0, 0, 50]
-                        }
-                    }
-                }
-            document.append(trajectory)
+                    document.append(trajectory)
 
         graph_data = []
         if self.graph_type != 'None':

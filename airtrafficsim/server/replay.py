@@ -2,7 +2,7 @@ from pathlib import Path
 import csv
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timezone
 
 class Replay:
     @staticmethod
@@ -16,13 +16,13 @@ class Replay:
             JSON file of historic file list and simulation file list in data/replay directory
         """
         historic_list = []
-        for dir in Path(__file__).parent.parent.parent.joinpath('data/replay/historic').iterdir():
+        for dir in Path(__file__).parent.parent.parent.joinpath('data/flight_data').iterdir():
             if dir.is_dir():
                 historic_list.append(dir.name)
         
         simulation_list=[]
         simulation_file_list={}
-        for dir in Path(__file__).parent.parent.parent.joinpath('data/replay/simulation').iterdir():
+        for dir in Path(__file__).parent.parent.parent.joinpath('result').iterdir():
             if dir.is_dir():
                 simulation_list.append(dir.name)
                 file_list = []
@@ -58,8 +58,8 @@ class Replay:
             trajectories = []
             start_time = None
             end_time = None
-            for file in Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile).iterdir():
-                if file != Path(__file__).parent.parent.parent.joinpath('data/replay/', replayCategory, replayFile, replayFile+'.csv'):
+            for file in Path(__file__).parent.parent.parent.joinpath('data/flight_data/',replayFile).iterdir():
+                if file != Path(__file__).parent.parent.parent.joinpath('data/flight_data/', replayFile, replayFile+'.csv'):
                     file_content = pd.read_csv(file)
                     
                     if replayCategory == 'historic':
@@ -69,21 +69,21 @@ class Replay:
                         id = file.name
                         if ('timestamp' and 'long' and 'lat' and 'alt' and 'gspeed') in file_content:
                             # FR24
-                            start = datetime.utcfromtimestamp(file_content.iloc[0]['timestamp'])
-                            end = datetime.utcfromtimestamp(file_content.iloc[-1]['timestamp'])
-                            positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.utcfromtimestamp(x).isoformat()), 
+                            start = datetime.fromtimestamp(file_content.iloc[0]['timestamp'], timezone.utc)
+                            end = datetime.fromtimestamp(file_content.iloc[-1]['timestamp'], timezone.utc)
+                            positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.fromtimestamp(x, timezone.utc).isoformat()), 
                                                     file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
-                            label = [{"interval": datetime.utcfromtimestamp(time).isoformat()+"/"+end.isoformat(), 
+                            label = [{"interval": datetime.fromtimestamp(time, timezone.utc).isoformat()+"/"+end.isoformat(), 
                                     "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
                                     for time, alt, gspeed in zip(file_content['timestamp'], file_content['alt'], file_content['gspeed'])]
 
                         elif ('timestamp' and 'longitude' and 'latitude' and 'altitude' and 'groundspeed') in file_content:
                             # Opensky
-                            start = datetime.fromisoformat(file_content.iloc[0]['timestamp'])
-                            end = datetime.fromisoformat(file_content.iloc[-1]['timestamp'])
-                            positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.fromisoformat(x).isoformat(timespec='seconds')), 
+                            start = datetime.fromisoformat(file_content.iloc[0]['timestamp']+'+00:00')
+                            end = datetime.fromisoformat(file_content.iloc[-1]['timestamp']+'+00:00')
+                            positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.fromisoformat(x+'+00:00').isoformat(timespec='seconds')), 
                                                     file_content['longitude'].values, file_content['latitude'].values, file_content['altitude'].values/3.2808))[::360].flatten().tolist()
-                            label = [{"interval": datetime.fromisoformat(time).isoformat(timespec='seconds')+"/"+end.isoformat(timespec='seconds'), 
+                            label = [{"interval": datetime.fromisoformat(time+'+00:00').isoformat(timespec='seconds')+"/"+end.isoformat(timespec='seconds'), 
                                     "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"} 
                                     for time, alt, gspeed in zip(file_content['timestamp'], file_content['altitude'], file_content['groundspeed'])]
                             label = label[0::60]
@@ -157,7 +157,7 @@ class Replay:
             return trajectories
 
         elif replayCategory == 'simulation':
-            df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile))
+            df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath('result',replayFile))
             document = [{
                 "id": "document",
                 "name": "simulation",
@@ -251,7 +251,7 @@ class Replay:
         """
         header = ['None']
         if mode == 'replay' and replayCategory == 'simulation':
-            with open(Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile), 'r') as file:
+            with open(Path(__file__).parent.parent.parent.joinpath('result',replayFile), 'r') as file:
                 header.extend(next(csv.reader(file)))
             header.remove('timestep')
             header.remove('timestamp')
@@ -283,7 +283,7 @@ class Replay:
         """
         data = []
         if mode == 'replay' and replayCategory == 'simulation' and graph != 'None':
-            df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath('data/replay/',replayCategory,replayFile))
+            df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath('result/', replayFile))
             for id in df['id'].unique():
                 content = df[df['id'] == id]
                 data.append({
@@ -295,7 +295,7 @@ class Replay:
                 })
                 
         elif mode == 'simulation' and graph != 'None':
-            df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath('data/replay/simulation',simulationFile,simulationFile+'.csv'))
+            df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath('result/',simulationFile,simulationFile+'.csv'))
             for id in df['id'].unique():
                 content = df[df['id'] == id]
                 data.append({

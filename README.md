@@ -8,7 +8,7 @@ AirTrafficSim is a web-based air traffic simulation software written in Python a
 - Air traffic simulation using [BADA performance data](https://www.eurocontrol.int/model/bada) and OpenAP (WIP)
 - Navigation data simulation and visualization from [x-plane 11](https://developer.x-plane.com/docs/data-development-documentation/)
 - Autopilot and Flight Management System simulation
-- Holding, vectoring, direct to maneuvers simulated
+- ATC traffic control methodology (Holding, vectoring, direct) simulation
 - Weather data from [ECMWF ERA5](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview) and custom radar image
 - Air traffic is controlled with API interface to simulate ATC interaction
 
@@ -17,7 +17,7 @@ AirTrafficSim is a web-based air traffic simulation software written in Python a
 
 ## Credits
 
-If you find AirTrafficSim useful for your research, please cite the following until any relevant material is actually published:
+If you find AirTrafficSim useful for your research, please cite the following until any relevant material is published:
 
 ```bibtex
 @software{AirTrafficSim,
@@ -25,7 +25,7 @@ If you find AirTrafficSim useful for your research, please cite the following un
   title   = {AirTrafficSim},
   url     = {https://github.com/HKUST-OCTAD-LAB/AirTrafficSim},
   version = {0.0},
-  date    = {2022-9-16},
+  date    = {2022-10-10},
 }
 ```
 

@@ -33,7 +33,7 @@ class Cal:
         """
         a = np.square(np.sin((np.deg2rad(lat2-lat1))/2.0)) + \
             np.cos(np.deg2rad(lat1)) * np.cos(np.deg2rad(lat2)) * np.square(np.sin((np.deg2rad(long2-long1))/2.0))
-        return 2.0 * 6371.009 * np.arctan2(np.square(a), np.sqrt(1.0-a))
+        return 2.0 * 6371.009 * np.arctan2(np.sqrt(a), np.sqrt(1.0-a))
 
     
     @staticmethod

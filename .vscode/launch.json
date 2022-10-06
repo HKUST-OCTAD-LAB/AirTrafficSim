@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Simulation",
+            "name": "Python: AirTrafficSim",
             "type": "python",
             "request": "launch",
-            "program": "simulation",
-            "args" : ["run", "--headless", "FullFlightDemo"]
+            "module": "airtrafficsim"
         },
-        // {
-        //     "name": "Python: Simulation Module",
-        //     "type": "python",
-        //     "request": "launch",
-        //     "module": "simulation"
-        // }
+        {
+            "name": "Python: AirTrafficSim --headless",
+            "type": "python",
+            "request": "launch",
+            "module": "airtrafficsim",
+            "args" : ["--headless", "ConvertHistoricDemo"]
+        },
         {
             "name": "Python: Profiling",
             "type": "python",
