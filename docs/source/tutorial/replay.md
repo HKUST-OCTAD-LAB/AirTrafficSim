@@ -1,11 +1,11 @@
 # Replaying data
 
-AirTrafficSim allows you to replay historic and simulated flight data. For historic flights, the data are stored in `data/flight_data`, while the data for simulated data are stored in `result/`. For the details of replay function, please refer to the API reference [airtrafficsim.server.replay](../api/server/airtrafficsim.server.replay).
+AirTrafficSim allows you to replay historicaland simulated flight data. For historical flights, the data are stored in `data/flight_data`, while the data for simulated data are stored in `result/`. For the details of replay function, please refer to the API reference [airtrafficsim.server.replay](../api/server/airtrafficsim.server.replay).
 
 
-## Replaying historic data
+## Replaying historical data
 
-Historic data from with [FlightRadar24](https://www.flightradar24.com/) and [OpenSky format](https://opensky-network.org/) can be processed. A sample data with FlightRadar24 format is provided in `data/flight_data/2018-05-01/`. Note that each .csv file in the folder represents one flight. This is what the sample data looks like.
+Historical data from with [FlightRadar24](https://www.flightradar24.com/) and [OpenSky format](https://opensky-network.org/) can be processed. A sample data with FlightRadar24 format is provided in `data/flight_data/2018-05-01/`. Note that each .csv file in the folder represents one flight. This is what the sample data looks like.
 
 
 ```{note}

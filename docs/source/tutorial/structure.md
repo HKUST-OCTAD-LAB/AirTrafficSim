@@ -64,7 +64,7 @@ The client folder stores the pre-compiled build of AirTrafficSim's UI. It is use
 
 <ul>
 
-The flight_data folder stores user-provided historic flight trajectory data. An example of a data set from FlightRadar24 is included. Please note that each data set should have its own folder.
+The flight_data folder stores user-provided historical flight trajectory data. An example of a data set from FlightRadar24 is included. Please note that each data set should have its own folder.
 
 </ul>
 

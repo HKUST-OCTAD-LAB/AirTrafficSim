@@ -20,7 +20,7 @@ class Era5:
             print ("ERA5 data exists.")
         else :
             print("Downloading ERA5 data.")
-            print("Downlad expected to complete in few minutes. Visit https://cds.climate.copernicus.eu/cdsapp#!/yourrequests for the status of the request. \n")
+            print("Download expected to complete in few minutes. Visit https://cds.climate.copernicus.eu/cdsapp#!/yourrequests for the status of the request. \n")
             if not Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).exists():
                 Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).mkdir()
             tmp = start_time

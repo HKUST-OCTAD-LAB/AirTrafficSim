@@ -1,12 +1,12 @@
 # AirTrafficSim
 
-AirTrafficSim is a web-based air traffic simulation software written in Python and Javascript. It is designed to visualize historic and research data, perform microscopic studies of air traffic movement with the integration of a historic weather database, and evaluate the performance of ATM algorithms.
+AirTrafficSim is a web-based air traffic simulation software written in Python and Javascript. It is designed to visualize historical and research data, perform microscopic studies of air traffic movement with the integration of a historical weather database, and evaluate the performance of ATM algorithms.
 
 AirTrafficSim is open-sourced at [https://github.com/HKUST-OCTAD-LAB/AirTrafficSim](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim).
 
 ## Features
 
-- Replay historic flights given data (FlightRadar 24 and simulated flights)
+- Replay historical flights given data (FlightRadar 24 and simulated flights)
 - Air traffic simulation using [BADA performance data](https://www.eurocontrol.int/model/bada) and OpenAP (WIP)
 - Navigation data simulation and visualization from [x-plane 11](https://developer.x-plane.com/docs/data-development-documentation/)
 - Autopilot and Flight Management System simulation
@@ -47,8 +47,8 @@ AirTrafficSim is open-sourced at [https://github.com/HKUST-OCTAD-LAB/AirTrafficS
    Creating a simulation environment <tutorial/creating_env>
    Running a simulation <tutorial/simulation>
    Adding flight plan <tutorial/flight_plan>
-   Using historic weather database <tutorial/weather>
-   Converting historic data <tutorial/historic>
+   Using historical weather database <tutorial/weather>
+   Converting historical data <tutorial/historic>
 ```
 
 ```{toctree}
