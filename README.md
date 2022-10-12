@@ -40,7 +40,7 @@ git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
 conda env create -f environment.yml
 ```
 
-After installation, please also download, unzip, and store BADA data in [data/BADA](data/BADA/). In addition follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to setup the API key for the weather database from ECMWF Climate Data Store.
+After installation, please also download, unzip, and store BADA data in [data/performance/BADA](data/performance/BADA/). In addition follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to setup the API key for the weather database from ECMWF Climate Data Store.
 
 
 ## Running AirTrafficSim
@@ -56,7 +56,7 @@ python -m airtrafficsim
 You should be able to open the UI using any modern browser at http://localhost:6111.
 
 
-You can also run AirTrafficSim without the UI by providing the name of an environment which is listed in [airtrafficsim/env](airtrafficsim/env/). The environment name should be identical to the file name.
+You can also run AirTrafficSim without the UI by providing the name of an environment which is listed in [environment](environment/). The environment name should be identical to the file name.
 
 ```
 cd AirTrafficSim

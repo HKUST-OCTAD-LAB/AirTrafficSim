@@ -235,7 +235,8 @@ def serve_client():
     """Serve client folder to user"""
     return render_template("index.html")
 
-def run_server(port = 6111):
+def run_server(port = 6111, host="127.0.0.1"):
+    # Change host to 0.0.0.0 during deployment
     """Start the backend server."""
     print("Running server at http://localhost:"+str(port))
-    socketio.run(app, port=port)
+    socketio.run(app, port=port, host=host)
