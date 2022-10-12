@@ -1,11 +1,11 @@
-# Converting historic data
+# Converting historical data
 
-Apart from manually adding new aircraft to the simulation environment, AirTrafficSim can also automatically convert historic data and generate and add aircraft into the simulation environment. The ConvertHistoricDemo class in `environment/ConvertHistoricDemo.py` provides a sample to set up such an environment.
+Apart from manually adding new aircraft to the simulation environment, AirTrafficSim can also automatically convert historical data and generate and add aircraft into the simulation environment. The ConvertHistoricDemo class in `environment/ConvertHistoricDemo.py` provides a sample to set up such an environment.
 
 
 ## Detecting procedures and entry points
 
-AirTrafficSim can detect the arrival and approach procedure of each flight base on historic data files. After detecting the procedures, AirTrafficSim will detect and store the entry position, time, and state e of each aircraft base on a user-defined rule such as distance to a location. 
+AirTrafficSim can detect the arrival and approach procedure of each flight base on historical data files. After detecting the procedures, AirTrafficSim will detect and store the entry position, time, and state e of each aircraft base on a user-defined rule such as distance to a location. 
 
 ```{code-block} python
 ---
@@ -68,7 +68,7 @@ self.time = np.array(self.time)
 
 ## Adding and deleting aircraft
 
-After converting historic flight data, AirTrafficSim will add aircraft at each timestep based on the stored entry time information. The aircraft will also be deleted if the aircraft has completed its flight plan and there is no next waypoint.
+After converting historical flight data, AirTrafficSim will add aircraft at each timestep based on the stored entry time information. The aircraft will also be deleted if the aircraft has completed its flight plan and there is no next waypoint.
 
 ```{code-block} python
 ---
