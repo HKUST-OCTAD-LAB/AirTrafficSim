@@ -1,12 +1,6 @@
-from traceback import print_tb
 import cdsapi
 from datetime import datetime, timedelta, time
 from pathlib import Path
-from matplotlib.figure import Figure
-import xarray as xr
-import cartopy.crs as ccrs
-from io import BytesIO
-import base64
 
 class Era5:
     """
@@ -14,7 +8,7 @@ class Era5:
     """
 
     @staticmethod
-    def download_data(start_time: datetime, end_time: datetime, file_name):
+    def download_data(start_time, end_time, file_name):
         c = cdsapi.Client()
         if Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).exists() and any(Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).iterdir()):
             print ("ERA5 data exists.")
@@ -28,17 +22,16 @@ class Era5:
             month = []
             day = []
             hour = []
-            while(tmp < start_time + timedelta(seconds=end_time)):
-                if not year or str(tmp.year) != year[-1]:
-                    year.append(str(tmp.year))
-                if not month or str(tmp.month) != month[-1]:
-                    month.append(str(tmp.month))
-                if not day or str(tmp.day) != day[-1]:
-                    day.append(str(tmp.day))
+            while(tmp < (start_time + timedelta(seconds=end_time))):
+                if not year or tmp.strftime("%Y") != year[-1]:
+                    year.append(tmp.strftime("%Y"))
+                if not month or tmp.strftime("%m") != month[-1]:
+                    month.append(tmp.strftime("%m"))
+                if not day or tmp.strftime("%d") != day[-1]:
+                    day.append(tmp.strftime("%d"))
                 if not hour or time(hour=tmp.hour).isoformat(timespec='minutes') != hour[-1]:
                     hour.append(time(hour=tmp.hour).isoformat(timespec='minutes'))
                 tmp += timedelta(hours=1)
-
             c.retrieve(
                 'reanalysis-era5-pressure-levels',
                 {

@@ -95,7 +95,7 @@ class Data:
             JSON CZML file of ERA5 wind data image
         """
         # TODO: Improve data loading to avoid repetitive loading
-        data = xr.open_dataset(Path(__file__).parent.parent.parent.joinpath('data/weather/era5/',file.split('-', 1)[0]+'/multilevel.nc')).sel(level=900, time=datetime.fromisoformat(time+'+00:00'), method="pad")
+        data = xr.open_dataset(Path(__file__).parent.parent.parent.joinpath('data/weather/era5/',file.split('-', 1)[0]+'/multilevel.nc')).sel(level=900, time=datetime.fromisoformat(time), method="pad")
         data = data.where((((data.latitude >= lat1) & (data.latitude <= lat2)) & ((data.longitude >= (long1+360.0) % 360.0) & (data.longitude <= (long2+360.0) % 360.0))), drop=True)
         fig = Figure(figsize=(long2-long1, lat2-lat1), facecolor='none', dpi=500)
         ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.PlateCarree(), frameon=False)
@@ -158,7 +158,7 @@ class Data:
             JSON CZML file of ERA5 rain data image
         """
         # TODO: Improve data loading to avoid repetitive loading
-        data = xr.open_dataset(Path(__file__).parent.parent.parent.joinpath('data/weather/era5/',file.split('-', 1)[0]+'/surface.nc')).sel(time=datetime.fromisoformat(time+'+00:00'), method="pad")
+        data = xr.open_dataset(Path(__file__).parent.parent.parent.joinpath('data/weather/era5/',file.split('-', 1)[0]+'/surface.nc')).sel(time=datetime.fromisoformat(time), method="pad")
         data = data.where((((data.latitude >= lat1) & (data.latitude <= lat2)) & ((data.longitude >= (long1+360.0) % 360.0) & (data.longitude <= (long2+360.0) % 360.0))), drop=True)
         fig = Figure(figsize=(long2-long1, lat2-lat1), facecolor='none', dpi=500)
         # fig = Figure(figsize=(360, 180), facecolor='none', dpi=100)
