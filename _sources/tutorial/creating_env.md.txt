@@ -77,7 +77,7 @@ class DemoEnv(Environment):
 There are five parameters needed to initialize the basic information of this simulation, which will be explained below.
 
 1. `file_name` is used to name the solution files. It has been set by default. Please do not change.
-2. `start_time` is a Python datetime object representing the **simulation UTC start time** that you want to study. It will be used to search for historic weather data. 
+2. `start_time` is a Python datetime object representing the **simulation UTC start time** that you want to study. It will be used to search for historical weather data. 
 3. `end_time` is an interger value representing how many **seconds** you want the simulation to continue.
 4. `weather_mode` is a string to select what **weather database** will be downloaded and used. ("": ISA, "ERA5": [ECMWF ERA5](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview))
 5. `performance_mode` is a string to select which performance model is used. ("BADA": [BADA](https://www.eurocontrol.int/model/bada))

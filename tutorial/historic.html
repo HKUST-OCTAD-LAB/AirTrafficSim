@@ -2,10 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Development guide" href="../development/guide.html" /><link rel="prev" title="Using historic weather database" href="weather.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Development guide" href="../development/guide.html" /><link rel="prev" title="Using historical weather database" href="weather.html" />
 
     <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
-        <title>Converting historic data - AirTrafficSim</title>
+        <title>Converting historical data - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -171,8 +171,8 @@
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historic weather database</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Converting historic data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historical weather database</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -240,12 +240,12 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="converting-historic-data">
-<h1>Converting historic data<a class="headerlink" href="#converting-historic-data" title="Permalink to this heading">#</a></h1>
-<p>Apart from manually adding new aircraft to the simulation environment, AirTrafficSim can also automatically convert historic data and generate and add aircraft into the simulation environment. The ConvertHistoricDemo class in <code class="docutils literal notranslate"><span class="pre">environment/ConvertHistoricDemo.py</span></code> provides a sample to set up such an environment.</p>
+          <div class="section" id="converting-historical-data">
+<h1>Converting historical data<a class="headerlink" href="#converting-historical-data" title="Permalink to this heading">#</a></h1>
+<p>Apart from manually adding new aircraft to the simulation environment, AirTrafficSim can also automatically convert historical data and generate and add aircraft into the simulation environment. The ConvertHistoricDemo class in <code class="docutils literal notranslate"><span class="pre">environment/ConvertHistoricDemo.py</span></code> provides a sample to set up such an environment.</p>
 <div class="section" id="detecting-procedures-and-entry-points">
 <h2>Detecting procedures and entry points<a class="headerlink" href="#detecting-procedures-and-entry-points" title="Permalink to this heading">#</a></h2>
-<p>AirTrafficSim can detect the arrival and approach procedure of each flight base on historic data files. After detecting the procedures, AirTrafficSim will detect and store the entry position, time, and state e of each aircraft base on a user-defined rule such as distance to a location.</p>
+<p>AirTrafficSim can detect the arrival and approach procedure of each flight base on historical data files. After detecting the procedures, AirTrafficSim will detect and store the entry position, time, and state e of each aircraft base on a user-defined rule such as distance to a location.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">ConvertHistoricDemo.py</span><a class="headerlink" href="#id1" title="Permalink to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">23</span><span class="c1"># Location of the historic data</span>
@@ -305,7 +305,7 @@
 </div>
 <div class="section" id="adding-and-deleting-aircraft">
 <h2>Adding and deleting aircraft<a class="headerlink" href="#adding-and-deleting-aircraft" title="Permalink to this heading">#</a></h2>
-<p>After converting historic flight data, AirTrafficSim will add aircraft at each timestep based on the stored entry time information. The aircraft will also be deleted if the aircraft has completed its flight plan and there is no next waypoint.</p>
+<p>After converting historical flight data, AirTrafficSim will add aircraft at each timestep based on the stored entry time information. The aircraft will also be deleted if the aircraft has completed its flight plan and there is no next waypoint.</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">ConvertHistoricDemo.py</span><a class="headerlink" href="#id2" title="Permalink to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">85</span><span class="k">def</span> <span class="nf">atc_command</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -364,7 +364,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Using historic weather database</div>
+                <div class="title">Using historical weather database</div>
                 
               </div>
             </a>
@@ -405,7 +405,7 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Converting historic data</a><ul>
+<li><a class="reference internal" href="#">Converting historical data</a><ul>
 <li><a class="reference internal" href="#detecting-procedures-and-entry-points">Detecting procedures and entry points</a></li>
 <li><a class="reference internal" href="#adding-and-deleting-aircraft">Adding and deleting aircraft</a></li>
 <li><a class="reference internal" href="#holding-and-vectoring">Holding and vectoring</a></li>

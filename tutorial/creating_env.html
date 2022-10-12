@@ -171,8 +171,8 @@
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historic weather database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historic data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historical weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -315,7 +315,7 @@
 <p>There are five parameters needed to initialize the basic information of this simulation, which will be explained below.</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">file_name</span></code> is used to name the solution files. It has been set by default. Please do not change.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">start_time</span></code> is a Python datetime object representing the <strong>simulation UTC start time</strong> that you want to study. It will be used to search for historic weather data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start_time</span></code> is a Python datetime object representing the <strong>simulation UTC start time</strong> that you want to study. It will be used to search for historical weather data.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">end_time</span></code> is an interger value representing how many <strong>seconds</strong> you want the simulation to continue.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">weather_mode</span></code> is a string to select what <strong>weather database</strong> will be downloaded and used. (“”: ISA, “ERA5”: <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview">ECMWF ERA5</a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">performance_mode</span></code> is a string to select which performance model is used. (“BADA”: <a class="reference external" href="https://www.eurocontrol.int/model/bada">BADA</a>)</p></li>

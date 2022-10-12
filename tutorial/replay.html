@@ -171,8 +171,8 @@
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historic weather database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historic data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historical weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -242,10 +242,10 @@
         <article role="main">
           <div class="section" id="replaying-data">
 <h1>Replaying data<a class="headerlink" href="#replaying-data" title="Permalink to this heading">#</a></h1>
-<p>AirTrafficSim allows you to replay historic and simulated flight data. For historic flights, the data are stored in <code class="docutils literal notranslate"><span class="pre">data/flight_data</span></code>, while the data for simulated data are stored in <code class="docutils literal notranslate"><span class="pre">result/</span></code>. For the details of replay function, please refer to the API reference <a class="reference internal" href="../api/server/airtrafficsim.server.replay.html"><span class="doc std std-doc">airtrafficsim.server.replay</span></a>.</p>
-<div class="section" id="replaying-historic-data">
-<h2>Replaying historic data<a class="headerlink" href="#replaying-historic-data" title="Permalink to this heading">#</a></h2>
-<p>Historic data from with <a class="reference external" href="https://www.flightradar24.com/">FlightRadar24</a> and <a class="reference external" href="https://opensky-network.org/">OpenSky format</a> can be processed. A sample data with FlightRadar24 format is provided in <code class="docutils literal notranslate"><span class="pre">data/flight_data/2018-05-01/</span></code>. Note that each .csv file in the folder represents one flight. This is what the sample data looks like.</p>
+<p>AirTrafficSim allows you to replay historicaland simulated flight data. For historical flights, the data are stored in <code class="docutils literal notranslate"><span class="pre">data/flight_data</span></code>, while the data for simulated data are stored in <code class="docutils literal notranslate"><span class="pre">result/</span></code>. For the details of replay function, please refer to the API reference <a class="reference internal" href="../api/server/airtrafficsim.server.replay.html"><span class="doc std std-doc">airtrafficsim.server.replay</span></a>.</p>
+<div class="section" id="replaying-historical-data">
+<h2>Replaying historical data<a class="headerlink" href="#replaying-historical-data" title="Permalink to this heading">#</a></h2>
+<p>Historical data from with <a class="reference external" href="https://www.flightradar24.com/">FlightRadar24</a> and <a class="reference external" href="https://opensky-network.org/">OpenSky format</a> can be processed. A sample data with FlightRadar24 format is provided in <code class="docutils literal notranslate"><span class="pre">data/flight_data/2018-05-01/</span></code>. Note that each .csv file in the folder represents one flight. This is what the sample data looks like.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Sometimes, there might be a problem to replay OpenSky data if the data size is too large as the data frequency is quite high. Work is in progress to improve the handling of OpenSky data by integrating the <a class="reference external" href="https://github.com/xoolive/traffic">traffic</a> library.</p>
@@ -327,7 +327,7 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Replaying data</a><ul>
-<li><a class="reference internal" href="#replaying-historic-data">Replaying historic data</a></li>
+<li><a class="reference internal" href="#replaying-historical-data">Replaying historical data</a></li>
 <li><a class="reference internal" href="#replaying-simulation-data">Replaying simulation data</a></li>
 </ul>
 </li>

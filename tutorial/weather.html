@@ -2,10 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Converting historic data" href="historic.html" /><link rel="prev" title="Adding flight plan" href="flight_plan.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Converting historical data" href="historic.html" /><link rel="prev" title="Adding flight plan" href="flight_plan.html" />
 
     <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
-        <title>Using historic weather database - AirTrafficSim</title>
+        <title>Using historical weather database - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -171,8 +171,8 @@
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Using historic weather database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historic data</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Using historical weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -240,8 +240,8 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="using-historic-weather-database">
-<h1>Using historic weather database<a class="headerlink" href="#using-historic-weather-database" title="Permalink to this heading">#</a></h1>
+          <div class="section" id="using-historical-weather-database">
+<h1>Using historical weather database<a class="headerlink" href="#using-historical-weather-database" title="Permalink to this heading">#</a></h1>
 <p>AirTrafficSim can use <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview">ECMWF ERA5</a> as a weather data source. The <code class="docutils literal notranslate"><span class="pre">WeatherDemo</span></code> class in <code class="docutils literal notranslate"><span class="pre">environment/WeatherDemo.py</span></code> demonstrates how to set up <code class="docutils literal notranslate"><span class="pre">ERA5</span></code> weather mode in AirTrafficSim.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">11</span><span class="c1"># Initialize environment super class</span>
 <span class="linenos">12</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">),</span> <span class="c1">#File name (do not change)</span>
@@ -252,13 +252,13 @@
 <span class="linenos">17</span>                <span class="p">)</span>
 </pre></div>
 </div>
-<p>To use the historic weather database, set <code class="docutils literal notranslate"><span class="pre">weather_mode</span></code> to “ERA5”. This will download the weather data in netCDF format to <code class="docutils literal notranslate"><span class="pre">data/weather/erea5/&lt;environment</span> <span class="pre">name&gt;/</span></code>. By default, it is an empty string <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> which will use the International Standard Atmosphere (ISA) for computation and assume 0 winds.</p>
+<p>To use the historical weather database, set <code class="docutils literal notranslate"><span class="pre">weather_mode</span></code> to “ERA5”. This will download the weather data in netCDF format to <code class="docutils literal notranslate"><span class="pre">data/weather/erea5/&lt;environment</span> <span class="pre">name&gt;/</span></code>. By default, it is an empty string <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> which will use the International Standard Atmosphere (ISA) for computation and assume 0 winds.</p>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
 <p>Please ensure that the API key for the weather database from ECMWF Climate Data Store has been set up following <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">this guide</a> to set up .</p>
 </div>
-<div class="section" id="usage-of-historic-weather-data">
-<h2>Usage of historic weather data<a class="headerlink" href="#usage-of-historic-weather-data" title="Permalink to this heading">#</a></h2>
+<div class="section" id="usage-of-al-weather-data">
+<h2>Usage of al weather data<a class="headerlink" href="#usage-of-al-weather-data" title="Permalink to this heading">#</a></h2>
 <p>The downloaded data will be loaded and for each timestep, AirTrafficSim will find the related temperature and wind data at the location and altitude of each aircraft. Then, the temperature temperature information difference with ISA will be used for further atmosphere condition calculation.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">weather.py</span><a class="headerlink" href="#id1" title="Permalink to this code">#</a></div>
@@ -285,7 +285,7 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Converting historic data</div>
+                <div class="title">Converting historical data</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -337,8 +337,8 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Using historic weather database</a><ul>
-<li><a class="reference internal" href="#usage-of-historic-weather-data">Usage of historic weather data</a></li>
+<li><a class="reference internal" href="#">Using historical weather database</a><ul>
+<li><a class="reference internal" href="#usage-of-al-weather-data">Usage of al weather data</a></li>
 </ul>
 </li>
 </ul>

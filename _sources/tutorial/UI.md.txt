@@ -17,13 +17,13 @@ The globe viewport provides a 3D globe for a user to interact with. You can oper
 
 ## 2. Mode selector
 
-You can select different AirTrafficSim modes (Replay/Simulation) by clicking on one of the buttons. **Replay** mode will replay historic or simulation flight trajectory data stored in `data/flight_data` while **Simulation** mode will initiate a simulation and show the flight trajectory live.
+You can select different AirTrafficSim modes (Replay/Simulation) by clicking on one of the buttons. **Replay** mode will replay historical or simulation flight trajectory data stored in `data/flight_data` while **Simulation** mode will initiate a simulation and show the flight trajectory live.
 
 ```{figure} ../images/UI_replay.png
 :figwidth: 45%
 :align: left
 
-In Replay mode, select the reply data file which can be historic or simulation data.
+In Replay mode, select the reply data file which can be historical or simulation data.
 ```
 ```{figure} ../images/UI_simulation.png
 :figwidth: 45%
