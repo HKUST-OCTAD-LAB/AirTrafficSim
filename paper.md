@@ -40,7 +40,7 @@ AirTrafficSim contains a web-based frontend written in JavaScript using the Ioni
 
 Meanwhile, the backend of AirTrafficSim has a Python web server using the Flask framework to communicate with the UI using the WebSocket protocol. It also contains several modules, namely navigation, weather, autopilot, performance, and flight route detection, to simulate flight trajectories. The details of each module will be explained briefly below. \autoref{fig:UI} showcases some of the key features of AirTrafficSim UI.
 
-![UI of AirTrafficSim showcasing different features. (Upper left: Fuel consumption of simulated flight. Upper right: Navigation waypoints. Lower left: ECMWF ERA5 Wind data. Lower right: HKO 256km radar image.)\label{fig:UI}](figures/UI.png){ width=100% }
+![UI of AirTrafficSim showcasing different features. (Upper left: Fuel consumption of simulated flight. Upper right: Navigation waypoints. Lower left: ECMWF ERA5 Wind data. Lower right: 256km weather radar image from the Hong Kong Observatory (HKO).)\label{fig:UI}](figures/UI.png){ width=100% }
 
 The navigation module provides global airports, waypoints, navigation aids and fixes, airways, Standard Instrument Departures (SIDs), Standard Terminal Arrival Routes (STARs), and approach procedure information using the navigation database from X-Plane 11 [@xplane11]. 
 
