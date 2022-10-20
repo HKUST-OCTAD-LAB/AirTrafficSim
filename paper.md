@@ -48,7 +48,7 @@ The weather module provides weather information including multi-level wind, pres
 
 The autopilot module processes the assigned flight plan and controls the aircraft to follow the plan from take-off to landing. It can also control the aircraft based on the target state inputted by the user and algorithm to simulate ATC commands. Non-standard maneuvers that are sometimes used by air traffic controllers such as vectoring and holding can also be commanded.
 
-The performance module calculates the aircraft state, such as speed, heading, vertical rate, and fuel consumption, for each timestep. Currently, AirtrafficSim makes use of the licensed BADA performance model data from Eurocontrol [@bada] but it is extensible to other performance models such as the open-source OpenMP model [@openap].
+The performance module calculates the aircraft state, such as speed, heading, vertical rate, and fuel consumption, for each timestep. Currently, AirtrafficSim makes use of the licensed BADA performance model data from Eurocontrol [@bada] but it is extensible to other performance models such as the open-source OpenAP model [@openap].
 
 The flight route detection module detects the flight route including origin and destination airports, SIDs, and STARs from historical flight data and generates a flight plan for simulation. A robust algorithm is being developed to detect the airways to generate a complete flight plan.
 
