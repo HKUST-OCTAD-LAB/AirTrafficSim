@@ -1,9 +1,10 @@
 from enum import IntEnum
 
+
 class EngineType(IntEnum):
     """
     An enumeration for aircraft's engine type.
-    
+
     Attributes
     ----------
     JET = 1
@@ -18,7 +19,7 @@ class EngineType(IntEnum):
 class WakeCat(IntEnum):
     """
     An enumeration for aircraft's wake category.
-    
+
     Attributes
     ----------
     J = 1
@@ -39,7 +40,7 @@ class WakeCat(IntEnum):
 class FlightPhase(IntEnum):
     """
     An enumeration for aircraft's flight phase.
-    
+
     Attributes
     ----------
     AT_GATE_ORIGIN = 1
@@ -70,7 +71,7 @@ class FlightPhase(IntEnum):
 class Config(IntEnum):
     """
     An enumeration for aircraft's wing and landing gear configuration.
-    
+
     Attributes
     ----------
     TAKEOFF = 1
@@ -89,7 +90,7 @@ class Config(IntEnum):
 class SpeedMode(IntEnum):
     """
     An enumeration for aircraft's actual speed mode.
-    
+
     Attributes
     ----------
     CAS = 1
@@ -102,7 +103,7 @@ class SpeedMode(IntEnum):
 class VerticalMode(IntEnum):
     """
     An enumeration for aircraft's actual vertical mode.
-    
+
     Attributes
     ----------
     LEVEL = 1
@@ -117,7 +118,7 @@ class VerticalMode(IntEnum):
 class APSpeedMode(IntEnum):
     """
     An enumeration for aircraft's autopilot target vertical mode.
-    
+
     Attributes
     ----------
     CONSTANT_MACH = 1
@@ -134,7 +135,7 @@ class APSpeedMode(IntEnum):
 class APThrottleMode(IntEnum):
     """
     An enumeration for aircraft's autopilot target throttle mode.
-    
+
     Attributes
     ----------
     AUTO = 1,
@@ -147,7 +148,7 @@ class APThrottleMode(IntEnum):
 class APVerticalMode(IntEnum):
     """
     An enumeration for aircraft's autopilot target vertical mode.
-    
+
     Attributes
     ----------
     ALT_HOLD = 1
@@ -158,10 +159,11 @@ class APVerticalMode(IntEnum):
     VS = 2,
     FLC = 3
 
+
 class APLateralMode(IntEnum):
     """
     An enumeration for aircraft's autopilot target lateral mode.
-    
+
     Attributes
     ----------
     HEADING = 1
