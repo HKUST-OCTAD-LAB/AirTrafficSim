@@ -14,15 +14,18 @@ from pathlib import Path
 from importlib import import_module
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-import eventlet
+# import eventlet
 
 from airtrafficsim.server.replay import Replay
 from airtrafficsim.server.data import Data
 
 # eventlet.monkey_patch()
 
-app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath('data/client'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('data/client')))
-socketio = SocketIO(app, cors_allowed_origins='*', max_http_buffer_size=1e8, ping_timeout=60, async_mode='eventlet', logger=True) #engineio_logger=True 
+app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath(
+    'data/client'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('data/client')))
+socketio = SocketIO(app, cors_allowed_origins='*', max_http_buffer_size=1e8,
+                    ping_timeout=60, async_mode='eventlet', logger=True)  # engineio_logger=True
+
 
 @socketio.on('connect')
 def test_connect():
@@ -31,6 +34,7 @@ def test_connect():
     """
     print('Client connected')
 
+
 @socketio.on('disconnect')
 def test_disconnect():
     """
@@ -38,10 +42,12 @@ def test_disconnect():
     """
     print('Client disconnected')
 
+
 @socketio.on('getReplayDir')
 def get_replay_dir():
     """Get the list of directories in data/replay"""
     return Replay.get_replay_dir()
+
 
 @socketio.on('getReplayCZML')
 def get_replay_czml(replayCategory, replayFile):
@@ -62,11 +68,12 @@ def get_replay_czml(replayCategory, replayFile):
     """
     return Replay.get_replay_czml(replayCategory, replayFile)
 
+
 @socketio.on('getGraphHeader')
 def get_graph_header(mode, replayCategory, replayFile):
     """
     Get the list of parameters name of a file suitable for plotting graph.
-    
+
     Parameters
     ----------
     mode : string
@@ -83,11 +90,12 @@ def get_graph_header(mode, replayCategory, replayFile):
     """
     return Replay.get_graph_header(mode, replayCategory, replayFile)
 
+
 @socketio.on('getGraphData')
 def get_graph_data(mode, replayCategory, replayFile, simulationFile, graph):
     """
     Get the data for the selected parameters to plot a graph.
-    
+
     Parameters
     ----------
     mode : string
@@ -104,27 +112,29 @@ def get_graph_data(mode, replayCategory, replayFile, simulationFile, graph):
     """
     return Replay.get_graph_data(mode, replayCategory, replayFile, simulationFile, graph)
 
+
 @socketio.on('getSimulationFile')
 def get_simulation_file():
     """
     Get the list of files in airtrafficsim/env/
-    
+
     Returns
     -------
     string[]
         List of simulation environment file names
     """
-    simulation_list=[]
+    simulation_list = []
     for file in Path(__file__).parent.parent.parent.joinpath('environment/').glob('*.py'):
         if file.name != '__init__.py':
             simulation_list.append(file.name.removesuffix('.py'))
     return simulation_list
 
+
 @socketio.on('runSimulation')
 def run_simulation(file):
     """
     Start the simulation given file name.
-    
+
     Parameters
     ----------
     file : string
@@ -134,11 +144,12 @@ def run_simulation(file):
     env = Env()
     env.run(socketio)
 
+
 @socketio.on('getNav')
 def get_Nav(lat1, long1, lat2, long2):
     """
     Get the navigation waypoint data given
-    
+
     Parameters
     ----------
     lat1 : float
@@ -157,11 +168,12 @@ def get_Nav(lat1, long1, lat2, long2):
     """
     return Data.get_nav(lat1, long1, lat2, long2)
 
+
 @socketio.on('getEra5Wind')
 def get_era5_wind(lat1, long1, lat2, long2, file, time):
     """
     Get the ERA5 wind data image to client
-    
+
     Parameters
     ----------
     lat1 : float
@@ -180,11 +192,12 @@ def get_era5_wind(lat1, long1, lat2, long2, file, time):
     """
     return Data.get_era5_wind(file, lat1, long1, lat2, long2, time)
 
+
 @socketio.on('getEra5Rain')
 def get_era5_rain(lat1, long1, lat2, long2, file, time):
     """
     Get the ERA5 rain data image to client
-    
+
     Parameters
     ----------
     lat1 : float
@@ -203,11 +216,12 @@ def get_era5_rain(lat1, long1, lat2, long2, file, time):
     """
     return Data.get_era5_rain(file, lat1, long1, lat2, long2, time)
 
+
 @socketio.on('getRadarImage')
 def get_radar_img(lat1, long1, lat2, long2, file, time):
     """
     Get the radar data image to client
-    
+
     Parameters
     ----------
     lat1 : float
@@ -230,12 +244,14 @@ def get_radar_img(lat1, long1, lat2, long2, file, time):
     """
     return Data.get_radar_img(file, lat1, long1, lat2, long2, time)
 
+
 @app.route("/")
 def serve_client():
     """Serve client folder to user"""
     return render_template("index.html")
 
-def run_server(port = 6111, host="127.0.0.1"):
+
+def run_server(port=6111, host="127.0.0.1"):
     # Change host to 0.0.0.0 during deployment
     """Start the backend server."""
     print("Running server at http://localhost:"+str(port))
