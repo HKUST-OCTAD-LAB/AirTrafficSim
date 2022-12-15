@@ -32,9 +32,10 @@ To facilitate microscopic ATM research, an agent-based simulation and visualizat
 
 # Summary
 
-AirTrafficSim is a web-based air traffic simulation software written in Python and JavaScript. It is designed to visualize historical and research data, perform microscopic studies of air traffic movement with the integration of a weather database, and evaluate the performance of ATM algorithms. \autoref{fig:Architecture} shows the architecture of AirTrafficSim.
 
 ![Architecture of AirTrafficSim.\label{fig:Architecture}](figures/Architecture.png){ width=75% }
+
+AirTrafficSim is a web-based air traffic simulation software written in Python and JavaScript. It is designed to visualize historical and research data, perform microscopic studies of air traffic movement with the integration of a weather database, and evaluate the performance of ATM algorithms. \autoref{fig:Architecture} shows the architecture of AirTrafficSim.
 
 AirTrafficSim contains a web-based frontend written in JavaScript using the Ionic React framework to provide an easy-to-use user interface (UI) to visualize both historical and simulated air traffic and other data in a browser. The 3D modeling of the globe is supported by the CesiumJS library to stream high-resolution maps, terrains, and 3D building data. The library also provides a rich API to visualize dynamic geospatial data obtained from performing simulations. The UI can also plot aircraft parameters using the Plotly.js library. 
 
