@@ -1,0 +1,32 @@
+package:
+  name: "airtrafficsim"
+  version: "1.0.0"
+
+source:
+  git_url: https://github.com/harrylui1995/AirTrafficSim
+requirements:
+  host:
+    - python
+    - setuptools
+  build:
+    - python
+  run:
+    - python
+    - numpy
+    - pandas
+    - flask
+    - flask-Socketio
+    - eventlet
+    - cartopy
+    - xarray
+
+about:
+  home: https://github.com/harrylui1995/AirTrafficSim
+  license: GNU General Public License (GPL)
+  license_familY: GNU General Public License (GPL)
+  license_file: LICENSE
+  summary: "Web-based air traffic simulation platform"
+
+extra:
+  recipe-maintainers:
+    - kyfrankie
