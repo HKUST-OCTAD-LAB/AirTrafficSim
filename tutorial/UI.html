@@ -2,9 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Understanding the project structure" href="structure.html" /><link rel="prev" title="Getting started" href="../start.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Understanding the project structure" href="structure.html" /><link rel="prev" title="Getting started" href="../start.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Navigating the UI - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -240,15 +241,15 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="navigating-the-ui">
+          <section id="navigating-the-ui">
 <h1>Navigating the UI<a class="headerlink" href="#navigating-the-ui" title="Permalink to this heading">#</a></h1>
 <p>The web-based user interface contains two main parts: the globe viewport at the top and the toolbar at the bottom. This page will explain the usage of the different components in the UI.</p>
 <img alt="../_images/UI_intro.png" src="../_images/UI_intro.png" />
-<div class="section" id="globe-viewport">
+<section id="globe-viewport">
 <h2>1. Globe viewport<a class="headerlink" href="#globe-viewport" title="Permalink to this heading">#</a></h2>
 <p>The globe viewport provides a 3D globe for a user to interact with. You can operate the camera with a mouse or with touch gestures following these methods.</p>
 <div class="table-wrapper colwidths-auto docutils container">
-<table class="colwidths-auto docutils align-default">
+<table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p></p></th>
 <th class="head"><p>Mouse</p></th>
@@ -271,38 +272,42 @@
 </tbody>
 </table>
 </div>
-</div>
-<div class="section" id="mode-selector">
+</section>
+<section id="mode-selector">
 <h2>2. Mode selector<a class="headerlink" href="#mode-selector" title="Permalink to this heading">#</a></h2>
 <p>You can select different AirTrafficSim modes (Replay/Simulation) by clicking on one of the buttons. <strong>Replay</strong> mode will replay historical or simulation flight trajectory data stored in <code class="docutils literal notranslate"><span class="pre">data/flight_data</span></code> while <strong>Simulation</strong> mode will initiate a simulation and show the flight trajectory live.</p>
-<div class="figure align-left" id="id1" style="width: 45%">
+<figure class="align-left" id="id1" style="width: 45%">
 <img alt="../_images/UI_replay.png" src="../_images/UI_replay.png" />
-<p class="caption"><span class="caption-text">In Replay mode, select the reply data file which can be historical or simulation data.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
-</div>
-<div class="figure align-right" id="id2" style="width: 45%">
+<figcaption>
+<p><span class="caption-text">In Replay mode, select the reply data file which can be historical or simulation data.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-right" id="id2" style="width: 45%">
 <img alt="../_images/UI_simulation.png" src="../_images/UI_simulation.png" />
-<p class="caption"><span class="caption-text">In Simulation mode, select a simulation environment to begin the simulation.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
-</div>
-</div>
-<div class="section" id="setting">
+<figcaption>
+<p><span class="caption-text">In Simulation mode, select a simulation environment to begin the simulation.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="setting">
 <h2>3. Setting<a class="headerlink" href="#setting" title="Permalink to this heading">#</a></h2>
 <p>In the setting, you can select different visualization modes including showing satellite imagery, showing navigation data, showing ERA5 wind and rain data, and showing weather radar images.</p>
 <img alt="../_images/UI_setting.png" src="../_images/UI_setting.png" />
-</div>
-<div class="section" id="show-graph">
+</section>
+<section id="show-graph">
 <h2>4. Show graph<a class="headerlink" href="#show-graph" title="Permalink to this heading">#</a></h2>
 <p>In <strong>Simulation</strong> mode or <strong>Replay</strong> mode with simulation data, you can view the graph of different simulation parameters by clicking the Show graph button.</p>
 <img alt="../_images/UI_graph.png" src="../_images/UI_graph.png" />
-</div>
-<div class="section" id="play-buttons">
+</section>
+<section id="play-buttons">
 <h2>5. Play buttons<a class="headerlink" href="#play-buttons" title="Permalink to this heading">#</a></h2>
 <p>You can control how the data are played by selecting one of the three buttons below.</p>
 <div class="table-wrapper colwidths-auto docutils container">
-<table class="colwidths-auto docutils align-default">
+<table class="docutils align-default">
 <thead>
-<tr class="row-odd"><th class="text-center head"><p>◀️</p></th>
-<th class="text-center head"><p>⏹</p></th>
-<th class="text-center head"><p>▶️</p></th>
+<tr class="row-odd"><th class="head text-center"><p>◀️</p></th>
+<th class="head text-center"><p>⏹</p></th>
+<th class="head text-center"><p>▶️</p></th>
 </tr>
 </thead>
 <tbody>
@@ -313,20 +318,20 @@
 </tbody>
 </table>
 </div>
-</div>
-<div class="section" id="speed-selector">
+</section>
+<section id="speed-selector">
 <h2>6. Speed selector<a class="headerlink" href="#speed-selector" title="Permalink to this heading">#</a></h2>
 <p>You can select how fast the data are played from <code class="docutils literal notranslate"><span class="pre">1X</span></code>, <code class="docutils literal notranslate"><span class="pre">2X</span></code>, <code class="docutils literal notranslate"><span class="pre">5X</span></code>, <code class="docutils literal notranslate"><span class="pre">10X</span></code>, <code class="docutils literal notranslate"><span class="pre">20X</span></code>, <code class="docutils literal notranslate"><span class="pre">50X</span></code>, to <code class="docutils literal notranslate"><span class="pre">100X</span></code>.</p>
-</div>
-<div class="section" id="clock">
+</section>
+<section id="clock">
 <h2>7. Clock<a class="headerlink" href="#clock" title="Permalink to this heading">#</a></h2>
 <p>The clock indicates the current time of the environment in UTC format.</p>
-</div>
-<div class="section" id="timeline">
+</section>
+<section id="timeline">
 <h2>8. Timeline<a class="headerlink" href="#timeline" title="Permalink to this heading">#</a></h2>
 <p>The timeline represents the full duration of the data file. You can drag the timeline to different positions to quickly go through different moments.</p>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>
@@ -411,9 +416,6 @@
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>

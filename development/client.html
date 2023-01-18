@@ -2,9 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Documentation development" href="documentation.html" /><link rel="prev" title="Development guide" href="guide.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Documentation development" href="documentation.html" /><link rel="prev" title="Development guide" href="guide.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Client development - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -240,20 +241,20 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="client-development">
+          <section id="client-development">
 <h1>Client development<a class="headerlink" href="#client-development" title="Permalink to this heading">#</a></h1>
 <p>AirTrafficSim’s web-based client is written with javascript using <a class="reference external" href="https://reactjs.org/">React.js</a> framework. The UI components are created using <a class="reference external" href="https://ionicframework.com/docs/react">Ionic React</a> library. The 3D globe and air traffic visualization are powered by <a class="reference external" href="https://cesium.com/">Cesium.js</a> library and <a class="reference external" href="https://resium.reearth.io/">Resium</a> while the graph is plotted using <a class="reference external" href="https://plotly.com/javascript/">Plotly.js</a> library. The communication is handled with <a class="reference external" href="https://socket.io/">Socket.IO</a> library.</p>
-<div class="section" id="installation">
+<section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <p>If you want to contribute to the development of the client UI, please install <a class="reference external" href="https://nodejs.org/en/">Nodejs</a> into the environment. You may also use your own nodejs install. Then, please also install <a class="reference external" href="https://classic.yarnpkg.com/en/">Yarn</a> a package manager for Node.js.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
-conda install -c conda-forge nodejs
-npm install --global yarn
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>airtrafficsim
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>nodejs
+npm<span class="w"> </span>install<span class="w"> </span>--global<span class="w"> </span>yarn
 </pre></div>
 </div>
 <p>To install all the Node.js dependencies for client development, execute the following commands:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
-<span class="nb">cd</span> AirTrafficSim/client/
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>airtrafficsim
+<span class="nb">cd</span><span class="w"> </span>AirTrafficSim/client/
 yarn
 </pre></div>
 </div>
@@ -265,8 +266,8 @@ yarn
 </div></blockquote>
 <p>This allows the UI to properly stream and render the map, terrain, 3D building, and more.</p>
 </div>
-</div>
-<div class="section" id="developing-client">
+</section>
+<section id="developing-client">
 <h2>Developing client<a class="headerlink" href="#developing-client" title="Permalink to this heading">#</a></h2>
 <p>The client code base are written in <code class="docutils literal notranslate"><span class="pre">client/src/pages/Simulation.tsx</span></code> with a React functional component called <code class="docutils literal notranslate"><span class="pre">Simulation</span></code>. The <code class="docutils literal notranslate"><span class="pre">client/src/utils/websocket.ts</span></code> file contains the setup of the Socket.IO WebSocket connection with the server’s URL and port number.</p>
 <p>To run the UI development environment:</p>
@@ -281,8 +282,8 @@ yarn
 <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">airtrafficsim</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="building-client">
+</section>
+<section id="building-client">
 <h2>Building client<a class="headerlink" href="#building-client" title="Permalink to this heading">#</a></h2>
 <p>After finishing building the client, you can build the UI by executing the following commands:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">AirTrafficSim</span><span class="o">/</span><span class="n">client</span><span class="o">/</span>
@@ -290,8 +291,8 @@ yarn
 </pre></div>
 </div>
 <p>You can then push and merge the client to the GitHub repository.</p>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>
@@ -371,9 +372,6 @@ yarn
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>

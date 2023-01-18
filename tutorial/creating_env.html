@@ -2,9 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Running a simulation" href="simulation.html" /><link rel="prev" title="Replaying data" href="replay.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Running a simulation" href="simulation.html" /><link rel="prev" title="Replaying data" href="replay.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Creating a simulation environment - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -240,10 +241,10 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="creating-a-simulation-environment">
+          <section id="creating-a-simulation-environment">
 <h1>Creating a simulation environment<a class="headerlink" href="#creating-a-simulation-environment" title="Permalink to this heading">#</a></h1>
 <p>The simulation environment files, located at <code class="docutils literal notranslate"><span class="pre">environments/</span></code>, tell AirTrafficSim how to initiate the environment and how to control the traffic during simulation. Four sample tutorial environments <code class="docutils literal notranslate"><span class="pre">DemoEnv</span></code>, <code class="docutils literal notranslate"><span class="pre">FullFlightDemo</span></code>, <code class="docutils literal notranslate"><span class="pre">WeatherDemo</span></code>, and <code class="docutils literal notranslate"><span class="pre">ConvertHistoricDemo</span></code> are included in <code class="docutils literal notranslate"><span class="pre">environments/</span></code>.</p>
-<div class="section" id="creating-the-file">
+<section id="creating-the-file">
 <h2>Creating the file<a class="headerlink" href="#creating-the-file" title="Permalink to this heading">#</a></h2>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
@@ -254,8 +255,8 @@
 <p class="admonition-title">Important</p>
 <p>Please note that the file name should be <strong>exactly equal</strong> to the class name including the capitals as it is dynamically imported at runtime by Python when a user selects the environment in the UI.</p>
 </div>
-</div>
-<div class="section" id="creating-the-class-content">
+</section>
+<section id="creating-the-class-content">
 <h2>Creating the class content<a class="headerlink" href="#creating-the-class-content" title="Permalink to this heading">#</a></h2>
 <p>We will discuss the setup of an environment file referencing <code class="docutils literal notranslate"><span class="pre">DemoEnv.py</span></code>. Notice that <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">DemoEnv(Environment):</span></code> is a subclass of <code class="docutils literal notranslate"><span class="pre">Environment</span></code> at <a class="reference internal" href="../api/core/airtrafficsim.core.environment.html"><span class="doc std std-doc">airtrafficsim.core.environment</span></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
@@ -310,7 +311,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">traffic</span><span class="o">.</span><span class="n">del_aircraft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aircraft_head</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="initialize-environment-base-class">
+<section id="initialize-environment-base-class">
 <h3>1. Initialize environment base class<a class="headerlink" href="#initialize-environment-base-class" title="Permalink to this heading">#</a></h3>
 <p>There are five parameters needed to initialize the basic information of this simulation, which will be explained below.</p>
 <ol class="arabic simple">
@@ -324,15 +325,15 @@
 <p class="admonition-title">Note</p>
 <p>We are working toward including <a class="reference external" href="https://github.com/TUDelft-CNS-ATM/openap">OpenAP</a> performance data. Right now, only the BADA performance model can be used.</p>
 </div>
-</div>
-<div class="section" id="add-aircraft">
+</section>
+<section id="add-aircraft">
 <h3>2. Add aircraft<a class="headerlink" href="#add-aircraft" title="Permalink to this heading">#</a></h3>
 <p>Air traffic are stored in arrays at <code class="docutils literal notranslate"><span class="pre">Traffic</span></code> class in <a class="reference internal" href="../api/core/airtrafficsim.core.traffic.html"><span class="doc std std-doc">airtrafficsim/core/traffic.py</span></a>. Each <code class="docutils literal notranslate"><span class="pre">Aircraft</span></code> in <a class="reference internal" href="../api/core/airtrafficsim.core.aircraft.html"><span class="doc std std-doc">airtrafficsim/core/aircraft.py</span></a> represents an individual aircraft in the traffic array and provides an interface to command the aircraft movement. The parameters to initialize an aircraft are explained below.</p>
 <div class="table-wrapper colwidths-auto docutils container">
-<table class="colwidths-auto docutils align-default">
+<table class="docutils align-default">
 <thead>
-<tr class="row-odd"><th class="text-center head"><p>Parameters</p></th>
-<th class="text-center head"><p>Meanings</p></th>
+<tr class="row-odd"><th class="head text-center"><p>Parameters</p></th>
+<th class="head text-center"><p>Meanings</p></th>
 </tr>
 </thead>
 <tbody>
@@ -411,17 +412,17 @@
 </tbody>
 </table>
 </div>
-</div>
-<div class="section" id="should-end">
+</section>
+<section id="should-end">
 <h3>3. Should end<a class="headerlink" href="#should-end" title="Permalink to this heading">#</a></h3>
 <p>This is an override function for the <code class="docutils literal notranslate"><span class="pre">Environment</span></code> base class to allow you to control whether the simulation should end earlier than indicated by <code class="docutils literal notranslate"><span class="pre">end_time</span></code>. For each timestep, AirTrafficSim will check the condition that the function returns. If it returns <code class="docutils literal notranslate"><span class="pre">True</span></code>, the simulation will end.</p>
-</div>
-<div class="section" id="atc-command">
+</section>
+<section id="atc-command">
 <h3>4. ATC command<a class="headerlink" href="#atc-command" title="Permalink to this heading">#</a></h3>
 <p>This is an override function for the <code class="docutils literal notranslate"><span class="pre">Environment</span></code> base class to allow you to command how traffic move in this timestep. It can be a simple time-based condition in this sample or it can be a more complicated algorithm developed by you.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
         </article>
       </div>
@@ -506,9 +507,6 @@
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>

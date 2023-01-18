@@ -2,9 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Using historical weather database" href="weather.html" /><link rel="prev" title="Running a simulation" href="simulation.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Using historical weather database" href="weather.html" /><link rel="prev" title="Running a simulation" href="simulation.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Adding flight plan - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -240,7 +241,7 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="adding-flight-plan">
+          <section id="adding-flight-plan">
 <h1>Adding flight plan<a class="headerlink" href="#adding-flight-plan" title="Permalink to this heading">#</a></h1>
 <p>AirTrafficSim can simulate flights following a user-defined flight plan. The <code class="docutils literal notranslate"><span class="pre">FullFlightDemo</span></code> class in <code class="docutils literal notranslate"><span class="pre">environment/FullFlightDemo.py</span></code> demonstrates how to set up a flight plan in AirTrafficSim.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">20</span><span class="c1"># Add aircraft</span>
@@ -254,20 +255,20 @@
 </span><span class="hll"><span class="linenos">28</span>                                <span class="n">cruise_alt</span><span class="o">=</span><span class="mi">37000</span><span class="p">)</span>
 </span></pre></div>
 </div>
-<div class="section" id="parameters">
+<section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
 <p>In the add aircraft section of the <code class="docutils literal notranslate"><span class="pre">FullFlightDemo</span></code> class, you may see that you can get the runway coordinate through <code class="docutils literal notranslate"><span class="pre">Nav.get_runway_coord()</span></code>. In this sample, it is used to set up the initial condition <code class="docutils literal notranslate"><span class="pre">lat,</span> <span class="pre">long,</span> <span class="pre">alt</span></code>.</p>
 <p>In addition, some optional parameter are passed in this demo including, <code class="docutils literal notranslate"><span class="pre">departure_airport</span></code>, <code class="docutils literal notranslate"><span class="pre">departure_runway</span></code>, <code class="docutils literal notranslate"><span class="pre">sid</span></code>, <code class="docutils literal notranslate"><span class="pre">arrival_airport</span></code>, <code class="docutils literal notranslate"><span class="pre">arrival_runway</span></code>, <code class="docutils literal notranslate"><span class="pre">star</span></code>, <code class="docutils literal notranslate"><span class="pre">approach</span></code>, <code class="docutils literal notranslate"><span class="pre">flight_plan</span></code>, and <code class="docutils literal notranslate"><span class="pre">cruise_alt</span></code>. These parameters are used for AirTrafficSim to generate a flight plan.</p>
-</div>
-<div class="section" id="departure-arrival">
+</section>
+<section id="departure-arrival">
 <h2>Departure/Arrival<a class="headerlink" href="#departure-arrival" title="Permalink to this heading">#</a></h2>
 <p>The waypoints and related restrictions of a Standard Terminal Arrival Procedure (STAR) and/or Standard Instrument Departure Route (SID) will be generated when the user provides information including airport, runway, and the procedure’s ICAO code.</p>
-</div>
-<div class="section" id="en-route">
+</section>
+<section id="en-route">
 <h2>En-route<a class="headerlink" href="#en-route" title="Permalink to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">Flight_plan</span></code> and <code class="docutils literal notranslate"><span class="pre">cruise_alt</span></code> are used to generate the related plan for en-route navigation. <code class="docutils literal notranslate"><span class="pre">flight_plan</span></code> is a list of en-route waypoints in ICAO code where <code class="docutils literal notranslate"><span class="pre">cruise_alt</span></code> is the target cruise altitude in feet.</p>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>
@@ -347,9 +348,6 @@
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>

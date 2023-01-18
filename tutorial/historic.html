@@ -2,9 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Development guide" href="../development/guide.html" /><link rel="prev" title="Using historical weather database" href="weather.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Development guide" href="../development/guide.html" /><link rel="prev" title="Using historical weather database" href="weather.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Converting historical data - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -240,10 +241,10 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="converting-historical-data">
+          <section id="converting-historical-data">
 <h1>Converting historical data<a class="headerlink" href="#converting-historical-data" title="Permalink to this heading">#</a></h1>
 <p>Apart from manually adding new aircraft to the simulation environment, AirTrafficSim can also automatically convert historical data and generate and add aircraft into the simulation environment. The ConvertHistoricDemo class in <code class="docutils literal notranslate"><span class="pre">environment/ConvertHistoricDemo.py</span></code> provides a sample to set up such an environment.</p>
-<div class="section" id="detecting-procedures-and-entry-points">
+<section id="detecting-procedures-and-entry-points">
 <h2>Detecting procedures and entry points<a class="headerlink" href="#detecting-procedures-and-entry-points" title="Permalink to this heading">#</a></h2>
 <p>AirTrafficSim can detect the arrival and approach procedure of each flight base on historical data files. After detecting the procedures, AirTrafficSim will detect and store the entry position, time, and state e of each aircraft base on a user-defined rule such as distance to a location.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
@@ -302,8 +303,8 @@
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="adding-and-deleting-aircraft">
+</section>
+<section id="adding-and-deleting-aircraft">
 <h2>Adding and deleting aircraft<a class="headerlink" href="#adding-and-deleting-aircraft" title="Permalink to this heading">#</a></h2>
 <p>After converting historical flight data, AirTrafficSim will add aircraft at each timestep based on the stored entry time information. The aircraft will also be deleted if the aircraft has completed its flight plan and there is no next waypoint.</p>
 <div class="literal-block-wrapper docutils container" id="id2">
@@ -325,8 +326,8 @@
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="holding-and-vectoring">
+</section>
+<section id="holding-and-vectoring">
 <h2>Holding and vectoring<a class="headerlink" href="#holding-and-vectoring" title="Permalink to this heading">#</a></h2>
 <p>A demo program is written to demonstrate the control of vectoring and holding.</p>
 <div class="literal-block-wrapper docutils container" id="id3">
@@ -340,8 +341,8 @@
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>
@@ -421,9 +422,6 @@
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>

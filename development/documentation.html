@@ -2,9 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="airtrafficsim" href="../api/index.html" /><link rel="prev" title="Client development" href="client.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="airtrafficsim" href="../api/index.html" /><link rel="prev" title="Client development" href="client.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Documentation development - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -240,31 +241,31 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="documentation-development">
+          <section id="documentation-development">
 <h1>Documentation development<a class="headerlink" href="#documentation-development" title="Permalink to this heading">#</a></h1>
 <p>This documentation is written using the <a class="reference external" href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> Python library. The theme <a class="reference external" href="https://pradyunsg.me/furo/">Furo</a> is used and each page is written with an extended MarkDown syntax called <a class="reference external" href="https://myst-parser.readthedocs.io/en/latest/index.html">MyST</a>.</p>
-<div class="section" id="installation">
+<section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <p>To contribute to the development of the documentation, please set up the environment with the following commands. This will install <a class="reference external" href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> and related themes and libraries for this project.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
-conda install -c conda-forge sphinx myst-parser furo numpydoc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>airtrafficsim
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>sphinx<span class="w"> </span>myst-parser<span class="w"> </span>furo<span class="w"> </span>numpydoc
 </pre></div>
 </div>
-</div>
-<div class="section" id="building-and-previewing-documentation">
+</section>
+<section id="building-and-previewing-documentation">
 <h2>Building and previewing documentation<a class="headerlink" href="#building-and-previewing-documentation" title="Permalink to this heading">#</a></h2>
 <p>A GitHub action is set up to automatically build and publish this documentation to the GitHub page. However, you may also want to preview the documentation during development.</p>
 <p>First, you can build the documentation locally by executing the following commands.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sphinx-build -b html docs/source/ docs/build/html
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sphinx-build<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>docs/source/<span class="w"> </span>docs/build/html
 </pre></div>
 </div>
 <p>Then, you may preview the documentation by executing the following commands.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m http.server <span class="m">8000</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>http.server<span class="w"> </span><span class="m">8000</span>
 </pre></div>
 </div>
 <p>This will open a Python server. Navigate to <a class="reference external" href="http://localhost:8000/docs/build/html/"><code class="docutils literal notranslate"><span class="pre">http://localhost:8000/docs/build/html</span></code></a> in your browser to preview the website.</p>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>
@@ -343,9 +344,6 @@ conda install -c conda-forge sphinx myst-parser furo numpydoc
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>

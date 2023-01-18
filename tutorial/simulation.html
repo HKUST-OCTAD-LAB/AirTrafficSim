@@ -2,9 +2,10 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Adding flight plan" href="flight_plan.html" /><link rel="prev" title="Creating a simulation environment" href="creating_env.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Adding flight plan" href="flight_plan.html" /><link rel="prev" title="Creating a simulation environment" href="creating_env.html" />
 
-    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../_static/OCTAD_logo.png"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Running a simulation - AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -240,14 +241,14 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="running-a-simulation">
+          <section id="running-a-simulation">
 <h1>Running a simulation<a class="headerlink" href="#running-a-simulation" title="Permalink to this heading">#</a></h1>
 <p>After setting up the simulation environment, you may run the simulation by either using the UI to select the simulation environment or by running AirTrafficSim in standalone mode with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">airtrafficsim</span> <span class="pre">--headless</span> <span class="pre">&lt;environment</span> <span class="pre">name&gt;</span></code>.</p>
 <img alt="../_images/Simulation_select.png" src="../_images/Simulation_select.png" />
 <p>Then, the selected environment will be dynamically imported and initialized and the <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">run(self):</span></code> function in its <code class="docutils literal notranslate"><span class="pre">Environment</span></code> base class will be executed to run the simulation for all timesteps. The data will be saved to <code class="docutils literal notranslate"><span class="pre">result</span></code>.</p>
 <p>This is what the UI will look like if you start the simualation using the UI. Note that there is a progress bar at the bottom to indicate the status of the simulation and the data will be sent to the UI every 0.5 seconds.</p>
 <img alt="../_images/Simulation_UI.png" src="../_images/Simulation_UI.png" />
-</div>
+</section>
 
         </article>
       </div>
@@ -306,9 +307,6 @@
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
