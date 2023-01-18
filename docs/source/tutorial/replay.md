@@ -9,7 +9,7 @@ Historical data from with [FlightRadar24](https://www.flightradar24.com/) and [O
 
 
 ```{note}
-Sometimes, there might be a problem to replay OpenSky data if the data size is too large as the data frequency is quite high. Work is in progress to improve the handling of OpenSky data by integrating the [traffic](https://github.com/xoolive/traffic) library.
+Sometimes, there might be a problem to replay OpenSky data if the data size is too large, as the data frequency is quite high. Work is in progress to improve the handling of OpenSky data by integrating the [traffic](https://github.com/xoolive/traffic) library.
 ```
 
 ```{image} ../images/Replay_historic.png
