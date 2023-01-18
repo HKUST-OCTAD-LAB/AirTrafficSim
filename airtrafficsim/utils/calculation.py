@@ -134,7 +134,7 @@ class Cal:
         """
         return np.arcsin(np.sin(Cal.cal_great_circle_dist(path_lat1, path_long1, point_lat, point_long)/6371.009)) * \
             np.sin(np.deg2rad(Cal.cal_great_circle_bearing(path_lat1, path_lat2, point_lat, point_long) -
-                              Cal.cal_great_circle_bearing(path_lat1, path_long1, path_lat2, path_long2))) * 6571.009
+                              Cal.cal_great_circle_bearing(path_lat1, path_long1, path_lat2, path_long2))) * 6371.009
 
     @staticmethod
     def cal_angle_diff(current_angle, target_angle):
