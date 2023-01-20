@@ -12,7 +12,7 @@ This will create a new conda enviornment called `airtrafficsim` and install all 
 
 ```{attention}
 
-After installation, please also download and unzip the [BADA data](https://www.eurocontrol.int/model/bada) in `data/BADA`. In addition, please follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to set up the API key for the weather database from ECMWF Climate Data Store.
+After installation, please also download and unzip the [BADA data](https://www.eurocontrol.int/model/bada) in `data/BADA`. You will need to follow the instructions to request a license. In addition, please follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to set up the API key for the weather database from ECMWF Climate Data Store.
 ```
 
 Then, activate the environment each time you want to use AirTrafficSim.
