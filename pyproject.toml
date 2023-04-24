@@ -16,7 +16,7 @@ classifiers = [
 dependencies = [
     "numpy",
     "pandas",
-    'Flask",
+    "Flask",
     "Flask-SocketIO",
     "Eventlet",
     "cartopy",
