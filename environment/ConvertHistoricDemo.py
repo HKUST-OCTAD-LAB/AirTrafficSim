@@ -1,11 +1,11 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
 import pandas as pd
 import numpy as np
 
 from airtrafficsim.core.environment import Environment
 from airtrafficsim.core.aircraft import Aircraft
-from airtrafficsim.utils.enums import APLateralMode, Config, FlightPhase
+from airtrafficsim.utils.enums import Config, FlightPhase
 from airtrafficsim.utils.calculation import Cal
 from airtrafficsim.utils.route_detection import rdp, detect_sid_star, get_arrival_data, get_approach_data
 

@@ -2,9 +2,9 @@ name: Docs
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
     
   workflow_dispatch:
   
@@ -12,13 +12,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
     - name: Build HTML
       uses: ammaraskar/sphinx-action@master
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
       with:
-        name: html-docs
-        path: docs/build/html/
+        docs-folder: "docs/"
+#     - name: Upload artifacts
+#       uses: actions/upload-artifact@v3
+#       with:
+#         name: html-docs
+#         path: docs/build/html/
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'

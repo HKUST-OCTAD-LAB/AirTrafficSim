@@ -10,12 +10,13 @@ from io import BytesIO
 import base64
 from airtrafficsim.core.navigation import Nav
 
+
 class Data:
     @staticmethod
     def get_nav(lat1, long1, lat2, long2):
         """
         Get the navigation waypoint data given
-        
+
         Parameters
         ----------
         lat1 : float
@@ -72,12 +73,11 @@ class Data:
 
         return document
 
-
     @staticmethod
     def get_era5_wind(file, lat1, long1, lat2, long2, time):
         """
         Get the ERA5 wind data image to client
-        
+
         Parameters
         ----------
         lat1 : float
@@ -141,7 +141,7 @@ class Data:
     def get_era5_rain(file, lat1, long1, lat2, long2, time):
         """
         Get the ERA5 rain data image to client
-        
+
         Parameters
         ----------
         lat1 : float
@@ -205,12 +205,11 @@ class Data:
                 },
             ]
 
-
     @staticmethod
     def get_radar_img(file, lat1, long1, lat2, long2, time):
         """
         Get the radar data image to client
-        
+
         Parameters
         ----------
         lat1 : float
@@ -237,14 +236,19 @@ class Data:
         lat2 = 22.3022 + 2.3152
         long2 = 114.1742 + 2.3152
         # Definition
-        rain_fall   = np.array([0.15, 0.5,   1,   2,   3,   5,   7,  10,  15,  30,  50,  75, 100, 150, 200, 300,   0,   0,   0])    # Minimum value of rainfall rate category
-        rain_fall_r = np.array([   0,   0,  60,   0,   0,   0,   0, 145, 225, 255, 240, 240, 240, 200, 200, 240, 211, 116, 148], dtype=float)
-        rain_fall_g = np.array([ 200, 145, 150, 130, 170, 210, 250, 255, 210, 210, 175, 130,   0,   0,   0,   0, 155, 117, 109], dtype=float)
-        rain_fall_b = np.array([ 250, 245, 255,  70,  55,   0,   5,   0,   0,   0,   0,   0,   0,   0, 105, 240,  94, 199,  66], dtype=float)
+        rain_fall = np.array([0.15, 0.5,   1,   2,   3,   5,   7,  10,  15,  30,  50,  75,
+                             100, 150, 200, 300,   0,   0,   0])    # Minimum value of rainfall rate category
+        rain_fall_r = np.array([0,   0,  60,   0,   0,   0,   0, 145, 225,
+                               255, 240, 240, 240, 200, 200, 240, 211, 116, 148], dtype=float)
+        rain_fall_g = np.array([200, 145, 150, 130, 170, 210, 250, 255, 210,
+                               210, 175, 130,   0,   0,   0,   0, 155, 117, 109], dtype=float)
+        rain_fall_b = np.array([250, 245, 255,  70,  55,   0,   5,   0,   0,
+                               0,   0,   0,   0,   0, 105, 240,  94, 199,  66], dtype=float)
 
         colorsList = ['#ffffff00', '#00c9fc', '#008ff4', '#3b96ff', '#018445', '#01aa35', '#00cf01', '#00f906', '#91ff00',
-          '#e0d000', '#ffd201', '#efb001', '#f08002', '#f00001', '#ce0101', '#bc016a', '#ef00f0']
-        scale = [0, 0.15, 0.5, 1, 2, 3, 5, 7, 10, 15, 30, 50, 75, 100, 150, 200, 300]
+                      '#e0d000', '#ffd201', '#efb001', '#f08002', '#f00001', '#ce0101', '#bc016a', '#ef00f0']
+        scale = [0, 0.15, 0.5, 1, 2, 3, 5, 7, 10,
+                 15, 30, 50, 75, 100, 150, 200, 300]
 
         # Input
         if Path(__file__).parent.parent.parent.joinpath('data/weather/radar/',file.split('-', 1)[0]).is_dir():
