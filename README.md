@@ -2,6 +2,11 @@
 
 AirTrafficSim is a web-based air traffic simulation software written in Python and javascript. It is designed to visualize historical and research data, perform microscopic studies of air traffic movement with the integration of a historical weather database, and evaluate the performance of ATM algorithms.
 
+![Doc](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/actions/workflows/sphinx.yml/badge.svg)
+[![status](https://joss.theoj.org/papers/7d4a9fdfae0c862863fa3645d3ae80b1/status.svg)](https://joss.theoj.org/papers/7d4a9fdfae0c862863fa3645d3ae80b1)
+<!-- ![Conda version](https://img.shields.io/conda/vn/conda-forge/) -->
+
+
 ## Features
 
 - Replay histortic flights given data (FlightRadar 24 and simulated flights)
