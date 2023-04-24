@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "AirTrafficSim"
 version = "0.0.0"
@@ -34,3 +38,6 @@ airtrafficsim = "airtrafficsim:main"
 
 [project.gui-scripts]
 airtrafficsim-gui = "airtrafficsim:main"
+
+[tool.setuptools]
+packages = ["airtrafficsim"]
