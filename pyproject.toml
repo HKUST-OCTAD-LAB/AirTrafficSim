@@ -36,8 +36,5 @@ repository = "https://github.com/HKUST-OCTAD-LAB/AirTrafficSim"
 [project.scripts]
 airtrafficsim = "airtrafficsim:main"
 
-[project.gui-scripts]
-airtrafficsim-gui = "airtrafficsim:main"
-
 [tool.setuptools]
 packages = ["airtrafficsim"]
