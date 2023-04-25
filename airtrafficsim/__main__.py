@@ -22,7 +22,7 @@ def main():
     # Handle command line arguments
     if len(sys.argv) > 1 and sys.argv[1] == '--headless':
         # Run user defined environment without UI: python -m airtrafficsim --headless <env name>
-        Env = getattr(import_module('environment.' +
+        Env = getattr(import_module('data.environment.' +
                       sys.argv[2], '...'), sys.argv[2])
         env = Env()
         env.run()
