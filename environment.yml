@@ -27,3 +27,5 @@ dependencies:
   # - pip
   # - pip:
   #   - -r requirements.txt
+  # - pytest
+  # - coverage

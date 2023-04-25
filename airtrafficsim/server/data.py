@@ -60,7 +60,7 @@ class Data:
                     "horizontalOrigin": "LEFT",
                     "pixelOffset": {
                         "cartesian2": [10, 0],
-                    },
+                    }
                     # "distanceDisplayCondition": {
                     #     "distanceDisplayCondition": [0, 1000000]
                     # },
@@ -173,7 +173,9 @@ class Data:
             scale = [0, 0.15, 0.5, 1, 2, 3, 5, 7, 10, 15, 30, 50, 75, 100, 150, 200, 300]
             cmap=colors.ListedColormap(colorscale)
             norm=colors.BoundaryNorm(scale, len(colorscale))
-            ax.pcolormesh(data.longitude.values, data.latitude.values, data.tp.values*75625.0,
+            # ax.pcolormesh(data.longitude.values, data.latitude.values, data.tp.values*75625.0,
+            #             cmap=cmap, norm=norm, transform=ccrs.PlateCarree())
+            ax.contourf(data.longitude.values, data.latitude.values, data.tp.values*75625.0,
                         cmap=cmap, norm=norm, transform=ccrs.PlateCarree())
             buf = BytesIO()
             fig.savefig(buf, format="png")

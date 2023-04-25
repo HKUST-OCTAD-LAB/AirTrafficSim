@@ -124,7 +124,7 @@ def get_simulation_file():
         List of simulation environment file names
     """
     simulation_list = []
-    for file in Path(__file__).parent.parent.parent.joinpath('data/environment/').glob('*.py'):
+    for file in sorted(Path(__file__).parent.parent.parent.joinpath('data/environment/').glob('*.py')):
         if file.name != '__init__.py':
             simulation_list.append(file.name.removesuffix('.py'))
     return simulation_list

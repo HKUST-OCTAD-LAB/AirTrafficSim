@@ -21,7 +21,7 @@ class ConvertHistoricDemo(Environment):
                         )
 
         # Location of the historic data
-        self.historic_data_path = Path(__file__).parent.parent.resolve().joinpath('data/flight_data/2018-05-01/')
+        self.historic_data_path = Path(__file__).parent.parent.parent.resolve().joinpath('data/flight_data/2018-05-01/')
 
         print("Analyzing flight data")
         # Set up arrival and approach data
