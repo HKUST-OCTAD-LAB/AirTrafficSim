@@ -50,6 +50,7 @@
   "scripts": {
     "start": "craco start",
     "build": "BUILD_PATH='../data/client' craco build",
+    "postbuild": "rm -f ./data/client/client.zip && zip -r ../data/client/client.zip ../data/client",
     "test": "craco test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
   },
