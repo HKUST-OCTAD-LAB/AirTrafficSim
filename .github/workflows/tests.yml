@@ -7,37 +7,75 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
+  build:
+    
     strategy:
       max-parallel: 5
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux-64
+            prefix: /usr/share/miniconda3/envs/airtrafficsim
+
+          # - os: macos-latest
+          #   label: osx-64
+          #   prefix: /Users/runner/miniconda3/envs/airtrafficsim
+
+          # - os: windows-latest
+          #   label: win-64
+          #   prefix: C:\Miniconda3\envs\airtrafficsim
+
+    name: ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
+
+    - name: Setup miniconda
+      uses: conda-incubator/setup-miniconda@v2
       with:
-        python-version: '3.11'
-    - name: Add conda to system path
-      run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        echo $CONDA/bin >> $GITHUB_PATH
-    - name: Install dependencies
-      run: |
-        conda env update --file environment.yml --name base
+        activate-environment: airtrafficsim
+        # environment-file: environment.yml
+        python-version: 3.11
+        auto-activate-base: false
+
+    - name: Cache conda enviornment
+      uses: actions/cache@v2
+      with:
+        path: ${{ matrix.prefix }}
+        key: ${{ matrix.label }}-conda-${{ hashFiles('environment.yml') }}
+      id: cache
+
+    - name: Update environment
+      run: conda env update -n airtrafficsim -f environment.yml
+      if: steps.cache.outputs.cache-hit != 'true'
+
+    # - name: Add conda to system path
+    #   run: |
+    #     # $CONDA is an environment variable pointing to the root of the miniconda directory
+    #     echo $CONDA/bin >> $GITHUB_PATH
+
+    # - name: Install dependencies
+    #   run: |
+    #     conda env update --file environment.yml --name base
+
     - name: Download data from private repository
       uses: actions/checkout@v3
       with:
         repository: HKUST-OCTAD-LAB/AirTrafficSim-data
         ssh-key: ${{ secrets.SSH_KEY }}
+        path: AirTrafficSim-data
+
     - name: Unzip data
       run: |
         ls
         ls AirTrafficSim-data
-        unzip AirTrafficSim-data/BADA.zip 
+        unzip AirTrafficSim-data/BADA.zip -d data/performance/BADA
         mv AirTrafficSim-data/.cdsapirc $HOME/
         ls
+        ls data/performance/BADA
       shell: bash
+
     # - name: Lint with flake8
     #   run: |
     #     conda install flake8
@@ -45,9 +83,9 @@ jobs:
     #     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
     #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
     #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
     - name: Test with pytest
       run: |
-        conda install pytest coverage
         coverage run -m pytest
         coverage report xml
 

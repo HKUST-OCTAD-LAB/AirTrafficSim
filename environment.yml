@@ -13,6 +13,8 @@ dependencies:
   - cdsapi
   - xarray
   - openap
+  - pytest
+  - coverage
 
   # Client
   # - nodejs
@@ -27,5 +29,3 @@ dependencies:
   # - pip
   # - pip:
   #   - -r requirements.txt
-  # - pytest
-  # - coverage
