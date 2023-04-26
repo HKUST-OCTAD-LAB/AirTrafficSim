@@ -23,7 +23,7 @@ class Replay:
 
         simulation_list = []
         simulation_file_list = {}
-        for dir in Path(__file__).parent.parent.parent.joinpath('result').iterdir():
+        for dir in Path(__file__).parent.parent.parent.joinpath('data/result').iterdir():
             if dir.is_dir():
                 simulation_list.append(dir.name)
                 file_list = []
@@ -161,7 +161,7 @@ class Replay:
 
         elif replayCategory == 'simulation':
             df = pd.read_csv(
-                Path(__file__).parent.parent.parent.joinpath('result', replayFile))
+                Path(__file__).parent.parent.parent.joinpath('data/result', replayFile))
             document = [{
                 "id": "document",
                 "name": "simulation",
@@ -255,7 +255,7 @@ class Replay:
         """
         header = ['None']
         if mode == 'replay' and replayCategory == 'simulation':
-            with open(Path(__file__).parent.parent.parent.joinpath('result', replayFile), 'r') as file:
+            with open(Path(__file__).parent.parent.parent.joinpath('data/result', replayFile), 'r') as file:
                 header.extend(next(csv.reader(file)))
             header.remove('timestep')
             header.remove('timestamp')
@@ -287,7 +287,7 @@ class Replay:
         data = []
         if mode == 'replay' and replayCategory == 'simulation' and graph != 'None':
             df = pd.read_csv(
-                Path(__file__).parent.parent.parent.joinpath('result/', replayFile))
+                Path(__file__).parent.parent.parent.joinpath('data/result/', replayFile))
             for id in df['id'].unique():
                 content = df[df['id'] == id]
                 data.append({
@@ -300,7 +300,7 @@ class Replay:
 
         elif mode == 'simulation' and graph != 'None':
             df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath(
-                'result/', simulationFile, simulationFile+'.csv'))
+                'data/result/', simulationFile, simulationFile+'.csv'))
             for id in df['id'].unique():
                 content = df[df['id'] == id]
                 data.append({
