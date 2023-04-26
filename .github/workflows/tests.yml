@@ -35,7 +35,7 @@ jobs:
       uses: conda-incubator/setup-miniconda@v2
       with:
         activate-environment: airtrafficsim
-        # environment-file: environment.yml
+        environment-file: environment.yml
         python-version: 3.11
         auto-activate-base: false
 
@@ -68,12 +68,8 @@ jobs:
 
     - name: Unzip data
       run: |
-        ls
-        ls AirTrafficSim-data
         unzip AirTrafficSim-data/BADA.zip -d data/performance/BADA
         mv AirTrafficSim-data/.cdsapirc $HOME/
-        ls
-        ls data/performance/BADA
       shell: bash
 
     # - name: Lint with flake8
@@ -86,8 +82,10 @@ jobs:
 
     - name: Test with pytest
       run: |
+        conda activate airtrafficsim
         coverage run -m pytest
         coverage report xml
+      shell: bash
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
