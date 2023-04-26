@@ -26,18 +26,18 @@ jobs:
       run: |
         conda env update --file environment.yml --name base
     - name: Download data from private repository
-        uses: actions/checkout@v3
-        with:
-          repository: HKUST-OCTAD-LAB/AirTrafficSim-data
-          ssh-key: ${{ secrets.SSH_KEY }}
+      uses: actions/checkout@v3
+      with:
+        repository: HKUST-OCTAD-LAB/AirTrafficSim-data
+        ssh-key: ${{ secrets.SSH_KEY }}
     - name: Unzip data
-        run: |
-          ls
-          ls AirTrafficSim-data
-          unzip AirTrafficSim-data/BADA.zip 
-          mv AirTrafficSim-data/.cdsapirc $HOME/
-          ls
-        shell: bash
+      run: |
+        ls
+        ls AirTrafficSim-data
+        unzip AirTrafficSim-data/BADA.zip 
+        mv AirTrafficSim-data/.cdsapirc $HOME/
+        ls
+      shell: bash
     # - name: Lint with flake8
     #   run: |
     #     conda install flake8
@@ -50,3 +50,6 @@ jobs:
         conda install pytest coverage
         coverage run -m pytest
         coverage report xml
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
