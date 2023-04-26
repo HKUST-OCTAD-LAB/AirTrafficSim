@@ -31,15 +31,16 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup Mambaforge
+    - name: Setup miniconda
       uses: conda-incubator/setup-miniconda@v2
       with:
         activate-environment: airtrafficsim
-        environment-file: environment.yml
+        # environment-file: environment.yml
         python-version: 3.11
         auto-activate-base: false
 
-    - uses: actions/cache@v2
+    - name: Cache conda enviornment
+      uses: actions/cache@v2
       with:
         path: ${{ matrix.prefix }}
         key: ${{ matrix.label }}-conda-${{ hashFiles('environment.yml') }}
