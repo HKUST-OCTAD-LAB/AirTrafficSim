@@ -38,6 +38,9 @@ jobs:
         environment-file: environment.yml
         python-version: 3.11
         auto-activate-base: false
+    - run: |
+        conda info
+        conda list
 
     - name: Cache conda enviornment
       uses: actions/cache@v2
@@ -46,9 +49,9 @@ jobs:
         key: ${{ matrix.label }}-conda-${{ hashFiles('environment.yml') }}
       id: cache
 
-    - name: Update environment
-      run: conda env update -n airtrafficsim -f environment.yml
-      if: steps.cache.outputs.cache-hit != 'true'
+#     - name: Update environment
+#       run: conda env update -n airtrafficsim -f environment.yml
+#       if: steps.cache.outputs.cache-hit != 'true'
 
     # - name: Add conda to system path
     #   run: |
@@ -82,7 +85,6 @@ jobs:
 
     - name: Test with pytest
       run: |
-        conda activate airtrafficsim
         coverage run -m pytest
         coverage report xml
       shell: bash
