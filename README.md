@@ -43,7 +43,7 @@ The latest stable release of AirTrafficSim can be installed from conda-forge. Al
 It is recommended to install AirTrafficSim in a new conda environment:
 
 ```
-conda create -n airtrafficsim -c conda-forge conda 
+conda create -n airtrafficsim -c conda-forge airtrafficsim 
 ```
 
 Then, please initialise AirTrafficSim by specifing a folder path to create a symbolic link to the [airtrafficsim_data](data/) folder:
