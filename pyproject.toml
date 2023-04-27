@@ -34,7 +34,13 @@ documentation = "https://hkust-octad-lab.github.io/AirTrafficSim/"
 repository = "https://github.com/HKUST-OCTAD-LAB/AirTrafficSim"
 
 [project.scripts]
-airtrafficsim = "airtrafficsim:main"
+airtrafficsim = "airtrafficsim.__main__:main"
 
 [tool.setuptools]
 packages = ["airtrafficsim"]
+
+[project.optional-dependencies]
+tests = [
+  'pytest',
+  'coverage'
+]

@@ -13,19 +13,16 @@ dependencies:
   - cdsapi
   - xarray
   - openap
+
+  # Test
   - pytest
   - coverage
 
+  # Documentation
+  - sphinx
+  - myst-parser
+  - furo
+  - numpydoc
+
   # Client
   # - nodejs
-
-  # Documentation
-  # - sphinx
-  # - myst-parser
-  # - furo
-  # - numpydoc
-
-  # Others
-  # - pip
-  # - pip:
-  #   - -r requirements.txt
