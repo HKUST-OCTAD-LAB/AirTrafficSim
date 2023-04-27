@@ -140,6 +140,14 @@ def run_simulation(file):
     file : string
         Environment file name
     """
+    print(file)
+    if file == "ConvertHistoricDemo":
+        socketio.emit('loadingMsg', 'Converting historic data to simulation data... <br> Please check the terminal for progress.')
+    elif file == "WeatherDemo":
+        socketio.emit('loadingMsg', 'Downloading weather data... <br> Please check the terminal for progress.')
+    else:
+        socketio.emit('loadingMsg', 'Running simulation... <br> Please check the terminal for progress.')   
+    socketio.sleep(0)
     Env = getattr(import_module('data.environment.'+file, '...'), file)
     env = Env()
     env.run(socketio)
