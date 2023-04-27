@@ -49,7 +49,7 @@ conda create -n airtrafficsim -c conda-forge airtrafficsim
 Then, please initialise AirTrafficSim by specifing a folder path to create a symbolic link to the [airtrafficsim_data](data/) folder:
 
 ```
-activate airtrafficsim
+conda activate airtrafficsim
 airtrafficsim -- init <path to a folder>
 ```
 You may provide or retrieve any data of AirTrafficSim and create simulation environments in this folder. Please visit the [documentation](https://hkust-octad-lab.github.io/AirTrafficSim/index.html) for more information.
