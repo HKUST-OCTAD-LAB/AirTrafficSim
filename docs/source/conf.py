@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'AirTrafficSim'
-copyright = '2022, HKUST OCTAD Lab'
+copyright = '2023, HKUST OCTAD Lab'
 author = 'HKUST OCTAD Lab'
 release = '0.0'
 
@@ -37,8 +37,9 @@ exclude_patterns = []
 
 html_theme = "furo"
 html_static_path = ['_static']
-html_title = "AirTrafficSim"
-html_favicon = "images/OCTAD_logo.png"
+html_title = ""
+html_favicon = "images/Logo.svg"
+html_logo = "images/Logo-large.svg"
 html_theme_options = {
     "footer_icons": [
         {
