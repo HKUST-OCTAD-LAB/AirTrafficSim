@@ -13,15 +13,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Cache conda
+      uses: actions/cache@v2
+      env:
+        # Increase this value to reset cache if etc/example-environment.yml has not changed
+        CACHE_NUMBER: 0
+      with:
+        path: ~/conda_pkgs_dir
+        key:
+          ${{ runner.os }}-conda-doc-${{ env.CACHE_NUMBER }}-${{ hashFiles('environment.yml') }}
+
+    - name: Setup miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        activate-environment: airtrafficsim
+        channel-priority: strict
+        environment-file: environment.yml
+        python-version: 3.11
+        use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+        
     - name: Build HTML
       uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
-#     - name: Upload artifacts
-#       uses: actions/upload-artifact@v3
-#       with:
-#         name: html-docs
-#         path: docs/build/html/
+        
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
