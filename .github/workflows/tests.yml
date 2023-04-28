@@ -67,7 +67,7 @@ jobs:
 
     - name: Unzip data
       run: |
-        unzip AirTrafficSim-data/BADA.zip -d data/performance/BADA
+        unzip AirTrafficSim-data/BADA.zip -d airtrafficsim/data/performance/BADA
         mv AirTrafficSim-data/.cdsapirc $HOME/
 
     # - name: Lint with flake8
