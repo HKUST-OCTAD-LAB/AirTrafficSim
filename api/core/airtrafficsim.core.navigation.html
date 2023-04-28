@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="autopilot" href="airtrafficsim.core.autopilot.html" /><link rel="prev" title="traffic" href="airtrafficsim.core.traffic.html" />
 
-    <link rel="shortcut icon" href="../../_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="../../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>navigation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -238,7 +238,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -246,6 +246,241 @@
         <article role="main">
           <section id="navigation">
 <h1>navigation<a class="headerlink" href="#navigation" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="airtrafficsim.core.navigation.Nav">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airtrafficsim.core.navigation.</span></span><span class="sig-name descname"><span class="pre">Nav</span></span><a class="headerlink" href="#airtrafficsim.core.navigation.Nav" title="Permalink to this definition">#</a></dt>
+<dd><p>Nav class to provide navigation data from x-plane 11.</p>
+<p class="rubric">Notes</p>
+<p><a class="reference external" href="https://developer.x-plane.com/docs/data-development-documentation/">https://developer.x-plane.com/docs/data-development-documentation/</a></p>
+<p><a class="reference external" href="https://developer.x-plane.com/article/navdata-in-x-plane-11/">https://developer.x-plane.com/article/navdata-in-x-plane-11/</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Nav.fix</strong><span class="classifier">pandas.dataframe</span></dt><dd><p>Fixes data <a class="reference external" href="https://developer.x-plane.com/wp-content/uploads/2019/01/XP-FIX1101-Spec.pdf">https://developer.x-plane.com/wp-content/uploads/2019/01/XP-FIX1101-Spec.pdf</a></p>
+</dd>
+<dt><strong>Nav.nav</strong><span class="classifier">pandas.dataframe</span></dt><dd><p>Radio navigation aid data <a class="reference external" href="https://developer.x-plane.com/wp-content/uploads/2020/03/XP-NAV1150-Spec.pdf">https://developer.x-plane.com/wp-content/uploads/2020/03/XP-NAV1150-Spec.pdf</a></p>
+</dd>
+<dt><strong>Nav.airway</strong><span class="classifier">pandas.dataframe</span></dt><dd><p>Airway data <a class="reference external" href="https://developer.x-plane.com/wp-content/uploads/2019/01/XP-AWY1101-Spec.pdf">https://developer.x-plane.com/wp-content/uploads/2019/01/XP-AWY1101-Spec.pdf</a></p>
+</dd>
+<dt><strong>Nav.holding</strong><span class="classifier">pandas.dataframe</span></dt><dd><p>Holding procedures data <a class="reference external" href="https://developer.x-plane.com/wp-content/uploads/2018/12/XP-HOLD1140-Spec.pdf">https://developer.x-plane.com/wp-content/uploads/2018/12/XP-HOLD1140-Spec.pdf</a></p>
+</dd>
+<dt><strong>Nav.min_off_route_alt</strong><span class="classifier">pandas.dataframe</span></dt><dd><p>Minimum off route grid altitudes <a class="reference external" href="https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MORA1150-Spec.pdf">https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MORA1150-Spec.pdf</a></p>
+</dd>
+<dt><strong>Nav.min_sector_alt</strong><span class="classifier">pandas.dataframe</span></dt><dd><p>Minimum sector altitudes for navaids, fixes, airports and runway threshold <a class="reference external" href="https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MSA1150-Spec.pdf">https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MSA1150-Spec.pdf</a></p>
+</dd>
+<dt><strong>Nav.airports</strong><span class="classifier">pandas.dataframe</span></dt><dd><p>Airports data (extracted to contain only runway coordinates) <a class="reference external" href="https://developer.x-plane.com/article/airport-data-apt-dat-file-format-specification/">https://developer.x-plane.com/article/airport-data-apt-dat-file-format-specification/</a></p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.find_closest_airport_runway" title="airtrafficsim.core.navigation.Nav.find_closest_airport_runway"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_closest_airport_runway</span></code></a>(lat, long)</p></td>
+<td><p>Find the closest runway and airport given lat long.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_airport_procedures" title="airtrafficsim.core.navigation.Nav.get_airport_procedures"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_airport_procedures</span></code></a>(airport, procedure_type)</p></td>
+<td><p>Get instrument procedures of an airport.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_holding_procedure" title="airtrafficsim.core.navigation.Nav.get_holding_procedure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_holding_procedure</span></code></a>(fix, region)</p></td>
+<td><p>Get holding procedure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_procedure" title="airtrafficsim.core.navigation.Nav.get_procedure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_procedure</span></code></a>(airport, runway, procedure[, ...])</p></td>
+<td><p>Get the details of standard instrument procedure</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_runway_coord" title="airtrafficsim.core.navigation.Nav.get_runway_coord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_runway_coord</span></code></a>(airport, runway)</p></td>
+<td><p>Get runway coordinate</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_wp_coord" title="airtrafficsim.core.navigation.Nav.get_wp_coord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wp_coord</span></code></a>(name, lat, long)</p></td>
+<td><p>Get the nearest waypoint (fix and navaid) coordinate given name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_wp_in_area" title="airtrafficsim.core.navigation.Nav.get_wp_in_area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wp_in_area</span></code></a>(lat1, long1, lat2, long2)</p></td>
+<td><p>Get all waypoints(fix, navaids) within area</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.navigation.Nav.get_wp_coord">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_wp_coord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.navigation.Nav.get_wp_coord" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the nearest waypoint (fix and navaid) coordinate given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>name</strong><span class="classifier">String</span></dt><dd><p>ICAO name of the waypoint (max 5 chars)</p>
+</dd>
+<dt><strong>lat</strong><span class="classifier">float</span></dt><dd><p>Latitude of current position</p>
+</dd>
+<dt><strong>long</strong><span class="classifier">float</span></dt><dd><p>Longitude of current position</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>lat, Long: float, float</dt><dd><p>Latitude and Longitude of the waypoint</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.navigation.Nav.get_wp_in_area">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_wp_in_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.navigation.Nav.get_wp_in_area" title="Permalink to this definition">#</a></dt>
+<dd><p>Get all waypoints(fix, navaids) within area</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>Latitude 1 of area (South)</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float</span></dt><dd><p>Longitude 1 of area (West)</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float</span></dt><dd><p>Latitude 2 of area (North)</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float</span></dt><dd><p>Longitude 2 of area (East)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>[lat, long, name]</strong><span class="classifier">[float[], float[], string[]]</span></dt><dd><p>[Latitude, Longitude, Name] array of all waypoints in the area</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.navigation.Nav.get_runway_coord">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_runway_coord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airport</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runway</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.navigation.Nav.get_runway_coord" title="Permalink to this definition">#</a></dt>
+<dd><p>Get runway coordinate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>airport</strong><span class="classifier">string</span></dt><dd><p>ICAO code of the airport</p>
+</dd>
+<dt><strong>runway: string</strong></dt><dd><p>Runway name (RW07L).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>(lat, Long, alt): (float, float, float)</dt><dd><p>Latitude, Longitude, and Altitude of the runway end</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.navigation.Nav.find_closest_airport_runway">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_closest_airport_runway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.navigation.Nav.find_closest_airport_runway" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the closest runway and airport given lat long.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat</strong><span class="classifier">float</span></dt><dd><p>Latitude</p>
+</dd>
+<dt><strong>long</strong><span class="classifier">float</span></dt><dd><p>Longitude</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Airport</strong><span class="classifier">string</span></dt><dd><p>ICAO code of airport</p>
+</dd>
+<dt><strong>Runway</strong><span class="classifier">string</span></dt><dd><p>Runway Name</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.navigation.Nav.get_airport_procedures">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_airport_procedures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airport</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">procedure_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.navigation.Nav.get_airport_procedures" title="Permalink to this definition">#</a></dt>
+<dd><p>Get instrument procedures of an airport.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>airport</strong><span class="classifier">string</span></dt><dd><p>ICAO code of the airport</p>
+</dd>
+<dt><strong>procedure_type</strong><span class="classifier">string</span></dt><dd><p>Procedure type (SID/STAR/APPCH)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>procedure_names</strong><span class="classifier">string []</span></dt><dd><p>Names of all procedures of the airport</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.navigation.Nav.get_procedure">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_procedure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airport</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runway</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">procedure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">appch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iaf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.navigation.Nav.get_procedure" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the details of standard instrument procedure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>airport</strong><span class="classifier">string</span></dt><dd><p>ICAO code of the airport</p>
+</dd>
+<dt><strong>runway: string</strong></dt><dd><p>Runway name (RW07L) for SID/STAR.</p>
+</dd>
+<dt><strong>procedure</strong><span class="classifier">string</span></dt><dd><p>Procedure name of SID/STAR/APPCH (XXXX7A)
+For Approach: ILS = I07C, Localliser = L25L, RNAV = R25LY/Z</p>
+</dd>
+<dt><strong>appch</strong><span class="classifier">string</span></dt><dd><p>Approach procedure type (A = initial approach, I = ILS, “” = None)</p>
+</dd>
+<dt><strong>iaf</strong><span class="classifier">string</span></dt><dd><p>Initial approach fix (Please provide when appch = A)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Waypoint names</strong><span class="classifier">string []</span></dt><dd><p>Waypoint names array</p>
+</dd>
+<dt><strong>Altitude restriction type</strong><span class="classifier">float []</span></dt><dd><p>Altitude restriction type (+, =, -)</p>
+</dd>
+<dt><strong>Altitude restriction</strong><span class="classifier">float []</span></dt><dd><p>Altitude restriction 1</p>
+</dd>
+<dt><strong>Altitude restriction</strong><span class="classifier">float []</span></dt><dd><p>Altitude restriction 2</p>
+</dd>
+<dt><strong>Speed restriction type</strong><span class="classifier">float []</span></dt><dd><p>Speed restriction type (+, =, -)</p>
+</dd>
+<dt><strong>Speed restriction</strong><span class="classifier">float []</span></dt><dd><p>Speed restriction</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.navigation.Nav.get_holding_procedure">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_holding_procedure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.navigation.Nav.get_holding_procedure" title="Permalink to this definition">#</a></dt>
+<dd><p>Get holding procedure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>fix</strong><span class="classifier">string</span></dt><dd><p>Fix name</p>
+</dd>
+<dt><strong>region</strong><span class="classifier">string</span></dt><dd><p>ICAO region</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>[inbound holding course, legtime, leg length, direction, min alt, max alt, speed]</strong><span class="classifier">[]</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -298,13 +533,44 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">navigation</a><ul>
+<li><a class="reference internal" href="#airtrafficsim.core.navigation.Nav"><code class="docutils literal notranslate"><span class="pre">Nav</span></code></a><ul>
+<li><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_wp_coord"><code class="docutils literal notranslate"><span class="pre">Nav.get_wp_coord()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_wp_in_area"><code class="docutils literal notranslate"><span class="pre">Nav.get_wp_in_area()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_runway_coord"><code class="docutils literal notranslate"><span class="pre">Nav.get_runway_coord()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.find_closest_airport_runway"><code class="docutils literal notranslate"><span class="pre">Nav.find_closest_airport_runway()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_airport_procedures"><code class="docutils literal notranslate"><span class="pre">Nav.get_airport_procedures()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_procedure"><code class="docutils literal notranslate"><span class="pre">Nav.get_procedure()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.navigation.Nav.get_holding_procedure"><code class="docutils literal notranslate"><span class="pre">Nav.get_holding_procedure()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>

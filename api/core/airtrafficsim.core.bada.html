@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="weather" href="airtrafficsim.core.weather.html" /><link rel="prev" title="performance" href="airtrafficsim.core.performance.html" />
 
-    <link rel="shortcut icon" href="../../_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="../../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>bada</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -238,7 +238,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -246,6 +246,1331 @@
         <article role="main">
           <section id="bada">
 <h1>bada<a class="headerlink" href="#bada" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airtrafficsim.core.performance.bada.</span></span><span class="sig-name descname"><span class="pre">Bada</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada" title="Permalink to this definition">#</a></dt>
+<dd><p>BADA Performance class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>See __init__()</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>__init__:</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>add_aircraft_performance:</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Initialize BADA performance parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>N: int</strong></dt><dd><p>Number of aircrafts. Maximum size of performance array (pre-initialize to eliminate inefficient append)
+TODO: Revise the initial estimate</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.add_aircraft" title="airtrafficsim.core.performance.bada.Bada.add_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_aircraft</span></code></a>(icao[, mass_class])</p></td>
+<td><p>Add one specific aircraft performance data to the performance array according to index.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_aerodynamic_drag" title="airtrafficsim.core.performance.bada.Bada.cal_aerodynamic_drag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_aerodynamic_drag</span></code></a>(V_tas, bank_angle, m, ...)</p></td>
+<td><p>Calculate Aerodynamic drag (Section 3.6.1)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_expedite_descend_factor" title="airtrafficsim.core.performance.bada.Bada.cal_expedite_descend_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_expedite_descend_factor</span></code></a>(expedite_descent)</p></td>
+<td><p>Calculate expedited descent factor for drag multiplication.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_fuel_burn" title="airtrafficsim.core.performance.bada.Bada.cal_fuel_burn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_fuel_burn</span></code></a>(flight_phase, tas, thrust, alt)</p></td>
+<td><p>Calculate fuel burn</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_low_speed_buffeting_limit" title="airtrafficsim.core.performance.bada.Bada.cal_low_speed_buffeting_limit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_low_speed_buffeting_limit</span></code></a>(p, M, m)</p></td>
+<td><p>Low speed buffeting limit for jet and turboprop aircraft.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_max_d_rocd" title="airtrafficsim.core.performance.bada.Bada.cal_max_d_rocd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_max_d_rocd</span></code></a>(d_t, V_tas, rocd)</p></td>
+<td><p>Calculate maximum delta rate of climb or descend (equation 5.2-2)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_max_d_tas" title="airtrafficsim.core.performance.bada.Bada.cal_max_d_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_max_d_tas</span></code></a>(d_t)</p></td>
+<td><p>Calculate maximum delta true air speed (equation 5.2-1)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_maximum_altitude" title="airtrafficsim.core.performance.bada.Bada.cal_maximum_altitude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_maximum_altitude</span></code></a>(d_T, m)</p></td>
+<td><p>Calculate flight envelope (Section 3.5-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_minimum_speed" title="airtrafficsim.core.performance.bada.Bada.cal_minimum_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_minimum_speed</span></code></a>(configuration)</p></td>
+<td><p>Calculate minimum speed for aircraft (3.5-2~3)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_reduced_climb_power" title="airtrafficsim.core.performance.bada.Bada.cal_reduced_climb_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_reduced_climb_power</span></code></a>(m, H_p, H_max)</p></td>
+<td><p>Calculate reduced climb power (section 3.8)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_thrust" title="airtrafficsim.core.performance.bada.Bada.cal_thrust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_thrust</span></code></a>(vertical_mode, configuration, ...)</p></td>
+<td><p>Calculate thrust given flight phases.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.del_aircraft" title="airtrafficsim.core.performance.bada.Bada.del_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_aircraft</span></code></a>(index)</p></td>
+<td><p>Delete one specific aircraft performance data to the performance array according to index.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.get_procedure_speed" title="airtrafficsim.core.performance.bada.Bada.get_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_procedure_speed</span></code></a>(H_p, H_p_trans, flight_phase)</p></td>
+<td><p>Get the standard air speed schedule</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.init_procedure_speed" title="airtrafficsim.core.performance.bada.Bada.init_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_procedure_speed</span></code></a>(m, n)</p></td>
+<td><p>Initialize standard air speed schedule for all flight phases (Section 4.1-4.3)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.update_configuration" title="airtrafficsim.core.performance.bada.Bada.update_configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_configuration</span></code></a>(V_cas, H_p, vertical_mode)</p></td>
+<td><p>Update configuration (section 3.5)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__n_eng">
+<span class="sig-name descname"><span class="pre">__n_eng</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__n_eng" title="Permalink to this definition">#</a></dt>
+<dd><p>Number of engines</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__engine_type">
+<span class="sig-name descname"><span class="pre">__engine_type</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__engine_type" title="Permalink to this definition">#</a></dt>
+<dd><p>engine type [Engine_type enum]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__wake_category">
+<span class="sig-name descname"><span class="pre">__wake_category</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__wake_category" title="Permalink to this definition">#</a></dt>
+<dd><p>wake category [Wake_category enum]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__m_ref">
+<span class="sig-name descname"><span class="pre">__m_ref</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__m_ref" title="Permalink to this definition">#</a></dt>
+<dd><p>reference mass [tones]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.m_min">
+<span class="sig-name descname"><span class="pre">m_min</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.m_min" title="Permalink to this definition">#</a></dt>
+<dd><p>minimum mass [tones]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__m_max">
+<span class="sig-name descname"><span class="pre">__m_max</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__m_max" title="Permalink to this definition">#</a></dt>
+<dd><p>maximum mass [tones]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__m_pyld">
+<span class="sig-name descname"><span class="pre">__m_pyld</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__m_pyld" title="Permalink to this definition">#</a></dt>
+<dd><p>maximum payload mass [tones]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.v_mo">
+<span class="sig-name descname"><span class="pre">v_mo</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.v_mo" title="Permalink to this definition">#</a></dt>
+<dd><p>maximum operating speed [knots (CAS)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.m_mo">
+<span class="sig-name descname"><span class="pre">m_mo</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.m_mo" title="Permalink to this definition">#</a></dt>
+<dd><p>maximum operating Mach number [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__h_mo">
+<span class="sig-name descname"><span class="pre">__h_mo</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__h_mo" title="Permalink to this definition">#</a></dt>
+<dd><p>maximum opearting altitude [feet]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__h_max">
+<span class="sig-name descname"><span class="pre">__h_max</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__h_max" title="Permalink to this definition">#</a></dt>
+<dd><p>maximum altitude at MTOW and ISA [feet]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__g_w">
+<span class="sig-name descname"><span class="pre">__g_w</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__g_w" title="Permalink to this definition">#</a></dt>
+<dd><p>weight gradient on maximum altitude [feet/kg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__g_t">
+<span class="sig-name descname"><span class="pre">__g_t</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__g_t" title="Permalink to this definition">#</a></dt>
+<dd><p>temperature gradient on maximum altitude [feet/K]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__S">
+<span class="sig-name descname"><span class="pre">__S</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__S" title="Permalink to this definition">#</a></dt>
+<dd><p>reference wing surface area [m^2]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_d0_cr">
+<span class="sig-name descname"><span class="pre">__c_d0_cr</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_d0_cr" title="Permalink to this definition">#</a></dt>
+<dd><p>parasitic drag coefficient (cruise) [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_d2_cr">
+<span class="sig-name descname"><span class="pre">__c_d2_cr</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_d2_cr" title="Permalink to this definition">#</a></dt>
+<dd><p>induced drag coefficient (cruise) [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_d0_ap">
+<span class="sig-name descname"><span class="pre">__c_d0_ap</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_d0_ap" title="Permalink to this definition">#</a></dt>
+<dd><p>parasitic drag coefficient (approach) [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_d2_ap">
+<span class="sig-name descname"><span class="pre">__c_d2_ap</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_d2_ap" title="Permalink to this definition">#</a></dt>
+<dd><p>induced drag coefficient (approach) [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_d0_ld">
+<span class="sig-name descname"><span class="pre">__c_d0_ld</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_d0_ld" title="Permalink to this definition">#</a></dt>
+<dd><p>parasitic drag coefficient (landing) [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_d2_ld">
+<span class="sig-name descname"><span class="pre">__c_d2_ld</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_d2_ld" title="Permalink to this definition">#</a></dt>
+<dd><p>induced drag coefficient (landing) [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_d0_ldg">
+<span class="sig-name descname"><span class="pre">__c_d0_ldg</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_d0_ldg" title="Permalink to this definition">#</a></dt>
+<dd><p>parasite darg coefficient (landing gear) [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_stall_to">
+<span class="sig-name descname"><span class="pre">__v_stall_to</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_stall_to" title="Permalink to this definition">#</a></dt>
+<dd><p>stall speed (TO) [knots (CAS)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_stall_ic">
+<span class="sig-name descname"><span class="pre">__v_stall_ic</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_stall_ic" title="Permalink to this definition">#</a></dt>
+<dd><p>stall speed (IC) [knots (CAS)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_stall_cr">
+<span class="sig-name descname"><span class="pre">__v_stall_cr</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_stall_cr" title="Permalink to this definition">#</a></dt>
+<dd><p>stall speed (CR) [knots (CAS)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_stall_ap">
+<span class="sig-name descname"><span class="pre">__v_stall_ap</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_stall_ap" title="Permalink to this definition">#</a></dt>
+<dd><p>stall speed (AP) [knots (CAS)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_stall_ld">
+<span class="sig-name descname"><span class="pre">__v_stall_ld</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_stall_ld" title="Permalink to this definition">#</a></dt>
+<dd><p>stall speed (LD) [knots (CAS)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_lbo">
+<span class="sig-name descname"><span class="pre">__c_lbo</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_lbo" title="Permalink to this definition">#</a></dt>
+<dd><p>buffet onset lift coefficient (jet and TBP only) [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__k">
+<span class="sig-name descname"><span class="pre">__k</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__k" title="Permalink to this definition">#</a></dt>
+<dd><p>buffeting gradient (Jet &amp; TBP only) [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_tc_1">
+<span class="sig-name descname"><span class="pre">__c_tc_1</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_tc_1" title="Permalink to this definition">#</a></dt>
+<dd><p>1st maximum climb thrust coefficient [Newton (jet/piston) knot-Newton (turboprop)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_tc_2">
+<span class="sig-name descname"><span class="pre">__c_tc_2</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_tc_2" title="Permalink to this definition">#</a></dt>
+<dd><p>2nd maximum climb thrust coefficient [feet]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_tc_3">
+<span class="sig-name descname"><span class="pre">__c_tc_3</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_tc_3" title="Permalink to this definition">#</a></dt>
+<dd><p>3rd maximum climb thrust coefficient [1/feet^2 (jet) Newton (turboprop) knot-Newton (piston)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_tc_4">
+<span class="sig-name descname"><span class="pre">__c_tc_4</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_tc_4" title="Permalink to this definition">#</a></dt>
+<dd><p>1st thrust temperature coefficient [K]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_tc_5">
+<span class="sig-name descname"><span class="pre">__c_tc_5</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_tc_5" title="Permalink to this definition">#</a></dt>
+<dd><p>2nd thrust temperature coefficient [1/K]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_tdes_low">
+<span class="sig-name descname"><span class="pre">__c_tdes_low</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_tdes_low" title="Permalink to this definition">#</a></dt>
+<dd><p>low altitude descent thrust coefficient [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_tdes_high">
+<span class="sig-name descname"><span class="pre">__c_tdes_high</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_tdes_high" title="Permalink to this definition">#</a></dt>
+<dd><p>high altitude descent thrust coefficient [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__h_p_des">
+<span class="sig-name descname"><span class="pre">__h_p_des</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__h_p_des" title="Permalink to this definition">#</a></dt>
+<dd><p>transition altitude for calculation of descent thrust [feet]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_tdes_app">
+<span class="sig-name descname"><span class="pre">__c_tdes_app</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_tdes_app" title="Permalink to this definition">#</a></dt>
+<dd><p>approach thrust coefficient [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_tdes_ld">
+<span class="sig-name descname"><span class="pre">__c_tdes_ld</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_tdes_ld" title="Permalink to this definition">#</a></dt>
+<dd><p>landing thrust coefficient [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_des_ref">
+<span class="sig-name descname"><span class="pre">__v_des_ref</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_des_ref" title="Permalink to this definition">#</a></dt>
+<dd><p>reference descent speed [knots (CAS)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__m_des_ref">
+<span class="sig-name descname"><span class="pre">__m_des_ref</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__m_des_ref" title="Permalink to this definition">#</a></dt>
+<dd><p>reference descent Mach number [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_f1">
+<span class="sig-name descname"><span class="pre">__c_f1</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_f1" title="Permalink to this definition">#</a></dt>
+<dd><p>1st thrust specific fuel consumption coefficient [kg/(min*kN) (jet) kg/(min*kN*knot) (turboprop) kg/min (piston)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_f2">
+<span class="sig-name descname"><span class="pre">__c_f2</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_f2" title="Permalink to this definition">#</a></dt>
+<dd><p>2nd thrust specific fuel consumption coefficient [knots]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_f3">
+<span class="sig-name descname"><span class="pre">__c_f3</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_f3" title="Permalink to this definition">#</a></dt>
+<dd><p>1st descent fuel flow coefficient [kg/min]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_f4">
+<span class="sig-name descname"><span class="pre">__c_f4</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_f4" title="Permalink to this definition">#</a></dt>
+<dd><p>2nd descent fuel flow coefficient [feet]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__c_fcr">
+<span class="sig-name descname"><span class="pre">__c_fcr</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__c_fcr" title="Permalink to this definition">#</a></dt>
+<dd><p>cruise fuel flow correction coefficient [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__tol">
+<span class="sig-name descname"><span class="pre">__tol</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__tol" title="Permalink to this definition">#</a></dt>
+<dd><p>take-off length [m]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__ldl">
+<span class="sig-name descname"><span class="pre">__ldl</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__ldl" title="Permalink to this definition">#</a></dt>
+<dd><p>landing length [m]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__span">
+<span class="sig-name descname"><span class="pre">__span</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__span" title="Permalink to this definition">#</a></dt>
+<dd><p>wingspan [m]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__length">
+<span class="sig-name descname"><span class="pre">__length</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__length" title="Permalink to this definition">#</a></dt>
+<dd><p>length [m]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_cl_1">
+<span class="sig-name descname"><span class="pre">__v_cl_1</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_cl_1" title="Permalink to this definition">#</a></dt>
+<dd><p>standard climb CAS [knots] between 1,500/6,000 and 10,000 ft</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_cl_2">
+<span class="sig-name descname"><span class="pre">__v_cl_2</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_cl_2" title="Permalink to this definition">#</a></dt>
+<dd><p>standard climb CAS [knots] between 10,000 ft and Mach transition altitude</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__m_cl">
+<span class="sig-name descname"><span class="pre">__m_cl</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__m_cl" title="Permalink to this definition">#</a></dt>
+<dd><p>standard climb Mach number above Mach transition altitude</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_cr_1">
+<span class="sig-name descname"><span class="pre">__v_cr_1</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_cr_1" title="Permalink to this definition">#</a></dt>
+<dd><p>standard cruise CAS [knots] between 3,000 and 10,000 ft</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_cr_2">
+<span class="sig-name descname"><span class="pre">__v_cr_2</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_cr_2" title="Permalink to this definition">#</a></dt>
+<dd><p>standard cruise CAS [knots] between 10,000 ft and Mach transition altitude</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__m_cr">
+<span class="sig-name descname"><span class="pre">__m_cr</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__m_cr" title="Permalink to this definition">#</a></dt>
+<dd><p>standard cruise Mach number above Mach transition altitude</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_des_1">
+<span class="sig-name descname"><span class="pre">__v_des_1</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_des_1" title="Permalink to this definition">#</a></dt>
+<dd><p>standard descent CAS [knots] between 3,000/6,000 and 10,000 ft</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__v_des_2">
+<span class="sig-name descname"><span class="pre">__v_des_2</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__v_des_2" title="Permalink to this definition">#</a></dt>
+<dd><p>standard descent CAS [knots] between 10,000 ft and Mach transition altitude</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__m_des">
+<span class="sig-name descname"><span class="pre">__m_des</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__m_des" title="Permalink to this definition">#</a></dt>
+<dd><p>standard descent Mach number above Mach transition altitude</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.climb_schedule">
+<span class="sig-name descname"><span class="pre">climb_schedule</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.climb_schedule" title="Permalink to this definition">#</a></dt>
+<dd><p>Standard climb CAS schedule [knots*8] (section 4.1)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cruise_schedule">
+<span class="sig-name descname"><span class="pre">cruise_schedule</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cruise_schedule" title="Permalink to this definition">#</a></dt>
+<dd><p>Standard cruise CAS schedule [knots*5] (section 4.2)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.descent_schedule">
+<span class="sig-name descname"><span class="pre">descent_schedule</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.descent_schedule" title="Permalink to this definition">#</a></dt>
+<dd><p>Standard descent CAS schedule [knots*8] (section 4.3)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__A_L_MAX_CIV">
+<span class="sig-name descname"><span class="pre">__A_L_MAX_CIV</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__A_L_MAX_CIV" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum longitudinal acceleration for civil flights [2 ft/s^2]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__A_N_MAX_CIV">
+<span class="sig-name descname"><span class="pre">__A_N_MAX_CIV</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__A_N_MAX_CIV" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum normal acceleration for civil flights [5 ft/s^2]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__PHI_NORM_CIV_TOLD">
+<span class="sig-name descname"><span class="pre">__PHI_NORM_CIV_TOLD</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__PHI_NORM_CIV_TOLD" title="Permalink to this definition">#</a></dt>
+<dd><p>Nominal bank angles fpr civil flight during TO and LD [15 deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__PHI_NORM_CIV_OTHERS">
+<span class="sig-name descname"><span class="pre">__PHI_NORM_CIV_OTHERS</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__PHI_NORM_CIV_OTHERS" title="Permalink to this definition">#</a></dt>
+<dd><p>Nominal bank angles for civil flight during all other phases [30 deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__PHI_NORM_MIL">
+<span class="sig-name descname"><span class="pre">__PHI_NORM_MIL</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__PHI_NORM_MIL" title="Permalink to this definition">#</a></dt>
+<dd><p>Nominal bank angles for military flight (all phases) [50 deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_TOLD">
+<span class="sig-name descname"><span class="pre">__PHI_MAX_CIV_TOLD</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_TOLD" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum bank angles for civil flight during TO and LD [25 deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_HOLD">
+<span class="sig-name descname"><span class="pre">__PHI_MAX_CIV_HOLD</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_HOLD" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum bank angles for civil flight during HOLD [35 deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_OTHERS">
+<span class="sig-name descname"><span class="pre">__PHI_MAX_CIV_OTHERS</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_OTHERS" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum bank angles for civil flight during all other phases [45 deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__PHI_MAX_MIL">
+<span class="sig-name descname"><span class="pre">__PHI_MAX_MIL</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_MIL" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum bank angles for military flight (all phases) [70 deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__C_DES_EXP">
+<span class="sig-name descname"><span class="pre">__C_DES_EXP</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__C_DES_EXP" title="Permalink to this definition">#</a></dt>
+<dd><p>Expedited descent factor [1.6]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__C_TCR">
+<span class="sig-name descname"><span class="pre">__C_TCR</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__C_TCR" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum cruise thrust coefficient [0.95] (postition different between GPF and user menu)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__C_TH_TO">
+<span class="sig-name descname"><span class="pre">__C_TH_TO</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__C_TH_TO" title="Permalink to this definition">#</a></dt>
+<dd><p>Take-off thrust coefficient [1.2] (no longer used since BADA 3.0) (postition different between GPF and user menu)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__H_MAX_TO">
+<span class="sig-name descname"><span class="pre">__H_MAX_TO</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__H_MAX_TO" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum altitude threshold for take-off [400 ft]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__H_MAX_IC">
+<span class="sig-name descname"><span class="pre">__H_MAX_IC</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__H_MAX_IC" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum altitude threshold for initial climb [2,000 ft]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__H_MAX_AP">
+<span class="sig-name descname"><span class="pre">__H_MAX_AP</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__H_MAX_AP" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum altitude threshold for approach [8,000 ft]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__H_MAX_LD">
+<span class="sig-name descname"><span class="pre">__H_MAX_LD</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__H_MAX_LD" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum altitude threshold for landing [3,000 ft]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__C_V_MIN">
+<span class="sig-name descname"><span class="pre">__C_V_MIN</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__C_V_MIN" title="Permalink to this definition">#</a></dt>
+<dd><p>Minimum speed coefficient (all other phases) [1.3]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__C_V_MIN_TO">
+<span class="sig-name descname"><span class="pre">__C_V_MIN_TO</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__C_V_MIN_TO" title="Permalink to this definition">#</a></dt>
+<dd><p>Minimum speed coefficient for take-off [1.2]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_CL_1">
+<span class="sig-name descname"><span class="pre">__V_D_CL_1</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_1" title="Permalink to this definition">#</a></dt>
+<dd><p>Climb speed increment below 1,500 ft (jet) [5 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_CL_2">
+<span class="sig-name descname"><span class="pre">__V_D_CL_2</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_2" title="Permalink to this definition">#</a></dt>
+<dd><p>Climb speed increment below 3,000 ft (jet) [10 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_CL_3">
+<span class="sig-name descname"><span class="pre">__V_D_CL_3</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_3" title="Permalink to this definition">#</a></dt>
+<dd><p>Climb speed increment below 4,000 ft (jet) [30 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_CL_4">
+<span class="sig-name descname"><span class="pre">__V_D_CL_4</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_4" title="Permalink to this definition">#</a></dt>
+<dd><p>Climb speed increment below 5,000 ft (jet) [60 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_CL_5">
+<span class="sig-name descname"><span class="pre">__V_D_CL_5</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_5" title="Permalink to this definition">#</a></dt>
+<dd><p>Climb speed increment below 6,000 ft (jet) [80 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_CL_6">
+<span class="sig-name descname"><span class="pre">__V_D_CL_6</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_6" title="Permalink to this definition">#</a></dt>
+<dd><p>Climb speed increment below 500 ft (turbo/piston) [20 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_CL_7">
+<span class="sig-name descname"><span class="pre">__V_D_CL_7</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_7" title="Permalink to this definition">#</a></dt>
+<dd><p>Climb speed increment below 1,000 ft (turbo/piston) [30 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_CL_8">
+<span class="sig-name descname"><span class="pre">__V_D_CL_8</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_8" title="Permalink to this definition">#</a></dt>
+<dd><p>Climb speed increment below 1,500 ft (turbo/piston) [35 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_DSE_1">
+<span class="sig-name descname"><span class="pre">__V_D_DSE_1</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_1" title="Permalink to this definition">#</a></dt>
+<dd><p>Descent speed increment below 1,000 ft (jet/turboprop) [5 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_DSE_2">
+<span class="sig-name descname"><span class="pre">__V_D_DSE_2</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_2" title="Permalink to this definition">#</a></dt>
+<dd><p>Descent speed increment below 1,500 ft (jet/turboprop) [10 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_DSE_3">
+<span class="sig-name descname"><span class="pre">__V_D_DSE_3</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_3" title="Permalink to this definition">#</a></dt>
+<dd><p>Descent speed increment below 2,000 ft (jet/turboprop) [20 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_DSE_4">
+<span class="sig-name descname"><span class="pre">__V_D_DSE_4</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_4" title="Permalink to this definition">#</a></dt>
+<dd><p>Descent speed increment below 3,000 ft (jet/turboprop) [50 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_DSE_5">
+<span class="sig-name descname"><span class="pre">__V_D_DSE_5</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_5" title="Permalink to this definition">#</a></dt>
+<dd><p>Descent speed increment below 500 ft (piston) [5 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_DSE_6">
+<span class="sig-name descname"><span class="pre">__V_D_DSE_6</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_6" title="Permalink to this definition">#</a></dt>
+<dd><p>Descent speed increment below 1,000 ft (piston) [10 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_D_DSE_7">
+<span class="sig-name descname"><span class="pre">__V_D_DSE_7</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_7" title="Permalink to this definition">#</a></dt>
+<dd><p>Descent speed increment below 1,500 ft (piston) [20 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_HOLD_1">
+<span class="sig-name descname"><span class="pre">__V_HOLD_1</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_HOLD_1" title="Permalink to this definition">#</a></dt>
+<dd><p>Holding speed below FL140 [230 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_HOLD_2">
+<span class="sig-name descname"><span class="pre">__V_HOLD_2</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_HOLD_2" title="Permalink to this definition">#</a></dt>
+<dd><p>Holding speed between FL140 and FL220 [240 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_HOLD_3">
+<span class="sig-name descname"><span class="pre">__V_HOLD_3</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_HOLD_3" title="Permalink to this definition">#</a></dt>
+<dd><p>Holding speed between FL220 and FL340 [265 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_HOLD_4">
+<span class="sig-name descname"><span class="pre">__V_HOLD_4</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_HOLD_4" title="Permalink to this definition">#</a></dt>
+<dd><p>Holding speed above FL340 [0.83 Mach]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_BACKTRACK">
+<span class="sig-name descname"><span class="pre">__V_BACKTRACK</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_BACKTRACK" title="Permalink to this definition">#</a></dt>
+<dd><p>Runway backtrack speed [35 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_TAXI">
+<span class="sig-name descname"><span class="pre">__V_TAXI</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_TAXI" title="Permalink to this definition">#</a></dt>
+<dd><p>Taxi speed [15 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_APRON">
+<span class="sig-name descname"><span class="pre">__V_APRON</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_APRON" title="Permalink to this definition">#</a></dt>
+<dd><p>Apron speed [10 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__V_GATE">
+<span class="sig-name descname"><span class="pre">__V_GATE</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__V_GATE" title="Permalink to this definition">#</a></dt>
+<dd><p>Gate speed [5 knot CAS]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__C_RED_TURBO">
+<span class="sig-name descname"><span class="pre">__C_RED_TURBO</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__C_RED_TURBO" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum reduction in power for turboprops [0.25] (postition different between GPF and user menu)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__C_RED_PISTON">
+<span class="sig-name descname"><span class="pre">__C_RED_PISTON</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__C_RED_PISTON" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum reduction in power for pistons [0.0] (postition different between GPF and user menu)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__C_RED_JET">
+<span class="sig-name descname"><span class="pre">__C_RED_JET</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__C_RED_JET" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum reduction in power for jets [0.15]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__T_0">
+<span class="sig-name descname"><span class="pre">__T_0</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__T_0" title="Permalink to this definition">#</a></dt>
+<dd><p>Standard atmospheric temperature at MSL [K]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__P_0">
+<span class="sig-name descname"><span class="pre">__P_0</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__P_0" title="Permalink to this definition">#</a></dt>
+<dd><p>Standard atmospheric pressure at MSL [Pa]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__RHO_0">
+<span class="sig-name descname"><span class="pre">__RHO_0</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__RHO_0" title="Permalink to this definition">#</a></dt>
+<dd><p>Standard atmospheric density at MSL [kg/m^3]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__A_0">
+<span class="sig-name descname"><span class="pre">__A_0</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__A_0" title="Permalink to this definition">#</a></dt>
+<dd><p>Speed of sound [m/s]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__KAPPA">
+<span class="sig-name descname"><span class="pre">__KAPPA</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__KAPPA" title="Permalink to this definition">#</a></dt>
+<dd><p>Adiabatic index of air [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__R">
+<span class="sig-name descname"><span class="pre">__R</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__R" title="Permalink to this definition">#</a></dt>
+<dd><p>Real gas constant of air [m^2/(K*s^2)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__G_0">
+<span class="sig-name descname"><span class="pre">__G_0</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__G_0" title="Permalink to this definition">#</a></dt>
+<dd><p>Gravitational acceleration [m/s^2]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__BETA_T_BELOW_TROP">
+<span class="sig-name descname"><span class="pre">__BETA_T_BELOW_TROP</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__BETA_T_BELOW_TROP" title="Permalink to this definition">#</a></dt>
+<dd><p>ISA temperature gradient with altitude below the tropopause [K/m]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__H_P_TROP">
+<span class="sig-name descname"><span class="pre">__H_P_TROP</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__H_P_TROP" title="Permalink to this definition">#</a></dt>
+<dd><p>Geopotential pressure altitude [m]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.add_aircraft">
+<span class="sig-name descname"><span class="pre">add_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">icao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.add_aircraft" title="Permalink to this definition">#</a></dt>
+<dd><p>Add one specific aircraft performance data to the performance array according to index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>self: Performance class instance</strong></dt><dd><p>Used to add data to the performance array.</p>
+</dd>
+<dt><strong>ICAO: string</strong></dt><dd><p>ICAO code of the specific aircraft.</p>
+</dd>
+<dt><strong>mass: int</strong></dt><dd><p>Mass of aircraft [kg]</p>
+</dd>
+<dt><strong>mass_class: int</strong></dt><dd><p>Aircraft mass for specific flight. To be used for APF. 1 = LO, 2 = AV, 3 = HI TODO: useful?</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>TODO:</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.del_aircraft">
+<span class="sig-name descname"><span class="pre">del_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.del_aircraft" title="Permalink to this definition">#</a></dt>
+<dd><p>Delete one specific aircraft performance data to the performance array according to index. This is done by setting all parameters to 0 for reuse in future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>self: Performance class instance</strong></dt><dd><p>Used to delete data to the performance array.</p>
+</dd>
+<dt><strong>index: int</strong></dt><dd><p>Index of array.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cal_fuel_burn">
+<span class="sig-name descname"><span class="pre">cal_fuel_burn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flight_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thrust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cal_fuel_burn" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate fuel burn</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>flight_phase</strong><span class="classifier">float[]</span></dt><dd><p>Flight phase from Traffic class [Flight_phase enum]</p>
+</dd>
+<dt><strong>tas</strong><span class="classifier">float[]</span></dt><dd><p>True airspeed [kt]</p>
+</dd>
+<dt><strong>thrust</strong><span class="classifier">float[]</span></dt><dd><p>Thrust [N]</p>
+</dd>
+<dt><strong>alt</strong><span class="classifier">_type_</span></dt><dd><p>Altitude [ft]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Fuel burn</strong><span class="classifier">float[]</span></dt><dd><p>Fuel burn [kg/s]</p>
+</dd>
+<dt>TODO: Thrust mode -&gt; idle descent</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cal_thrust">
+<span class="sig-name descname"><span class="pre">cal_thrust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertical_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V_tas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ap_speed_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cal_thrust" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate thrust given flight phases.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>vertical_mode</strong><span class="classifier">float[]</span></dt><dd><p>Vertical mode from Traffic class [Vertical_mode enum]</p>
+</dd>
+<dt><strong>configuration</strong><span class="classifier">float[]</span></dt><dd><blockquote>
+<div><p>Configuration from Traffic class [Configuration enum]</p>
+</div></blockquote>
+<dl class="simple">
+<dt>H_p<span class="classifier">float[]</span></dt><dd><p>Geopotential pressuer altitude [ft]</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>V_tas</strong><span class="classifier">float[]</span></dt><dd><p>True airspeed [kt]</p>
+</dd>
+<dt><strong>d_T</strong><span class="classifier">float[]</span></dt><dd><p>Temperature differential from ISA [K]</p>
+</dd>
+<dt><strong>drag</strong><span class="classifier">float[]</span></dt><dd><p>Drag forces [N]</p>
+</dd>
+<dt><strong>ap_speed_mode</strong><span class="classifier">AP_speed_mode enum []</span></dt><dd><p>Autopilot speed mode [1: Constant CAS, 2: Constant Mach, 3: Acceleration, 4: Deceleration]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>_type_</dt><dd><p>_description_</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__cal_operating_speed">
+<span class="sig-name descname"><span class="pre">__cal_operating_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V_ref</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__cal_operating_speed" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate operating speed given mass (Equation 3.4-1)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>m: float[]</strong></dt><dd><p>Aircraft mass [kg]</p>
+</dd>
+<dt><strong>v_ref: float[]</strong></dt><dd><p>Velocity reference (e.g. v_stall) [m/s]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>V: float[]</dt><dd><p>Operating velocity [m/s]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cal_maximum_altitude">
+<span class="sig-name descname"><span class="pre">cal_maximum_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cal_maximum_altitude" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate flight envelope (Section 3.5-1)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>d_T: float[]</strong></dt><dd><p>Temperature differential from ISA [K]</p>
+</dd>
+<dt><strong>m: float[]</strong></dt><dd><p>Aircraft mass [kg]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>h_max/act: float[]</dt><dd><p>Actual maximum altitude for any given mass [ft]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cal_minimum_speed">
+<span class="sig-name descname"><span class="pre">cal_minimum_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cal_minimum_speed" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate minimum speed for aircraft (3.5-2~3)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>configuration: float[]</strong></dt><dd><p>configuration from Traffic class [configuration enum]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>v_min: float[]</dt><dd><p>Minimum at speed at specific configuration [knots] TODO: need to consider mass using __calculate_operating_speed?</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cal_aerodynamic_drag">
+<span class="sig-name descname"><span class="pre">cal_aerodynamic_drag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">V_tas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bank_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_des_exp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cal_aerodynamic_drag" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate Aerodynamic drag (Section 3.6.1)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>V_tas: float[]</strong></dt><dd><p>True airspeed [m/s]</p>
+</dd>
+<dt><strong>bank_angles: float[]</strong></dt><dd><p>Bank angles from Traffic class [deg]</p>
+</dd>
+<dt><strong>m: float[]</strong></dt><dd><p>Aircraft mass [kg]</p>
+</dd>
+<dt><strong>rho: float[]</strong></dt><dd><p>Density [kg/m^3]</p>
+</dd>
+<dt><strong>configuration: float[]</strong></dt><dd><p>Configuration from Traffic class [Configuration enum]</p>
+</dd>
+<dt><strong>c_des_exp: float[]</strong></dt><dd><p>Coefficient of expedited descent factor [dimensionless]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>D: float[]</dt><dd><p>Drag force [N]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cal_low_speed_buffeting_limit">
+<span class="sig-name descname"><span class="pre">cal_low_speed_buffeting_limit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cal_low_speed_buffeting_limit" title="Permalink to this definition">#</a></dt>
+<dd><p>Low speed buffeting limit for jet and turboprop aircraft. It is expressed as Mach number. (Equation 3.6-6)
+TODO: Appendix B</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>p: float[]</strong></dt><dd><p>Pressure [Pa]</p>
+</dd>
+<dt><strong>M: float[]</strong></dt><dd><p>Mach number [dimensionless]</p>
+</dd>
+<dt><strong>m: float[]</strong></dt><dd><p>Aircraft mass [kg]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>M: float[]</dt><dd><p>Mach number [dimensionless]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>TODO: Calculate minimum speed for Jet and Turboprop when H_p &gt;= 15000. V_min = MAX(V_min_stall, M_b) (&lt;- same unit)</dt><dd><p>If H_p &lt; 15000, V_min = V_min_stall</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__cal_max_climb_to_thrust">
+<span class="sig-name descname"><span class="pre">__cal_max_climb_to_thrust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V_tas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_T</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__cal_max_climb_to_thrust" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate maximum climb thrust for both take-off and climb phases (Section 3.7.1)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H_p: float[]</strong></dt><dd><p>Geopotential pressuer altitude [ft] TODO: Different unit</p>
+</dd>
+<dt><strong>V_tas: float[]</strong></dt><dd><p>True airspeed [kt] TODO: Different unit</p>
+</dd>
+<dt><strong>d_T: float[]</strong></dt><dd><p>Temperature differential from ISA [K]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Thr_max_climb: float[]</dt><dd><p>Maximum climb thrust [N]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__cal_max_cruise_thrust">
+<span class="sig-name descname"><span class="pre">__cal_max_cruise_thrust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Thr_max_climb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__cal_max_cruise_thrust" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate maximum cruise thrust (Equation 3.7-8)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Thr_max_climb: float[]</strong></dt><dd><p>Maximum climb thrust [N] (obtained from cal_max_climb_to_thrust())</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>thr_cruise_max: float[]</dt><dd><p>Maximum cruise thrust [N]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The normal cruise thrust is by definition set equal to drag (Thr=D). However, the maximum amount of thrust available in cruise situation is limited.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__cal_descent_thrust">
+<span class="sig-name descname"><span class="pre">__cal_descent_thrust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Thr_max_climb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__cal_descent_thrust" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate descent thrust (Section 3.7.3)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H_p: float[]</strong></dt><dd><p>Geopotential pressuer altitude [m]</p>
+</dd>
+<dt><strong>Thr_max_climb: float[]</strong></dt><dd><p>Maximum climb thrust [N]</p>
+</dd>
+<dt><strong>Configuration: float[]</strong></dt><dd><p>Configuration from Traffic class [Configuration enum]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Thr_des: float[]</dt><dd><p>Descent thrust [N]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cal_reduced_climb_power">
+<span class="sig-name descname"><span class="pre">cal_reduced_climb_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cal_reduced_climb_power" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate reduced climb power (section 3.8)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>m: float[]</strong></dt><dd><p>Aircraft mass [kg]</p>
+</dd>
+<dt><strong>H_p: float[]</strong></dt><dd><p>Geopotential pressuer altitude [m]</p>
+</dd>
+<dt><strong>H_max: float[]</strong></dt><dd><p>Actual maximum altitude for any given mass [kg] (obtained from __cal_maximum_altitude())</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>C_pow,red: float[]</dt><dd><p>Coefficient of reduced climb power [dimensionless]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The result can be applied in the calculation of ROCD during climb phase TODO:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__cal_nominal_fuel_flow">
+<span class="sig-name descname"><span class="pre">__cal_nominal_fuel_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">V_tas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Thr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__cal_nominal_fuel_flow" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate nominal fuel flow (except idle descent and cruise) (equations 3.9-1~3 and 3.9-7)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>V_tas: float[]</strong></dt><dd><p>True airspeed [kt] TODO: Different unit</p>
+</dd>
+<dt><strong>Thr: float[]</strong></dt><dd><p>Thrust acting parallel to the aircraft velocity vector [N]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>f_norm: float[]</dt><dd><p>Nominal fuel flow [kg/min]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__cal_minimum_fuel_flow">
+<span class="sig-name descname"><span class="pre">__cal_minimum_fuel_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H_p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__cal_minimum_fuel_flow" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate fuel flow for idle descent (equations 3.9-4 and 3.9-8)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H_p: float[]</strong></dt><dd><p>Geopotential pressuer altitude [ft] TODO: Different uni</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>f_min: float[]</dt><dd><p>Minimum fuel flow [kg/min]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__cal_approach_landing_fuel_flow">
+<span class="sig-name descname"><span class="pre">__cal_approach_landing_fuel_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">V_tas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Thr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H_p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__cal_approach_landing_fuel_flow" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate fuel flow for approach and landing (equations 3.9-5 and 3.9-8)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>V_tas: float[]</strong></dt><dd><p>True airspeed [kt] TODO: Different unit</p>
+</dd>
+<dt><strong>Thr: float[]</strong></dt><dd><p>Thrust acting parallel to the aircraft velocity vector [N]</p>
+</dd>
+<dt><strong>H_p: float[]</strong></dt><dd><p>Geopotential pressuer altitude [ft] TODO: Different uni</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>f_app/ld: float[]</dt><dd><p>Approach and landing fuel flow [kg/min]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.__cal_cruise_fuel_flow">
+<span class="sig-name descname"><span class="pre">__cal_cruise_fuel_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">V_tas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Thr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.__cal_cruise_fuel_flow" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate fuel flow for cruise (equations 3.9-6 and 3.9-9)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>V_tas: float[]</strong></dt><dd><p>True airspeed [kt] TODO: Different unit</p>
+</dd>
+<dt><strong>Thr: float[]</strong></dt><dd><p>Thrust acting parallel to the aircraft velocity vector [N]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>f_cr: float[]</dt><dd><p>Cruise fuel flow [kg/min]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.init_procedure_speed">
+<span class="sig-name descname"><span class="pre">init_procedure_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.init_procedure_speed" title="Permalink to this definition">#</a></dt>
+<dd><p>Initialize standard air speed schedule for all flight phases (Section 4.1-4.3)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>m: float[]</strong></dt><dd><p>Aircraft mass [kg]</p>
+</dd>
+<dt><strong>n: int</strong></dt><dd><p>Index of performance array.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.get_procedure_speed">
+<span class="sig-name descname"><span class="pre">get_procedure_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H_p_trans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flight_phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.get_procedure_speed" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the standard air speed schedule</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>H_p: float[]</strong></dt><dd><p>Geopotential pressuer altitude [ft]</p>
+</dd>
+<dt><strong>H_p_trans: float[]</strong></dt><dd><p>Transition altitude [ft]</p>
+</dd>
+<dt><strong>m: float[]</strong></dt><dd><p>Aircraft mass [kg]</p>
+</dd>
+<dt><strong>flight_phase: float[]</strong></dt><dd><p>Flight phase from Traffic class [Flight_phase enum]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>v_std: float[]</dt><dd><p>Standard CAS [kt]</p>
+</dd>
+</dl>
+<dl class="option-list">
+<dt><kbd><span class="option">-o<var>r-</var></span></kbd></dt>
+<dd></dd>
+</dl>
+<dl class="simple">
+<dt>M_std: float[]</dt><dd><p>Standard Mach [dimensionless]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>TODO: Recommended to determine the speed schedule from the highest altitude to the lowest one, 
+and to use at each step the speed of the higher altitude range as a ceiling value for the lower altitude range.</p>
+<p>TODO: Bound the speed schedule form the minimum and maximum speed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.update_configuration">
+<span class="sig-name descname"><span class="pre">update_configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">V_cas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.update_configuration" title="Permalink to this definition">#</a></dt>
+<dd><p>Update configuration (section 3.5)</p>
+<dl class="simple">
+<dt>V_cas: float[]</dt><dd><p>True air speed [knots]</p>
+</dd>
+<dt>H_p: float[]</dt><dd><p>Geopotential pressuer altitude [ft]</p>
+</dd>
+<dt>vertical_mode<span class="classifier">float[]</span></dt><dd><p>Vertical mode from Traffic class [Vertical_mode enum]</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>configuration</strong><span class="classifier">float[]</span></dt><dd><p>configuration from Traffic class [configuration enum]</p>
+</dd>
+<dt>TODO: Make use of Airport Elevation in calculation</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cal_max_d_tas">
+<span class="sig-name descname"><span class="pre">cal_max_d_tas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cal_max_d_tas" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate maximum delta true air speed (equation 5.2-1)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>d_t: float[]</strong></dt><dd><p>Timestep [s]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>d_v: float[]</dt><dd><p>Max delta velocity for time step [ft/s^2]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cal_max_d_rocd">
+<span class="sig-name descname"><span class="pre">cal_max_d_rocd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V_tas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rocd</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cal_max_d_rocd" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate maximum delta rate of climb or descend (equation 5.2-2)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>d_t: float[]</strong></dt><dd><p>Timestep [s]</p>
+</dd>
+<dt><strong>V_tas: float[]</strong></dt><dd><p>True air speed [ft/s]</p>
+</dd>
+<dt><strong>rocd: float[]</strong></dt><dd><p>Current rate of climb/descend [ft/s]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>d_rocd: float[]</dt><dd><p>Delta rate of climb or descent [ft/s^2]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada.cal_expedite_descend_factor">
+<span class="sig-name descname"><span class="pre">cal_expedite_descend_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expedite_descent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada.cal_expedite_descend_factor" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate expedited descent factor for drag multiplication. (Equation 5.4-1)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>expedite_descent: bool[]</strong></dt><dd><p>Autopilot setting of whether expedite descent is activated</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>c_des_exp: float[]</dt><dd><p>Coefficient of expedited descent factor [dimensionless]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -298,13 +1623,174 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">bada</a><ul>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada"><code class="docutils literal notranslate"><span class="pre">Bada</span></code></a><ul>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__n_eng"><code class="docutils literal notranslate"><span class="pre">Bada.__n_eng</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__engine_type"><code class="docutils literal notranslate"><span class="pre">Bada.__engine_type</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__wake_category"><code class="docutils literal notranslate"><span class="pre">Bada.__wake_category</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__m_ref"><code class="docutils literal notranslate"><span class="pre">Bada.__m_ref</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.m_min"><code class="docutils literal notranslate"><span class="pre">Bada.m_min</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__m_max"><code class="docutils literal notranslate"><span class="pre">Bada.__m_max</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__m_pyld"><code class="docutils literal notranslate"><span class="pre">Bada.__m_pyld</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.v_mo"><code class="docutils literal notranslate"><span class="pre">Bada.v_mo</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.m_mo"><code class="docutils literal notranslate"><span class="pre">Bada.m_mo</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__h_mo"><code class="docutils literal notranslate"><span class="pre">Bada.__h_mo</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__h_max"><code class="docutils literal notranslate"><span class="pre">Bada.__h_max</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__g_w"><code class="docutils literal notranslate"><span class="pre">Bada.__g_w</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__g_t"><code class="docutils literal notranslate"><span class="pre">Bada.__g_t</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__S"><code class="docutils literal notranslate"><span class="pre">Bada.__S</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_d0_cr"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d0_cr</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_d2_cr"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d2_cr</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_d0_ap"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d0_ap</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_d2_ap"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d2_ap</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_d0_ld"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d0_ld</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_d2_ld"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d2_ld</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_d0_ldg"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d0_ldg</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_stall_to"><code class="docutils literal notranslate"><span class="pre">Bada.__v_stall_to</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_stall_ic"><code class="docutils literal notranslate"><span class="pre">Bada.__v_stall_ic</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_stall_cr"><code class="docutils literal notranslate"><span class="pre">Bada.__v_stall_cr</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_stall_ap"><code class="docutils literal notranslate"><span class="pre">Bada.__v_stall_ap</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_stall_ld"><code class="docutils literal notranslate"><span class="pre">Bada.__v_stall_ld</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_lbo"><code class="docutils literal notranslate"><span class="pre">Bada.__c_lbo</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__k"><code class="docutils literal notranslate"><span class="pre">Bada.__k</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_tc_1"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tc_1</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_tc_2"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tc_2</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_tc_3"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tc_3</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_tc_4"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tc_4</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_tc_5"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tc_5</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_tdes_low"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tdes_low</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_tdes_high"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tdes_high</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__h_p_des"><code class="docutils literal notranslate"><span class="pre">Bada.__h_p_des</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_tdes_app"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tdes_app</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_tdes_ld"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tdes_ld</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_des_ref"><code class="docutils literal notranslate"><span class="pre">Bada.__v_des_ref</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__m_des_ref"><code class="docutils literal notranslate"><span class="pre">Bada.__m_des_ref</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_f1"><code class="docutils literal notranslate"><span class="pre">Bada.__c_f1</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_f2"><code class="docutils literal notranslate"><span class="pre">Bada.__c_f2</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_f3"><code class="docutils literal notranslate"><span class="pre">Bada.__c_f3</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_f4"><code class="docutils literal notranslate"><span class="pre">Bada.__c_f4</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__c_fcr"><code class="docutils literal notranslate"><span class="pre">Bada.__c_fcr</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__tol"><code class="docutils literal notranslate"><span class="pre">Bada.__tol</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__ldl"><code class="docutils literal notranslate"><span class="pre">Bada.__ldl</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__span"><code class="docutils literal notranslate"><span class="pre">Bada.__span</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__length"><code class="docutils literal notranslate"><span class="pre">Bada.__length</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_cl_1"><code class="docutils literal notranslate"><span class="pre">Bada.__v_cl_1</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_cl_2"><code class="docutils literal notranslate"><span class="pre">Bada.__v_cl_2</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__m_cl"><code class="docutils literal notranslate"><span class="pre">Bada.__m_cl</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_cr_1"><code class="docutils literal notranslate"><span class="pre">Bada.__v_cr_1</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_cr_2"><code class="docutils literal notranslate"><span class="pre">Bada.__v_cr_2</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__m_cr"><code class="docutils literal notranslate"><span class="pre">Bada.__m_cr</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_des_1"><code class="docutils literal notranslate"><span class="pre">Bada.__v_des_1</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__v_des_2"><code class="docutils literal notranslate"><span class="pre">Bada.__v_des_2</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__m_des"><code class="docutils literal notranslate"><span class="pre">Bada.__m_des</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.climb_schedule"><code class="docutils literal notranslate"><span class="pre">Bada.climb_schedule</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cruise_schedule"><code class="docutils literal notranslate"><span class="pre">Bada.cruise_schedule</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.descent_schedule"><code class="docutils literal notranslate"><span class="pre">Bada.descent_schedule</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__A_L_MAX_CIV"><code class="docutils literal notranslate"><span class="pre">Bada.__A_L_MAX_CIV</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__A_N_MAX_CIV"><code class="docutils literal notranslate"><span class="pre">Bada.__A_N_MAX_CIV</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__PHI_NORM_CIV_TOLD"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_NORM_CIV_TOLD</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__PHI_NORM_CIV_OTHERS"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_NORM_CIV_OTHERS</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__PHI_NORM_MIL"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_NORM_MIL</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_TOLD"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_MAX_CIV_TOLD</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_HOLD"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_MAX_CIV_HOLD</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_OTHERS"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_MAX_CIV_OTHERS</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_MIL"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_MAX_MIL</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__C_DES_EXP"><code class="docutils literal notranslate"><span class="pre">Bada.__C_DES_EXP</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__C_TCR"><code class="docutils literal notranslate"><span class="pre">Bada.__C_TCR</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__C_TH_TO"><code class="docutils literal notranslate"><span class="pre">Bada.__C_TH_TO</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__H_MAX_TO"><code class="docutils literal notranslate"><span class="pre">Bada.__H_MAX_TO</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__H_MAX_IC"><code class="docutils literal notranslate"><span class="pre">Bada.__H_MAX_IC</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__H_MAX_AP"><code class="docutils literal notranslate"><span class="pre">Bada.__H_MAX_AP</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__H_MAX_LD"><code class="docutils literal notranslate"><span class="pre">Bada.__H_MAX_LD</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__C_V_MIN"><code class="docutils literal notranslate"><span class="pre">Bada.__C_V_MIN</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__C_V_MIN_TO"><code class="docutils literal notranslate"><span class="pre">Bada.__C_V_MIN_TO</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_1"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_1</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_2"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_2</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_3"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_3</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_4"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_4</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_5"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_5</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_6"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_6</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_7"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_7</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_CL_8"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_8</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_1"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_1</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_2"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_2</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_3"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_3</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_4"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_4</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_5"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_5</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_6"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_6</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_7"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_7</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_HOLD_1"><code class="docutils literal notranslate"><span class="pre">Bada.__V_HOLD_1</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_HOLD_2"><code class="docutils literal notranslate"><span class="pre">Bada.__V_HOLD_2</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_HOLD_3"><code class="docutils literal notranslate"><span class="pre">Bada.__V_HOLD_3</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_HOLD_4"><code class="docutils literal notranslate"><span class="pre">Bada.__V_HOLD_4</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_BACKTRACK"><code class="docutils literal notranslate"><span class="pre">Bada.__V_BACKTRACK</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_TAXI"><code class="docutils literal notranslate"><span class="pre">Bada.__V_TAXI</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_APRON"><code class="docutils literal notranslate"><span class="pre">Bada.__V_APRON</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__V_GATE"><code class="docutils literal notranslate"><span class="pre">Bada.__V_GATE</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__C_RED_TURBO"><code class="docutils literal notranslate"><span class="pre">Bada.__C_RED_TURBO</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__C_RED_PISTON"><code class="docutils literal notranslate"><span class="pre">Bada.__C_RED_PISTON</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__C_RED_JET"><code class="docutils literal notranslate"><span class="pre">Bada.__C_RED_JET</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__T_0"><code class="docutils literal notranslate"><span class="pre">Bada.__T_0</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__P_0"><code class="docutils literal notranslate"><span class="pre">Bada.__P_0</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__RHO_0"><code class="docutils literal notranslate"><span class="pre">Bada.__RHO_0</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__A_0"><code class="docutils literal notranslate"><span class="pre">Bada.__A_0</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__KAPPA"><code class="docutils literal notranslate"><span class="pre">Bada.__KAPPA</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__R"><code class="docutils literal notranslate"><span class="pre">Bada.__R</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__G_0"><code class="docutils literal notranslate"><span class="pre">Bada.__G_0</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__BETA_T_BELOW_TROP"><code class="docutils literal notranslate"><span class="pre">Bada.__BETA_T_BELOW_TROP</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__H_P_TROP"><code class="docutils literal notranslate"><span class="pre">Bada.__H_P_TROP</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.add_aircraft"><code class="docutils literal notranslate"><span class="pre">Bada.add_aircraft()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.del_aircraft"><code class="docutils literal notranslate"><span class="pre">Bada.del_aircraft()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_fuel_burn"><code class="docutils literal notranslate"><span class="pre">Bada.cal_fuel_burn()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_thrust"><code class="docutils literal notranslate"><span class="pre">Bada.cal_thrust()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__cal_operating_speed"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_operating_speed()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_maximum_altitude"><code class="docutils literal notranslate"><span class="pre">Bada.cal_maximum_altitude()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_minimum_speed"><code class="docutils literal notranslate"><span class="pre">Bada.cal_minimum_speed()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_aerodynamic_drag"><code class="docutils literal notranslate"><span class="pre">Bada.cal_aerodynamic_drag()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_low_speed_buffeting_limit"><code class="docutils literal notranslate"><span class="pre">Bada.cal_low_speed_buffeting_limit()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__cal_max_climb_to_thrust"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_max_climb_to_thrust()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__cal_max_cruise_thrust"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_max_cruise_thrust()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__cal_descent_thrust"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_descent_thrust()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_reduced_climb_power"><code class="docutils literal notranslate"><span class="pre">Bada.cal_reduced_climb_power()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__cal_nominal_fuel_flow"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_nominal_fuel_flow()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__cal_minimum_fuel_flow"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_minimum_fuel_flow()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__cal_approach_landing_fuel_flow"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_approach_landing_fuel_flow()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.__cal_cruise_fuel_flow"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_cruise_fuel_flow()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.init_procedure_speed"><code class="docutils literal notranslate"><span class="pre">Bada.init_procedure_speed()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.get_procedure_speed"><code class="docutils literal notranslate"><span class="pre">Bada.get_procedure_speed()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.update_configuration"><code class="docutils literal notranslate"><span class="pre">Bada.update_configuration()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_max_d_tas"><code class="docutils literal notranslate"><span class="pre">Bada.cal_max_d_tas()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_max_d_rocd"><code class="docutils literal notranslate"><span class="pre">Bada.cal_max_d_rocd()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_expedite_descend_factor"><code class="docutils literal notranslate"><span class="pre">Bada.cal_expedite_descend_factor()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>

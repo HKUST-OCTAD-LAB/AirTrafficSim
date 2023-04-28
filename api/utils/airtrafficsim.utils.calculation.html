@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="unit_conversion" href="airtrafficsim.utils.unit_conversion.html" /><link rel="prev" title="enums" href="airtrafficsim.utils.enums.html" />
 
-    <link rel="shortcut icon" href="../../_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="../../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>calculation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -238,7 +238,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -246,6 +246,178 @@
         <article role="main">
           <section id="calculation">
 <h1>calculation<a class="headerlink" href="#calculation" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="airtrafficsim.utils.calculation.Cal">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airtrafficsim.utils.calculation.</span></span><span class="sig-name descname"><span class="pre">Cal</span></span><a class="headerlink" href="#airtrafficsim.utils.calculation.Cal" title="Permalink to this definition">#</a></dt>
+<dd><p>A utility class for calculation</p>
+<p class="rubric">Methods</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal.cal_angle_diff" title="airtrafficsim.utils.calculation.Cal.cal_angle_diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_angle_diff</span></code></a>(current_angle, target_angle)</p></td>
+<td><p>Calculate the difference of two angle (+ve clockwise, -ve anti-clockwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal.cal_cross_track_dist" title="airtrafficsim.utils.calculation.Cal.cal_cross_track_dist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_cross_track_dist</span></code></a>(path_lat1, path_long1, ...)</p></td>
+<td><p>Calculate the cross track distance between point(s) along a great circle path.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal.cal_dest_given_dist_bearing" title="airtrafficsim.utils.calculation.Cal.cal_dest_given_dist_bearing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_dest_given_dist_bearing</span></code></a>(lat, long, ...)</p></td>
+<td><p>Calculate the destination point(s) given start point(s), bearing(s) and distance(s)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal.cal_great_circle_bearing" title="airtrafficsim.utils.calculation.Cal.cal_great_circle_bearing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_great_circle_bearing</span></code></a>(lat1, long1, lat2, ...)</p></td>
+<td><p>Calculate the great circle bearing of two points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal.cal_great_circle_dist" title="airtrafficsim.utils.calculation.Cal.cal_great_circle_dist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_great_circle_dist</span></code></a>(lat1, long1, lat2, long2)</p></td>
+<td><p>Calculate great circle distance in km between two point.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.utils.calculation.Cal.cal_great_circle_dist">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cal_great_circle_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.utils.calculation.Cal.cal_great_circle_dist" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate great circle distance in km between two point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float[]</span></dt><dd><p>Latitude of first point(s) [deg]</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float[]</span></dt><dd><p>Longitude of first point(s) [deg]</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float[]</span></dt><dd><p>Latitude of second point(s) [deg]</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float[]</span></dt><dd><p>Longitude of second point(s) [deg]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float[]</dt><dd><p>Great circle distance [km]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Haversine distance using mean Earth radius 6371.009km for the WGS84 ellipsoid.
+<a class="reference external" href="https://www.movable-type.co.uk/scripts/latlong.html">https://www.movable-type.co.uk/scripts/latlong.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.utils.calculation.Cal.cal_great_circle_bearing">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cal_great_circle_bearing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.utils.calculation.Cal.cal_great_circle_bearing" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate the great circle bearing of two points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float[]</span></dt><dd><p>Latitude of first point(s) [deg]</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float[]</span></dt><dd><p>Longitude of first point(s) [deg]</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float[]</span></dt><dd><p>Latitude of second point(s) [deg]</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float[]</span></dt><dd><p>Longitude of second point(s) [deg]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float[]</dt><dd><p>Bearing [deg 0-360]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Initial bearing or forward azimuth
+<a class="reference external" href="https://www.movable-type.co.uk/scripts/latlong.html">https://www.movable-type.co.uk/scripts/latlong.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.utils.calculation.Cal.cal_dest_given_dist_bearing">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cal_dest_given_dist_bearing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bearing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.utils.calculation.Cal.cal_dest_given_dist_bearing" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate the destination point(s) given start point(s), bearing(s) and distance(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat</strong><span class="classifier">float[]</span></dt><dd><p>Latitude of start point(s) [deg]</p>
+</dd>
+<dt><strong>long</strong><span class="classifier">float[]</span></dt><dd><p>Longitude of start point(s) [deg]</p>
+</dd>
+<dt><strong>bearing</strong><span class="classifier">float[]</span></dt><dd><p>Target bearing(s) [deg 0-360]</p>
+</dd>
+<dt><strong>dist</strong><span class="classifier">float[]</span></dt><dd><p>Target distance(s) [km]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>lat2</strong><span class="classifier">float[]</span></dt><dd><p>Latitude of destination(s) [deg]</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float[]</span></dt><dd><p>Longitude of destination(s) [deg]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Using mean Earth radius 6371.009km for the WGS84 ellipsoid.
+<a class="reference external" href="https://www.movable-type.co.uk/scripts/latlong.html">https://www.movable-type.co.uk/scripts/latlong.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.utils.calculation.Cal.cal_cross_track_dist">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cal_cross_track_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_long2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_long</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.utils.calculation.Cal.cal_cross_track_dist" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate the cross track distance between point(s) along a great circle path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>path_lat1</strong><span class="classifier">float</span></dt><dd><p>Latitude of first point of great circle path [deg]</p>
+</dd>
+<dt><strong>path_long1</strong><span class="classifier">float</span></dt><dd><p>Longitude of first point of great circle path [deg]</p>
+</dd>
+<dt><strong>path_lat2</strong><span class="classifier">float</span></dt><dd><p>Latitude of second point of great circle path [deg]</p>
+</dd>
+<dt><strong>path_long2</strong><span class="classifier">float</span></dt><dd><p>Longitude of second point of great circle point [deg]</p>
+</dd>
+<dt><strong>point_lat</strong><span class="classifier">float[]</span></dt><dd><p>Latitude of point(s) [deg]</p>
+</dd>
+<dt><strong>point_long</strong><span class="classifier">float[]</span></dt><dd><p>Longitude of point(s) [deg]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float[]</dt><dd><p>Cross track distance [km]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Cross track distance using mean Earth radius 6371.009km for the WGS84 ellipsoid.
+<a class="reference external" href="https://www.movable-type.co.uk/scripts/latlong.html">https://www.movable-type.co.uk/scripts/latlong.html</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.utils.calculation.Cal.cal_angle_diff">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cal_angle_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_angle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.utils.calculation.Cal.cal_angle_diff" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate the difference of two angle (+ve clockwise, -ve anti-clockwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>current_angle</strong><span class="classifier">float[]</span></dt><dd><p>Current angle [deg]</p>
+</dd>
+<dt><strong>target_angle</strong><span class="classifier">float[]</span></dt><dd><p>Target angle [deg]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float[]</dt><dd><p>Angle difference [deg]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -298,13 +470,42 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">calculation</a><ul>
+<li><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal"><code class="docutils literal notranslate"><span class="pre">Cal</span></code></a><ul>
+<li><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal.cal_great_circle_dist"><code class="docutils literal notranslate"><span class="pre">Cal.cal_great_circle_dist()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal.cal_great_circle_bearing"><code class="docutils literal notranslate"><span class="pre">Cal.cal_great_circle_bearing()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal.cal_dest_given_dist_bearing"><code class="docutils literal notranslate"><span class="pre">Cal.cal_dest_given_dist_bearing()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal.cal_cross_track_dist"><code class="docutils literal notranslate"><span class="pre">Cal.cal_cross_track_dist()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.utils.calculation.Cal.cal_angle_diff"><code class="docutils literal notranslate"><span class="pre">Cal.cal_angle_diff()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>

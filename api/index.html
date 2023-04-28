@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="core" href="airtrafficsim.core.html" /><link rel="prev" title="Documentation development" href="../development/documentation.html" />
 
-    <link rel="shortcut icon" href="../_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>airtrafficsim</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -250,15 +250,347 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="airtrafficsim.core.html">core</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.environment.html">environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html">aircraft</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.traffic.html">traffic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.navigation.html">navigation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html">autopilot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.performance.html">performance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.bada.html">bada</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.weather.html">weather</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.era5.html">era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.environment.html">environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.start_time"><code class="docutils literal notranslate"><span class="pre">Environment.start_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.end_time"><code class="docutils literal notranslate"><span class="pre">Environment.end_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.atc_command"><code class="docutils literal notranslate"><span class="pre">Environment.atc_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.should_end"><code class="docutils literal notranslate"><span class="pre">Environment.should_end()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.step"><code class="docutils literal notranslate"><span class="pre">Environment.step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.run"><code class="docutils literal notranslate"><span class="pre">Environment.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.save"><code class="docutils literal notranslate"><span class="pre">Environment.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.export_to_csv"><code class="docutils literal notranslate"><span class="pre">Environment.export_to_csv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.send_to_client"><code class="docutils literal notranslate"><span class="pre">Environment.send_to_client()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html">aircraft</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft"><code class="docutils literal notranslate"><span class="pre">Aircraft</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.set_heading"><code class="docutils literal notranslate"><span class="pre">Aircraft.set_heading()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.set_speed"><code class="docutils literal notranslate"><span class="pre">Aircraft.set_speed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.set_vs"><code class="docutils literal notranslate"><span class="pre">Aircraft.set_vs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.set_alt"><code class="docutils literal notranslate"><span class="pre">Aircraft.set_alt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.set_direct"><code class="docutils literal notranslate"><span class="pre">Aircraft.set_direct()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.set_holding"><code class="docutils literal notranslate"><span class="pre">Aircraft.set_holding()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.set_vectoring"><code class="docutils literal notranslate"><span class="pre">Aircraft.set_vectoring()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.resume_own_navigation"><code class="docutils literal notranslate"><span class="pre">Aircraft.resume_own_navigation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.get_heading"><code class="docutils literal notranslate"><span class="pre">Aircraft.get_heading()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.get_cas"><code class="docutils literal notranslate"><span class="pre">Aircraft.get_cas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.get_mach"><code class="docutils literal notranslate"><span class="pre">Aircraft.get_mach()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.get_vs"><code class="docutils literal notranslate"><span class="pre">Aircraft.get_vs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.get_alt"><code class="docutils literal notranslate"><span class="pre">Aircraft.get_alt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.get_long"><code class="docutils literal notranslate"><span class="pre">Aircraft.get_long()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.get_lat"><code class="docutils literal notranslate"><span class="pre">Aircraft.get_lat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.get_fuel_consumed"><code class="docutils literal notranslate"><span class="pre">Aircraft.get_fuel_consumed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.get_next_wp"><code class="docutils literal notranslate"><span class="pre">Aircraft.get_next_wp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.get_wake"><code class="docutils literal notranslate"><span class="pre">Aircraft.get_wake()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.traffic.html">traffic</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic"><code class="docutils literal notranslate"><span class="pre">Traffic</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.n"><code class="docutils literal notranslate"><span class="pre">Traffic.n</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.index"><code class="docutils literal notranslate"><span class="pre">Traffic.index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.call_sign"><code class="docutils literal notranslate"><span class="pre">Traffic.call_sign</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.aircraft_type"><code class="docutils literal notranslate"><span class="pre">Traffic.aircraft_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.configuration"><code class="docutils literal notranslate"><span class="pre">Traffic.configuration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.flight_phase"><code class="docutils literal notranslate"><span class="pre">Traffic.flight_phase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.lat"><code class="docutils literal notranslate"><span class="pre">Traffic.lat</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.long"><code class="docutils literal notranslate"><span class="pre">Traffic.long</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.alt"><code class="docutils literal notranslate"><span class="pre">Traffic.alt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.trans_alt"><code class="docutils literal notranslate"><span class="pre">Traffic.trans_alt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.cruise_alt"><code class="docutils literal notranslate"><span class="pre">Traffic.cruise_alt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.heading"><code class="docutils literal notranslate"><span class="pre">Traffic.heading</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.track_angle"><code class="docutils literal notranslate"><span class="pre">Traffic.track_angle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.bank_angle"><code class="docutils literal notranslate"><span class="pre">Traffic.bank_angle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.path_angle"><code class="docutils literal notranslate"><span class="pre">Traffic.path_angle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.cas"><code class="docutils literal notranslate"><span class="pre">Traffic.cas</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.tas"><code class="docutils literal notranslate"><span class="pre">Traffic.tas</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.gs_north"><code class="docutils literal notranslate"><span class="pre">Traffic.gs_north</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.gs_east"><code class="docutils literal notranslate"><span class="pre">Traffic.gs_east</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.mach"><code class="docutils literal notranslate"><span class="pre">Traffic.mach</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.accel"><code class="docutils literal notranslate"><span class="pre">Traffic.accel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.speed_mode"><code class="docutils literal notranslate"><span class="pre">Traffic.speed_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.max_alt"><code class="docutils literal notranslate"><span class="pre">Traffic.max_alt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.max_cas"><code class="docutils literal notranslate"><span class="pre">Traffic.max_cas</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.max_mach"><code class="docutils literal notranslate"><span class="pre">Traffic.max_mach</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.vs"><code class="docutils literal notranslate"><span class="pre">Traffic.vs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.fpa"><code class="docutils literal notranslate"><span class="pre">Traffic.fpa</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.vertical_mode"><code class="docutils literal notranslate"><span class="pre">Traffic.vertical_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.mass"><code class="docutils literal notranslate"><span class="pre">Traffic.mass</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.empty_weight"><code class="docutils literal notranslate"><span class="pre">Traffic.empty_weight</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.fuel_weight"><code class="docutils literal notranslate"><span class="pre">Traffic.fuel_weight</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.payload_weight"><code class="docutils literal notranslate"><span class="pre">Traffic.payload_weight</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.fuel_consumed"><code class="docutils literal notranslate"><span class="pre">Traffic.fuel_consumed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.perf"><code class="docutils literal notranslate"><span class="pre">Traffic.perf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.ap"><code class="docutils literal notranslate"><span class="pre">Traffic.ap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.weather"><code class="docutils literal notranslate"><span class="pre">Traffic.weather</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.add_aircraft"><code class="docutils literal notranslate"><span class="pre">Traffic.add_aircraft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.del_aircraft"><code class="docutils literal notranslate"><span class="pre">Traffic.del_aircraft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.update"><code class="docutils literal notranslate"><span class="pre">Traffic.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.navigation.html">navigation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/airtrafficsim.core.navigation.html#airtrafficsim.core.navigation.Nav"><code class="docutils literal notranslate"><span class="pre">Nav</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.navigation.html#airtrafficsim.core.navigation.Nav.get_wp_coord"><code class="docutils literal notranslate"><span class="pre">Nav.get_wp_coord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.navigation.html#airtrafficsim.core.navigation.Nav.get_wp_in_area"><code class="docutils literal notranslate"><span class="pre">Nav.get_wp_in_area()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.navigation.html#airtrafficsim.core.navigation.Nav.get_runway_coord"><code class="docutils literal notranslate"><span class="pre">Nav.get_runway_coord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.navigation.html#airtrafficsim.core.navigation.Nav.find_closest_airport_runway"><code class="docutils literal notranslate"><span class="pre">Nav.find_closest_airport_runway()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.navigation.html#airtrafficsim.core.navigation.Nav.get_airport_procedures"><code class="docutils literal notranslate"><span class="pre">Nav.get_airport_procedures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.navigation.html#airtrafficsim.core.navigation.Nav.get_procedure"><code class="docutils literal notranslate"><span class="pre">Nav.get_procedure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.navigation.html#airtrafficsim.core.navigation.Nav.get_holding_procedure"><code class="docutils literal notranslate"><span class="pre">Nav.get_holding_procedure()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html">autopilot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot"><code class="docutils literal notranslate"><span class="pre">Autopilot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.alt"><code class="docutils literal notranslate"><span class="pre">Autopilot.alt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.heading"><code class="docutils literal notranslate"><span class="pre">Autopilot.heading</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.track_angle"><code class="docutils literal notranslate"><span class="pre">Autopilot.track_angle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.ap_rate_of_turn"><code class="docutils literal notranslate"><span class="pre">Autopilot.ap_rate_of_turn</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.cas"><code class="docutils literal notranslate"><span class="pre">Autopilot.cas</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.mach"><code class="docutils literal notranslate"><span class="pre">Autopilot.mach</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.vs"><code class="docutils literal notranslate"><span class="pre">Autopilot.vs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.fpa"><code class="docutils literal notranslate"><span class="pre">Autopilot.fpa</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.lat"><code class="docutils literal notranslate"><span class="pre">Autopilot.lat</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.long"><code class="docutils literal notranslate"><span class="pre">Autopilot.long</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.lat_next"><code class="docutils literal notranslate"><span class="pre">Autopilot.lat_next</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.long_next"><code class="docutils literal notranslate"><span class="pre">Autopilot.long_next</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.hv_next_wp"><code class="docutils literal notranslate"><span class="pre">Autopilot.hv_next_wp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.dist"><code class="docutils literal notranslate"><span class="pre">Autopilot.dist</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.flight_plan_index"><code class="docutils literal notranslate"><span class="pre">Autopilot.flight_plan_index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.flight_plan_name"><code class="docutils literal notranslate"><span class="pre">Autopilot.flight_plan_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.flight_plan_lat"><code class="docutils literal notranslate"><span class="pre">Autopilot.flight_plan_lat</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.flight_plan_long"><code class="docutils literal notranslate"><span class="pre">Autopilot.flight_plan_long</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.flight_plan_target_alt"><code class="docutils literal notranslate"><span class="pre">Autopilot.flight_plan_target_alt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.flight_plan_target_speed"><code class="docutils literal notranslate"><span class="pre">Autopilot.flight_plan_target_speed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.procedure_speed"><code class="docutils literal notranslate"><span class="pre">Autopilot.procedure_speed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.speed_mode"><code class="docutils literal notranslate"><span class="pre">Autopilot.speed_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.auto_throttle_mode"><code class="docutils literal notranslate"><span class="pre">Autopilot.auto_throttle_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.vertical_mode"><code class="docutils literal notranslate"><span class="pre">Autopilot.vertical_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.lateral_mode"><code class="docutils literal notranslate"><span class="pre">Autopilot.lateral_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.expedite_descent"><code class="docutils literal notranslate"><span class="pre">Autopilot.expedite_descent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.add_aircraft"><code class="docutils literal notranslate"><span class="pre">Autopilot.add_aircraft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.del_aircraft"><code class="docutils literal notranslate"><span class="pre">Autopilot.del_aircraft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.update"><code class="docutils literal notranslate"><span class="pre">Autopilot.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.performance.html">performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance"><code class="docutils literal notranslate"><span class="pre">Performance</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.performance_mode"><code class="docutils literal notranslate"><span class="pre">Performance.performance_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.drag"><code class="docutils literal notranslate"><span class="pre">Performance.drag</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.thrust"><code class="docutils literal notranslate"><span class="pre">Performance.thrust</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.esf"><code class="docutils literal notranslate"><span class="pre">Performance.esf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.__T_0"><code class="docutils literal notranslate"><span class="pre">Performance.__T_0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.__P_0"><code class="docutils literal notranslate"><span class="pre">Performance.__P_0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.__RHO_0"><code class="docutils literal notranslate"><span class="pre">Performance.__RHO_0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.__A_0"><code class="docutils literal notranslate"><span class="pre">Performance.__A_0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.__KAPPA"><code class="docutils literal notranslate"><span class="pre">Performance.__KAPPA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.__R"><code class="docutils literal notranslate"><span class="pre">Performance.__R</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.__G_0"><code class="docutils literal notranslate"><span class="pre">Performance.__G_0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.__BETA_T_BELOW_TROP"><code class="docutils literal notranslate"><span class="pre">Performance.__BETA_T_BELOW_TROP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.__H_P_TROP"><code class="docutils literal notranslate"><span class="pre">Performance.__H_P_TROP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.add_aircraft"><code class="docutils literal notranslate"><span class="pre">Performance.add_aircraft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.del_aircraft"><code class="docutils literal notranslate"><span class="pre">Performance.del_aircraft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.init_procedure_speed"><code class="docutils literal notranslate"><span class="pre">Performance.init_procedure_speed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.get_procedure_speed"><code class="docutils literal notranslate"><span class="pre">Performance.get_procedure_speed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_temperature"><code class="docutils literal notranslate"><span class="pre">Performance.cal_temperature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_air_pressure"><code class="docutils literal notranslate"><span class="pre">Performance.cal_air_pressure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_air_density"><code class="docutils literal notranslate"><span class="pre">Performance.cal_air_density()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_speed_of_sound"><code class="docutils literal notranslate"><span class="pre">Performance.cal_speed_of_sound()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cas_to_tas"><code class="docutils literal notranslate"><span class="pre">Performance.cas_to_tas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.tas_to_cas"><code class="docutils literal notranslate"><span class="pre">Performance.tas_to_cas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.mach_to_tas"><code class="docutils literal notranslate"><span class="pre">Performance.mach_to_tas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.tas_to_mach"><code class="docutils literal notranslate"><span class="pre">Performance.tas_to_mach()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_transition_alt"><code class="docutils literal notranslate"><span class="pre">Performance.cal_transition_alt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.get_empty_weight"><code class="docutils literal notranslate"><span class="pre">Performance.get_empty_weight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_maximum_alt"><code class="docutils literal notranslate"><span class="pre">Performance.cal_maximum_alt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_maximum_speed"><code class="docutils literal notranslate"><span class="pre">Performance.cal_maximum_speed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_minimum_speed"><code class="docutils literal notranslate"><span class="pre">Performance.cal_minimum_speed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_max_d_tas"><code class="docutils literal notranslate"><span class="pre">Performance.cal_max_d_tas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_max_d_rocd"><code class="docutils literal notranslate"><span class="pre">Performance.cal_max_d_rocd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_energy_share_factor"><code class="docutils literal notranslate"><span class="pre">Performance.cal_energy_share_factor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_tem_rocd"><code class="docutils literal notranslate"><span class="pre">Performance.cal_tem_rocd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_tem_accel"><code class="docutils literal notranslate"><span class="pre">Performance.cal_tem_accel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_tem_thrust"><code class="docutils literal notranslate"><span class="pre">Performance.cal_tem_thrust()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_vs_accel"><code class="docutils literal notranslate"><span class="pre">Performance.cal_vs_accel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_fuel_burn"><code class="docutils literal notranslate"><span class="pre">Performance.cal_fuel_burn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_rate_of_turn"><code class="docutils literal notranslate"><span class="pre">Performance.cal_rate_of_turn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_bank_angle"><code class="docutils literal notranslate"><span class="pre">Performance.cal_bank_angle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.cal_turn_radius"><code class="docutils literal notranslate"><span class="pre">Performance.cal_turn_radius()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.get_bank_angles"><code class="docutils literal notranslate"><span class="pre">Performance.get_bank_angles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.update_configuration"><code class="docutils literal notranslate"><span class="pre">Performance.update_configuration()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.bada.html">bada</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada"><code class="docutils literal notranslate"><span class="pre">Bada</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__n_eng"><code class="docutils literal notranslate"><span class="pre">Bada.__n_eng</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__engine_type"><code class="docutils literal notranslate"><span class="pre">Bada.__engine_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__wake_category"><code class="docutils literal notranslate"><span class="pre">Bada.__wake_category</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__m_ref"><code class="docutils literal notranslate"><span class="pre">Bada.__m_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.m_min"><code class="docutils literal notranslate"><span class="pre">Bada.m_min</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__m_max"><code class="docutils literal notranslate"><span class="pre">Bada.__m_max</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__m_pyld"><code class="docutils literal notranslate"><span class="pre">Bada.__m_pyld</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.v_mo"><code class="docutils literal notranslate"><span class="pre">Bada.v_mo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.m_mo"><code class="docutils literal notranslate"><span class="pre">Bada.m_mo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__h_mo"><code class="docutils literal notranslate"><span class="pre">Bada.__h_mo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__h_max"><code class="docutils literal notranslate"><span class="pre">Bada.__h_max</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__g_w"><code class="docutils literal notranslate"><span class="pre">Bada.__g_w</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__g_t"><code class="docutils literal notranslate"><span class="pre">Bada.__g_t</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__S"><code class="docutils literal notranslate"><span class="pre">Bada.__S</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_d0_cr"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d0_cr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_d2_cr"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d2_cr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_d0_ap"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d0_ap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_d2_ap"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d2_ap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_d0_ld"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d0_ld</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_d2_ld"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d2_ld</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_d0_ldg"><code class="docutils literal notranslate"><span class="pre">Bada.__c_d0_ldg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_stall_to"><code class="docutils literal notranslate"><span class="pre">Bada.__v_stall_to</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_stall_ic"><code class="docutils literal notranslate"><span class="pre">Bada.__v_stall_ic</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_stall_cr"><code class="docutils literal notranslate"><span class="pre">Bada.__v_stall_cr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_stall_ap"><code class="docutils literal notranslate"><span class="pre">Bada.__v_stall_ap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_stall_ld"><code class="docutils literal notranslate"><span class="pre">Bada.__v_stall_ld</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_lbo"><code class="docutils literal notranslate"><span class="pre">Bada.__c_lbo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__k"><code class="docutils literal notranslate"><span class="pre">Bada.__k</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_tc_1"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tc_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_tc_2"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tc_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_tc_3"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tc_3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_tc_4"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tc_4</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_tc_5"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tc_5</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_tdes_low"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tdes_low</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_tdes_high"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tdes_high</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__h_p_des"><code class="docutils literal notranslate"><span class="pre">Bada.__h_p_des</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_tdes_app"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tdes_app</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_tdes_ld"><code class="docutils literal notranslate"><span class="pre">Bada.__c_tdes_ld</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_des_ref"><code class="docutils literal notranslate"><span class="pre">Bada.__v_des_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__m_des_ref"><code class="docutils literal notranslate"><span class="pre">Bada.__m_des_ref</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_f1"><code class="docutils literal notranslate"><span class="pre">Bada.__c_f1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_f2"><code class="docutils literal notranslate"><span class="pre">Bada.__c_f2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_f3"><code class="docutils literal notranslate"><span class="pre">Bada.__c_f3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_f4"><code class="docutils literal notranslate"><span class="pre">Bada.__c_f4</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__c_fcr"><code class="docutils literal notranslate"><span class="pre">Bada.__c_fcr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__tol"><code class="docutils literal notranslate"><span class="pre">Bada.__tol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__ldl"><code class="docutils literal notranslate"><span class="pre">Bada.__ldl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__span"><code class="docutils literal notranslate"><span class="pre">Bada.__span</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__length"><code class="docutils literal notranslate"><span class="pre">Bada.__length</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_cl_1"><code class="docutils literal notranslate"><span class="pre">Bada.__v_cl_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_cl_2"><code class="docutils literal notranslate"><span class="pre">Bada.__v_cl_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__m_cl"><code class="docutils literal notranslate"><span class="pre">Bada.__m_cl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_cr_1"><code class="docutils literal notranslate"><span class="pre">Bada.__v_cr_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_cr_2"><code class="docutils literal notranslate"><span class="pre">Bada.__v_cr_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__m_cr"><code class="docutils literal notranslate"><span class="pre">Bada.__m_cr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_des_1"><code class="docutils literal notranslate"><span class="pre">Bada.__v_des_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__v_des_2"><code class="docutils literal notranslate"><span class="pre">Bada.__v_des_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__m_des"><code class="docutils literal notranslate"><span class="pre">Bada.__m_des</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.climb_schedule"><code class="docutils literal notranslate"><span class="pre">Bada.climb_schedule</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cruise_schedule"><code class="docutils literal notranslate"><span class="pre">Bada.cruise_schedule</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.descent_schedule"><code class="docutils literal notranslate"><span class="pre">Bada.descent_schedule</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__A_L_MAX_CIV"><code class="docutils literal notranslate"><span class="pre">Bada.__A_L_MAX_CIV</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__A_N_MAX_CIV"><code class="docutils literal notranslate"><span class="pre">Bada.__A_N_MAX_CIV</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__PHI_NORM_CIV_TOLD"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_NORM_CIV_TOLD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__PHI_NORM_CIV_OTHERS"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_NORM_CIV_OTHERS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__PHI_NORM_MIL"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_NORM_MIL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_TOLD"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_MAX_CIV_TOLD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_HOLD"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_MAX_CIV_HOLD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_CIV_OTHERS"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_MAX_CIV_OTHERS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__PHI_MAX_MIL"><code class="docutils literal notranslate"><span class="pre">Bada.__PHI_MAX_MIL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__C_DES_EXP"><code class="docutils literal notranslate"><span class="pre">Bada.__C_DES_EXP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__C_TCR"><code class="docutils literal notranslate"><span class="pre">Bada.__C_TCR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__C_TH_TO"><code class="docutils literal notranslate"><span class="pre">Bada.__C_TH_TO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__H_MAX_TO"><code class="docutils literal notranslate"><span class="pre">Bada.__H_MAX_TO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__H_MAX_IC"><code class="docutils literal notranslate"><span class="pre">Bada.__H_MAX_IC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__H_MAX_AP"><code class="docutils literal notranslate"><span class="pre">Bada.__H_MAX_AP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__H_MAX_LD"><code class="docutils literal notranslate"><span class="pre">Bada.__H_MAX_LD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__C_V_MIN"><code class="docutils literal notranslate"><span class="pre">Bada.__C_V_MIN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__C_V_MIN_TO"><code class="docutils literal notranslate"><span class="pre">Bada.__C_V_MIN_TO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_CL_1"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_CL_2"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_CL_3"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_CL_4"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_4</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_CL_5"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_5</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_CL_6"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_6</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_CL_7"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_7</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_CL_8"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_CL_8</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_1"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_2"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_3"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_4"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_4</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_5"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_5</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_6"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_6</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_D_DSE_7"><code class="docutils literal notranslate"><span class="pre">Bada.__V_D_DSE_7</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_HOLD_1"><code class="docutils literal notranslate"><span class="pre">Bada.__V_HOLD_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_HOLD_2"><code class="docutils literal notranslate"><span class="pre">Bada.__V_HOLD_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_HOLD_3"><code class="docutils literal notranslate"><span class="pre">Bada.__V_HOLD_3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_HOLD_4"><code class="docutils literal notranslate"><span class="pre">Bada.__V_HOLD_4</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_BACKTRACK"><code class="docutils literal notranslate"><span class="pre">Bada.__V_BACKTRACK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_TAXI"><code class="docutils literal notranslate"><span class="pre">Bada.__V_TAXI</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_APRON"><code class="docutils literal notranslate"><span class="pre">Bada.__V_APRON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__V_GATE"><code class="docutils literal notranslate"><span class="pre">Bada.__V_GATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__C_RED_TURBO"><code class="docutils literal notranslate"><span class="pre">Bada.__C_RED_TURBO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__C_RED_PISTON"><code class="docutils literal notranslate"><span class="pre">Bada.__C_RED_PISTON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__C_RED_JET"><code class="docutils literal notranslate"><span class="pre">Bada.__C_RED_JET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__T_0"><code class="docutils literal notranslate"><span class="pre">Bada.__T_0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__P_0"><code class="docutils literal notranslate"><span class="pre">Bada.__P_0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__RHO_0"><code class="docutils literal notranslate"><span class="pre">Bada.__RHO_0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__A_0"><code class="docutils literal notranslate"><span class="pre">Bada.__A_0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__KAPPA"><code class="docutils literal notranslate"><span class="pre">Bada.__KAPPA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__R"><code class="docutils literal notranslate"><span class="pre">Bada.__R</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__G_0"><code class="docutils literal notranslate"><span class="pre">Bada.__G_0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__BETA_T_BELOW_TROP"><code class="docutils literal notranslate"><span class="pre">Bada.__BETA_T_BELOW_TROP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__H_P_TROP"><code class="docutils literal notranslate"><span class="pre">Bada.__H_P_TROP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.add_aircraft"><code class="docutils literal notranslate"><span class="pre">Bada.add_aircraft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.del_aircraft"><code class="docutils literal notranslate"><span class="pre">Bada.del_aircraft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cal_fuel_burn"><code class="docutils literal notranslate"><span class="pre">Bada.cal_fuel_burn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cal_thrust"><code class="docutils literal notranslate"><span class="pre">Bada.cal_thrust()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__cal_operating_speed"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_operating_speed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cal_maximum_altitude"><code class="docutils literal notranslate"><span class="pre">Bada.cal_maximum_altitude()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cal_minimum_speed"><code class="docutils literal notranslate"><span class="pre">Bada.cal_minimum_speed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cal_aerodynamic_drag"><code class="docutils literal notranslate"><span class="pre">Bada.cal_aerodynamic_drag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cal_low_speed_buffeting_limit"><code class="docutils literal notranslate"><span class="pre">Bada.cal_low_speed_buffeting_limit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__cal_max_climb_to_thrust"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_max_climb_to_thrust()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__cal_max_cruise_thrust"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_max_cruise_thrust()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__cal_descent_thrust"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_descent_thrust()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cal_reduced_climb_power"><code class="docutils literal notranslate"><span class="pre">Bada.cal_reduced_climb_power()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__cal_nominal_fuel_flow"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_nominal_fuel_flow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__cal_minimum_fuel_flow"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_minimum_fuel_flow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__cal_approach_landing_fuel_flow"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_approach_landing_fuel_flow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.__cal_cruise_fuel_flow"><code class="docutils literal notranslate"><span class="pre">Bada.__cal_cruise_fuel_flow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.init_procedure_speed"><code class="docutils literal notranslate"><span class="pre">Bada.init_procedure_speed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.get_procedure_speed"><code class="docutils literal notranslate"><span class="pre">Bada.get_procedure_speed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.update_configuration"><code class="docutils literal notranslate"><span class="pre">Bada.update_configuration()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cal_max_d_tas"><code class="docutils literal notranslate"><span class="pre">Bada.cal_max_d_tas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cal_max_d_rocd"><code class="docutils literal notranslate"><span class="pre">Bada.cal_max_d_rocd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.bada.html#airtrafficsim.core.performance.bada.Bada.cal_expedite_descend_factor"><code class="docutils literal notranslate"><span class="pre">Bada.cal_expedite_descend_factor()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.weather.html">weather</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather"><code class="docutils literal notranslate"><span class="pre">Weather</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.mode"><code class="docutils literal notranslate"><span class="pre">Weather.mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.add_aircraft"><code class="docutils literal notranslate"><span class="pre">Weather.add_aircraft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.del_aircraft"><code class="docutils literal notranslate"><span class="pre">Weather.del_aircraft()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.update"><code class="docutils literal notranslate"><span class="pre">Weather.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core/airtrafficsim.core.era5.html">era5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/airtrafficsim.core.era5.html#airtrafficsim.core.weather.era5.Era5"><code class="docutils literal notranslate"><span class="pre">Era5</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core/airtrafficsim.core.era5.html#airtrafficsim.core.weather.era5.Era5.download_data"><code class="docutils literal notranslate"><span class="pre">Era5.download_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="airtrafficsim.utils.html">utils</a><ul>
@@ -275,7 +607,17 @@
 <li class="toctree-l3"><a class="reference internal" href="utils/airtrafficsim.utils.enums.html#airtrafficsim.utils.enums.APLateralMode"><code class="docutils literal notranslate"><span class="pre">APLateralMode</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="utils/airtrafficsim.utils.calculation.html">calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils/airtrafficsim.utils.calculation.html">calculation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="utils/airtrafficsim.utils.calculation.html#airtrafficsim.utils.calculation.Cal"><code class="docutils literal notranslate"><span class="pre">Cal</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="utils/airtrafficsim.utils.calculation.html#airtrafficsim.utils.calculation.Cal.cal_great_circle_dist"><code class="docutils literal notranslate"><span class="pre">Cal.cal_great_circle_dist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="utils/airtrafficsim.utils.calculation.html#airtrafficsim.utils.calculation.Cal.cal_great_circle_bearing"><code class="docutils literal notranslate"><span class="pre">Cal.cal_great_circle_bearing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="utils/airtrafficsim.utils.calculation.html#airtrafficsim.utils.calculation.Cal.cal_dest_given_dist_bearing"><code class="docutils literal notranslate"><span class="pre">Cal.cal_dest_given_dist_bearing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="utils/airtrafficsim.utils.calculation.html#airtrafficsim.utils.calculation.Cal.cal_cross_track_dist"><code class="docutils literal notranslate"><span class="pre">Cal.cal_cross_track_dist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="utils/airtrafficsim.utils.calculation.html#airtrafficsim.utils.calculation.Cal.cal_angle_diff"><code class="docutils literal notranslate"><span class="pre">Cal.cal_angle_diff()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="utils/airtrafficsim.utils.unit_conversion.html">unit_conversion</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="utils/airtrafficsim.utils.unit_conversion.html#airtrafficsim.utils.unit_conversion.Unit"><code class="docutils literal notranslate"><span class="pre">Unit</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="utils/airtrafficsim.utils.unit_conversion.html#airtrafficsim.utils.unit_conversion.Unit.kts2mps"><code class="docutils literal notranslate"><span class="pre">Unit.kts2mps()</span></code></a></li>
@@ -293,9 +635,43 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="airtrafficsim.server.html">server</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html">server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.replay.html">replay</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.data.html">data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html">server</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.test_connect"><code class="docutils literal notranslate"><span class="pre">test_connect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.test_disconnect"><code class="docutils literal notranslate"><span class="pre">test_disconnect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_replay_dir"><code class="docutils literal notranslate"><span class="pre">get_replay_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_replay_czml"><code class="docutils literal notranslate"><span class="pre">get_replay_czml()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_graph_header"><code class="docutils literal notranslate"><span class="pre">get_graph_header()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_graph_data"><code class="docutils literal notranslate"><span class="pre">get_graph_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_simulation_file"><code class="docutils literal notranslate"><span class="pre">get_simulation_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.run_simulation"><code class="docutils literal notranslate"><span class="pre">run_simulation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_Nav"><code class="docutils literal notranslate"><span class="pre">get_Nav()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_era5_wind"><code class="docutils literal notranslate"><span class="pre">get_era5_wind()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_era5_rain"><code class="docutils literal notranslate"><span class="pre">get_era5_rain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_radar_img"><code class="docutils literal notranslate"><span class="pre">get_radar_img()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.serve_client"><code class="docutils literal notranslate"><span class="pre">serve_client()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.run_server"><code class="docutils literal notranslate"><span class="pre">run_server()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.replay.html">replay</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay"><code class="docutils literal notranslate"><span class="pre">Replay</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay.get_replay_dir"><code class="docutils literal notranslate"><span class="pre">Replay.get_replay_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay.get_replay_czml"><code class="docutils literal notranslate"><span class="pre">Replay.get_replay_czml()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay.get_graph_header"><code class="docutils literal notranslate"><span class="pre">Replay.get_graph_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay.get_graph_data"><code class="docutils literal notranslate"><span class="pre">Replay.get_graph_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.data.html">data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data.get_nav"><code class="docutils literal notranslate"><span class="pre">Data.get_nav()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data.get_era5_wind"><code class="docutils literal notranslate"><span class="pre">Data.get_era5_wind()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data.get_era5_rain"><code class="docutils literal notranslate"><span class="pre">Data.get_era5_rain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data.get_radar_img"><code class="docutils literal notranslate"><span class="pre">Data.get_radar_img()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -359,6 +735,9 @@
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>

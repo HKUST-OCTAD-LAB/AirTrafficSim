@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="aircraft" href="airtrafficsim.core.aircraft.html" /><link rel="prev" title="core" href="../airtrafficsim.core.html" />
 
-    <link rel="shortcut icon" href="../../_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="../../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>environment</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -238,7 +238,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -246,6 +246,96 @@
         <article role="main">
           <section id="environment">
 <h1>environment<a class="headerlink" href="#environment" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airtrafficsim.core.environment.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weather_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ISA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">performance_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'BADA'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment" title="Permalink to this definition">#</a></dt>
+<dd><p>Base class for simulation environment</p>
+<p class="rubric">Methods</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.save" title="airtrafficsim.core.environment.Environment.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>()</p></td>
+<td><p>Save all states variable of one timestemp to csv file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.should_end" title="airtrafficsim.core.environment.Environment.should_end"><code class="xref py py-obj docutils literal notranslate"><span class="pre">should_end</span></code></a>()</p></td>
+<td><p>Return true/false of whether the simulation should end.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.step" title="airtrafficsim.core.environment.Environment.step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step</span></code></a>([socketio])</p></td>
+<td><p>Conduct one simulation timestep.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>atc_command</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>export_to_csv</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>run</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>send_to_client</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.start_time">
+<span class="sig-name descname"><span class="pre">start_time</span></span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.start_time" title="Permalink to this definition">#</a></dt>
+<dd><p>The simulation start time [datetime object]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.end_time">
+<span class="sig-name descname"><span class="pre">end_time</span></span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.end_time" title="Permalink to this definition">#</a></dt>
+<dd><p>The simulation end time [s]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.atc_command">
+<span class="sig-name descname"><span class="pre">atc_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.atc_command" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.should_end">
+<span class="sig-name descname"><span class="pre">should_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.should_end" title="Permalink to this definition">#</a></dt>
+<dd><p>Return true/false of whether the simulation should end.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">socketio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.step" title="Permalink to this definition">#</a></dt>
+<dd><p>Conduct one simulation timestep.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">socketio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.run" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.save" title="Permalink to this definition">#</a></dt>
+<dd><p>Save all states variable of one timestemp to csv file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.export_to_csv">
+<span class="sig-name descname"><span class="pre">export_to_csv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.export_to_csv" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.send_to_client">
+<span class="sig-name descname"><span class="pre">send_to_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">socketio</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.send_to_client" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -298,13 +388,46 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">environment</a><ul>
+<li><a class="reference internal" href="#airtrafficsim.core.environment.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a><ul>
+<li><a class="reference internal" href="#airtrafficsim.core.environment.Environment.start_time"><code class="docutils literal notranslate"><span class="pre">Environment.start_time</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.environment.Environment.end_time"><code class="docutils literal notranslate"><span class="pre">Environment.end_time</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.environment.Environment.atc_command"><code class="docutils literal notranslate"><span class="pre">Environment.atc_command()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.environment.Environment.should_end"><code class="docutils literal notranslate"><span class="pre">Environment.should_end()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.environment.Environment.step"><code class="docutils literal notranslate"><span class="pre">Environment.step()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.environment.Environment.run"><code class="docutils literal notranslate"><span class="pre">Environment.run()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.environment.Environment.save"><code class="docutils literal notranslate"><span class="pre">Environment.save()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.environment.Environment.export_to_csv"><code class="docutils literal notranslate"><span class="pre">Environment.export_to_csv()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.environment.Environment.send_to_client"><code class="docutils literal notranslate"><span class="pre">Environment.send_to_client()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>

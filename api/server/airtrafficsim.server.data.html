@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="prev" title="replay" href="airtrafficsim.server.replay.html" />
 
-    <link rel="shortcut icon" href="../../_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="../../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>data</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -238,7 +238,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -246,6 +246,138 @@
         <article role="main">
           <section id="data">
 <h1>data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="airtrafficsim.server.data.Data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.data.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><a class="headerlink" href="#airtrafficsim.server.data.Data" title="Permalink to this definition">#</a></dt>
+<dd><p class="rubric">Methods</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.server.data.Data.get_era5_rain" title="airtrafficsim.server.data.Data.get_era5_rain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_era5_rain</span></code></a>(file, lat1, long1, lat2, ...)</p></td>
+<td><p>Get the ERA5 rain data image to client</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.server.data.Data.get_era5_wind" title="airtrafficsim.server.data.Data.get_era5_wind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_era5_wind</span></code></a>(file, lat1, long1, lat2, ...)</p></td>
+<td><p>Get the ERA5 wind data image to client</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.server.data.Data.get_nav" title="airtrafficsim.server.data.Data.get_nav"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_nav</span></code></a>(lat1, long1, lat2, long2)</p></td>
+<td><p>Get the navigation waypoint data given</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.server.data.Data.get_radar_img" title="airtrafficsim.server.data.Data.get_radar_img"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_radar_img</span></code></a>(file, lat1, long1, lat2, ...)</p></td>
+<td><p>Get the radar data image to client</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.server.data.Data.get_nav">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_nav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.data.Data.get_nav" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the navigation waypoint data given</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>Latitude (South)</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float</span></dt><dd><p>Longitude (West)</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float</span></dt><dd><p>Latitude (North)</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float</span></dt><dd><p>Longitude (East)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON CZML file of navigation waypoint data</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.server.data.Data.get_era5_wind">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_era5_wind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.data.Data.get_era5_wind" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the ERA5 wind data image to client</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>Latitude (South)</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float</span></dt><dd><p>Longitude (West)</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float</span></dt><dd><p>Latitude (North)</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float</span></dt><dd><p>Longitude (East)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON CZML file of ERA5 wind data image</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.server.data.Data.get_era5_rain">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_era5_rain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.data.Data.get_era5_rain" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the ERA5 rain data image to client</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>Latitude (South)</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float</span></dt><dd><p>Longitude (West)</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float</span></dt><dd><p>Latitude (North)</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float</span></dt><dd><p>Longitude (East)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON CZML file of ERA5 rain data image</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.server.data.Data.get_radar_img">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_radar_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.data.Data.get_radar_img" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the radar data image to client</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>Latitude (South)</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float</span></dt><dd><p>Longitude (West)</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float</span></dt><dd><p>Latitude (North)</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float</span></dt><dd><p>Longitude (East)</p>
+</dd>
+<dt><strong>time</strong><span class="classifier">string</span></dt><dd><p>Time in ISO format</p>
+</dd>
+<dt><strong>file</strong><span class="classifier">string</span></dt><dd><p>File name of the radar image</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON CZML file of radar data image</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -290,13 +422,41 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">data</a><ul>
+<li><a class="reference internal" href="#airtrafficsim.server.data.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a><ul>
+<li><a class="reference internal" href="#airtrafficsim.server.data.Data.get_nav"><code class="docutils literal notranslate"><span class="pre">Data.get_nav()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.data.Data.get_era5_wind"><code class="docutils literal notranslate"><span class="pre">Data.get_era5_wind()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.data.Data.get_era5_rain"><code class="docutils literal notranslate"><span class="pre">Data.get_era5_rain()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.data.Data.get_radar_img"><code class="docutils literal notranslate"><span class="pre">Data.get_radar_img()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>

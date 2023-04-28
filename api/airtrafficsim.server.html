@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="server" href="server/airtrafficsim.server.server.html" /><link rel="prev" title="unit_conversion" href="utils/airtrafficsim.utils.unit_conversion.html" />
 
-    <link rel="shortcut icon" href="../_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>server</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -249,9 +249,43 @@
 <p>The server modules handles the backend server and communication of AirTrafficSim. The entry point is server.py while replay.py and data.py provides support functions to handle data generation.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="server/airtrafficsim.server.server.html">server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="server/airtrafficsim.server.replay.html">replay</a></li>
-<li class="toctree-l1"><a class="reference internal" href="server/airtrafficsim.server.data.html">data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/airtrafficsim.server.server.html">server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.test_connect"><code class="docutils literal notranslate"><span class="pre">test_connect()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.test_disconnect"><code class="docutils literal notranslate"><span class="pre">test_disconnect()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_replay_dir"><code class="docutils literal notranslate"><span class="pre">get_replay_dir()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_replay_czml"><code class="docutils literal notranslate"><span class="pre">get_replay_czml()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_graph_header"><code class="docutils literal notranslate"><span class="pre">get_graph_header()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_graph_data"><code class="docutils literal notranslate"><span class="pre">get_graph_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_simulation_file"><code class="docutils literal notranslate"><span class="pre">get_simulation_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.run_simulation"><code class="docutils literal notranslate"><span class="pre">run_simulation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_Nav"><code class="docutils literal notranslate"><span class="pre">get_Nav()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_era5_wind"><code class="docutils literal notranslate"><span class="pre">get_era5_wind()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_era5_rain"><code class="docutils literal notranslate"><span class="pre">get_era5_rain()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.get_radar_img"><code class="docutils literal notranslate"><span class="pre">get_radar_img()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.serve_client"><code class="docutils literal notranslate"><span class="pre">serve_client()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.server.html#airtrafficsim.server.server.run_server"><code class="docutils literal notranslate"><span class="pre">run_server()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="server/airtrafficsim.server.replay.html">replay</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay"><code class="docutils literal notranslate"><span class="pre">Replay</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay.get_replay_dir"><code class="docutils literal notranslate"><span class="pre">Replay.get_replay_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay.get_replay_czml"><code class="docutils literal notranslate"><span class="pre">Replay.get_replay_czml()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay.get_graph_header"><code class="docutils literal notranslate"><span class="pre">Replay.get_graph_header()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay.get_graph_data"><code class="docutils literal notranslate"><span class="pre">Replay.get_graph_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="server/airtrafficsim.server.data.html">data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data.get_nav"><code class="docutils literal notranslate"><span class="pre">Data.get_nav()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data.get_era5_wind"><code class="docutils literal notranslate"><span class="pre">Data.get_era5_wind()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data.get_era5_rain"><code class="docutils literal notranslate"><span class="pre">Data.get_era5_rain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data.get_radar_img"><code class="docutils literal notranslate"><span class="pre">Data.get_radar_img()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -313,6 +347,9 @@
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>

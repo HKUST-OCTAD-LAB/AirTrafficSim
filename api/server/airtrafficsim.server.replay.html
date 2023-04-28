@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="data" href="airtrafficsim.server.data.html" /><link rel="prev" title="server" href="airtrafficsim.server.server.html" />
 
-    <link rel="shortcut icon" href="../../_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="../../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>replay</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -238,7 +238,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -246,6 +246,114 @@
         <article role="main">
           <section id="replay">
 <h1>replay<a class="headerlink" href="#replay" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="airtrafficsim.server.replay.Replay">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.replay.</span></span><span class="sig-name descname"><span class="pre">Replay</span></span><a class="headerlink" href="#airtrafficsim.server.replay.Replay" title="Permalink to this definition">#</a></dt>
+<dd><p class="rubric">Methods</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.server.replay.Replay.get_graph_data" title="airtrafficsim.server.replay.Replay.get_graph_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_graph_data</span></code></a>(mode, replayCategory, ...)</p></td>
+<td><p>Get the data for the selected parameters to plot a graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.server.replay.Replay.get_graph_header" title="airtrafficsim.server.replay.Replay.get_graph_header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_graph_header</span></code></a>(mode, replayCategory, ...)</p></td>
+<td><p>Get the list of parameters name of a file suitable for plotting graph.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.server.replay.Replay.get_replay_czml" title="airtrafficsim.server.replay.Replay.get_replay_czml"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_replay_czml</span></code></a>(replayCategory, replayFile)</p></td>
+<td><p>Generate CZML file for visualization given replay file name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.server.replay.Replay.get_replay_dir" title="airtrafficsim.server.replay.Replay.get_replay_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_replay_dir</span></code></a>()</p></td>
+<td><p>Return a list of historic/simulation data directories in data/replay</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.server.replay.Replay.get_replay_dir">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_replay_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.replay.Replay.get_replay_dir" title="Permalink to this definition">#</a></dt>
+<dd><p>Return a list of historic/simulation data directories in data/replay</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>{}</dt><dd><p>JSON file of historic file list and simulation file list in data/replay directory</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.server.replay.Replay.get_replay_czml">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_replay_czml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">replayCategory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replayFile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.replay.Replay.get_replay_czml" title="Permalink to this definition">#</a></dt>
+<dd><p>Generate CZML file for visualization given replay file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>replayCategory</strong><span class="classifier">string</span></dt><dd><p>The category to replay (historic / simulation)</p>
+</dd>
+<dt><strong>replayFile</strong><span class="classifier">string</span></dt><dd><p>Name of the replay file directory</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON CZML file</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.server.replay.Replay.get_graph_header">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_graph_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replayCategory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replayFile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.replay.Replay.get_graph_header" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the list of parameters name of a file suitable for plotting graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mode</strong><span class="classifier">string</span></dt><dd><p>AirTrafficSim mode (replay / simulation)</p>
+</dd>
+<dt><strong>replayCategory</strong><span class="classifier">string</span></dt><dd><p>The category to replay (historic / simulation)</p>
+</dd>
+<dt><strong>replayFile</strong><span class="classifier">string</span></dt><dd><p>Name of the replay file directory</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>string[]</dt><dd><p>List of graph headers</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.server.replay.Replay.get_graph_data">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_graph_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replayCategory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replayFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulationFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.replay.Replay.get_graph_data" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the data for the selected parameters to plot a graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mode</strong><span class="classifier">string</span></dt><dd><p>AirTrafficSim mode (replay / simulation)</p>
+</dd>
+<dt><strong>replayCategory</strong><span class="classifier">string</span></dt><dd><p>The category to replay (historic / simulation)</p>
+</dd>
+<dt><strong>replayFile</strong><span class="classifier">string</span></dt><dd><p>Name of the replay file directory</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON file for graph data for Plotly.js</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -298,13 +406,41 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">replay</a><ul>
+<li><a class="reference internal" href="#airtrafficsim.server.replay.Replay"><code class="docutils literal notranslate"><span class="pre">Replay</span></code></a><ul>
+<li><a class="reference internal" href="#airtrafficsim.server.replay.Replay.get_replay_dir"><code class="docutils literal notranslate"><span class="pre">Replay.get_replay_dir()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.replay.Replay.get_replay_czml"><code class="docutils literal notranslate"><span class="pre">Replay.get_replay_czml()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.replay.Replay.get_graph_header"><code class="docutils literal notranslate"><span class="pre">Replay.get_graph_header()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.replay.Replay.get_graph_data"><code class="docutils literal notranslate"><span class="pre">Replay.get_graph_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>

@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="replay" href="airtrafficsim.server.replay.html" /><link rel="prev" title="server" href="../airtrafficsim.server.html" />
 
-    <link rel="shortcut icon" href="../../_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="../../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>server</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -238,14 +238,258 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section id="server">
-<h1>server<a class="headerlink" href="#server" title="Permalink to this heading">#</a></h1>
+          <section id="module-airtrafficsim.server.server">
+<span id="server"></span><h1>server<a class="headerlink" href="#module-airtrafficsim.server.server" title="Permalink to this heading">#</a></h1>
+<p>An entry point to the backend of AirTrafficSim.</p>
+<p>Attributes:</p>
+<dl class="simple">
+<dt>app<span class="classifier">Flask()</span></dt><dd><p>A flask server object.</p>
+</dd>
+<dt>socketio<span class="classifier">SocketIO()</span></dt><dd><p>A SocketIO object for communication.</p>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.test_connect">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">test_connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.test_connect" title="Permalink to this definition">#</a></dt>
+<dd><p>Debug function to test whether the client is connected.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.test_disconnect">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">test_disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.test_disconnect" title="Permalink to this definition">#</a></dt>
+<dd><p>Debug function to inform the client is disconnected.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.get_replay_dir">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">get_replay_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.get_replay_dir" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the list of directories in data/replay</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.get_replay_czml">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">get_replay_czml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">replayCategory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replayFile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.get_replay_czml" title="Permalink to this definition">#</a></dt>
+<dd><p>Generate a CZML file to client for replaying data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>replayCategory</strong><span class="classifier">string</span></dt><dd><p>The category to replay (historic / simulation)</p>
+</dd>
+<dt><strong>replayFile</strong><span class="classifier">string</span></dt><dd><p>Name of the replay file directory</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON dictionary of the CZML data file</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.get_graph_header">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">get_graph_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replayCategory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replayFile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.get_graph_header" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the list of parameters name of a file suitable for plotting graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mode</strong><span class="classifier">string</span></dt><dd><p>AirTrafficSim mode (replay / simulation)</p>
+</dd>
+<dt><strong>replayCategory</strong><span class="classifier">string</span></dt><dd><p>The category to replay (historic / simulation)</p>
+</dd>
+<dt><strong>replayFile</strong><span class="classifier">string</span></dt><dd><p>Name of the replay file directory</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>string[]</dt><dd><p>List of graph headers</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.get_graph_data">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">get_graph_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replayCategory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replayFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulationFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.get_graph_data" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the data for the selected parameters to plot a graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mode</strong><span class="classifier">string</span></dt><dd><p>AirTrafficSim mode (replay / simulation)</p>
+</dd>
+<dt><strong>replayCategory</strong><span class="classifier">string</span></dt><dd><p>The category to replay (historic / simulation)</p>
+</dd>
+<dt><strong>replayFile</strong><span class="classifier">string</span></dt><dd><p>Name of the replay file directory</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON file for graph data for Plotly.js</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.get_simulation_file">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">get_simulation_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.get_simulation_file" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the list of files in airtrafficsim/env/</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>string[]</dt><dd><p>List of simulation environment file names</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.run_simulation">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">run_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.run_simulation" title="Permalink to this definition">#</a></dt>
+<dd><p>Start the simulation given file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>file</strong><span class="classifier">string</span></dt><dd><p>Environment file name</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.get_Nav">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">get_Nav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.get_Nav" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the navigation waypoint data given</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>Latitude (South)</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float</span></dt><dd><p>Longitude (West)</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float</span></dt><dd><p>Latitude (North)</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float</span></dt><dd><p>Longitude (East)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON CZML file of navigation waypoint data</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.get_era5_wind">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">get_era5_wind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.get_era5_wind" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the ERA5 wind data image to client</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>Latitude (South)</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float</span></dt><dd><p>Longitude (West)</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float</span></dt><dd><p>Latitude (North)</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float</span></dt><dd><p>Longitude (East)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON CZML file of ERA5 wind data image</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.get_era5_rain">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">get_era5_rain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.get_era5_rain" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the ERA5 rain data image to client</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>Latitude (South)</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float</span></dt><dd><p>Longitude (West)</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float</span></dt><dd><p>Latitude (North)</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float</span></dt><dd><p>Longitude (East)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON CZML file of ERA5 rain data image</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.get_radar_img">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">get_radar_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.get_radar_img" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the radar data image to client</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>Latitude (South)</p>
+</dd>
+<dt><strong>long1</strong><span class="classifier">float</span></dt><dd><p>Longitude (West)</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float</span></dt><dd><p>Latitude (North)</p>
+</dd>
+<dt><strong>long2</strong><span class="classifier">float</span></dt><dd><p>Longitude (East)</p>
+</dd>
+<dt><strong>time</strong><span class="classifier">string</span></dt><dd><p>Time in ISO format</p>
+</dd>
+<dt><strong>file</strong><span class="classifier">string</span></dt><dd><p>File name of the radar image</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>{}</dt><dd><p>JSON CZML file of radar data image</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.serve_client">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">serve_client</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.serve_client" title="Permalink to this definition">#</a></dt>
+<dd><p>Serve client folder to user</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="airtrafficsim.server.server.run_server">
+<span class="sig-prename descclassname"><span class="pre">airtrafficsim.server.server.</span></span><span class="sig-name descname"><span class="pre">run_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6111</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'127.0.0.1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.server.server.run_server" title="Permalink to this definition">#</a></dt>
+<dd><p>Start the backend server.</p>
+</dd></dl>
+
 </section>
 
         </article>
@@ -298,13 +542,48 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">server</a><ul>
+<li><a class="reference internal" href="#airtrafficsim.server.server.test_connect"><code class="docutils literal notranslate"><span class="pre">test_connect()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.test_disconnect"><code class="docutils literal notranslate"><span class="pre">test_disconnect()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.get_replay_dir"><code class="docutils literal notranslate"><span class="pre">get_replay_dir()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.get_replay_czml"><code class="docutils literal notranslate"><span class="pre">get_replay_czml()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.get_graph_header"><code class="docutils literal notranslate"><span class="pre">get_graph_header()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.get_graph_data"><code class="docutils literal notranslate"><span class="pre">get_graph_data()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.get_simulation_file"><code class="docutils literal notranslate"><span class="pre">get_simulation_file()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.run_simulation"><code class="docutils literal notranslate"><span class="pre">run_simulation()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.get_Nav"><code class="docutils literal notranslate"><span class="pre">get_Nav()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.get_era5_wind"><code class="docutils literal notranslate"><span class="pre">get_era5_wind()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.get_era5_rain"><code class="docutils literal notranslate"><span class="pre">get_era5_rain()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.get_radar_img"><code class="docutils literal notranslate"><span class="pre">get_radar_img()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.serve_client"><code class="docutils literal notranslate"><span class="pre">serve_client()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.server.server.run_server"><code class="docutils literal notranslate"><span class="pre">run_server()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>

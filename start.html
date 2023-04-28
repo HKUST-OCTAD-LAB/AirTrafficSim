@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Navigating the UI" href="tutorial/UI.html" /><link rel="prev" title="Installation" href="install.html" />
 
-    <link rel="shortcut icon" href="_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Getting started</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -249,14 +249,14 @@
 <section id="running-airtrafficsim">
 <h2>Running AirTrafficSim<a class="headerlink" href="#running-airtrafficsim" title="Permalink to this heading">#</a></h2>
 <p>You can run AirTrafficSim by executing the following commands in your console.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>airtrafficsim
-<span class="nb">cd</span><span class="w"> </span>AirTrafficSim
-python<span class="w"> </span>-m<span class="w"> </span>airtrafficsim
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
+<span class="nb">cd</span> AirTrafficSim
+python -m airtrafficsim
 </pre></div>
 </div>
 <p>If you are running AirTrafficSim for the first time, it will unpack the navigation data which will take a few minutes to complete. After executing the commands, you will see the following output in your console.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Reading<span class="w"> </span>NAV<span class="w"> </span>data...
-Running<span class="w"> </span>server<span class="w"> </span>at<span class="w"> </span>http://localhost:6111
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Reading NAV data...
+Running server at http://localhost:6111
 </pre></div>
 </div>
 <div class="admonition note">
@@ -269,9 +269,9 @@ Running<span class="w"> </span>server<span class="w"> </span>at<span class="w"> 
 <section id="running-airtrafficsim-without-ui">
 <h2>Running AirTrafficSim without UI<a class="headerlink" href="#running-airtrafficsim-without-ui" title="Permalink to this heading">#</a></h2>
 <p>You can also run AirTrafficSim without the UI by providing the name of an environment listed in <code class="docutils literal notranslate"><span class="pre">environments/</span></code>. The environment name should be identical to the file name.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>airtrafficsim
-<span class="nb">cd</span><span class="w"> </span>AirTrafficSim
-python<span class="w"> </span>-m<span class="w"> </span>airtrafficsim<span class="w"> </span>--headless<span class="w"> </span>&lt;environment<span class="w"> </span>name&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
+<span class="nb">cd</span> AirTrafficSim
+python -m airtrafficsim --headless &lt;environment name&gt;
 </pre></div>
 </div>
 <p>These commands will execute the specified simulation environment without running the UI. The output data will be stored in <code class="docutils literal notranslate"><span class="pre">result/</span></code> as a CSV file. More details will be discussed in the tutorial.</p>
@@ -355,6 +355,9 @@ python<span class="w"> </span>-m<span class="w"> </span>airtrafficsim<span class
     </aside>
   </div>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>

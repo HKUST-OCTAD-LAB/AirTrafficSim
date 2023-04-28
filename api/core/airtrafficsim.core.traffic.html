@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="navigation" href="airtrafficsim.core.navigation.html" /><link rel="prev" title="aircraft" href="airtrafficsim.core.aircraft.html" />
 
-    <link rel="shortcut icon" href="../../_static/Logo.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+    <link rel="shortcut icon" href="../../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>traffic</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -149,7 +149,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
@@ -158,7 +158,7 @@
   <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -238,7 +238,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -246,6 +246,296 @@
         <article role="main">
           <section id="traffic">
 <h1>traffic<a class="headerlink" href="#traffic" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airtrafficsim.core.traffic.</span></span><span class="sig-name descname"><span class="pre">Traffic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weather_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">performance_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic" title="Permalink to this definition">#</a></dt>
+<dd><p>Initialize base traffic array to store aircraft state variables for one timestep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>file_name</strong><span class="classifier">String</span></dt><dd><p>Output file name</p>
+</dd>
+<dt><strong>N</strong><span class="classifier">int</span></dt><dd><p>Total number of aircraft</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.add_aircraft" title="airtrafficsim.core.traffic.Traffic.add_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_aircraft</span></code></a>(call_sign, aircraft_type, ...)</p></td>
+<td><p>Add an aircraft to traffic array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.del_aircraft" title="airtrafficsim.core.traffic.Traffic.del_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_aircraft</span></code></a>(index)</p></td>
+<td><p>Delete an aircraft from traffic array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.update" title="airtrafficsim.core.traffic.Traffic.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(global_time[, d_t])</p></td>
+<td><p>Update aircraft state for each timestep given ATC/autopilot command.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.n">
+<span class="sig-name descname"><span class="pre">n</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.n" title="Permalink to this definition">#</a></dt>
+<dd><p>Aircraft count</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.index">
+<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.index" title="Permalink to this definition">#</a></dt>
+<dd><p>Index array to indicate whether there is an aircraft active in each index.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.call_sign">
+<span class="sig-name descname"><span class="pre">call_sign</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.call_sign" title="Permalink to this definition">#</a></dt>
+<dd><p>Callsign [string]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.aircraft_type">
+<span class="sig-name descname"><span class="pre">aircraft_type</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.aircraft_type" title="Permalink to this definition">#</a></dt>
+<dd><p>Aircraft type in ICAO format [string]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.configuration">
+<span class="sig-name descname"><span class="pre">configuration</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.configuration" title="Permalink to this definition">#</a></dt>
+<dd><p>Aircraft configuration [Configuration enum 1: Clean, 2: Take Off, 3: Approach, 4: Landing]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.flight_phase">
+<span class="sig-name descname"><span class="pre">flight_phase</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.flight_phase" title="Permalink to this definition">#</a></dt>
+<dd><p>Flight phase [Flight_phase enum] (BADA section 3.5)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.lat">
+<span class="sig-name descname"><span class="pre">lat</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.lat" title="Permalink to this definition">#</a></dt>
+<dd><p>Latitude [deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.long">
+<span class="sig-name descname"><span class="pre">long</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.long" title="Permalink to this definition">#</a></dt>
+<dd><p>Longitude [deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.alt">
+<span class="sig-name descname"><span class="pre">alt</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.alt" title="Permalink to this definition">#</a></dt>
+<dd><p>Altitude [ft] Geopotential altitude</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.trans_alt">
+<span class="sig-name descname"><span class="pre">trans_alt</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.trans_alt" title="Permalink to this definition">#</a></dt>
+<dd><p>Transaition altitude [ft]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.cruise_alt">
+<span class="sig-name descname"><span class="pre">cruise_alt</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.cruise_alt" title="Permalink to this definition">#</a></dt>
+<dd><p>Cruise altitude [ft]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.heading">
+<span class="sig-name descname"><span class="pre">heading</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.heading" title="Permalink to this definition">#</a></dt>
+<dd><p>Heading [deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.track_angle">
+<span class="sig-name descname"><span class="pre">track_angle</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.track_angle" title="Permalink to this definition">#</a></dt>
+<dd><p>Track angle [deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.bank_angle">
+<span class="sig-name descname"><span class="pre">bank_angle</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.bank_angle" title="Permalink to this definition">#</a></dt>
+<dd><p>Bank angle [deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.path_angle">
+<span class="sig-name descname"><span class="pre">path_angle</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.path_angle" title="Permalink to this definition">#</a></dt>
+<dd><p>Path angle [deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.cas">
+<span class="sig-name descname"><span class="pre">cas</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.cas" title="Permalink to this definition">#</a></dt>
+<dd><p>Calibrated air speed [knot]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.tas">
+<span class="sig-name descname"><span class="pre">tas</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.tas" title="Permalink to this definition">#</a></dt>
+<dd><p>True air speed [knot]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.gs_north">
+<span class="sig-name descname"><span class="pre">gs_north</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.gs_north" title="Permalink to this definition">#</a></dt>
+<dd><p>Ground speed - North[knot]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.gs_east">
+<span class="sig-name descname"><span class="pre">gs_east</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.gs_east" title="Permalink to this definition">#</a></dt>
+<dd><p>Ground speed - East [knot]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.mach">
+<span class="sig-name descname"><span class="pre">mach</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.mach" title="Permalink to this definition">#</a></dt>
+<dd><p>Mach number [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.accel">
+<span class="sig-name descname"><span class="pre">accel</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.accel" title="Permalink to this definition">#</a></dt>
+<dd><p>Acceleration [m/s^2]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.speed_mode">
+<span class="sig-name descname"><span class="pre">speed_mode</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.speed_mode" title="Permalink to this definition">#</a></dt>
+<dd><p>Speed mode [Traffic.speed_mode enum 1: CAS, 2: MACH]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.max_alt">
+<span class="sig-name descname"><span class="pre">max_alt</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.max_alt" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum altitude [feet]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.max_cas">
+<span class="sig-name descname"><span class="pre">max_cas</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.max_cas" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum calibrated air speed [knot]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.max_mach">
+<span class="sig-name descname"><span class="pre">max_mach</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.max_mach" title="Permalink to this definition">#</a></dt>
+<dd><p>Maximum mach number [dimensionless]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.vs">
+<span class="sig-name descname"><span class="pre">vs</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.vs" title="Permalink to this definition">#</a></dt>
+<dd><p>Vertical speed [feet/min]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.fpa">
+<span class="sig-name descname"><span class="pre">fpa</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.fpa" title="Permalink to this definition">#</a></dt>
+<dd><p>Flight path angle [deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.vertical_mode">
+<span class="sig-name descname"><span class="pre">vertical_mode</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.vertical_mode" title="Permalink to this definition">#</a></dt>
+<dd><p>Vertical mode [Vertical mode enum 1: LEVEL, 2: CLIMB, 3: DESCENT]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.mass">
+<span class="sig-name descname"><span class="pre">mass</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.mass" title="Permalink to this definition">#</a></dt>
+<dd><p>Aircraft mass [kg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.empty_weight">
+<span class="sig-name descname"><span class="pre">empty_weight</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.empty_weight" title="Permalink to this definition">#</a></dt>
+<dd><p>Empty weight [kg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.fuel_weight">
+<span class="sig-name descname"><span class="pre">fuel_weight</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.fuel_weight" title="Permalink to this definition">#</a></dt>
+<dd><p>Initial fuel weight [kg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.payload_weight">
+<span class="sig-name descname"><span class="pre">payload_weight</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.payload_weight" title="Permalink to this definition">#</a></dt>
+<dd><p>Payload weight [kg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.fuel_consumed">
+<span class="sig-name descname"><span class="pre">fuel_consumed</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.fuel_consumed" title="Permalink to this definition">#</a></dt>
+<dd><p>Fuel consumped [kg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.perf">
+<span class="sig-name descname"><span class="pre">perf</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.perf" title="Permalink to this definition">#</a></dt>
+<dd><p>Performance class</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.ap">
+<span class="sig-name descname"><span class="pre">ap</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.ap" title="Permalink to this definition">#</a></dt>
+<dd><p>Autopilot class</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.weather">
+<span class="sig-name descname"><span class="pre">weather</span></span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.weather" title="Permalink to this definition">#</a></dt>
+<dd><p>Weather class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.add_aircraft">
+<span class="sig-name descname"><span class="pre">add_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">call_sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aircraft_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flight_phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heading</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload_weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">departure_airport</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">departure_runway</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrival_airport</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrival_runway</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">star</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approach</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flight_plan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cruise_alt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.add_aircraft" title="Permalink to this definition">#</a></dt>
+<dd><p>Add an aircraft to traffic array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>self.n-1: int</dt><dd><p>Index of the added aircraft</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.del_aircraft">
+<span class="sig-name descname"><span class="pre">del_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.del_aircraft" title="Permalink to this definition">#</a></dt>
+<dd><p>Delete an aircraft from traffic array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>index</strong><span class="classifier">int</span></dt><dd><p>Index of an aircraft</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="airtrafficsim.core.traffic.Traffic.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">global_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.traffic.Traffic.update" title="Permalink to this definition">#</a></dt>
+<dd><p>Update aircraft state for each timestep given ATC/autopilot command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>d_t: float</strong></dt><dd><p>delta time per timestep [s] TODO: need?</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -298,13 +588,76 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">traffic</a><ul>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic"><code class="docutils literal notranslate"><span class="pre">Traffic</span></code></a><ul>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.n"><code class="docutils literal notranslate"><span class="pre">Traffic.n</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.index"><code class="docutils literal notranslate"><span class="pre">Traffic.index</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.call_sign"><code class="docutils literal notranslate"><span class="pre">Traffic.call_sign</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.aircraft_type"><code class="docutils literal notranslate"><span class="pre">Traffic.aircraft_type</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.configuration"><code class="docutils literal notranslate"><span class="pre">Traffic.configuration</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.flight_phase"><code class="docutils literal notranslate"><span class="pre">Traffic.flight_phase</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.lat"><code class="docutils literal notranslate"><span class="pre">Traffic.lat</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.long"><code class="docutils literal notranslate"><span class="pre">Traffic.long</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.alt"><code class="docutils literal notranslate"><span class="pre">Traffic.alt</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.trans_alt"><code class="docutils literal notranslate"><span class="pre">Traffic.trans_alt</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.cruise_alt"><code class="docutils literal notranslate"><span class="pre">Traffic.cruise_alt</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.heading"><code class="docutils literal notranslate"><span class="pre">Traffic.heading</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.track_angle"><code class="docutils literal notranslate"><span class="pre">Traffic.track_angle</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.bank_angle"><code class="docutils literal notranslate"><span class="pre">Traffic.bank_angle</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.path_angle"><code class="docutils literal notranslate"><span class="pre">Traffic.path_angle</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.cas"><code class="docutils literal notranslate"><span class="pre">Traffic.cas</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.tas"><code class="docutils literal notranslate"><span class="pre">Traffic.tas</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.gs_north"><code class="docutils literal notranslate"><span class="pre">Traffic.gs_north</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.gs_east"><code class="docutils literal notranslate"><span class="pre">Traffic.gs_east</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.mach"><code class="docutils literal notranslate"><span class="pre">Traffic.mach</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.accel"><code class="docutils literal notranslate"><span class="pre">Traffic.accel</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.speed_mode"><code class="docutils literal notranslate"><span class="pre">Traffic.speed_mode</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.max_alt"><code class="docutils literal notranslate"><span class="pre">Traffic.max_alt</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.max_cas"><code class="docutils literal notranslate"><span class="pre">Traffic.max_cas</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.max_mach"><code class="docutils literal notranslate"><span class="pre">Traffic.max_mach</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.vs"><code class="docutils literal notranslate"><span class="pre">Traffic.vs</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.fpa"><code class="docutils literal notranslate"><span class="pre">Traffic.fpa</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.vertical_mode"><code class="docutils literal notranslate"><span class="pre">Traffic.vertical_mode</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.mass"><code class="docutils literal notranslate"><span class="pre">Traffic.mass</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.empty_weight"><code class="docutils literal notranslate"><span class="pre">Traffic.empty_weight</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.fuel_weight"><code class="docutils literal notranslate"><span class="pre">Traffic.fuel_weight</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.payload_weight"><code class="docutils literal notranslate"><span class="pre">Traffic.payload_weight</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.fuel_consumed"><code class="docutils literal notranslate"><span class="pre">Traffic.fuel_consumed</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.perf"><code class="docutils literal notranslate"><span class="pre">Traffic.perf</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.ap"><code class="docutils literal notranslate"><span class="pre">Traffic.ap</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.weather"><code class="docutils literal notranslate"><span class="pre">Traffic.weather</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.add_aircraft"><code class="docutils literal notranslate"><span class="pre">Traffic.add_aircraft()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.del_aircraft"><code class="docutils literal notranslate"><span class="pre">Traffic.del_aircraft()</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.traffic.Traffic.update"><code class="docutils literal notranslate"><span class="pre">Traffic.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
