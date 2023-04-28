@@ -38,7 +38,7 @@ class Environment:
         # File IO
         self.file_name = file_name+'-' + \
             self.datetime.isoformat(timespec='seconds')
-        self.folder_path = Path(__file__).parent.parent.parent.resolve().joinpath(
+        self.folder_path = Path(__file__).parent.parent.resolve().joinpath(
             'data/result/'+self.file_name)
         self.folder_path.mkdir()
         self.file_path = self.folder_path.joinpath(self.file_name+'.csv')

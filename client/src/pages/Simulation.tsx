@@ -83,6 +83,7 @@ const Simulation: React.FC = () => {
     const [showSimulationModal, setShowSimulationModal] = useState(false);
     const [showSettingModal, setShowSettingModal] = useState(false);
     const [showNavigationData, setShowNavigationData] = useState(false);
+    const [loadingMsg, setLoadingMsg] = useState('Loading...');
 
 
     useIonViewDidEnter(()=> {
@@ -132,6 +133,12 @@ const Simulation: React.FC = () => {
             setGraphHeader(msg.header);
             setSimulationFile(msg.file);
         })
+
+        socket.on("loadingMsg", (msg) => {
+            setLoadingMsg(msg);
+            setIsLoading(true);
+            setLoadingMsg('Loading...');
+        });
     })
 
     function getReplayDirs(){
@@ -179,7 +186,6 @@ const Simulation: React.FC = () => {
 
     function runSimulation(file :string){
         setGraphType('None')
-        setIsLoading(true)
         socket.emit("runSimulation", file);
     }
 
@@ -316,7 +322,7 @@ const Simulation: React.FC = () => {
                 </Viewer>
             </IonContent>
             
-            <IonLoading isOpen={isLoading} spinner="crescent" message="Loading..."/>
+            <IonLoading isOpen={isLoading} spinner="crescent" message={loadingMsg}/>
             <IonToast isOpen={!connected} message="Connecting. Please refresh." position='top' color='light'/>
             <IonFooter>
             {progressBar > 0 && <IonProgressBar value={progressBar} color='dark'/>}

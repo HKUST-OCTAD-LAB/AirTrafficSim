@@ -9,10 +9,10 @@ import airtrafficsim.server.server as server
 
 def main():
     # Unpack client
-    if not Path(__file__).parent.parent.resolve().joinpath('./data/client/build/').is_dir():
+    if not Path(__file__).parent.resolve().joinpath('./data/client/build/').is_dir():
         print("Unzipping client.")
-        ZipFile(Path(__file__).parent.parent.resolve().joinpath('./data/client/build.zip')
-                ).extractall(Path(__file__).parent.parent.resolve().joinpath('./data/client/'))
+        ZipFile(Path(__file__).parent.resolve().joinpath('./data/client/build.zip')
+                ).extractall(Path(__file__).parent.resolve().joinpath('./data/client/'))
 
     # Create a parser for command line arguments
     parser = argparse.ArgumentParser(
@@ -31,17 +31,17 @@ def main():
     if args.init:
         # Create a symbolic link to the data folder
         if Path.cwd().joinpath(args.init).is_dir():
-            Path.cwd().joinpath(args.init).resolve().joinpath('airtrafficsim_data').symlink_to(Path(__file__).parent.parent.resolve().joinpath('./data'), target_is_directory=True)
+            Path.cwd().joinpath(args.init).resolve().joinpath('airtrafficsim_data').symlink_to(Path(__file__).parent.resolve().joinpath('./data'), target_is_directory=True)
         else:
             raise IOError("The path you provided does not exist. Please provide a valid path.")
     else:
         # Give error if BADA data is missing TODO: To be removed when OpenAP is implemented
-        if len(os.listdir('data/performance/BADA/')) <= 1:
+        if len(list(Path(__file__).parent.resolve().joinpath('./data/performance/BADA/').glob('*'))) <= 1:
             raise IOError(
                 "BADA folder is empty. Remember to put the BADA performance data into /data/performance/BADA/.")
         if args.headless:
             # Run user defined environment without UI
-            Env = getattr(import_module('data.environment.' +
+            Env = getattr(import_module('airtrafficsim.data.environment.' +
                         sys.argv[2], '...'), sys.argv[2])
             env = Env()
             env.run()

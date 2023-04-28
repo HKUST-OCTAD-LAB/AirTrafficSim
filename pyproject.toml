@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "AirTrafficSim"
-version = "0.0.0"
+version = "0.0.2"
 authors = [
     {name = "Frankie Hui", email = "kyhuiaf@connect.ust.hk"},
 ]
@@ -37,10 +37,17 @@ repository = "https://github.com/HKUST-OCTAD-LAB/AirTrafficSim"
 airtrafficsim = "airtrafficsim.__main__:main"
 
 [tool.setuptools]
-packages = ["airtrafficsim"]
+packages = ["airtrafficsim", "airtrafficsim.core", "airtrafficsim.data", "airtrafficsim.server", "airtrafficsim.utils"]
+include-package-data = true
 
 [project.optional-dependencies]
 tests = [
   'pytest',
   'coverage'
+]
+docs = [
+  'sphinx',
+  'myst-parser',
+  'furo',
+  'numpydoc'
 ]

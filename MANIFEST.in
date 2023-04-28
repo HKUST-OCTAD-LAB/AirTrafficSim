@@ -1,0 +1,12 @@
+include airtrafficsim/data/client/*
+include airtrafficsim/data/environment/*
+include airtrafficsim/data/flight_data/*
+include airtrafficsim/data/flight_data/2018-05-01/*
+include airtrafficsim/data/navigation/*
+include airtrafficsim/data/performance/*
+include airtrafficsim/data/performance/BADA/*
+include airtrafficsim/data/result/*
+include airtrafficsim/data/weather/*
+include airtrafficsim/data/weather/era5/*
+include airtrafficsim/data/weather/radar/*
+include airtrafficsim/data/weather/radar/WeatherDemo/*
