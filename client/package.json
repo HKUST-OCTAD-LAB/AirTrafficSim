@@ -49,8 +49,8 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "BUILD_PATH='../data/client/build' craco build",
-    "postbuild": "cd ../data/client/ && rm -f build.zip && zip -r build.zip .",
+    "build": "BUILD_PATH='../airtrafficsim/data/client/build' craco build",
+    "postbuild": "cd ../airtrafficsim/data/client/ && rm -f build.zip && zip -r build.zip .",
     "test": "craco test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
   },

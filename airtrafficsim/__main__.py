@@ -32,6 +32,7 @@ def main():
         # Create a symbolic link to the data folder
         if Path.cwd().joinpath(args.init).is_dir():
             Path.cwd().joinpath(args.init).resolve().joinpath('airtrafficsim_data').symlink_to(Path(__file__).parent.resolve().joinpath('./data'), target_is_directory=True)
+            print("Created airtrafficsim_data at " + str(Path.cwd().joinpath(args.init).resolve().joinpath('airtrafficsim_data').resolve()))
         else:
             raise IOError("The path you provided does not exist. Please provide a valid path.")
     else:
