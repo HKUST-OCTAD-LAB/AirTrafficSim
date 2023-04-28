@@ -1,15 +1,10 @@
 name: Tests
 
 on:
-  # push:
-  #   branches: [ "main" ]
-  # pull_request_target:
-  #   types: [labeled]
-  #   branches: [ "main" ]
-  workflow_run:
-    workflows: ["Receive PR"]
-    types:
-      - completed
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -32,42 +27,13 @@ jobs:
 
     name: ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
-
-    if: github.event.workflow_run.conclusion == 'success'
-    # if: contains(github.event.pull_request.labels.*.name, 'Ready for testing')
-    # if: github.repository == 'HKUST-OCTAD-LAB/AirTrafficSim'
     
     defaults:
       run:
         shell: bash -el {0}
 
     steps:
-    # - uses: actions/checkout@v3
-
-    - name: 'Download artifact'
-      uses: actions/github-script@v3.1.0
-      with:
-        script: |
-          var artifacts = await github.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: ${{github.event.workflow_run.id }},
-          });
-          var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-            return artifact.name == "pr"
-          })[0];
-          var download = await github.actions.downloadArtifact({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              artifact_id: matchArtifact.id,
-              archive_format: 'zip',
-          });
-          var fs = require('fs');
-          fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
-    - run: |
-        unzip pr.zip
-        unzip AirTrafficSim.zip -d .
-        ls
+    - uses: actions/checkout@v3
     
     - name: Cache conda
       uses: actions/cache@v2
