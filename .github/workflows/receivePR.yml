@@ -1,0 +1,23 @@
+name: Receive PR
+
+# read-only repo token
+# no access to secrets
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:        
+      - uses: actions/checkout@v3
+
+      - name: Zip folder
+        run: |
+          zip -r pr.zip .
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pr
+          path: pr.zip
