@@ -21,8 +21,8 @@ from airtrafficsim.server.data import Data
 
 # eventlet.monkey_patch()
 
-app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.parent.joinpath(
-    'data/client/build'), template_folder=str(Path(__file__).parent.parent.parent.joinpath('data/client/build')))
+app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.joinpath(
+    'data/client/build'), template_folder=str(Path(__file__).parent.parent.joinpath('data/client/build')))
 socketio = SocketIO(app, cors_allowed_origins='*', max_http_buffer_size=1e8,
                     ping_timeout=60, async_mode='eventlet', logger=True)  # engineio_logger=True
 
@@ -124,7 +124,7 @@ def get_simulation_file():
         List of simulation environment file names
     """
     simulation_list = []
-    for file in sorted(Path(__file__).parent.parent.parent.joinpath('data/environment/').glob('*.py')):
+    for file in sorted(Path(__file__).parent.parent.joinpath('data/environment/').glob('*.py')):
         if file.name != '__init__.py':
             simulation_list.append(file.name.removesuffix('.py'))
     return simulation_list
@@ -148,7 +148,7 @@ def run_simulation(file):
     else:
         socketio.emit('loadingMsg', 'Running simulation... <br> Please check the terminal for progress.')   
     socketio.sleep(0)
-    Env = getattr(import_module('data.environment.'+file, '...'), file)
+    Env = getattr(import_module('airtrafficsim.data.environment.'+file, '...'), file)
     env = Env()
     env.run(socketio)
 

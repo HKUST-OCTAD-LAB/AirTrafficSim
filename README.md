@@ -45,7 +45,7 @@ It is recommended to install AirTrafficSim in a new conda environment:
 conda create -n airtrafficsim -c conda-forge airtrafficsim 
 ```
 
-Then, please initialise AirTrafficSim by specifing a folder path to create a symbolic link to the [airtrafficsim_data](data/) folder:
+Then, please initialise AirTrafficSim by specifing a folder path to create a symbolic link to the [airtrafficsim_data](airtrafficsim/data/) folder:
 
 ```
 conda activate airtrafficsim
@@ -53,7 +53,7 @@ airtrafficsim -- init <path to a folder>
 ```
 You may provide or retrieve any data of AirTrafficSim and create simulation environments in this folder. Please visit the [documentation](https://hkust-octad-lab.github.io/AirTrafficSim/index.html) for more information.
 
-After installation, please also download, unzip, and store BADA 3.15 data files in [airtrafficsim_data/performance/BADA](data/performance/BADA/). In addition follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to setup the API key for the weather database from ECMWF Climate Data Store.
+After installation, please also download, unzip, and store BADA 3.15 data files in [airtrafficsim_data/performance/BADA](airtrafficsim/data/performance/BADA/). In addition follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to setup the API key for the weather database from ECMWF Climate Data Store.
 
 
 ## Running AirTrafficSim
@@ -68,7 +68,7 @@ airtrafficsim
 AirTrafficSim uses port 6111 for communicaiton. Please open or forward the port accordingly if needed. You should be able to open the UI using any modern browser at http://localhost:6111. You may also check the console for any messages when using AirTrafficSim.
 
 
-You can also run AirTrafficSim without the UI by providing the name of the simulation environment which is listed in [environment](data/environment/). The environment name should be identical to the file name.
+You can also run AirTrafficSim without the UI by providing the name of the simulation environment which is listed in [environment](airtrafficsim/data/environment/). The environment name should be identical to the file name.
 
 ```
 conda activate airtrafficsim

@@ -11,13 +11,13 @@ class Era5:
     @staticmethod
     def download_data(start_time, end_time, file_name):
         c = cdsapi.Client()
-        if Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).exists() and any(Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).iterdir()):
+        if Path(__file__).parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).exists() and any(Path(__file__).parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).iterdir()):
             print("ERA5 data exists.")
         else:
             print("Downloading ERA5 data.")
             print("Download expected to complete in few minutes. Visit https://cds.climate.copernicus.eu/cdsapp#!/yourrequests for the status of the request. \n")
-            if not Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).exists():
-                Path(__file__).parent.parent.parent.parent.resolve().joinpath(
+            if not Path(__file__).parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).exists():
+                Path(__file__).parent.parent.parent.resolve().joinpath(
                     'data/weather/era5/'+file_name).mkdir()
             tmp = start_time
             year = []
@@ -62,7 +62,7 @@ class Era5:
                     # 'area': [ 90, 0, 0, 90,],       #North, West, South, East
                     'format': 'netcdf',
                 },
-                Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name+'/multilevel.nc'))
+                Path(__file__).parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name+'/multilevel.nc'))
 
             c.retrieve(
                 'reanalysis-era5-single-levels',
@@ -75,6 +75,6 @@ class Era5:
                     'day': day,
                     'time': hour,
                 },
-                Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name+'/surface.nc'))
+                Path(__file__).parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name+'/surface.nc'))
 
-        return Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name+'/multilevel.nc'), Path(__file__).parent.parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name+'/surface.nc')
+        return Path(__file__).parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name+'/multilevel.nc'), Path(__file__).parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name+'/surface.nc')

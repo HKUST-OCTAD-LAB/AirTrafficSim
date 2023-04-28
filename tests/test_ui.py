@@ -37,7 +37,7 @@ def test_get_radar_img(client):
 
 def test_get_replay_dir(client):
     r = client.emit('getReplayDir', callback=True)
-    path = Path(__file__).parent.parent.joinpath('data/result')
+    path = Path(__file__).parent.parent.joinpath('airtrafficsim/data/result')
     print(list(path.glob('DemoEnv*'))[0].name)
     assert r == {'historic': ['2018-05-01'], 
                  'simulation': [list(path.glob('WeatherDemo*'))[0].name,
@@ -60,7 +60,7 @@ def test_get_replay_czml(client):
     assert len(r) > 1
 
 def test_get_graph_header(client):
-    path = list(Path(__file__).parent.parent.joinpath('data/result').glob('DemoEnv*'))[0]
+    path = list(Path(__file__).parent.parent.joinpath('airtrafficsim/data/result').glob('DemoEnv*'))[0]
     r = client.emit('getGraphHeader', 'replay', 'simulation', path.name+'/'+list(path.glob('DemoEnv*.csv'))[0].name, callback=True)
     assert r == ['None', 'alt', 'cas', 'tas', 'mach', 'vs',
                 'heading', 'bank_angle', 'path_angle',
@@ -71,7 +71,7 @@ def test_get_graph_header(client):
                 'flight_phase', 'configuration', 'speed_mode', 'vertical_mode', 'ap_speed_mode', 'ap_lateral_mode', 'ap_throttle_mode']
                                                     
 def test_get_graph_data(client):
-    path = list(Path(__file__).parent.parent.joinpath('data/result').glob('DemoEnv*'))[0]
+    path = list(Path(__file__).parent.parent.joinpath('airtrafficsim/data/result').glob('DemoEnv*'))[0]
     r = client.emit('getGraphData', 'replay', 'simulation', path.name+'/'+list(path.glob('DemoEnv*.csv'))[0].name, path.name+'/'+list(path.glob('DemoEnv*.csv'))[0].name, 'alt', callback=True)
     assert len(r[0]['x']) > 1 and len(r[0]['y']) > 1
 

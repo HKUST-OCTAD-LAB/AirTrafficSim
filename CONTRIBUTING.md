@@ -20,7 +20,7 @@ python -m airtrafficsim
 python -m airtrafficsim --headless <environment name>
 ```
 
-Please also be reminded to unzip BADA 3.15 data files to [airtrafficsim_data/performance/BADA](data/performance/BADA/) and setup the API key for the weather database from ECMWF Climate Data Store following [this guide](https://cds.climate.copernicus.eu/api-how-to).
+Please also be reminded to unzip BADA 3.15 data files to [airtrafficsim/data/performance/BADA](airtrafficsim/data/performance/BADA/) and setup the API key for the weather database from ECMWF Climate Data Store following [this guide](https://cds.climate.copernicus.eu/api-how-to).
 
 
 ## Code of Conduct

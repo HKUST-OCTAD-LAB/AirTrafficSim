@@ -184,8 +184,8 @@ class Bada:
         # ----------------------------  Global Aircraft Parameters (GPF) section 5 -----------------------------------------
         # Read data from GPF file (section 6.8)
         # 'CD', 1X, A15, 1X, A7, 1X, A16, 1x, A29, 1X, E10.5
-        if Path(__file__).parent.parent.parent.parent.resolve().joinpath('./data/performance/BADA/BADA.GPF').is_file():
-            GPF = np.genfromtxt(Path(__file__).parent.parent.parent.parent.resolve().joinpath('./data/performance/BADA/BADA.GPF'),
+        if Path(__file__).parent.parent.parent.resolve().joinpath('./data/performance/BADA/BADA.GPF').is_file():
+            GPF = np.genfromtxt(Path(__file__).parent.parent.parent.resolve().joinpath('./data/performance/BADA/BADA.GPF'),
                                 delimiter=[3, 16, 8, 17, 29, 12], dtype="U2,U15,U7,U16,U29,f8", comments="CC", autostrip=True, skip_footer=1)
 
             # Maximum acceleration
@@ -329,7 +329,7 @@ class Bada:
 
         # ----------------------------  SYNONYM FILE FORMAT (SYNONYM.NEW) section 6.3 -----------------------------------------
         # | 'CD' | SUPPORT TYPE (-/*) | AIRCRAFT Code | MANUFACTURER | NAME OR MODEL | FILE NAME | ICAO (Y/N) |
-        self.__SYNONYM = np.genfromtxt(Path(__file__).parent.parent.parent.parent.resolve().joinpath('./data/performance/BADA/SYNONYM.NEW'), delimiter=[3, 2, 7, 20, 25, 8, 5], names=[
+        self.__SYNONYM = np.genfromtxt(Path(__file__).parent.parent.parent.resolve().joinpath('./data/performance/BADA/SYNONYM.NEW'), delimiter=[3, 2, 7, 20, 25, 8, 5], names=[
                                        'CD', 'ST', 'ACCODE', 'MANUFACTURER', 'MODEL', 'FILENAME', 'ICAO'], dtype="U2,U1,U4,U18,U25,U6,U1", comments="CC", autostrip=True, skip_footer=1, encoding='unicode_escape')
 
     def add_aircraft(self, icao, mass_class=2):
@@ -364,17 +364,17 @@ class Bada:
             print("No aircraft in SYNONYM.NEW")
 
         # Get data from Operations Performance File (Section 6.4)
-        OPF = np.genfromtxt(Path(__file__).parent.parent.parent.parent.resolve().joinpath('./data/performance/BADA/', file_name+'.OPF'), delimiter=[
+        OPF = np.genfromtxt(Path(__file__).parent.parent.parent.resolve().joinpath('./data/performance/BADA/', file_name+'.OPF'), delimiter=[
                             3, 2, 2, 13, 13, 13, 13, 11], dtype="U2,U1,U2,f8,f8,f8,f8,f8", comments="CC", autostrip=True, skip_header=16, skip_footer=1)
 
         # 'CD', 3X, A6, 9X, I1, 12X, A9, 17X, A1 - aircraft type block - 1 data line
         # | 'CD' | ICAO | # of engine | 'engines' | engine type ( Jet,  Turboprop  or  Piston) | wake category ( J (jumbo), H (heavy), M (medium) or L (light))
-        OPF_Actype = np.genfromtxt(Path(__file__).parent.parent.parent.parent.resolve().joinpath(
+        OPF_Actype = np.genfromtxt(Path(__file__).parent.parent.parent.resolve().joinpath(
             './data/performance/BADA/', file_name+'.OPF'), delimiter=[5, 15, 1, 12, 26, 1], dtype="U2,U6,i1,U7,U9,U1", comments="CC", autostrip=True, max_rows=1)
 
         # Get data from Airlines Procedures File (Section 6.5)
         # 'CD', 25X, 2(I3, 1X), I2, 10X, 2(Ix, 1X), I2, 2X, I2, 2(1X, I3) - procedures specification block - 3 dataline
-        APF = np.genfromtxt(Path(__file__).parent.parent.parent.parent.resolve().joinpath('./data/performance/BADA/', file_name+'.APF'), delimiter=[
+        APF = np.genfromtxt(Path(__file__).parent.parent.parent.resolve().joinpath('./data/performance/BADA/', file_name+'.APF'), delimiter=[
                             6, 8, 9, 4, 4, 4, 3, 5, 4, 4, 4, 4, 3, 4, 4, 5, 4, 4, 4, 5, 7], dtype="U2,U7,U7,U2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,i2,U6", comments="CC", autostrip=True)
 
         self.__n_eng = np.append(self.__n_eng, OPF_Actype.item()[2])

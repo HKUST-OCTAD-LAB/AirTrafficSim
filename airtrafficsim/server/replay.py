@@ -17,13 +17,13 @@ class Replay:
             JSON file of historic file list and simulation file list in data/replay directory
         """
         historic_list = []
-        for dir in Path(__file__).parent.parent.parent.joinpath('data/flight_data').iterdir():
+        for dir in Path(__file__).parent.parent.joinpath('data/flight_data').iterdir():
             if dir.is_dir():
                 historic_list.append(dir.name)
 
         simulation_list = []
         simulation_file_list = {}
-        for dir in Path(__file__).parent.parent.parent.joinpath('data/result').iterdir():
+        for dir in Path(__file__).parent.parent.joinpath('data/result').iterdir():
             if dir.is_dir():
                 simulation_list.append(dir.name)
                 file_list = []
@@ -58,8 +58,8 @@ class Replay:
             trajectories = []
             start_time = None
             end_time = None
-            for file in Path(__file__).parent.parent.parent.joinpath('data/flight_data/', replayFile).iterdir():
-                if file != Path(__file__).parent.parent.parent.joinpath('data/flight_data/', replayFile, replayFile+'.csv'):
+            for file in Path(__file__).parent.parent.joinpath('data/flight_data/', replayFile).iterdir():
+                if file != Path(__file__).parent.parent.joinpath('data/flight_data/', replayFile, replayFile+'.csv'):
                     file_content = pd.read_csv(file)
 
                     if replayCategory == 'historic':
@@ -161,7 +161,7 @@ class Replay:
 
         elif replayCategory == 'simulation':
             df = pd.read_csv(
-                Path(__file__).parent.parent.parent.joinpath('data/result', replayFile))
+                Path(__file__).parent.parent.joinpath('data/result', replayFile))
             document = [{
                 "id": "document",
                 "name": "simulation",
@@ -255,7 +255,7 @@ class Replay:
         """
         header = ['None']
         if mode == 'replay' and replayCategory == 'simulation':
-            with open(Path(__file__).parent.parent.parent.joinpath('data/result', replayFile), 'r') as file:
+            with open(Path(__file__).parent.parent.joinpath('data/result', replayFile), 'r') as file:
                 header.extend(next(csv.reader(file)))
             header.remove('timestep')
             header.remove('timestamp')
@@ -287,7 +287,7 @@ class Replay:
         data = []
         if mode == 'replay' and replayCategory == 'simulation' and graph != 'None':
             df = pd.read_csv(
-                Path(__file__).parent.parent.parent.joinpath('data/result/', replayFile))
+                Path(__file__).parent.parent.joinpath('data/result/', replayFile))
             for id in df['id'].unique():
                 content = df[df['id'] == id]
                 data.append({
@@ -299,7 +299,7 @@ class Replay:
                 })
 
         elif mode == 'simulation' and graph != 'None':
-            df = pd.read_csv(Path(__file__).parent.parent.parent.joinpath(
+            df = pd.read_csv(Path(__file__).parent.parent.joinpath(
                 'data/result/', simulationFile, simulationFile+'.csv'))
             for id in df['id'].unique():
                 content = df[df['id'] == id]
