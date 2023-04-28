@@ -37,9 +37,7 @@ jobs:
         use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
         
     - name: Build HTML
-      uses: ammaraskar/sphinx-action@master
-      with:
-        docs-folder: "docs/"
+      run: sphinx-build -b html docs/source/ docs/build/html
         
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
