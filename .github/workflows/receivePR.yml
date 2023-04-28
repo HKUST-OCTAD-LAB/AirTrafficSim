@@ -15,9 +15,10 @@ jobs:
 
       - name: Zip folder
         run: |
-          zip -r pr.zip .
+          zip -r AirTrafficSim.zip .
 
       - uses: actions/upload-artifact@v3
         with:
           name: pr
-          path: pr.zip
+          path: AirTrafficSim.zip
+          retention-days: 1
