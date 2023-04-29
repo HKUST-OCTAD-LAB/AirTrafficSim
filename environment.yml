@@ -23,6 +23,7 @@ dependencies:
   - myst-parser
   - furo
   - numpydoc
+  - sphinx-copybutton
 
   # Client
   # - nodejs

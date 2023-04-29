@@ -17,3 +17,13 @@ For any features suggestion or any ideas in general, please feel free to raise a
 ## Code development
 
 We welcome everyone to contribute to the development of AirTrafficSim. You can open a new item in the [Projects board](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/discussions) to let us and others know your goal. Then, please create a new branch to develop your features. Once your work is completed, please raise a pull request for reviewal. Once it is done, your work and branch will be merged into the master branch where everyone will be able to use your new feature.
+
+You can update AirTrafficSim with the newest changes by executing the following command.
+
+``` bash
+git pull
+```
+
+```{tip}
+You may git commit and/or push your local changes first before pulling new remote changes to avoid overwriting your changes.
+```

@@ -3,3 +3,4 @@ docutils>=0.19
 furo
 myst-parser
 numpydoc
+sphinx-copybutton
