@@ -6,9 +6,10 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Converting historical data" href="historic.html" /><link rel="prev" title="Adding flight plan" href="flight_plan.html" />
 
     <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>Using historical weather database</title>
+        <title>Using weather database</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -170,20 +171,22 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="UI.html">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">   Understanding the data folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Using historical weather database</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../development/guide.html">   Development guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/client.html">   Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/client.html">   Web client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/documentation.html">   Documentation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/test.html">   Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   AirTrafficSim API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.environment.html">environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.aircraft.html">aircraft</a></li>
@@ -244,9 +247,11 @@
           </label>
         </div>
         <article role="main">
-          <section id="using-historical-weather-database">
-<h1>Using historical weather database<a class="headerlink" href="#using-historical-weather-database" title="Permalink to this heading">#</a></h1>
-<p>AirTrafficSim can use <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview">ECMWF ERA5</a> as a weather data source. The <code class="docutils literal notranslate"><span class="pre">WeatherDemo</span></code> class in <code class="docutils literal notranslate"><span class="pre">environment/WeatherDemo.py</span></code> demonstrates how to set up <code class="docutils literal notranslate"><span class="pre">ERA5</span></code> weather mode in AirTrafficSim.</p>
+          <section id="using-weather-database">
+<h1>Using weather database<a class="headerlink" href="#using-weather-database" title="Permalink to this heading">#</a></h1>
+<p>AirTrafficSim can use <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview">ECMWF ERA5</a> as a weather data source. The <code class="docutils literal notranslate"><span class="pre">WeatherDemo</span></code> class in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/environment/WeatherDemo.py</span></code> demonstrates how to set up <code class="docutils literal notranslate"><span class="pre">ERA5</span></code> weather mode in AirTrafficSim.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">airtrafficsim_data/environment/WeatherDemo.py</span><a class="headerlink" href="#id1" title="Permalink to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">11</span><span class="c1"># Initialize environment super class</span>
 <span class="linenos">12</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">),</span> <span class="c1">#File name (do not change)</span>
 <span class="linenos">13</span>                <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s1">&#39;2018-05-01T00:00:00+00:00&#39;</span><span class="p">),</span>
@@ -256,16 +261,17 @@
 <span class="linenos">17</span>                <span class="p">)</span>
 </pre></div>
 </div>
-<p>To use the historical weather database, set <code class="docutils literal notranslate"><span class="pre">weather_mode</span></code> to “ERA5”. This will download the weather data in netCDF format to <code class="docutils literal notranslate"><span class="pre">data/weather/erea5/&lt;environment</span> <span class="pre">name&gt;/</span></code>. By default, it is an empty string <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> which will use the International Standard Atmosphere (ISA) for computation and assume 0 winds.</p>
+</div>
+<p>To use the historical weather database, set <code class="docutils literal notranslate"><span class="pre">weather_mode</span></code> to “ERA5”. This will download the weather data in netCDF format to <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/weather/erea5/&lt;environment</span> <span class="pre">name&gt;/</span></code>. By default, it is an empty string <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> which will use the International Standard Atmosphere (ISA) for computation and assume 0 winds.</p>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>Please ensure that the API key for the weather database from ECMWF Climate Data Store has been set up following <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">this guide</a> to set up .</p>
+<p>Please ensure that the API key for the weather database from ECMWF Climate Data Store has been set up following <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">this guide</a>.</p>
 </div>
-<section id="usage-of-al-weather-data">
-<h2>Usage of al weather data<a class="headerlink" href="#usage-of-al-weather-data" title="Permalink to this heading">#</a></h2>
-<p>The downloaded data will be loaded and for each timestep, AirTrafficSim will find the related temperature and wind data at the location and altitude of each aircraft. Then, the temperature temperature information difference with ISA will be used for further atmosphere condition calculation.</p>
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">weather.py</span><a class="headerlink" href="#id1" title="Permalink to this code">#</a></div>
+<section id="usage-of-era5-weather-data">
+<h2>Usage of ERA5 weather data<a class="headerlink" href="#usage-of-era5-weather-data" title="Permalink to this heading">#</a></h2>
+<p>The downloaded ERA5 data will be loaded and for each timestep, AirTrafficSim will find the related temperature and wind data at the location and altitude of each aircraft. Then, the temperature difference with ISA will be computed for further atmosphere condition calculation in the performance model.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">weather.py</span><a class="headerlink" href="#id2" title="Permalink to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">65</span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ERA5&quot;</span><span class="p">:</span>
 <span class="linenos">66</span>    <span class="n">ds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weather_data</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">longitude</span><span class="o">=</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">long</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="s2">&quot;points&quot;</span><span class="p">),</span> <span class="n">latitude</span><span class="o">=</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="s2">&quot;points&quot;</span><span class="p">),</span> <span class="n">time</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">global_time</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span><span class="s1">&#39;ns&#39;</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span> <span class="c1"># </span>
 <span class="linenos">67</span>    <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">Unit</span><span class="o">.</span><span class="n">ft2m</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span> <span class="o">*</span> <span class="mf">9.80665</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">alt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">alt</span><span class="p">)])</span> <span class="o">-</span> <span class="mi">1</span>
@@ -341,8 +347,8 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Using historical weather database</a><ul>
-<li><a class="reference internal" href="#usage-of-al-weather-data">Usage of al weather data</a></li>
+<li><a class="reference internal" href="#">Using weather database</a><ul>
+<li><a class="reference internal" href="#usage-of-era5-weather-data">Usage of ERA5 weather data</a></li>
 </ul>
 </li>
 </ul>
@@ -361,5 +367,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     </body>
 </html>

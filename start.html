@@ -9,6 +9,7 @@
         <title>Getting started</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -170,20 +171,22 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/UI.html">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/data.html">   Understanding the data folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/weather.html">   Using historical weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="development/guide.html">   Development guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="development/client.html">   Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development/client.html">   Web client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development/documentation.html">   Documentation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">   API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="development/test.html">   Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">   AirTrafficSim API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/core/airtrafficsim.core.environment.html">environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/core/airtrafficsim.core.aircraft.html">aircraft</a></li>
@@ -246,35 +249,50 @@
         <article role="main">
           <section id="getting-started">
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h1>
+<section id="initialising-airtrafficsim">
+<h2>Initialising AirTrafficSim<a class="headerlink" href="#initialising-airtrafficsim" title="Permalink to this heading">#</a></h2>
+<p>You should have initialised AirTrafficSim by following the <a class="reference internal" href="install.html"><span class="doc std std-doc">installation guide</span></a> which will create a folder alias in your specified location called <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
+airtrafficsim -- init &lt;path to a folder&gt;
+</pre></div>
+</div>
+<p>If you are running AirTrafficSim for the first time, it will unpack the navigation and web client data which will take a few minutes to complete.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Please ensure that BADA 3.15 data files are extracted in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/performance/BADA/</span></code> and the API key for the weather database from ECMWF Climate Data Store is set up following <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">this guide</a>.</p>
+</div>
+</section>
 <section id="running-airtrafficsim">
 <h2>Running AirTrafficSim<a class="headerlink" href="#running-airtrafficsim" title="Permalink to this heading">#</a></h2>
 <p>You can run AirTrafficSim by executing the following commands in your console.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
-<span class="nb">cd</span> AirTrafficSim
-python -m airtrafficsim
+airtrafficsim
 </pre></div>
 </div>
-<p>If you are running AirTrafficSim for the first time, it will unpack the navigation data which will take a few minutes to complete. After executing the commands, you will see the following output in your console.</p>
+<p>After executing the commands, you will see the following output in your console.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Reading NAV data...
 Running server at http://localhost:6111
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>AirTrafficSim uses port 6111 for communication between client and server. Please open or forward the port accordingly if needed.</p>
+<p>AirTrafficSim uses port 6111 for communication between the client and server. Please open or forward the port accordingly if needed.</p>
 </div>
 <p>You should then be able to open the UI using any modern browser at <a class="reference external" href="http://localhost:6111">http://localhost:6111</a>. You will see the UI similar to below.</p>
 <img alt="_images/UI.png" src="_images/UI.png" />
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You may also check the console for any messages when running AirTrafficSim.</p>
+</div>
 </section>
 <section id="running-airtrafficsim-without-ui">
 <h2>Running AirTrafficSim without UI<a class="headerlink" href="#running-airtrafficsim-without-ui" title="Permalink to this heading">#</a></h2>
-<p>You can also run AirTrafficSim without the UI by providing the name of an environment listed in <code class="docutils literal notranslate"><span class="pre">environments/</span></code>. The environment name should be identical to the file name.</p>
+<p>You can also run AirTrafficSim without the UI by providing the name of an environment listed in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/environment/</span></code>. The environment name should be identical to the file name.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
-<span class="nb">cd</span> AirTrafficSim
-python -m airtrafficsim --headless &lt;environment name&gt;
+airtrafficsim --headless &lt;environment name&gt;
 </pre></div>
 </div>
-<p>These commands will execute the specified simulation environment without running the UI. The output data will be stored in <code class="docutils literal notranslate"><span class="pre">result/</span></code> as a CSV file. More details will be discussed in the tutorial.</p>
+<p>These commands will execute the specified simulation environment without running the UI. The output data will be stored in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_result/</span></code> as a CSV file. More details will be discussed in the tutorial.</p>
 </section>
 </section>
 
@@ -341,6 +359,7 @@ python -m airtrafficsim --headless &lt;environment name&gt;
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Getting started</a><ul>
+<li><a class="reference internal" href="#initialising-airtrafficsim">Initialising AirTrafficSim</a></li>
 <li><a class="reference internal" href="#running-airtrafficsim">Running AirTrafficSim</a></li>
 <li><a class="reference internal" href="#running-airtrafficsim-without-ui">Running AirTrafficSim without UI</a></li>
 </ul>
@@ -361,5 +380,7 @@ python -m airtrafficsim --headless &lt;environment name&gt;
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
     </body>
 </html>

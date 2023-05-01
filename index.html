@@ -9,6 +9,7 @@
         <title>AirTrafficSim</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -170,20 +171,22 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/UI.html">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/data.html">   Understanding the data folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/weather.html">   Using historical weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="development/guide.html">   Development guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="development/client.html">   Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development/client.html">   Web client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development/documentation.html">   Documentation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">   API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="development/test.html">   Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">   AirTrafficSim API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/core/airtrafficsim.core.environment.html">environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/core/airtrafficsim.core.aircraft.html">aircraft</a></li>
@@ -246,25 +249,25 @@
         <article role="main">
           <section id="airtrafficsim">
 <h1>AirTrafficSim<a class="headerlink" href="#airtrafficsim" title="Permalink to this heading">#</a></h1>
-<p>AirTrafficSim is a web-based air traffic simulation software written in Python and Javascript. It is designed to visualize historical and research data, perform microscopic studies of air traffic movement with the integration of a historical weather database, and evaluate the performance of ATM algorithms.</p>
+<p>AirTrafficSim is a web-based air traffic simulation software written in Python and javascript. It is designed to visualize historical and simulated flight data and perform microscopic studies of air traffic movement with the integration of a historical weather database. It aims to assist users to evaluate the performance of ATM algorithms.</p>
 <p>AirTrafficSim is open-sourced at <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim">https://github.com/HKUST-OCTAD-LAB/AirTrafficSim</a>.</p>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Replay historical flights given data (FlightRadar 24 and simulated flights)</p></li>
-<li><p>Air traffic simulation using <a class="reference external" href="https://www.eurocontrol.int/model/bada">BADA performance data</a> and OpenAP (WIP)</p></li>
+<li><p>Replay historical flights with user-provided data (e.g. from FlightRadar 24)</p></li>
+<li><p>Air traffic simulation using <a class="reference external" href="https://www.eurocontrol.int/model/bada">BADA 3.15 performance data</a></p></li>
 <li><p>Navigation data simulation and visualization from <a class="reference external" href="https://developer.x-plane.com/docs/data-development-documentation/">x-plane 11</a></p></li>
 <li><p>Autopilot and Flight Management System simulation</p></li>
-<li><p>Holding, vectoring, direct to maneuvers simulation</p></li>
-<li><p>Weather data from <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview">ECMWF ERA5</a> and custom radar image</p></li>
-<li><p>Air traffic is controlled with Python API interface to simulate ATC interaction</p></li>
+<li><p>ATC commands (e.g. holding, vectoring, and direct to) simulation</p></li>
+<li><p>Simulation and visualisation with weather data from <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview">ECMWF ERA5</a> and custom radar image (HKO 256km radar images)</p></li>
+<li><p>Aircraft is controlled with  an API interface to simulate ATC interaction</p></li>
 </ul>
 <img alt="_images/UI_features.png" src="_images/UI_features.png" />
 </section>
 <section id="usages">
 <h2>Usages<a class="headerlink" href="#usages" title="Permalink to this heading">#</a></h2>
 <blockquote>
-<div><p><strong>Tactical routing for air transportation in HKIA terminal manuevering area.</strong></p>
+<div><p><strong><a class="reference external" href="https://repository.hkust.edu.hk/ir/bitstream/1783.1-122610/1/122610-1.pdf">Tactical routing for air transportation in HKIA terminal manuevering area</a></strong></p>
 <p>The 26th HKSTS International Conference, 2022</p>
 <p>Chris HC. NGUYEN, Go Nam LUI, Ka Yiu HUI, and Rhea P. LIEM</p>
 </div></blockquote>
@@ -355,5 +358,7 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
     </body>
 </html>

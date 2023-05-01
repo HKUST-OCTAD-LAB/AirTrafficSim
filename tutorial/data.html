@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Adding flight plan" href="flight_plan.html" /><link rel="prev" title="Creating a simulation environment" href="creating_env.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Replaying data" href="replay.html" /><link rel="prev" title="Navigating the UI" href="UI.html" />
 
     <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>Running a simulation</title>
+        <title>Understanding the data folder</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -141,7 +141,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -171,10 +171,10 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="UI.html">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data.html">   Understanding the data folder</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Understanding the data folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Running a simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historical data</a></li>
@@ -241,24 +241,122 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section id="running-a-simulation">
-<h1>Running a simulation<a class="headerlink" href="#running-a-simulation" title="Permalink to this heading">#</a></h1>
-<p>After setting up the simulation environment, you may run the simulation by either using the UI to select the simulation environment or by running AirTrafficSim in standalone mode with <code class="docutils literal notranslate"><span class="pre">airtrafficsim</span> <span class="pre">--headless</span> <span class="pre">&lt;environment</span> <span class="pre">name&gt;</span></code>.</p>
-<p>To run the simulation in the UI, click the <code class="docutils literal notranslate"><span class="pre">Simulation</span></code> button in the toolbar and select the environment in the popup menu.</p>
-<img alt="../_images/Simulation_select.png" src="../_images/Simulation_select.png" />
-<p>Then, the selected environment will be dynamically imported and initialised and the <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">run(self):</span></code> function in its <code class="docutils literal notranslate"><span class="pre">Environment</span></code> base class will be executed to run the simulation for all timesteps specified. The data will be saved to <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/result</span></code>.</p>
-<p>This is what the UI will look like if you start the simulation using the UI. Note that there is a progress bar at the bottom to indicate the status of the simulation and the data will be sent to the UI every 0.5 seconds.</p>
-<img alt="../_images/Simulation_UI.png" src="../_images/Simulation_UI.png" />
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>You can view the plot for different simulation parameters by using the “Show Graph” selector.</p>
+          <section id="understanding-the-data-folder">
+<h1>Understanding the data folder<a class="headerlink" href="#understanding-the-data-folder" title="Permalink to this heading">#</a></h1>
+<p>After initialising AirTrafficSim with <code class="docutils literal notranslate"><span class="pre">airtrafficsim</span> <span class="pre">--init</span> <span class="pre">&lt;folder</span> <span class="pre">path&gt;</span></code>, the <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/</span></code> alias folder is created at the user-specified location which links to the <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/tree/main/airtrafficsim/data"><code class="docutils literal notranslate"><span class="pre">airtrafficsim/data/</span></code></a> folder. There are 7 folders inside to provide and save information from AirTrafficSim. This page will explain the purpose of these folders.</p>
+<p>To create a new simulation, you should create a new simulation environment file in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/environment/</span></code> following the <a class="reference internal" href="creating_env.html"><span class="doc std std-doc">Creating a simulation environment</span></a> guide. When a simulation is finished, the result will be saved to <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/result/</span></code>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>If you want to understand the full project structure of AirTrafficSim, please visit <a class="reference internal" href="../development/structure.html"><span class="doc std std-doc">Understanding the project structure</span></a>.</p>
 </div>
+<section id="airtrafficsim-data">
+<h2>airtrafficsim_data 📁<a class="headerlink" href="#airtrafficsim-data" title="Permalink to this heading">#</a></h2>
+<section id="client">
+<h3> client 📁<a class="headerlink" href="#client" title="Permalink to this heading">#</a></h3>
+<ul>
+<p>The client folder stores the pre-compiled build of AirTrafficSim’s web client which is compressed in a zip file <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/blob/main/airtrafficsim/data/client/build.zip"><code class="docutils literal notranslate"><span class="pre">build.zip</span></code></a>. After using AirTrafficSim for the first time, the web client will be unzipped into the <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/client/build</span></code> folder for the AirTrafficSim’s backend server to serve the client code to users to open in the browser.</p>
+</ul>
+</section>
+<section id="environment">
+<h3> environment 📁<a class="headerlink" href="#environment" title="Permalink to this heading">#</a></h3>
+<ul>
+<p>The environment folder contains different Python files to set up the simulation environments. The creation of such a file will be explained on the <a class="reference internal" href="creating_env.html"><span class="doc std std-doc">Creating a simulation environment</span></a> page. Four sample tutorial files, including <code class="docutils literal notranslate"><span class="pre">DemoEnv.py</span></code>, <code class="docutils literal notranslate"><span class="pre">FullFlightDemo.py</span></code>, <code class="docutils literal notranslate"><span class="pre">WeatherDemo.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">ConvertHistoricDemo.py</span></code>, are provided which are also explained in the tutorials <a class="reference internal" href="creating_env.html"><span class="doc std std-doc">Creating a simulation environment</span></a>, <a class="reference internal" href="flight_plan.html"><span class="doc std std-doc">Adding flight plan</span></a>, <a class="reference internal" href="weather.html"><span class="doc std std-doc">Using weather database</span></a>, and <a class="reference internal" href="historic.html"><span class="doc std std-doc">Converting historical data</span></a> respectively.</p>
+</ul>
+</section>
+<section id="flight-data">
+<h3> flight_data 📁<a class="headerlink" href="#flight-data" title="Permalink to this heading">#</a></h3>
+<ul>
+<p>The flight_data folder stores user-provided historical flight trajectory data. A sample data set of arrival flights to Hong Kong International Airport (VHHH) on 01 MAY 2018 from FlightRadar24 is included. To provide your own flight data, please open a folder and stores the CSV files with each CSV file representing each flight and named as its flight number. The CSV files should have a header with at least the following parameters to <a class="reference internal" href="replay.html"><span class="doc std std-doc">replay the flights</span></a>:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameters</p></th>
+<th class="head"><p>Details</p></th>
+<th class="head"><p>Types</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>timestamp</p></td>
+<td><p>Unix/Epoch time in seconds (10-digit)</p></td>
+<td><p>float</p></td>
+</tr>
+<tr class="row-odd"><td><p>lat</p></td>
+<td><p>Latitude (degree)</p></td>
+<td><p>float</p></td>
+</tr>
+<tr class="row-even"><td><p>long</p></td>
+<td><p>Longitude (degree)</p></td>
+<td><p>float</p></td>
+</tr>
+<tr class="row-odd"><td><p>alt</p></td>
+<td><p>Altitude (meter)</p></td>
+<td><p>float</p></td>
+</tr>
+<tr class="row-even"><td><p>gspeed</p></td>
+<td><p>Ground speed (knot)</p></td>
+<td><p>float</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Two additional parameters are needed for AirTrafficSim to convert the historical flight data to a simulation environment automatically as explained in <a class="reference internal" href="historic.html"><span class="doc std std-doc">this tutorial</span></a>.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameters</p></th>
+<th class="head"><p>Details</p></th>
+<th class="head"><p>Types</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>hangle</p></td>
+<td><p>Heading angle (degree)</p></td>
+<td><p>float</p></td>
+</tr>
+<tr class="row-odd"><td><p>Aircraft_model</p></td>
+<td><p><a class="reference external" href="https://www.icao.int/publications/doc8643/pages/search.aspx">ICAO Aircraft Type Designators</a></p></td>
+<td><p>string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Please note that each data set should have its own folder.</p>
+</div>
+</ul>
+</section>
+<section id="navigation">
+<h3> navigation 📁<a class="headerlink" href="#navigation" title="Permalink to this heading">#</a></h3>
+<ul>
+<p>The navigation folder includes navigation data at <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/blob/main/airtrafficsim/data/navigation/xplane_default_data.zip"><code class="docutils literal notranslate"><span class="pre">airtraffficsim_data/navigation/xplane_default_data.zip</span></code></a> obtained from <a class="reference external" href="https://developer.x-plane.com/docs/data-development-documentation/">Xplane-11 data</a>. The data will be extracted into <code class="docutils literal notranslate"><span class="pre">airtraffficsim_data/navigation/xplane/</span></code> when AirTrafficSim is executed for the first time. It is used to provide the fix, nav aids, airways, airports, STARs, and SIDs information.</p>
+</ul>
+</section>
+<section id="performance">
+<h3> performance 📁<a class="headerlink" href="#performance" title="Permalink to this heading">#</a></h3>
+<ul>
+<p>The performance folder is intended to contain any necessary data for different aircraft performance models. To use the BADA 3.15 performance model, the BADA aircraft Performance data should be extracted to the <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/tree/main/airtrafficsim/data/performance/BADA"><code class="docutils literal notranslate"><span class="pre">airtrafficsim/performance/BADA</span></code></a> folder. The data is not included during installation due to licensing requirements but it is obtainable at <a class="reference external" href="https://www.eurocontrol.int/model/bada">eurocontrol</a> website.</p>
+</ul>
+</section>
+<section id="result">
+<h3> result 📁<a class="headerlink" href="#result" title="Permalink to this heading">#</a></h3>
+<ul>
+<p>The result folder contains the output files from the simulation. The result of each simulation is stored in a folder with this naming convention <code class="docutils literal notranslate"><span class="pre">&lt;Environment</span> <span class="pre">name&gt;-&lt;real</span> <span class="pre">world</span> <span class="pre">start</span> <span class="pre">time</span> <span class="pre">of</span> <span class="pre">simulation</span> <span class="pre">in</span> <span class="pre">UTC&gt;</span></code>. In each folder, there is a master .csv file with the same name that includes every flight in the simulation.</p>
+</ul>
+</section>
+<section id="weather">
+<h3> weather 📁<a class="headerlink" href="#weather" title="Permalink to this heading">#</a></h3>
+<ul>
+<p>The weather folder is empty by default. It serves as the directory to store ECMWF ERA5 data in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/weather/era5</span></code> when you selected to download such data for simulation. It also stores user-provided radar images in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/weather/radar</span></code> as high-resolution convective weather data. The provided radar images should be stored in a folder named after the environment name.</p>
+</ul>
+</section>
+</section>
 </section>
 
         </article>
@@ -266,23 +364,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="flight_plan.html">
+          <a class="next-page" href="replay.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Adding flight plan</div>
+                <div class="title">Replaying data</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="creating_env.html">
+          <a class="prev-page" href="UI.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Creating a simulation environment</div>
+                <div class="title">Navigating the UI</div>
                 
               </div>
             </a>
@@ -311,8 +409,36 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Understanding the data folder</a><ul>
+<li><a class="reference internal" href="#airtrafficsim-data">airtrafficsim_data 📁</a><ul>
+<li><a class="reference internal" href="#client"> client 📁</a></li>
+<li><a class="reference internal" href="#environment"> environment 📁</a></li>
+<li><a class="reference internal" href="#flight-data"> flight_data 📁</a></li>
+<li><a class="reference internal" href="#navigation"> navigation 📁</a></li>
+<li><a class="reference internal" href="#performance"> performance 📁</a></li>
+<li><a class="reference internal" href="#result"> result 📁</a></li>
+<li><a class="reference internal" href="#weather"> weather 📁</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

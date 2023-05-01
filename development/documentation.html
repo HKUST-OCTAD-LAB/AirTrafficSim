@@ -3,12 +3,13 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="airtrafficsim" href="../api/index.html" /><link rel="prev" title="Client development" href="client.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Test development" href="test.html" /><link rel="prev" title="Client development" href="client.html" />
 
     <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Documentation development</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -170,20 +171,22 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/UI.html">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/data.html">   Understanding the data folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using historical weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="guide.html">   Development guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="client.html">   Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">   Web client</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Documentation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="test.html">   Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   AirTrafficSim API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.environment.html">environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.aircraft.html">aircraft</a></li>
@@ -251,7 +254,7 @@
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <p>To contribute to the development of the documentation, please set up the environment with the following commands. This will install <a class="reference external" href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> and related themes and libraries for this project.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
-conda install -c conda-forge sphinx myst-parser furo numpydoc
+conda install -c conda-forge sphinx myst-parser furo numpydoc sphinx-copybutton
 </pre></div>
 </div>
 </section>
@@ -275,12 +278,12 @@ conda install -c conda-forge sphinx myst-parser furo numpydoc
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../api/index.html">
+          <a class="next-page" href="test.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">airtrafficsim</div>
+                <div class="title">Test development</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -353,5 +356,7 @@ conda install -c conda-forge sphinx myst-parser furo numpydoc
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     </body>
 </html>

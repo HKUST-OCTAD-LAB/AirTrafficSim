@@ -3,12 +3,13 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Creating a simulation environment" href="creating_env.html" /><link rel="prev" title="Understanding the project structure" href="structure.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Creating a simulation environment" href="creating_env.html" /><link rel="prev" title="Understanding the data folder" href="data.html" />
 
     <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Replaying data</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -170,20 +171,22 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="UI.html">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">   Understanding the data folder</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historical weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../development/guide.html">   Development guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/client.html">   Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/client.html">   Web client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/documentation.html">   Documentation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/test.html">   Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   AirTrafficSim API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.environment.html">environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.aircraft.html">aircraft</a></li>
@@ -246,10 +249,11 @@
         <article role="main">
           <section id="replaying-data">
 <h1>Replaying data<a class="headerlink" href="#replaying-data" title="Permalink to this heading">#</a></h1>
-<p>AirTrafficSim allows you to replay historicaland simulated flight data. For historical flights, the data are stored in <code class="docutils literal notranslate"><span class="pre">data/flight_data</span></code>, while the data for simulated data are stored in <code class="docutils literal notranslate"><span class="pre">result/</span></code>. For the details of replay function, please refer to the API reference <a class="reference internal" href="../api/server/airtrafficsim.server.replay.html"><span class="doc std std-doc">airtrafficsim.server.replay</span></a>.</p>
+<p>AirTrafficSim allows you to replay historical and simulated flight data. For historical flights, the data are stored in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/flight_data</span></code>, while the data for simulated data are stored in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/result/</span></code>. For the details of the replay function, please refer to the API reference <a class="reference internal" href="../api/server/airtrafficsim.server.replay.html"><span class="doc std std-doc">airtrafficsim.server.replay</span></a>.</p>
 <section id="replaying-historical-data">
 <h2>Replaying historical data<a class="headerlink" href="#replaying-historical-data" title="Permalink to this heading">#</a></h2>
-<p>Historical data from with <a class="reference external" href="https://www.flightradar24.com/">FlightRadar24</a> and <a class="reference external" href="https://opensky-network.org/">OpenSky format</a> can be processed. A sample data with FlightRadar24 format is provided in <code class="docutils literal notranslate"><span class="pre">data/flight_data/2018-05-01/</span></code>. Note that each .csv file in the folder represents one flight. This is what the sample data looks like.</p>
+<p>Historical data from with <a class="reference external" href="https://www.flightradar24.com/">FlightRadar24</a> and <a class="reference external" href="https://opensky-network.org/">OpenSky format</a> can be processed. A sample data with FlightRadar24 format is provided in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/flight_data/2018-05-01/</span></code>. Note that each CSV file in the folder represents one flight with the parameters specified in <span class="xref myst">this guide</span>.</p>
+<p>To visualise the historical data, you can select the <code class="docutils literal notranslate"><span class="pre">Replay</span></code> button in the toolbar and select <code class="docutils literal notranslate"><span class="pre">2018-05-01</span></code> in the popup menu under the <code class="docutils literal notranslate"><span class="pre">HISTORICAL</span></code> tab. This will inform AirTrafficSim to process the flight data in the folder <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/flight_data/2018-05-01/</span></code>. This is what the sample data looks like in the UI:</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Sometimes, there might be a problem to replay OpenSky data if the data size is too large, as the data frequency is quite high. Work is in progress to improve the handling of OpenSky data by integrating the <a class="reference external" href="https://github.com/xoolive/traffic">traffic</a> library.</p>
@@ -258,8 +262,8 @@
 </section>
 <section id="replaying-simulation-data">
 <h2>Replaying simulation data<a class="headerlink" href="#replaying-simulation-data" title="Permalink to this heading">#</a></h2>
-<p>The output of a simulation will be stored in a new folder in <code class="docutils literal notranslate"><span class="pre">result/</span></code> with the following format <code class="docutils literal notranslate"><span class="pre">&lt;environment</span> <span class="pre">name&gt;-&lt;actual</span> <span class="pre">simulation</span> <span class="pre">start</span> <span class="pre">time</span> <span class="pre">in</span> <span class="pre">UTC&gt;</span></code>. In each folder, there will be a master .csv file containing all flights in simulation with the same name.</p>
-<p>To try it out, you can create one sample data by running <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">airtrafficsim</span> <span class="pre">--headless</span> <span class="pre">DemoEnv</span></code>. You may find the sample data located similarly at <code class="docutils literal notranslate"><span class="pre">result/DemoEnv-2022-09-06T03:48:21/</span></code>. This is what the sample looks like.</p>
+<p>The output of a simulation will be stored in a new folder in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/result/</span></code> with the following format <code class="docutils literal notranslate"><span class="pre">&lt;environment</span> <span class="pre">name&gt;-&lt;actual</span> <span class="pre">simulation</span> <span class="pre">start</span> <span class="pre">time</span> <span class="pre">in</span> <span class="pre">UTC&gt;</span></code>. In each folder, there will be a master CSV file containing all flights in simulation with the same name.</p>
+<p>To replay simulation data, you can create one sample data by running <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">airtrafficsim</span> <span class="pre">--headless</span> <span class="pre">DemoEnv</span></code>. You may find the sample data located similarly at <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/result/DemoEnv-2022-09-06T03:48:21/</span></code>. Then, you can select the <code class="docutils literal notranslate"><span class="pre">Replay</span></code> button in the toolbar and select <code class="docutils literal notranslate"><span class="pre">DemoEnv-2022-09-06T03:48:21</span></code> in the popup menu under the <code class="docutils literal notranslate"><span class="pre">SIMULATION</span></code> tab. This will inform AirTrafficSim to process the simulation data in the folder <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/result/DemoEnv-2022-09-06T03:48:21//</span></code>. This is what the sample looks like in the UI:</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>When replaying simulation data, you can view the plot for different simulation parameters by using the “Show Graph” selector.</p>
@@ -282,14 +286,14 @@
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="structure.html">
+          <a class="prev-page" href="data.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Understanding the project structure</div>
+                <div class="title">Understanding the data folder</div>
                 
               </div>
             </a>
@@ -351,5 +355,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     </body>
 </html>

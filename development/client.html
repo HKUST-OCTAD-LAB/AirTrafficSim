@@ -3,12 +3,13 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Documentation development" href="documentation.html" /><link rel="prev" title="Development guide" href="guide.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Documentation development" href="documentation.html" /><link rel="prev" title="Understanding the project structure" href="structure.html" />
 
     <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Client development</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -170,20 +171,22 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/UI.html">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/data.html">   Understanding the data folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using historical weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="guide.html">   Development guide</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Web client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="documentation.html">   Documentation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="test.html">   Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   AirTrafficSim API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.environment.html">environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.aircraft.html">aircraft</a></li>
@@ -272,7 +275,7 @@ yarn
 </section>
 <section id="developing-client">
 <h2>Developing client<a class="headerlink" href="#developing-client" title="Permalink to this heading">#</a></h2>
-<p>The client code base are written in <code class="docutils literal notranslate"><span class="pre">client/src/pages/Simulation.tsx</span></code> with a React functional component called <code class="docutils literal notranslate"><span class="pre">Simulation</span></code>. The <code class="docutils literal notranslate"><span class="pre">client/src/utils/websocket.ts</span></code> file contains the setup of the Socket.IO WebSocket connection with the server’s URL and port number.</p>
+<p>The client code base is written in <code class="docutils literal notranslate"><span class="pre">client/src/pages/Simulation.tsx</span></code> with a React functional component called <code class="docutils literal notranslate"><span class="pre">Simulation</span></code>. The <code class="docutils literal notranslate"><span class="pre">client/src/utils/websocket.ts</span></code> file contains the setup of the Socket.IO WebSocket connection with the server’s URL and port number.</p>
 <p>To run the UI development environment:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">AirTrafficSim</span><span class="o">/</span><span class="n">client</span><span class="o">/</span>
 <span class="n">yarn</span> <span class="n">start</span>
@@ -311,14 +314,14 @@ yarn
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="guide.html">
+          <a class="prev-page" href="structure.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Development guide</div>
+                <div class="title">Understanding the project structure</div>
                 
               </div>
             </a>
@@ -381,5 +384,7 @@ yarn
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     </body>
 </html>

@@ -3,12 +3,13 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Client development" href="client.html" /><link rel="prev" title="Converting historical data" href="../tutorial/historic.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Understanding the project structure" href="structure.html" /><link rel="prev" title="Converting historical data" href="../tutorial/historic.html" />
 
     <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Development guide</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -170,20 +171,22 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/UI.html">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/data.html">   Understanding the data folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using historical weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Development guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="client.html">   Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">   Web client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="documentation.html">   Documentation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="test.html">   Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   AirTrafficSim API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.environment.html">environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.aircraft.html">aircraft</a></li>
@@ -261,7 +264,31 @@
 </section>
 <section id="code-development">
 <h2>Code development<a class="headerlink" href="#code-development" title="Permalink to this heading">#</a></h2>
-<p>We welcome everyone to contribute to the development of AirTrafficSim. You can open a new item in the <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/discussions">Projects board</a> to let us and others know your goal. Then, please create a new branch to develop your features. Once your work is completed, please raise a pull request for reviewal. Once it is done, your work and branch will be merged into the master branch where everyone will be able to use your new feature.</p>
+<p>We welcome everyone to contribute to the development of AirTrafficSim. You can open a new item in the <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/discussions">Projects board</a> to share your goal. Then, clone or fork this repository to develop your feature. When your work is completed, please push your work to a new channel in the <a class="reference external" href="https://github.com/HKUST-OCTAD-LAB/AirTrafficSim">AirTrafficSim repository</a> and create a pull request such that the CI service can run automated tests and build tasks. After review, your work and branch will be merged into the main branch where everyone will be able to use your new feature.</p>
+<p>You may download AirTrafficSim with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
+conda env create -f environment.yml
+
+cd AirTrafficSim
+conda activate airtrafficsim
+&lt;!-- With UI --&gt;
+python -m airtrafficsim
+&lt;!-- Without UI --&gt;
+python -m airtrafficsim --headless &lt;environment name&gt;
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Please also be reminded to unzip BADA 3.15 data files to <span class="xref myst">airtrafficsim/data/performance/BADA</span> and set up the API key for the weather database from ECMWF Climate Data Store following <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">this guide</a>.</p>
+</div>
+<p>You can update AirTrafficSim with the newest changes by executing the following command.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git pull
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You may git commit and/or push your local changes first before pulling new remote changes to avoid overwriting your changes.</p>
+</div>
 </section>
 </section>
 
@@ -270,12 +297,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="client.html">
+          <a class="next-page" href="structure.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Client development</div>
+                <div class="title">Understanding the project structure</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -350,5 +377,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     </body>
 </html>

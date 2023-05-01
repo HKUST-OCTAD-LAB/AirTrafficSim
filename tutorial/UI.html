@@ -3,12 +3,13 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Understanding the project structure" href="structure.html" /><link rel="prev" title="Getting started" href="../start.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Understanding the data folder" href="data.html" /><link rel="prev" title="Getting started" href="../start.html" />
 
     <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Navigating the UI</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -170,20 +171,22 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">   Understanding the data folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="replay.html">   Replaying data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using historical weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historical data</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../development/guide.html">   Development guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/client.html">   Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/client.html">   Web client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/documentation.html">   Documentation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/test.html">   Testing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   AirTrafficSim API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.environment.html">environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.aircraft.html">aircraft</a></li>
@@ -278,7 +281,7 @@
 </section>
 <section id="mode-selector">
 <h2>2. Mode selector<a class="headerlink" href="#mode-selector" title="Permalink to this heading">#</a></h2>
-<p>You can select different AirTrafficSim modes (Replay/Simulation) by clicking on one of the buttons. <strong>Replay</strong> mode will replay historical or simulation flight trajectory data stored in <code class="docutils literal notranslate"><span class="pre">data/flight_data</span></code> while <strong>Simulation</strong> mode will initiate a simulation and show the flight trajectory live.</p>
+<p>You can select different AirTrafficSim modes (Replay/Simulation) by clicking on one of the buttons. <strong>Replay</strong> mode will replay historical or simulated flight trajectory data stored in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/flight_data</span></code> while <strong>Simulation</strong> mode will initiate a simulation by selecting an environment file from <code class="docutils literal notranslate"><span class="pre">airtrafficsim_data/environment</span></code> and visualise the flight trajectory live.</p>
 <figure class="align-left" id="id1" style="width: 45%">
 <img alt="../_images/UI_replay.png" src="../_images/UI_replay.png" />
 <figcaption>
@@ -294,12 +297,12 @@
 </section>
 <section id="setting">
 <h2>3. Setting<a class="headerlink" href="#setting" title="Permalink to this heading">#</a></h2>
-<p>In the setting, you can select different visualization modes including showing satellite imagery, showing navigation data, showing ERA5 wind and rain data, and showing weather radar images.</p>
+<p>In the setting, you can select different visualisation layers including satellite imagery, navigation data, ERA5 wind and rain data, and weather radar images. Note that the weather data may be disabled or not loaded depending on the selected replay file and whether the data is downloaded or supplied.</p>
 <img alt="../_images/UI_setting.png" src="../_images/UI_setting.png" />
 </section>
 <section id="show-graph">
 <h2>4. Show graph<a class="headerlink" href="#show-graph" title="Permalink to this heading">#</a></h2>
-<p>In <strong>Simulation</strong> mode or <strong>Replay</strong> mode with simulation data, you can view the graph of different simulation parameters by clicking the Show graph button.</p>
+<p>When AirTrafficSim is in <strong>Simulation</strong> mode or <strong>Replay</strong> mode with <strong>simulation data</strong>, you can view the graph of different simulation parameters by clicking the Show graph button.</p>
 <img alt="../_images/UI_graph.png" src="../_images/UI_graph.png" />
 </section>
 <section id="play-buttons">
@@ -341,12 +344,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="structure.html">
+          <a class="next-page" href="data.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Understanding the project structure</div>
+                <div class="title">Understanding the data folder</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -425,5 +428,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     </body>
 </html>

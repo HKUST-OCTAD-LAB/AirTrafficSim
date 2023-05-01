@@ -1,11 +1,12 @@
-# Using historical weather database
+# Using weather database
 
-AirTrafficSim can use [ECMWF ERA5](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview) as a weather data source. The `WeatherDemo` class in `environment/WeatherDemo.py` demonstrates how to set up `ERA5` weather mode in AirTrafficSim.
+AirTrafficSim can use [ECMWF ERA5](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview) as a weather data source. The `WeatherDemo` class in `airtrafficsim_data/environment/WeatherDemo.py` demonstrates how to set up `ERA5` weather mode in AirTrafficSim.
 
 ```{code-block} python
 ---
 lineno-start: 11
 emphasize-lines: 5
+caption: airtrafficsim_data/environment/WeatherDemo.py
 ---
 # Initialize environment super class
 super().__init__(file_name = Path(__file__).name.removesuffix('.py'), #File name (do not change)
@@ -16,16 +17,16 @@ super().__init__(file_name = Path(__file__).name.removesuffix('.py'), #File name
                 )
 ```
 
-To use the historical weather database, set `weather_mode` to "ERA5". This will download the weather data in netCDF format to `data/weather/erea5/<environment name>/`. By default, it is an empty string `""` which will use the International Standard Atmosphere (ISA) for computation and assume 0 winds.
+To use the historical weather database, set `weather_mode` to "ERA5". This will download the weather data in netCDF format to `airtrafficsim_data/weather/erea5/<environment name>/`. By default, it is an empty string `""` which will use the International Standard Atmosphere (ISA) for computation and assume 0 winds.
 
 ```{attention}
 
-Please ensure that the API key for the weather database from ECMWF Climate Data Store has been set up following [this guide](https://cds.climate.copernicus.eu/api-how-to) to set up .
+Please ensure that the API key for the weather database from ECMWF Climate Data Store has been set up following [this guide](https://cds.climate.copernicus.eu/api-how-to).
 ```
 
-## Usage of al weather data
+## Usage of ERA5 weather data
 
-The downloaded data will be loaded and for each timestep, AirTrafficSim will find the related temperature and wind data at the location and altitude of each aircraft. Then, the temperature temperature information difference with ISA will be used for further atmosphere condition calculation.
+The downloaded ERA5 data will be loaded and for each timestep, AirTrafficSim will find the related temperature and wind data at the location and altitude of each aircraft. Then, the temperature difference with ISA will be computed for further atmosphere condition calculation in the performance model.
 
 ```{code-block} python
 ---
