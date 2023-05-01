@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 project = 'AirTrafficSim'
 copyright = '2023, HKUST OCTAD Lab'
 author = 'HKUST OCTAD Lab'
-release = '0.0'
+release = '0.0.3'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -26,6 +26,7 @@ extensions = [
     # 'sphinx.ext.coverage',
     # "sphinx.ext.autosummary",
     'numpydoc',
+    'sphinx_copybutton'
 ]
 
 templates_path = ['_templates']

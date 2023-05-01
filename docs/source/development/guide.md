@@ -16,4 +16,32 @@ For any features suggestion or any ideas in general, please feel free to raise a
 
 ## Code development
 
-We welcome everyone to contribute to the development of AirTrafficSim. You can open a new item in the [Projects board](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/discussions) to let us and others know your goal. Then, please create a new branch to develop your features. Once your work is completed, please raise a pull request for reviewal. Once it is done, your work and branch will be merged into the master branch where everyone will be able to use your new feature.
+We welcome everyone to contribute to the development of AirTrafficSim. You can open a new item in the [Projects board](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/discussions) to share your goal. Then, clone or fork this repository to develop your feature. When your work is completed, please push your work to a new channel in the [AirTrafficSim repository](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim) and create a pull request such that the CI service can run automated tests and build tasks. After review, your work and branch will be merged into the main branch where everyone will be able to use your new feature.
+
+You may download AirTrafficSim with:
+
+```
+git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
+conda env create -f environment.yml
+
+cd AirTrafficSim
+conda activate airtrafficsim
+<!-- With UI -->
+python -m airtrafficsim
+<!-- Without UI -->
+python -m airtrafficsim --headless <environment name>
+```
+
+```{important}
+Please also be reminded to unzip BADA 3.15 data files to [airtrafficsim/data/performance/BADA](airtrafficsim/data/performance/BADA/) and set up the API key for the weather database from ECMWF Climate Data Store following [this guide](https://cds.climate.copernicus.eu/api-how-to).
+```
+
+You can update AirTrafficSim with the newest changes by executing the following command.
+
+``` bash
+git pull
+```
+
+```{tip}
+You may git commit and/or push your local changes first before pulling new remote changes to avoid overwriting your changes.
+```
