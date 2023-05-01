@@ -675,6 +675,23 @@ class Performance:
         return rocd / f_M / ((T-d_T)/T) * m*self.__G_0 / V_tas + D
 
     def cal_vs_accel(self, traffic, tas):
+        """
+        Calculate vertical speed and acceleration given true airspeed.
+
+        Parameters
+        ----------
+        traffic : traffic class
+            Points to traffic array
+        tas : float[]
+            True airspeed [kt]
+
+        Returns
+        -------
+        vs : float[]
+            Vertical speed [ft/min]
+        accel : float[]
+            Acceleration [m/s^2]
+        """
         if (self.performance_mode == "BADA"):
             # Drag and Thrust
             self.drag = self.perf_model.cal_aerodynamic_drag(tas, traffic.bank_angle, traffic.mass, traffic.weather.rho,

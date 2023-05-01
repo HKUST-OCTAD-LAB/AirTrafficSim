@@ -10,6 +10,23 @@ class Era5:
 
     @staticmethod
     def download_data(start_time, end_time, file_name):
+        """
+        Download ERA5 data
+
+        Parameters
+        ----------
+        start_time : datetime
+            Start time of the simulation [ISO time in UTC]
+        end_time : float
+            Duration of the simulation [seconds]
+        file_name : float
+            Simulation environment name
+
+        Returns
+        -------
+        path: Path
+            Path to the downloaded weather data
+        """
         c = cdsapi.Client()
         if Path(__file__).parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).exists() and any(Path(__file__).parent.parent.parent.resolve().joinpath('data/weather/era5/'+file_name).iterdir()):
             print("ERA5 data exists.")

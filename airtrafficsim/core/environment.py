@@ -58,10 +58,15 @@ class Environment:
         self.header.remove('callsign')
 
     def atc_command(self):
+        """
+        Virtual method to execute user command each timestep.
+        """
         pass
 
     def should_end(self):
-        """Return true/false of whether the simulation should end."""
+        """
+        Virtual method to determine whether the simulation should end each timestep.
+        """
         return False
 
     def step(self, socketio=None):
@@ -106,6 +111,14 @@ class Environment:
         self.global_time += 1
 
     def run(self, socketio=None):
+        """
+        Run the simulation for all timesteps.
+
+        Parameters
+        ----------
+        socketio : socketio object, optional
+            Socketio object to handle communciation when running simulation, by default None
+        """
         if socketio:
             socketio.emit('simulationEnvironment', {
                           'header': self.header, 'file': self.file_name})
@@ -145,6 +158,9 @@ class Environment:
         self.writer.writerows(data)
 
     def export_to_csv(self):
+        """
+        Export the simulation result to a csv file.
+        """
         df = pd.read_csv(self.file_path)
         for id in df['id'].unique():
             df[df['id'] == id].to_csv(
@@ -152,6 +168,14 @@ class Environment:
         # self.file_path.unlink()
 
     def send_to_client(self, socketio):
+        """
+        Send the simulation data to client.
+
+        Parameters
+        ----------
+        socketio : socketio object
+            socketio object to handle communciation when running simulation
+        """
         print("send to client")
 
         document = [{

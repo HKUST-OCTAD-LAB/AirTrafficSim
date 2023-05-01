@@ -9,20 +9,6 @@ from airtrafficsim.utils.unit_conversion import Unit
 class Bada:
     """
     BADA Performance class 
-
-    Attributes
-    ----------
-    See __init__()
-
-    Methods
-    -------
-    __init__:
-
-    add_aircraft_performance:
-
-    Notes
-    -----
-
     """
 
     def __init__(self):
