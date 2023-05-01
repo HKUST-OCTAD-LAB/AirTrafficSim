@@ -15,7 +15,7 @@
             "type": "python",
             "request": "launch",
             "module": "airtrafficsim",
-            "args" : ["--headless", "ConvertHistoricDemo"]
+            "args" : ["--headless", "OpenApDemo"]
         },
         {
             "name": "Python: Profiling",

@@ -1,4 +1,4 @@
-![AirTrafficSim](docs/source/images/Logo-full.png)
+<img src="docs/source/images/Logo-full.png" width=50% />
 
 ![Tests](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/actions/workflows/tests.yml/badge.svg)
 [![Code Coverage](https://img.shields.io/codecov/c/github/HKUST-OCTAD-LAB/AirTrafficSim.svg)](https://codecov.io/gh/HKUST-OCTAD-LAB/AirTrafficSim)
@@ -11,7 +11,7 @@ AirTrafficSim is a web-based air traffic simulation software written in Python a
 ## Features
 
 - Replay historical flights with user-provided data (e.g. from FlightRadar 24)
-- Air traffic simulation using [BADA 3.15 performance data](https://www.eurocontrol.int/model/bada)
+- Air traffic simulation using [BADA 3.15 performance data](https://www.eurocontrol.int/model/bada) and [OpenAP](https://github.com/TUDelft-CNS-ATM/openap)
 - Navigation data simulation and visualization from [x-plane 11](https://developer.x-plane.com/docs/data-development-documentation/)
 - Autopilot and Flight Management System simulation
 - ATC commands (e.g. holding, vectoring, and direct to) simulation

@@ -245,6 +245,14 @@ class Autopilot:
 
 
     def del_aircraft(self, index):
+        """
+        Delete aircraft
+
+        Parameters
+        ----------
+        index : float
+            The index of the aircraft to be deleted
+        """
         self.alt = np.delete(self.alt, index)                                
         self.heading = np.delete(self.heading, index)                    
         self.track_angle = np.delete(self.track_angle, index)                     

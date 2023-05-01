@@ -9,6 +9,13 @@ def test_demoenv():
     df = pd.read_csv(env.file_path)
     assert df.shape[0] > 1 and df.isnull().values.any() == False
 
+def test_openapdemo():
+    Env = getattr(import_module('airtrafficsim.data.environment.OpenApDemo', '...'), "OpenApDemo")
+    env = Env()
+    env.run()
+    df = pd.read_csv(env.file_path)
+    assert df.shape[0] > 1 and df.isnull().values.any() == False
+
 def test_fullflightdemo():
     Env = getattr(import_module('airtrafficsim.data.environment.FullFlightDemo', '...'), "FullFlightDemo")
     env = Env()

@@ -40,7 +40,7 @@ html_theme = "furo"
 html_static_path = ['_static']
 html_title = ""
 html_favicon = "images/Logo.svg"
-html_logo = "images/Logo-large.svg"
+html_logo = "images/Logo-full.png"
 html_theme_options = {
     "footer_icons": [
         {
@@ -62,6 +62,7 @@ html_theme_options = {
         "color-brand-primary": "#92a143",
         "color-brand-content": "#92a143",
     },
+    "sidebar_hide_name": True
 }
 
 autoclass_content = 'both'
