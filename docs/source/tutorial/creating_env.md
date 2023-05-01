@@ -1,6 +1,6 @@
 # Creating a simulation environment
 
-The simulation environment files, located at `environments/`, tell AirTrafficSim how to initiate the environment and how to control the traffic during simulation. Four sample tutorial environments `DemoEnv`, `FullFlightDemo`, `WeatherDemo`, and `ConvertHistoricDemo` are included in `environments/`.
+The simulation environment files, located at `airtrafficsim_data/environment/`, inform AirTrafficSim how to initialise the environment and how to control the traffic during simulation. Four sample tutorial environments `DemoEnv`, `FullFlightDemo`, `WeatherDemo`, and `ConvertHistoricDemo` are included in `airtrafficsim_data/environment/`.
 
 ## Creating the file
 
@@ -9,7 +9,7 @@ The simulation environment files, located at `environments/`, tell AirTrafficSim
 It may be easier to copy one of the sample environments when creating a new one.
 ```
 
-To create a simulation environment, create a new Python file under `environments/` with the name you want. Then, create a new Python class in the file with the same name. Note that this new class is actually a subclass of [airtrafficsim.core.environment](../api/core/airtrafficsim.core.environment).
+To create a simulation environment, create a new Python file under `airtrafficsim_data/environment/` with the name you want. Then, create a new Python class in the file with the same name. Note that this new class is actually a subclass of [airtrafficsim.core.environment](../api/core/airtrafficsim.core.environment).
 
 ```{important}
 Please note that the file name should be **exactly equal** to the class name including the capitals as it is dynamically imported at runtime by Python when a user selects the environment in the UI.
@@ -20,6 +20,10 @@ Please note that the file name should be **exactly equal** to the class name inc
 We will discuss the setup of an environment file referencing `DemoEnv.py`. Notice that `class DemoEnv(Environment):` is a subclass of `Environment` at [airtrafficsim.core.environment](../api/core/airtrafficsim.core.environment).
 
 ```{code-block} python
+---
+caption: airtrafficsim_data/environment/DemoEnv.py
+---
+
 from datetime import datetime
 from pathlib import Path
 
@@ -78,8 +82,8 @@ There are five parameters needed to initialize the basic information of this sim
 
 1. `file_name` is used to name the solution files. It has been set by default. Please do not change.
 2. `start_time` is a Python datetime object representing the **simulation UTC start time** that you want to study. It will be used to search for historical weather data. 
-3. `end_time` is an interger value representing how many **seconds** you want the simulation to continue.
-4. `weather_mode` is a string to select what **weather database** will be downloaded and used. ("": ISA, "ERA5": [ECMWF ERA5](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview))
+3. `end_time` is an integer value representing how many **seconds** you want the simulation to continue.
+4. `weather_mode` is a string to select what **weather database** to be used. ("": ISA, "ERA5": [ECMWF ERA5](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview))
 5. `performance_mode` is a string to select which performance model is used. ("BADA": [BADA](https://www.eurocontrol.int/model/bada))
    
 ```{note}
@@ -88,7 +92,7 @@ We are working toward including [OpenAP](https://github.com/TUDelft-CNS-ATM/open
 
 ### 2. Add aircraft
 
-Air traffic are stored in arrays at `Traffic` class in [airtrafficsim/core/traffic.py](../api/core/airtrafficsim.core.traffic). Each `Aircraft` in [airtrafficsim/core/aircraft.py](../api/core/airtrafficsim.core.aircraft) represents an individual aircraft in the traffic array and provides an interface to command the aircraft movement. The parameters to initialize an aircraft are explained below.
+Air traffic is stored in arrays at `Traffic` class in [airtrafficsim/core/traffic.py](../api/core/airtrafficsim.core.traffic). Each `Aircraft` in [airtrafficsim/core/aircraft.py](../api/core/airtrafficsim.core.aircraft) represents an individual aircraft in the traffic array and provides an interface to command the aircraft movement. The parameters to initialize an aircraft are explained below.
 
 | Parameters | Meanings |
 | :--------: | :------: |
@@ -123,4 +127,4 @@ This is an override function for the `Environment` base class to allow you to co
 
 ### 4. ATC command
 
-This is an override function for the `Environment` base class to allow you to command how traffic move in this timestep. It can be a simple time-based condition in this sample or it can be a more complicated algorithm developed by you.
+This is an override function for the `Environment` base class to allow you to command how traffic moves in this timestep. It can be a simple time-based condition in this sample or it can be a more complicated algorithm developed by you.

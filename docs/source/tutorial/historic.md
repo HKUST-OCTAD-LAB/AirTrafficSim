@@ -1,17 +1,17 @@
 # Converting historical data
 
-Apart from manually adding new aircraft to the simulation environment, AirTrafficSim can also automatically convert historical data and generate and add aircraft into the simulation environment. The ConvertHistoricDemo class in `environment/ConvertHistoricDemo.py` provides a sample to set up such an environment.
+Apart from manually adding new aircraft to the simulation environment, AirTrafficSim can also automatically convert historical data to generate aircraft in the simulation environment. The `ConvertHistoricDemo` class in `airtrafficsim_demo/environment/ConvertHistoricDemo.py` provides a sample to set up such an environment.
 
 
 ## Detecting procedures and entry points
 
-AirTrafficSim can detect the arrival and approach procedure of each flight base on historical data files. After detecting the procedures, AirTrafficSim will detect and store the entry position, time, and state e of each aircraft base on a user-defined rule such as distance to a location. 
+AirTrafficSim can detect the arrival and approach procedure of each flight base on historical data files. After detecting the procedures, AirTrafficSim will detect and store the entry position, time, speed, heading, and altitude of each aircraft base on a user-defined rule such as distance to a location. 
 
 ```{code-block} python
 ---
 lineno-start: 23
 emphasize-lines: 33, 35, 39, 40, 41, 42, 43, 44
-caption: ConvertHistoricDemo.py
+caption: airtrafficsim_data/environment/ConvertHistoricDemo.py
 ---
 # Location of the historic data
 self.historic_data_path = Path(__file__).parent.parent.resolve().joinpath('data/flight_data/2018-05-01/')
@@ -73,7 +73,7 @@ After converting historical flight data, AirTrafficSim will add aircraft at each
 ```{code-block} python
 ---
 lineno-start: 85
-caption: ConvertHistoricDemo.py
+caption: airtrafficsim_data/environment/ConvertHistoricDemo.py
 ---
 def atc_command(self):
     # Handle creation and deletion of aircraft
@@ -93,7 +93,7 @@ def atc_command(self):
 
 ## Holding and vectoring
 
-A demo program is written to demonstrate the control of vectoring and holding.
+A demo program is written to demonstrate commanding aircraft to vectoring and holding.
 
 ```{code-block} python
 ---

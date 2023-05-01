@@ -8,7 +8,7 @@ To contribute to the development of the documentation, please set up the environ
 
 ```{code-block} bash
 conda activate airtrafficsim
-conda install -c conda-forge sphinx myst-parser furo numpydoc
+conda install -c conda-forge sphinx myst-parser furo numpydoc sphinx-copybutton
 ```
 
 ## Building and previewing documentation

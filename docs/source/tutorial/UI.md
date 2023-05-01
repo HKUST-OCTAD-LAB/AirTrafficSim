@@ -17,7 +17,7 @@ The globe viewport provides a 3D globe for a user to interact with. You can oper
 
 ## 2. Mode selector
 
-You can select different AirTrafficSim modes (Replay/Simulation) by clicking on one of the buttons. **Replay** mode will replay historical or simulation flight trajectory data stored in `data/flight_data` while **Simulation** mode will initiate a simulation and show the flight trajectory live.
+You can select different AirTrafficSim modes (Replay/Simulation) by clicking on one of the buttons. **Replay** mode will replay historical or simulated flight trajectory data stored in `airtrafficsim_data/flight_data` while **Simulation** mode will initiate a simulation by selecting an environment file from `airtrafficsim_data/environment` and visualise the flight trajectory live.
 
 ```{figure} ../images/UI_replay.png
 :figwidth: 45%
@@ -34,14 +34,14 @@ In Simulation mode, select a simulation environment to begin the simulation.
 
 ## 3. Setting
 
-In the setting, you can select different visualization modes including showing satellite imagery, showing navigation data, showing ERA5 wind and rain data, and showing weather radar images.
+In the setting, you can select different visualisation layers including satellite imagery, navigation data, ERA5 wind and rain data, and weather radar images. Note that the weather data may be disabled or not loaded depending on the selected replay file and whether the data is downloaded or supplied.
 
 ```{image} ../images/UI_setting.png
 ```
 
 ## 4. Show graph
 
-In **Simulation** mode or **Replay** mode with simulation data, you can view the graph of different simulation parameters by clicking the Show graph button.
+When AirTrafficSim is in **Simulation** mode or **Replay** mode with **simulation data**, you can view the graph of different simulation parameters by clicking the Show graph button.
 
 ```{image} ../images/UI_graph.png
 ```
