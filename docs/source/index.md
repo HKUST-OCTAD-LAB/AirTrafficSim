@@ -7,7 +7,7 @@ AirTrafficSim is open-sourced at [https://github.com/HKUST-OCTAD-LAB/AirTrafficS
 ## Features
 
 - Replay historical flights with user-provided data (e.g. from FlightRadar 24)
-- Air traffic simulation using [BADA 3.15 performance data](https://www.eurocontrol.int/model/bada)
+- Air traffic simulation using [BADA 3.15 performance data](https://www.eurocontrol.int/model/bada) and [OpenAP](https://github.com/TUDelft-CNS-ATM/openap)
 - Navigation data simulation and visualization from [x-plane 11](https://developer.x-plane.com/docs/data-development-documentation/)
 - Autopilot and Flight Management System simulation
 - ATC commands (e.g. holding, vectoring, and direct to) simulation
@@ -49,6 +49,7 @@ AirTrafficSim is open-sourced at [https://github.com/HKUST-OCTAD-LAB/AirTrafficS
    Adding flight plan <tutorial/flight_plan>
    Using weather database <tutorial/weather>
    Converting historical data <tutorial/historic>
+   Using OpenAP model <tutorial/openap>
 ```
 
 ```{toctree}

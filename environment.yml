@@ -17,6 +17,8 @@ dependencies:
   # Test
   - pytest
   - coverage
+  - flake8
+  - flake8-docstrings
 
   # Documentation
   - sphinx

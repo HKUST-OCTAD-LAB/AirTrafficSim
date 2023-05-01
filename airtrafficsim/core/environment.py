@@ -173,7 +173,7 @@ class Environment:
                 positions = content.iloc[:, [2, 3, 4, 5]
                                          ].to_numpy().flatten().tolist()
                 label = [{"interval": time+"/"+(self.start_time + timedelta(seconds=self.end_time)).isoformat(),
-                          "string": call_sign+"\n"+str(np.floor(alt))+"ft "+str(np.floor(cas))+"kt"}
+                          "string": call_sign+"\n"+str(np.floor(Unit.m2ft(alt)))+"ft "+str(np.floor(cas))+"kt"}
                          for time, alt, cas in zip(content.iloc[:, 2].to_numpy(), content.iloc[:, 5].to_numpy(dtype=float), content.iloc[:, 6].to_numpy(dtype=float))]
 
                 trajectory = {

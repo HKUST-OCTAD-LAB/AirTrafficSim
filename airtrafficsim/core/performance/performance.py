@@ -18,15 +18,12 @@ class Performance:
 
         Parameters
         ----------
-        N : int, optional
-            Number of aircrafts. Maximum size of performance array (pre-initialize to eliminate inefficient append)
-            TODO: Revise the initial estimate, by default 1000
-        Bada : bool, optional
-            Whether to use BADA Performance model, by default False
+        performance_mode : string, optional
+            Which performance model to use [BADA, OpenAP]
         """
 
         self.performance_mode = performance_mode
-        """Whether BADA performance model is used [Boolean]"""
+        """Whether BADA performance model is used [string]"""
 
         if (self.performance_mode == "BADA"):
             self.perf_model = Bada()
@@ -91,9 +88,9 @@ class Performance:
             self.perf_model.add_aircraft(icao, mass_class)
         else:
             self.prop_model.append(prop.aircraft(icao))
-            self.thrust_model.append(Thrust(ac=icao, eng=engine))
+            self.thrust_model.append(Thrust(ac=icao, eng=prop.aircraft_engine_options(icao)[0]))
             self.drag_model.append(Drag(ac=icao))
-            self.fuel_flow_model.append(FuelFlow(ac=icao, eng=engine))
+            self.fuel_flow_model.append(FuelFlow(ac=icao, eng=prop.aircraft_engine_options(icao)[0]))
             self.wrap_model.append(WRAP(ac=icao))
 
     def del_aircraft(self, index):
@@ -156,7 +153,7 @@ class Performance:
         if (self.performance_mode == "BADA"):
             return self.perf_model.get_procedure_speed(H_p, H_p_trans, flight_phase)
         else:
-            return np.array([0])
+            return np.where(H_p > 0, 20000, 20000)
 
     # ----------------------------  Atmosphere model (Ref: BADA user menu section 3.1) -----------------------------------------
 
@@ -382,7 +379,7 @@ class Performance:
                             self.__H_P_TROP - self.__R*self.cal_temperature(self.__H_P_TROP, 0.0)/self.__G_0 * np.log(p_trans/p_trop))
 
         else:
-            return np.array([x.climb_cross_alt_conmach()['default'] for x in self.wrap_model])
+            return self.wrap_model[n].climb_cross_alt_conmach()['default']*1000.0
 
     def get_empty_weight(self, n):
         """
@@ -436,6 +433,8 @@ class Performance:
         """
         if (self.performance_mode == "BADA"):
             return self.perf_model.v_mo, self.perf_model.m_mo
+        else:
+            return np.full(len(self.prop_model), 1000), np.full(len(self.prop_model), 1000)
 
     def cal_minimum_speed(self, configuration):
         """
@@ -683,11 +682,20 @@ class Performance:
             self.thrust = self.perf_model.cal_thrust(
                 traffic.vertical_mode, traffic.configuration, traffic.alt, traffic.tas, traffic.weather.d_T, self.drag, traffic.ap.speed_mode)
         else:
-            self.drag = np.array([x.clean(mass=traffic.mass, tas=traffic.tas,
-                                 alt=traffic.alt, path_angle=traffic.path_angle) for x in self.drag_model])
+            self.drag = np.array([x.clean(mass=traffic.mass[i], tas=traffic.tas[i],
+                                 alt=traffic.alt[i], path_angle=traffic.path_angle[i]) for i, x in enumerate(self.drag_model)])
             # drag.nonclean(mass=60000, tas=150, alt=100, flap_angle=20, path_angle=10, landing_gear=True)
             self.thrust = np.array(
-                [x.cruise(tas=traffic.cas, alt=traffic.alt) for x in self.thrust_model])
+                [x.cruise(tas=traffic.cas[i], alt=traffic.alt[i]) for i, x in enumerate(self.thrust_model)])
+            thrust = []
+            for i, x in enumerate(self.thrust_model):
+                if (traffic.vertical_mode[i] == VerticalMode.CLIMB) | ((traffic.vertical_mode[i] == VerticalMode.LEVEL) & (traffic.ap.speed_mode[i] == APSpeedMode.ACCELERATE)):
+                    thrust.append(x.climb(tas=traffic.tas[i], alt=traffic.alt[i], roc=1000))
+                elif (traffic.vertical_mode[i] == VerticalMode.LEVEL) & ((traffic.ap.speed_mode[i] == APSpeedMode.CONSTANT_CAS) | (traffic.ap.speed_mode[i] == APSpeedMode.CONSTANT_MACH)):
+                    thrust.append(self.drag[i])
+                elif (traffic.vertical_mode[i] == VerticalMode.DESCENT) | ((traffic.vertical_mode[i] == VerticalMode.LEVEL) & (traffic.ap.speed_mode[i] == APSpeedMode.DECELERATE)):
+                    thrust.append(x.descent_idle(tas=traffic.tas[i], alt=traffic.alt[i]))
+            self.thrust = np.array(thrust)
             # T = thrust.takeoff(tas=100, alt=0) T = thrust.climb(tas=200, alt=20000, roc=1000)
 
         # Total Energy Model
@@ -730,7 +738,7 @@ class Performance:
         if (self.performance_mode == "BADA"):
             return self.perf_model.cal_fuel_burn(flight_phase, tas, self.thrust, alt)
         else:
-            return [x.at_thrust(acthr=self.thrust, alt=alt) for x in self.fuel_flow_model]
+            return [x.at_thrust(acthr=self.thrust[i], alt=alt[i]) for i, x in enumerate(self.fuel_flow_model)]
         # FF = fuelflow.takeoff(tas=100, alt=0, throttle=1)
         # FF = fuelflow.enroute(mass=60000, tas=200, alt=20000, path_angle=3)
         # FF = fuelflow.enroute(mass=60000, tas=230, alt=32000, path_angle=0)
@@ -833,4 +841,4 @@ class Performance:
         if (self.performance_mode == "BADA"):
             return self.perf_model.update_configuration(V_cas, H_p, vertical_mode)
         else:
-            return np.array([Config.CLEAN])
+            return np.where(V_cas > 0.0, Config.CLEAN, Config.TAKEOFF)
