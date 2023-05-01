@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Understanding the project structure" href="structure.html" /><link rel="prev" title="Converting historical data" href="../tutorial/historic.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Understanding the project structure" href="structure.html" /><link rel="prev" title="Uisng OpenAP performance model" href="../tutorial/openap.html" />
 
     <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Development guide</title>
@@ -153,10 +153,9 @@
       <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../_static/Logo-large.svg" alt="Logo"/>
+    <img class="sidebar-logo" src="../_static/Logo-full.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -178,6 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/flight_plan.html">   Adding flight plan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/historic.html">   Converting historical data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/openap.html">   Using OpenAP model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -279,7 +279,7 @@ python -m airtrafficsim --headless &lt;environment name&gt;
 </div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Please also be reminded to unzip BADA 3.15 data files to <span class="xref myst">airtrafficsim/data/performance/BADA</span> and set up the API key for the weather database from ECMWF Climate Data Store following <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">this guide</a>.</p>
+<p>Please also be reminded to unzip BADA 3.15 data files to <code class="docutils literal notranslate"><span class="pre">airtrafficsim/data/performance/BADA</span></code> and set up the API key for the weather database from ECMWF Climate Data Store following <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">this guide</a>.</p>
 </div>
 <p>You can update AirTrafficSim with the newest changes by executing the following command.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git pull
@@ -306,14 +306,14 @@ python -m airtrafficsim --headless &lt;environment name&gt;
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="../tutorial/historic.html">
+          <a class="prev-page" href="../tutorial/openap.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Converting historical data</div>
+                <div class="title">Uisng OpenAP performance model</div>
                 
               </div>
             </a>

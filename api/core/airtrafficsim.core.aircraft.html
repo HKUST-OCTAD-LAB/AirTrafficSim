@@ -153,10 +153,9 @@
       <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
+    <img class="sidebar-logo" src="../../_static/Logo-full.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -178,6 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/flight_plan.html">   Adding flight plan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/historic.html">   Converting historical data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/openap.html">   Using OpenAP model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -278,49 +278,91 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.get_mach" title="airtrafficsim.core.aircraft.Aircraft.get_mach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mach</span></code></a>()</p></td>
 <td><p>Get Mach number of aircraft.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.get_vs" title="airtrafficsim.core.aircraft.Aircraft.get_vs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vs</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.get_next_wp" title="airtrafficsim.core.aircraft.Aircraft.get_next_wp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_next_wp</span></code></a>()</p></td>
+<td><p>Get next waypoint.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.get_vs" title="airtrafficsim.core.aircraft.Aircraft.get_vs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vs</span></code></a>()</p></td>
 <td><p>Get vertical speed of aircraft.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_alt" title="airtrafficsim.core.aircraft.Aircraft.set_alt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_alt</span></code></a>(alt)</p></td>
-<td><p>Set alt [ft]</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.get_wake" title="airtrafficsim.core.aircraft.Aircraft.get_wake"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wake</span></code></a>()</p></td>
+<td><p>Get wake category of aircraft.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.resume_own_navigation" title="airtrafficsim.core.aircraft.Aircraft.resume_own_navigation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resume_own_navigation</span></code></a>()</p></td>
+<td><p>Resume own navigation to use autopilot instead of user commanded target.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_alt" title="airtrafficsim.core.aircraft.Aircraft.set_alt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_alt</span></code></a>(alt)</p></td>
+<td><p>Set altitude.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_direct" title="airtrafficsim.core.aircraft.Aircraft.set_direct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_direct</span></code></a>(waypoint)</p></td>
+<td><p>Set direct to a waypoint.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_heading" title="airtrafficsim.core.aircraft.Aircraft.set_heading"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_heading</span></code></a>(heading)</p></td>
-<td><p>Set heading [deg]</p></td>
+<td><p>Set the heading of the aircraft.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_speed" title="airtrafficsim.core.aircraft.Aircraft.set_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_speed</span></code></a>(speed)</p></td>
-<td><p>Set CAS [kt]</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_holding" title="airtrafficsim.core.aircraft.Aircraft.set_holding"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_holding</span></code></a>(holding_time, holding_fix, region)</p></td>
+<td><p>Set holding procedure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_speed" title="airtrafficsim.core.aircraft.Aircraft.set_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_speed</span></code></a>(speed)</p></td>
+<td><p>Set the speed of the aircraft.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_vectoring" title="airtrafficsim.core.aircraft.Aircraft.set_vectoring"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vectoring</span></code></a>(vectoring_time, v_2, fix)</p></td>
+<td><p>Set vectoring procedure.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_vs" title="airtrafficsim.core.aircraft.Aircraft.set_vs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vs</span></code></a>(vs)</p></td>
-<td><p>Set vertical speed [ft/min]</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><strong>get_next_wp</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>get_wake</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>resume_own_navigation</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>set_direct</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>set_holding</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>set_vectoring</strong></p></td>
-<td></td>
+<td><p>Set vertical speed.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>Initialize one aircraft and add the aircraft to traffic array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>traffic</strong><span class="classifier">Traffic</span></dt><dd><p>Points to the traffic array class. (The value must be self.traffic)</p>
+</dd>
+<dt><strong>call_sign</strong><span class="classifier">str</span></dt><dd><p>Call sign of the aircraft</p>
+</dd>
+<dt><strong>aircraft_type</strong><span class="classifier">str</span></dt><dd><p>ICAO aircraft type</p>
+</dd>
+<dt><strong>flight_phase</strong><span class="classifier">FlightPhase.enums</span></dt><dd><p>Initial flight phase</p>
+</dd>
+<dt><strong>configuration</strong><span class="classifier">Configuration.enums</span></dt><dd><p>Initial configuration</p>
+</dd>
+<dt><strong>lat</strong><span class="classifier">float</span></dt><dd><p>Initial latitude [deg]</p>
+</dd>
+<dt><strong>long</strong><span class="classifier">float</span></dt><dd><p>Initial longitude [deg]</p>
+</dd>
+<dt><strong>alt</strong><span class="classifier">float</span></dt><dd><p>Initial altitude [ft]</p>
+</dd>
+<dt><strong>heading</strong><span class="classifier">float</span></dt><dd><p>Initial heading [deg]</p>
+</dd>
+<dt><strong>cas</strong><span class="classifier">float</span></dt><dd><p>Initial CAS [kt]</p>
+</dd>
+<dt><strong>fuel_weight</strong><span class="classifier">float</span></dt><dd><p>Initial fuel weight [kg]</p>
+</dd>
+<dt><strong>payload_weight</strong><span class="classifier">float</span></dt><dd><p>Initial payload weight [kg]</p>
+</dd>
+<dt><strong>departure_airport</strong><span class="classifier">str, optional</span></dt><dd><p>ICAO code of departure airport, by default “”</p>
+</dd>
+<dt><strong>departure_runway</strong><span class="classifier">str, optional</span></dt><dd><p>Departure runway, by default “”</p>
+</dd>
+<dt><strong>sid</strong><span class="classifier">str, optional</span></dt><dd><p>ICAO code of Standard Instrument Departure, by default “”</p>
+</dd>
+<dt><strong>arrival_airport</strong><span class="classifier">str, optional</span></dt><dd><p>ICAO code of arrival airport, by default “”</p>
+</dd>
+<dt><strong>arrival_runway</strong><span class="classifier">str, optional</span></dt><dd><p>Arrival runway, by default “”</p>
+</dd>
+<dt><strong>star</strong><span class="classifier">str, optional</span></dt><dd><p>ICAO code Standard Terminal Arrival Procedure, by default “”</p>
+</dd>
+<dt><strong>approach</strong><span class="classifier">str, optional</span></dt><dd><p>ILS approach procedure, by default “”</p>
+</dd>
+<dt><strong>flight_plan</strong><span class="classifier">list, optional</span></dt><dd><p>Array of waypoints that the aircraft will fly, by default []</p>
+</dd>
+<dt><strong>cruise_alt</strong><span class="classifier">int, optional</span></dt><dd><p>Target cruise altitude [ft], by default -1</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
@@ -346,44 +388,38 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.get_mach" title="airtrafficsim.core.aircraft.Aircraft.get_mach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mach</span></code></a>()</p></td>
 <td><p>Get Mach number of aircraft.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.get_vs" title="airtrafficsim.core.aircraft.Aircraft.get_vs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vs</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.get_next_wp" title="airtrafficsim.core.aircraft.Aircraft.get_next_wp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_next_wp</span></code></a>()</p></td>
+<td><p>Get next waypoint.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.get_vs" title="airtrafficsim.core.aircraft.Aircraft.get_vs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vs</span></code></a>()</p></td>
 <td><p>Get vertical speed of aircraft.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_alt" title="airtrafficsim.core.aircraft.Aircraft.set_alt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_alt</span></code></a>(alt)</p></td>
-<td><p>Set alt [ft]</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.get_wake" title="airtrafficsim.core.aircraft.Aircraft.get_wake"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wake</span></code></a>()</p></td>
+<td><p>Get wake category of aircraft.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.resume_own_navigation" title="airtrafficsim.core.aircraft.Aircraft.resume_own_navigation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resume_own_navigation</span></code></a>()</p></td>
+<td><p>Resume own navigation to use autopilot instead of user commanded target.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_alt" title="airtrafficsim.core.aircraft.Aircraft.set_alt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_alt</span></code></a>(alt)</p></td>
+<td><p>Set altitude.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_direct" title="airtrafficsim.core.aircraft.Aircraft.set_direct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_direct</span></code></a>(waypoint)</p></td>
+<td><p>Set direct to a waypoint.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_heading" title="airtrafficsim.core.aircraft.Aircraft.set_heading"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_heading</span></code></a>(heading)</p></td>
-<td><p>Set heading [deg]</p></td>
+<td><p>Set the heading of the aircraft.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_speed" title="airtrafficsim.core.aircraft.Aircraft.set_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_speed</span></code></a>(speed)</p></td>
-<td><p>Set CAS [kt]</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_holding" title="airtrafficsim.core.aircraft.Aircraft.set_holding"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_holding</span></code></a>(holding_time, holding_fix, region)</p></td>
+<td><p>Set holding procedure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_speed" title="airtrafficsim.core.aircraft.Aircraft.set_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_speed</span></code></a>(speed)</p></td>
+<td><p>Set the speed of the aircraft.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_vectoring" title="airtrafficsim.core.aircraft.Aircraft.set_vectoring"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vectoring</span></code></a>(vectoring_time, v_2, fix)</p></td>
+<td><p>Set vectoring procedure.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.aircraft.Aircraft.set_vs" title="airtrafficsim.core.aircraft.Aircraft.set_vs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vs</span></code></a>(vs)</p></td>
-<td><p>Set vertical speed [ft/min]</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><strong>get_next_wp</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>get_wake</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>resume_own_navigation</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>set_direct</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>set_holding</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>set_vectoring</strong></p></td>
-<td></td>
+<td><p>Set vertical speed.</p></td>
 </tr>
 </tbody>
 </table>
@@ -391,46 +427,114 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.set_heading">
 <span class="sig-name descname"><span class="pre">set_heading</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heading</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.aircraft.Aircraft.set_heading" title="Permalink to this definition">#</a></dt>
-<dd><p>Set heading [deg]</p>
+<dd><p>Set the heading of the aircraft.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>heading</strong><span class="classifier">float</span></dt><dd><p>Heading [deg]</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.set_speed">
 <span class="sig-name descname"><span class="pre">set_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.aircraft.Aircraft.set_speed" title="Permalink to this definition">#</a></dt>
-<dd><p>Set CAS [kt]</p>
+<dd><p>Set the speed of the aircraft.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>speed</strong><span class="classifier">float</span></dt><dd><p>Speed [kt]</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.set_vs">
 <span class="sig-name descname"><span class="pre">set_vs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.aircraft.Aircraft.set_vs" title="Permalink to this definition">#</a></dt>
-<dd><p>Set vertical speed [ft/min]</p>
+<dd><p>Set vertical speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>vs</strong><span class="classifier">float</span></dt><dd><p>Vertical speed [ft/min]</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.set_alt">
 <span class="sig-name descname"><span class="pre">set_alt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.aircraft.Aircraft.set_alt" title="Permalink to this definition">#</a></dt>
-<dd><p>Set alt [ft]</p>
+<dd><p>Set altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>alt</strong><span class="classifier">float</span></dt><dd><p>Altitude [ft]</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.set_direct">
 <span class="sig-name descname"><span class="pre">set_direct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waypoint</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.aircraft.Aircraft.set_direct" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Set direct to a waypoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>waypoint</strong><span class="classifier">str</span></dt><dd><p>ICAO code of the waypoint</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.set_holding">
 <span class="sig-name descname"><span class="pre">set_holding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">holding_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">holding_fix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.aircraft.Aircraft.set_holding" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Set holding procedure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>holding_time</strong><span class="classifier">float</span></dt><dd><p>How long should the aircraft hold [second]</p>
+</dd>
+<dt><strong>holding_fix</strong><span class="classifier">float</span></dt><dd><p>ICAO code of the fix that the aircraft should hold</p>
+</dd>
+<dt><strong>region</strong><span class="classifier">float</span></dt><dd><p>ICAO code of the region that the aircraft should hold</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.set_vectoring">
 <span class="sig-name descname"><span class="pre">set_vectoring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vectoring_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.aircraft.Aircraft.set_vectoring" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Set vectoring procedure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>vectoring_time</strong><span class="classifier">float</span></dt><dd><p>How long should the aircraft vector [second]</p>
+</dd>
+<dt><strong>v_2</strong><span class="classifier">float</span></dt><dd><p>The target speed speed [kt]</p>
+</dd>
+<dt><strong>fix</strong><span class="classifier">str</span></dt><dd><p>ICAO code of the fix that the aircraft go next after vectoring</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.resume_own_navigation">
 <span class="sig-name descname"><span class="pre">resume_own_navigation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.aircraft.Aircraft.resume_own_navigation" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Resume own navigation to use autopilot instead of user commanded target.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.get_heading">
@@ -547,12 +651,30 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.get_next_wp">
 <span class="sig-name descname"><span class="pre">get_next_wp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.aircraft.Aircraft.get_next_wp" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Get next waypoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>waypoint</strong><span class="classifier">str</span></dt><dd><p>ICAO code of the next waypoing</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.aircraft.Aircraft.get_wake">
 <span class="sig-name descname"><span class="pre">get_wake</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.aircraft.Aircraft.get_wake" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Get wake category of aircraft.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Wake category</strong><span class="classifier">str</span></dt><dd><p>The ICAO wake category of the aircraft.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

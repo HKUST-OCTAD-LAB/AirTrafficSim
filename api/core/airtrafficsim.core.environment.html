@@ -153,10 +153,9 @@
       <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
+    <img class="sidebar-logo" src="../../_static/Logo-full.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -178,6 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/flight_plan.html">   Adding flight plan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/historic.html">   Converting historical data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/openap.html">   Using OpenAP model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -257,32 +257,26 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.save" title="airtrafficsim.core.environment.Environment.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.atc_command" title="airtrafficsim.core.environment.Environment.atc_command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atc_command</span></code></a>()</p></td>
+<td><p>Virtual method to execute user command each timestep.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.export_to_csv" title="airtrafficsim.core.environment.Environment.export_to_csv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_to_csv</span></code></a>()</p></td>
+<td><p>Export the simulation result to a csv file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.run" title="airtrafficsim.core.environment.Environment.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>([socketio])</p></td>
+<td><p>Run the simulation for all timesteps.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.save" title="airtrafficsim.core.environment.Environment.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>()</p></td>
 <td><p>Save all states variable of one timestemp to csv file.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.send_to_client" title="airtrafficsim.core.environment.Environment.send_to_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_to_client</span></code></a>(socketio)</p></td>
+<td><p>Send the simulation data to client.</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.should_end" title="airtrafficsim.core.environment.Environment.should_end"><code class="xref py py-obj docutils literal notranslate"><span class="pre">should_end</span></code></a>()</p></td>
-<td><p>Return true/false of whether the simulation should end.</p></td>
+<td><p>Virtual method to determine whether the simulation should end each timestep.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.environment.Environment.step" title="airtrafficsim.core.environment.Environment.step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step</span></code></a>([socketio])</p></td>
 <td><p>Conduct one simulation timestep.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><strong>atc_command</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>export_to_csv</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>run</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>send_to_client</strong></p></td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -302,12 +296,13 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.atc_command">
 <span class="sig-name descname"><span class="pre">atc_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.atc_command" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Virtual method to execute user command each timestep.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.should_end">
 <span class="sig-name descname"><span class="pre">should_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.should_end" title="Permalink to this definition">#</a></dt>
-<dd><p>Return true/false of whether the simulation should end.</p>
+<dd><p>Virtual method to determine whether the simulation should end each timestep.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -319,7 +314,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">socketio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.run" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Run the simulation for all timesteps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>socketio</strong><span class="classifier">socketio object, optional</span></dt><dd><p>Socketio object to handle communciation when running simulation, by default None</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.save">
@@ -330,12 +334,22 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.export_to_csv">
 <span class="sig-name descname"><span class="pre">export_to_csv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.export_to_csv" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Export the simulation result to a csv file.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.environment.Environment.send_to_client">
 <span class="sig-name descname"><span class="pre">send_to_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">socketio</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.environment.Environment.send_to_client" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Send the simulation data to client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>socketio</strong><span class="classifier">socketio object</span></dt><dd><p>socketio object to handle communciation when running simulation</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

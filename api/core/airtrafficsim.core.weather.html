@@ -153,10 +153,9 @@
       <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
+    <img class="sidebar-logo" src="../../_static/Logo-full.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -178,6 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/flight_plan.html">   Adding flight plan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/historic.html">   Converting historical data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/openap.html">   Using OpenAP model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -252,18 +252,50 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airtrafficsim.core.weather.weather.</span></span><span class="sig-name descname"><span class="pre">Weather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weather_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather" title="Permalink to this definition">#</a></dt>
-<dd><p class="rubric">Methods</p>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
+<dd><p>Weather class</p>
+<p class="rubric">Methods</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>add_aircraft</strong></p></td>
-<td></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.add_aircraft" title="airtrafficsim.core.weather.weather.Weather.add_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_aircraft</span></code></a>(alt, perf)</p></td>
+<td><p>Add aircraft to the weather class</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>del_aircraft</strong></p></td>
-<td></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.del_aircraft" title="airtrafficsim.core.weather.weather.Weather.del_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_aircraft</span></code></a>(index)</p></td>
+<td><p>Delete aircraft from the weather class</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>update</strong></p></td>
-<td></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.update" title="airtrafficsim.core.weather.weather.Weather.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(lat, long, alt, perf, global_time)</p></td>
+<td><p>Update weather data</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Weather class constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>start_time</strong><span class="classifier">datetime</span></dt><dd><p>Start time of the simulation</p>
+</dd>
+<dt><strong>end_time</strong><span class="classifier">datetime</span></dt><dd><p>End time of the simulation</p>
+</dd>
+<dt><strong>weather_mode</strong><span class="classifier">str</span></dt><dd><p>Weather mode [ISA, ERA5]</p>
+</dd>
+<dt><strong>file_name</strong><span class="classifier">str</span></dt><dd><p>File name of the weather data</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.add_aircraft" title="airtrafficsim.core.weather.weather.Weather.add_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_aircraft</span></code></a>(alt, perf)</p></td>
+<td><p>Add aircraft to the weather class</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.del_aircraft" title="airtrafficsim.core.weather.weather.Weather.del_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_aircraft</span></code></a>(index)</p></td>
+<td><p>Delete aircraft from the weather class</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.update" title="airtrafficsim.core.weather.weather.Weather.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(lat, long, alt, perf, global_time)</p></td>
+<td><p>Update weather data</p></td>
 </tr>
 </tbody>
 </table>
@@ -274,20 +306,117 @@
 <dd><p>Weather mode [ISA, ERA5]</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.start_time">
+<span class="sig-name descname"><span class="pre">start_time</span></span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.start_time" title="Permalink to this definition">#</a></dt>
+<dd><p>Start time of the simulation [datetime]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.wind_speed">
+<span class="sig-name descname"><span class="pre">wind_speed</span></span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.wind_speed" title="Permalink to this definition">#</a></dt>
+<dd><p>Wind speed [knots]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.wind_direction">
+<span class="sig-name descname"><span class="pre">wind_direction</span></span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.wind_direction" title="Permalink to this definition">#</a></dt>
+<dd><p>Wind direction [deg]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.wind_north">
+<span class="sig-name descname"><span class="pre">wind_north</span></span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.wind_north" title="Permalink to this definition">#</a></dt>
+<dd><p>Wind - North [knots]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.wind_east">
+<span class="sig-name descname"><span class="pre">wind_east</span></span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.wind_east" title="Permalink to this definition">#</a></dt>
+<dd><p>Wind - East [knots]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.d_T">
+<span class="sig-name descname"><span class="pre">d_T</span></span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.d_T" title="Permalink to this definition">#</a></dt>
+<dd><p>Temperature difference compare to ISA [K]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.d_p">
+<span class="sig-name descname"><span class="pre">d_p</span></span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.d_p" title="Permalink to this definition">#</a></dt>
+<dd><p>Pressure difference compare to ISA [Pa]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.T">
+<span class="sig-name descname"><span class="pre">T</span></span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.T" title="Permalink to this definition">#</a></dt>
+<dd><p>Temperature [K]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.p">
+<span class="sig-name descname"><span class="pre">p</span></span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.p" title="Permalink to this definition">#</a></dt>
+<dd><p>Pressure [Pa]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.rho">
+<span class="sig-name descname"><span class="pre">rho</span></span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.rho" title="Permalink to this definition">#</a></dt>
+<dd><p>Density [kg/m^3]</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.add_aircraft">
 <span class="sig-name descname"><span class="pre">add_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance" title="airtrafficsim.core.performance.performance.Performance"><span class="pre">Performance</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.add_aircraft" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Add aircraft to the weather class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>alt</strong><span class="classifier">float</span></dt><dd><p>Altitude of the aircraft [ft]</p>
+</dd>
+<dt><strong>perf</strong><span class="classifier">Performance</span></dt><dd><p>Performance class</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.del_aircraft">
 <span class="sig-name descname"><span class="pre">del_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.del_aircraft" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Delete aircraft from the weather class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>index</strong><span class="classifier">int</span></dt><dd><p>Index of the aircraft</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.weather.weather.Weather.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance" title="airtrafficsim.core.performance.performance.Performance"><span class="pre">Performance</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.weather.weather.Weather.update" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Update weather data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lat</strong><span class="classifier">float[]</span></dt><dd><p>Latitude of the aircraft [deg]</p>
+</dd>
+<dt><strong>long</strong><span class="classifier">float[]</span></dt><dd><p>Longitude of the aircraft [deg]</p>
+</dd>
+<dt><strong>alt</strong><span class="classifier">float[]</span></dt><dd><p>Altitude of the aircraft [ft]</p>
+</dd>
+<dt><strong>perf</strong><span class="classifier">Performance</span></dt><dd><p>Performance class</p>
+</dd>
+<dt><strong>global_time</strong><span class="classifier">float</span></dt><dd><p>Time since the start of the simulation [seconds]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -358,6 +487,16 @@
 <li><a class="reference internal" href="#">weather</a><ul>
 <li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather"><code class="docutils literal notranslate"><span class="pre">Weather</span></code></a><ul>
 <li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.mode"><code class="docutils literal notranslate"><span class="pre">Weather.mode</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.start_time"><code class="docutils literal notranslate"><span class="pre">Weather.start_time</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.wind_speed"><code class="docutils literal notranslate"><span class="pre">Weather.wind_speed</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.wind_direction"><code class="docutils literal notranslate"><span class="pre">Weather.wind_direction</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.wind_north"><code class="docutils literal notranslate"><span class="pre">Weather.wind_north</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.wind_east"><code class="docutils literal notranslate"><span class="pre">Weather.wind_east</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.d_T"><code class="docutils literal notranslate"><span class="pre">Weather.d_T</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.d_p"><code class="docutils literal notranslate"><span class="pre">Weather.d_p</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.T"><code class="docutils literal notranslate"><span class="pre">Weather.T</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.p"><code class="docutils literal notranslate"><span class="pre">Weather.p</span></code></a></li>
+<li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.rho"><code class="docutils literal notranslate"><span class="pre">Weather.rho</span></code></a></li>
 <li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.add_aircraft"><code class="docutils literal notranslate"><span class="pre">Weather.add_aircraft()</span></code></a></li>
 <li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.del_aircraft"><code class="docutils literal notranslate"><span class="pre">Weather.del_aircraft()</span></code></a></li>
 <li><a class="reference internal" href="#airtrafficsim.core.weather.weather.Weather.update"><code class="docutils literal notranslate"><span class="pre">Weather.update()</span></code></a></li>

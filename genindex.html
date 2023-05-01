@@ -151,10 +151,9 @@
       <div class="sidebar-sticky"><a class="sidebar-brand centered" href="index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="_static/Logo-large.svg" alt="Logo"/>
+    <img class="sidebar-logo" src="_static/Logo-full.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -176,6 +175,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial/flight_plan.html">   Adding flight plan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/historic.html">   Converting historical data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/openap.html">   Using OpenAP model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
@@ -719,6 +719,10 @@
   <h2>D</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.d_p">d_p (airtrafficsim.core.weather.weather.Weather attribute)</a>
+</li>
+        <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.d_T">d_T (airtrafficsim.core.weather.weather.Weather attribute)</a>
+</li>
         <li><a href="api/server/airtrafficsim.server.data.html#airtrafficsim.server.data.Data">Data (class in airtrafficsim.server.data)</a>
 </li>
         <li><a href="api/core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.del_aircraft">del_aircraft() (airtrafficsim.core.autopilot.Autopilot method)</a>
@@ -1062,14 +1066,16 @@
   <h2>P</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.p">p (airtrafficsim.core.weather.weather.Weather attribute)</a>
+</li>
         <li><a href="api/core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.path_angle">path_angle (airtrafficsim.core.traffic.Traffic attribute)</a>
 </li>
         <li><a href="api/core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.payload_weight">payload_weight (airtrafficsim.core.traffic.Traffic attribute)</a>
 </li>
-        <li><a href="api/core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.perf">perf (airtrafficsim.core.traffic.Traffic attribute)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.perf">perf (airtrafficsim.core.traffic.Traffic attribute)</a>
+</li>
         <li><a href="api/core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance">Performance (class in airtrafficsim.core.performance.performance)</a>
 </li>
         <li><a href="api/core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.performance_mode">performance_mode (airtrafficsim.core.performance.performance.Performance attribute)</a>
@@ -1087,6 +1093,8 @@
         <li><a href="api/server/airtrafficsim.server.replay.html#airtrafficsim.server.replay.Replay">Replay (class in airtrafficsim.server.replay)</a>
 </li>
         <li><a href="api/core/airtrafficsim.core.aircraft.html#airtrafficsim.core.aircraft.Aircraft.resume_own_navigation">resume_own_navigation() (airtrafficsim.core.aircraft.Aircraft method)</a>
+</li>
+        <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.rho">rho (airtrafficsim.core.weather.weather.Weather attribute)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
@@ -1137,7 +1145,11 @@
         <li><a href="api/utils/airtrafficsim.utils.enums.html#airtrafficsim.utils.enums.SpeedMode">SpeedMode (class in airtrafficsim.utils.enums)</a>
 </li>
         <li><a href="api/core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.start_time">start_time (airtrafficsim.core.environment.Environment attribute)</a>
+
+        <ul>
+          <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.start_time">(airtrafficsim.core.weather.weather.Weather attribute)</a>
 </li>
+        </ul></li>
         <li><a href="api/core/airtrafficsim.core.environment.html#airtrafficsim.core.environment.Environment.step">step() (airtrafficsim.core.environment.Environment method)</a>
 </li>
     </ul></td>
@@ -1148,6 +1160,8 @@
   <h2>T</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.T">T (airtrafficsim.core.weather.weather.Weather attribute)</a>
+</li>
         <li><a href="api/core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.tas">tas (airtrafficsim.core.traffic.Traffic attribute)</a>
 </li>
         <li><a href="api/core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.tas_to_cas">tas_to_cas() (airtrafficsim.core.performance.performance.Performance method)</a>
@@ -1156,10 +1170,10 @@
 </li>
         <li><a href="api/server/airtrafficsim.server.server.html#airtrafficsim.server.server.test_connect">test_connect() (in module airtrafficsim.server.server)</a>
 </li>
-        <li><a href="api/server/airtrafficsim.server.server.html#airtrafficsim.server.server.test_disconnect">test_disconnect() (in module airtrafficsim.server.server)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/server/airtrafficsim.server.server.html#airtrafficsim.server.server.test_disconnect">test_disconnect() (in module airtrafficsim.server.server)</a>
+</li>
         <li><a href="api/core/airtrafficsim.core.performance.html#airtrafficsim.core.performance.performance.Performance.thrust">thrust (airtrafficsim.core.performance.performance.Performance attribute)</a>
 </li>
         <li><a href="api/core/airtrafficsim.core.autopilot.html#airtrafficsim.core.autopilot.Autopilot.track_angle">track_angle (airtrafficsim.core.autopilot.Autopilot attribute)</a>
@@ -1234,11 +1248,19 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/utils/airtrafficsim.utils.enums.html#airtrafficsim.utils.enums.WakeCat">WakeCat (class in airtrafficsim.utils.enums)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/core/airtrafficsim.core.traffic.html#airtrafficsim.core.traffic.Traffic.weather">weather (airtrafficsim.core.traffic.Traffic attribute)</a>
 </li>
         <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather">Weather (class in airtrafficsim.core.weather.weather)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.wind_direction">wind_direction (airtrafficsim.core.weather.weather.Weather attribute)</a>
+</li>
+        <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.wind_east">wind_east (airtrafficsim.core.weather.weather.Weather attribute)</a>
+</li>
+        <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.wind_north">wind_north (airtrafficsim.core.weather.weather.Weather attribute)</a>
+</li>
+        <li><a href="api/core/airtrafficsim.core.weather.html#airtrafficsim.core.weather.weather.Weather.wind_speed">wind_speed (airtrafficsim.core.weather.weather.Weather attribute)</a>
 </li>
     </ul></td>
   </tr></table>

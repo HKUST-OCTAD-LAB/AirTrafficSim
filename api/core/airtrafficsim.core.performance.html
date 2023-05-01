@@ -153,10 +153,9 @@
       <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
+    <img class="sidebar-logo" src="../../_static/Logo-full.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -178,6 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/flight_plan.html">   Adding flight plan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/historic.html">   Converting historical data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/openap.html">   Using OpenAP model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -314,44 +314,38 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.cal_turn_radius" title="airtrafficsim.core.performance.performance.Performance.cal_turn_radius"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_turn_radius</span></code></a>(bank_angle, V_tas)</p></td>
 <td><p>Calculate rate of turn (Equation 5.3-1)</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.cas_to_tas" title="airtrafficsim.core.performance.performance.Performance.cas_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cas_to_tas</span></code></a>(V_cas, p, rho)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.cal_vs_accel" title="airtrafficsim.core.performance.performance.Performance.cal_vs_accel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_vs_accel</span></code></a>(traffic, tas)</p></td>
+<td><p>Calculate vertical speed and acceleration given true airspeed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.cas_to_tas" title="airtrafficsim.core.performance.performance.Performance.cas_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cas_to_tas</span></code></a>(V_cas, p, rho)</p></td>
 <td><p>Convert Calibrated air speed to True air speed.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.del_aircraft" title="airtrafficsim.core.performance.performance.Performance.del_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_aircraft</span></code></a>(index)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.del_aircraft" title="airtrafficsim.core.performance.performance.Performance.del_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_aircraft</span></code></a>(index)</p></td>
 <td><p>Delete an aircraft from traffic array.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_bank_angles" title="airtrafficsim.core.performance.performance.Performance.get_bank_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bank_angles</span></code></a>(configuration)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_bank_angles" title="airtrafficsim.core.performance.performance.Performance.get_bank_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bank_angles</span></code></a>(configuration)</p></td>
 <td><p>Get standard nominal bank angles (Session 5.3)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_empty_weight" title="airtrafficsim.core.performance.performance.Performance.get_empty_weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_empty_weight</span></code></a>(n)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_empty_weight" title="airtrafficsim.core.performance.performance.Performance.get_empty_weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_empty_weight</span></code></a>(n)</p></td>
 <td><p>Get Empty Weight of an aircraft</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_procedure_speed" title="airtrafficsim.core.performance.performance.Performance.get_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_procedure_speed</span></code></a>(H_p, H_p_trans, flight_phase)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_procedure_speed" title="airtrafficsim.core.performance.performance.Performance.get_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_procedure_speed</span></code></a>(H_p, H_p_trans, flight_phase)</p></td>
 <td><p>Get the standard air speed schedule</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.init_procedure_speed" title="airtrafficsim.core.performance.performance.Performance.init_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_procedure_speed</span></code></a>(mass, n)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.init_procedure_speed" title="airtrafficsim.core.performance.performance.Performance.init_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_procedure_speed</span></code></a>(mass, n)</p></td>
 <td><p>Initialize standard air speed schedule for all flight phases (Section 4.1-4.3)</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.mach_to_tas" title="airtrafficsim.core.performance.performance.Performance.mach_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mach_to_tas</span></code></a>(M, T)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.mach_to_tas" title="airtrafficsim.core.performance.performance.Performance.mach_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mach_to_tas</span></code></a>(M, T)</p></td>
 <td><p>Convert Mach number to True Air speed (Equation 3.1-26)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.tas_to_cas" title="airtrafficsim.core.performance.performance.Performance.tas_to_cas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_cas</span></code></a>(V_tas, p, rho)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.tas_to_cas" title="airtrafficsim.core.performance.performance.Performance.tas_to_cas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_cas</span></code></a>(V_tas, p, rho)</p></td>
 <td><p>Convert True air speed to Calibrated air speed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.tas_to_mach" title="airtrafficsim.core.performance.performance.Performance.tas_to_mach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_mach</span></code></a>(V_tas, T)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.tas_to_mach" title="airtrafficsim.core.performance.performance.Performance.tas_to_mach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_mach</span></code></a>(V_tas, T)</p></td>
 <td><p>Convert True Air speed to Mach number (Equation 3.1-26)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.update_configuration" title="airtrafficsim.core.performance.performance.Performance.update_configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_configuration</span></code></a>(V_cas, H_p, vertical_mode)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.update_configuration" title="airtrafficsim.core.performance.performance.Performance.update_configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_configuration</span></code></a>(V_cas, H_p, vertical_mode)</p></td>
 <td><p>Update Flight Phase (section 3.5)</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><strong>cal_vs_accel</strong></p></td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -360,10 +354,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>N</strong><span class="classifier">int, optional</span></dt><dd><p>Number of aircrafts. Maximum size of performance array (pre-initialize to eliminate inefficient append)
-TODO: Revise the initial estimate, by default 1000</p>
-</dd>
-<dt><strong>Bada</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to use BADA Performance model, by default False</p>
+<dt><strong>performance_mode</strong><span class="classifier">string, optional</span></dt><dd><p>Which performance model to use [BADA, OpenAP]</p>
 </dd>
 </dl>
 </dd>
@@ -429,44 +420,38 @@ TODO: Revise the initial estimate, by default 1000</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.cal_turn_radius" title="airtrafficsim.core.performance.performance.Performance.cal_turn_radius"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_turn_radius</span></code></a>(bank_angle, V_tas)</p></td>
 <td><p>Calculate rate of turn (Equation 5.3-1)</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.cas_to_tas" title="airtrafficsim.core.performance.performance.Performance.cas_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cas_to_tas</span></code></a>(V_cas, p, rho)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.cal_vs_accel" title="airtrafficsim.core.performance.performance.Performance.cal_vs_accel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_vs_accel</span></code></a>(traffic, tas)</p></td>
+<td><p>Calculate vertical speed and acceleration given true airspeed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.cas_to_tas" title="airtrafficsim.core.performance.performance.Performance.cas_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cas_to_tas</span></code></a>(V_cas, p, rho)</p></td>
 <td><p>Convert Calibrated air speed to True air speed.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.del_aircraft" title="airtrafficsim.core.performance.performance.Performance.del_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_aircraft</span></code></a>(index)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.del_aircraft" title="airtrafficsim.core.performance.performance.Performance.del_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_aircraft</span></code></a>(index)</p></td>
 <td><p>Delete an aircraft from traffic array.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_bank_angles" title="airtrafficsim.core.performance.performance.Performance.get_bank_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bank_angles</span></code></a>(configuration)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_bank_angles" title="airtrafficsim.core.performance.performance.Performance.get_bank_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bank_angles</span></code></a>(configuration)</p></td>
 <td><p>Get standard nominal bank angles (Session 5.3)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_empty_weight" title="airtrafficsim.core.performance.performance.Performance.get_empty_weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_empty_weight</span></code></a>(n)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_empty_weight" title="airtrafficsim.core.performance.performance.Performance.get_empty_weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_empty_weight</span></code></a>(n)</p></td>
 <td><p>Get Empty Weight of an aircraft</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_procedure_speed" title="airtrafficsim.core.performance.performance.Performance.get_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_procedure_speed</span></code></a>(H_p, H_p_trans, flight_phase)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.get_procedure_speed" title="airtrafficsim.core.performance.performance.Performance.get_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_procedure_speed</span></code></a>(H_p, H_p_trans, flight_phase)</p></td>
 <td><p>Get the standard air speed schedule</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.init_procedure_speed" title="airtrafficsim.core.performance.performance.Performance.init_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_procedure_speed</span></code></a>(mass, n)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.init_procedure_speed" title="airtrafficsim.core.performance.performance.Performance.init_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_procedure_speed</span></code></a>(mass, n)</p></td>
 <td><p>Initialize standard air speed schedule for all flight phases (Section 4.1-4.3)</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.mach_to_tas" title="airtrafficsim.core.performance.performance.Performance.mach_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mach_to_tas</span></code></a>(M, T)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.mach_to_tas" title="airtrafficsim.core.performance.performance.Performance.mach_to_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mach_to_tas</span></code></a>(M, T)</p></td>
 <td><p>Convert Mach number to True Air speed (Equation 3.1-26)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.tas_to_cas" title="airtrafficsim.core.performance.performance.Performance.tas_to_cas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_cas</span></code></a>(V_tas, p, rho)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.tas_to_cas" title="airtrafficsim.core.performance.performance.Performance.tas_to_cas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_cas</span></code></a>(V_tas, p, rho)</p></td>
 <td><p>Convert True air speed to Calibrated air speed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.tas_to_mach" title="airtrafficsim.core.performance.performance.Performance.tas_to_mach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_mach</span></code></a>(V_tas, T)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.tas_to_mach" title="airtrafficsim.core.performance.performance.Performance.tas_to_mach"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tas_to_mach</span></code></a>(V_tas, T)</p></td>
 <td><p>Convert True Air speed to Mach number (Equation 3.1-26)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.update_configuration" title="airtrafficsim.core.performance.performance.Performance.update_configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_configuration</span></code></a>(V_cas, H_p, vertical_mode)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.performance.Performance.update_configuration" title="airtrafficsim.core.performance.performance.Performance.update_configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_configuration</span></code></a>(V_cas, H_p, vertical_mode)</p></td>
 <td><p>Update Flight Phase (section 3.5)</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><strong>cal_vs_accel</strong></p></td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -474,7 +459,7 @@ TODO: Revise the initial estimate, by default 1000</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="airtrafficsim.core.performance.performance.Performance.performance_mode">
 <span class="sig-name descname"><span class="pre">performance_mode</span></span><a class="headerlink" href="#airtrafficsim.core.performance.performance.Performance.performance_mode" title="Permalink to this definition">#</a></dt>
-<dd><p>Whether BADA performance model is used [Boolean]</p>
+<dd><p>Whether BADA performance model is used [string]</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -1082,7 +1067,26 @@ Calculate thrust given ROCD and speed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.performance.performance.Performance.cal_vs_accel">
 <span class="sig-name descname"><span class="pre">cal_vs_accel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traffic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tas</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.performance.performance.Performance.cal_vs_accel" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Calculate vertical speed and acceleration given true airspeed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>traffic</strong><span class="classifier">traffic class</span></dt><dd><p>Points to traffic array</p>
+</dd>
+<dt><strong>tas</strong><span class="classifier">float[]</span></dt><dd><p>True airspeed [kt]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>vs</strong><span class="classifier">float[]</span></dt><dd><p>Vertical speed [ft/min]</p>
+</dd>
+<dt><strong>accel</strong><span class="classifier">float[]</span></dt><dd><p>Acceleration [m/s^2]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.performance.performance.Performance.cal_fuel_burn">

@@ -153,10 +153,9 @@
       <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
+    <img class="sidebar-logo" src="../../_static/Logo-full.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -178,6 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/flight_plan.html">   Adding flight plan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/historic.html">   Converting historical data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/openap.html">   Using OpenAP model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -253,22 +253,54 @@
 <dt class="sig sig-object py" id="airtrafficsim.core.performance.bada.Bada">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airtrafficsim.core.performance.bada.</span></span><span class="sig-name descname"><span class="pre">Bada</span></span><a class="headerlink" href="#airtrafficsim.core.performance.bada.Bada" title="Permalink to this definition">#</a></dt>
 <dd><p>BADA Performance class</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>See __init__()</strong></dt><dd></dd>
-</dl>
-</dd>
-</dl>
 <p class="rubric">Methods</p>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>__init__:</strong></p></td>
-<td></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.add_aircraft" title="airtrafficsim.core.performance.bada.Bada.add_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_aircraft</span></code></a>(icao[, mass_class])</p></td>
+<td><p>Add one specific aircraft performance data to the performance array according to index.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>add_aircraft_performance:</strong></p></td>
-<td></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_aerodynamic_drag" title="airtrafficsim.core.performance.bada.Bada.cal_aerodynamic_drag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_aerodynamic_drag</span></code></a>(V_tas, bank_angle, m, ...)</p></td>
+<td><p>Calculate Aerodynamic drag (Section 3.6.1)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_expedite_descend_factor" title="airtrafficsim.core.performance.bada.Bada.cal_expedite_descend_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_expedite_descend_factor</span></code></a>(expedite_descent)</p></td>
+<td><p>Calculate expedited descent factor for drag multiplication.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_fuel_burn" title="airtrafficsim.core.performance.bada.Bada.cal_fuel_burn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_fuel_burn</span></code></a>(flight_phase, tas, thrust, alt)</p></td>
+<td><p>Calculate fuel burn</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_low_speed_buffeting_limit" title="airtrafficsim.core.performance.bada.Bada.cal_low_speed_buffeting_limit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_low_speed_buffeting_limit</span></code></a>(p, M, m)</p></td>
+<td><p>Low speed buffeting limit for jet and turboprop aircraft.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_max_d_rocd" title="airtrafficsim.core.performance.bada.Bada.cal_max_d_rocd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_max_d_rocd</span></code></a>(d_t, V_tas, rocd)</p></td>
+<td><p>Calculate maximum delta rate of climb or descend (equation 5.2-2)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_max_d_tas" title="airtrafficsim.core.performance.bada.Bada.cal_max_d_tas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_max_d_tas</span></code></a>(d_t)</p></td>
+<td><p>Calculate maximum delta true air speed (equation 5.2-1)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_maximum_altitude" title="airtrafficsim.core.performance.bada.Bada.cal_maximum_altitude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_maximum_altitude</span></code></a>(d_T, m)</p></td>
+<td><p>Calculate flight envelope (Section 3.5-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_minimum_speed" title="airtrafficsim.core.performance.bada.Bada.cal_minimum_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_minimum_speed</span></code></a>(configuration)</p></td>
+<td><p>Calculate minimum speed for aircraft (3.5-2~3)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_reduced_climb_power" title="airtrafficsim.core.performance.bada.Bada.cal_reduced_climb_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_reduced_climb_power</span></code></a>(m, H_p, H_max)</p></td>
+<td><p>Calculate reduced climb power (section 3.8)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.cal_thrust" title="airtrafficsim.core.performance.bada.Bada.cal_thrust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_thrust</span></code></a>(vertical_mode, configuration, ...)</p></td>
+<td><p>Calculate thrust given flight phases.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.del_aircraft" title="airtrafficsim.core.performance.bada.Bada.del_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_aircraft</span></code></a>(index)</p></td>
+<td><p>Delete one specific aircraft performance data to the performance array according to index.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.get_procedure_speed" title="airtrafficsim.core.performance.bada.Bada.get_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_procedure_speed</span></code></a>(H_p, H_p_trans, flight_phase)</p></td>
+<td><p>Get the standard air speed schedule</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.init_procedure_speed" title="airtrafficsim.core.performance.bada.Bada.init_procedure_speed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_procedure_speed</span></code></a>(m, n)</p></td>
+<td><p>Initialize standard air speed schedule for all flight phases (Section 4.1-4.3)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.performance.bada.Bada.update_configuration" title="airtrafficsim.core.performance.bada.Bada.update_configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_configuration</span></code></a>(V_cas, H_p, vertical_mode)</p></td>
+<td><p>Update configuration (section 3.5)</p></td>
 </tr>
 </tbody>
 </table>

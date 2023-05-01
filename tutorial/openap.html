@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Documentation development" href="documentation.html" /><link rel="prev" title="Understanding the project structure" href="structure.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Development guide" href="../development/guide.html" /><link rel="prev" title="Converting historical data" href="historic.html" />
 
     <link rel="shortcut icon" href="../_static/Logo.svg"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>Client development</title>
+        <title>Uisng OpenAP performance model</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -141,7 +141,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -168,24 +168,24 @@
 <li class="toctree-l1"><a class="reference internal" href="../start.html">   Getting started</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/UI.html">   Navigating the UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/data.html">   Understanding the data folder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/replay.html">   Replaying data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/creating_env.html">   Creating a simulation environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/simulation.html">   Running a simulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/flight_plan.html">   Adding flight plan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/weather.html">   Using weather database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/historic.html">   Converting historical data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/openap.html">   Using OpenAP model</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="UI.html">   Navigating the UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">   Understanding the data folder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="replay.html">   Replaying data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="creating_env.html">   Creating a simulation environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">   Running a simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flight_plan.html">   Adding flight plan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weather.html">   Using weather database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="historic.html">   Converting historical data</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Using OpenAP model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="guide.html">   Development guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="structure.html">   Understanding the project structure</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">   Web client</a></li>
-<li class="toctree-l1"><a class="reference internal" href="documentation.html">   Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="test.html">   Testing</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/guide.html">   Development guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/structure.html">   Understanding the project structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/client.html">   Web client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/documentation.html">   Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/test.html">   Testing</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">   AirTrafficSim API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../api/airtrafficsim.core.html">core</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/core/airtrafficsim.core.environment.html">environment</a></li>
@@ -241,63 +241,44 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section id="client-development">
-<h1>Client development<a class="headerlink" href="#client-development" title="Permalink to this heading">#</a></h1>
-<p>AirTrafficSim’s web-based client is written with javascript using <a class="reference external" href="https://reactjs.org/">React.js</a> framework. The UI components are created using <a class="reference external" href="https://ionicframework.com/docs/react">Ionic React</a> library. The 3D globe and air traffic visualization are powered by <a class="reference external" href="https://cesium.com/">Cesium.js</a> library and <a class="reference external" href="https://resium.reearth.io/">Resium</a> while the graph is plotted using <a class="reference external" href="https://plotly.com/javascript/">Plotly.js</a> library. The communication is handled with <a class="reference external" href="https://socket.io/">Socket.IO</a> library.</p>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
-<p>If you want to contribute to the development of the client UI, please install <a class="reference external" href="https://nodejs.org/en/">Nodejs</a> into the environment. You may also use your own nodejs install. Then, please also install <a class="reference external" href="https://classic.yarnpkg.com/en/">Yarn</a> a package manager for Node.js.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
-conda install -c conda-forge nodejs
-npm install --global yarn
-</pre></div>
+          <section id="uisng-openap-performance-model">
+<h1>Uisng OpenAP performance model<a class="headerlink" href="#uisng-openap-performance-model" title="Permalink to this heading">#</a></h1>
+<p>Apart from the default <a class="reference external" href="https://www.eurocontrol.int/model/bada">BADA 3.15 performance data</a>, AirTrafficSim also support using the open-source <a class="reference external" href="https://github.com/TUDelft-CNS-ATM/openap">OpenAP</a> performance model. This allows users to run AirTrafficSim without the need to obtain the licensed BADA 3.15 model. The <code class="docutils literal notranslate"><span class="pre">OpenApDemo</span></code> class in <code class="docutils literal notranslate"><span class="pre">airtrafficsim_demo/environment/OpenApDemo.py</span></code> provides a sample to set up such an environment.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The support for OpenAP is experimental and some AirTrafficSim features such as autopilot procedural speed are not yet supported and bugs may occur.</p>
 </div>
-<p>To install all the Node.js dependencies for client development, execute the following commands:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate airtrafficsim
-<span class="nb">cd</span> AirTrafficSim/client/
-yarn
-</pre></div>
+<p>To use OpenAP, set performance_mode equals to “OpenAP” instead of “BADA”. The aircraft is needed similarly to <a class="reference internal" href="creating_env.html"><span class="doc std std-doc"><code class="docutils literal notranslate"><span class="pre">DemoEnv</span></code></span></a> but flight plan and airport information should not be added since they are yet to be supported. After adding the aircraft, set the speed of each aircraft using the <code class="docutils literal notranslate"><span class="pre">set_speed()</span></code> function to disable auto procedural speed.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">airtrafficsim_data/environment/OpenApDemo.py</span><a class="headerlink" href="#id1" title="Permalink to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 9</span><span class="k">class</span> <span class="nc">OpenApDemo</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">12</span>        <span class="c1"># Initialize environment super class</span>
+<span class="linenos">13</span>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">),</span>  <span class="c1"># File name (do not change)</span>
+<span class="linenos">14</span>                         <span class="n">start_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span>
+<span class="linenos">15</span>                             <span class="s1">&#39;2022-03-22T00:00:00+00:00&#39;</span><span class="p">),</span>
+<span class="linenos">16</span>                         <span class="n">end_time</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+<span class="linenos">17</span>                         <span class="n">weather_mode</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="hll"><span class="linenos">18</span>                         <span class="n">performance_mode</span><span class="o">=</span><span class="s2">&quot;OpenAP&quot;</span>
+</span><span class="linenos">19</span>                         <span class="p">)</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>        <span class="c1"># Add aircraft</span>
+<span class="linenos">22</span>        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_head</span> <span class="o">=</span> <span class="n">Aircraft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traffic</span><span class="p">,</span> <span class="n">call_sign</span><span class="o">=</span><span class="s2">&quot;HEAD&quot;</span><span class="p">,</span> <span class="n">aircraft_type</span><span class="o">=</span><span class="s2">&quot;A320&quot;</span><span class="p">,</span> <span class="n">flight_phase</span><span class="o">=</span><span class="n">FlightPhase</span><span class="o">.</span><span class="n">CRUISE</span><span class="p">,</span> <span class="n">configuration</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">CLEAN</span><span class="p">,</span>
+<span class="linenos">23</span>                                      <span class="n">lat</span><span class="o">=</span><span class="mf">22.019213</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="mf">113.539164</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="mf">20000.0</span><span class="p">,</span> <span class="n">heading</span><span class="o">=</span><span class="mf">175.0</span><span class="p">,</span> <span class="n">cas</span><span class="o">=</span><span class="mf">250.0</span><span class="p">,</span> <span class="n">fuel_weight</span><span class="o">=</span><span class="mf">10000.0</span><span class="p">,</span> <span class="n">payload_weight</span><span class="o">=</span><span class="mf">12000.0</span><span class="p">,</span> <span class="n">cruise_alt</span><span class="o">=</span><span class="mi">37000</span><span class="p">)</span>
+<span class="linenos">24</span>        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fol</span> <span class="o">=</span> <span class="n">Aircraft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traffic</span><span class="p">,</span> <span class="n">call_sign</span><span class="o">=</span><span class="s2">&quot;FOLLOW&quot;</span><span class="p">,</span> <span class="n">aircraft_type</span><span class="o">=</span><span class="s2">&quot;A320&quot;</span><span class="p">,</span> <span class="n">flight_phase</span><span class="o">=</span><span class="n">FlightPhase</span><span class="o">.</span><span class="n">CRUISE</span><span class="p">,</span> <span class="n">configuration</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">CLEAN</span><span class="p">,</span>
+<span class="linenos">25</span>                                     <span class="n">lat</span><span class="o">=</span><span class="mf">21.9</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="mf">113.5</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="mf">20000.0</span><span class="p">,</span> <span class="n">heading</span><span class="o">=</span><span class="mf">175.0</span><span class="p">,</span> <span class="n">cas</span><span class="o">=</span><span class="mf">310.0</span><span class="p">,</span> <span class="n">fuel_weight</span><span class="o">=</span><span class="mf">10000.0</span><span class="p">,</span> <span class="n">payload_weight</span><span class="o">=</span><span class="mf">12000.0</span><span class="p">,</span> <span class="n">cruise_alt</span><span class="o">=</span><span class="mi">37000</span><span class="p">)</span>
+<span class="hll"><span class="linenos">26</span>        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_head</span><span class="o">.</span><span class="n">set_speed</span><span class="p">(</span><span class="mf">250.0</span><span class="p">)</span> <span class="c1"># To set the aircraft to follow given speed command instead of auto procedural</span>
+</span><span class="hll"><span class="linenos">27</span>        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fol</span><span class="o">.</span><span class="n">set_speed</span><span class="p">(</span><span class="mf">310.0</span><span class="p">)</span> <span class="c1"># To set the aircraft to follow given speed command instead of auto procedural</span>
+</span></pre></div>
 </div>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>Please also obtain a Cesium access token from  <a class="reference external" href="https://cesium.com/platform/cesium-ion/">Cesium ion portal</a> after signing up for a free account and copy it into a new file <code class="docutils literal notranslate"><span class="pre">.env</span></code> in <code class="docutils literal notranslate"><span class="pre">client/</span></code> with the following line:</p>
-<blockquote>
-<div><p>REACT_APP_CESIUMION_ACCESS_TOKEN= &lt;Cesium Access Token&gt;</p>
-</div></blockquote>
-<p>This allows the UI to properly stream and render the map, terrain, 3D building, and more.</p>
 </div>
-</section>
-<section id="developing-client">
-<h2>Developing client<a class="headerlink" href="#developing-client" title="Permalink to this heading">#</a></h2>
-<p>The client code base is written in <code class="docutils literal notranslate"><span class="pre">client/src/pages/Simulation.tsx</span></code> with a React functional component called <code class="docutils literal notranslate"><span class="pre">Simulation</span></code>. The <code class="docutils literal notranslate"><span class="pre">client/src/utils/websocket.ts</span></code> file contains the setup of the Socket.IO WebSocket connection with the server’s URL and port number.</p>
-<p>To run the UI development environment:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">AirTrafficSim</span><span class="o">/</span><span class="n">client</span><span class="o">/</span>
-<span class="n">yarn</span> <span class="n">start</span>
-</pre></div>
-</div>
-<p>You should be able to open the development UI using any modern browser at http://localhost:3000. It will live-refresh once you make any changes to the UI. In addition, you may want to run the AirTrafficSim backend to run a simulation or generate a replay.</p>
-<p>To run the AirTrafficSim backend, open a new terminal window and run a server instance:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">AirTrafficSim</span><span class="o">/</span>
-<span class="n">conda</span> <span class="n">activate</span> <span class="n">airtrafficsim</span>
-<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">airtrafficsim</span>
-</pre></div>
-</div>
-</section>
-<section id="building-client">
-<h2>Building client<a class="headerlink" href="#building-client" title="Permalink to this heading">#</a></h2>
-<p>After finishing building the client, you can build the UI by executing the following commands:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">AirTrafficSim</span><span class="o">/</span><span class="n">client</span><span class="o">/</span>
-<span class="n">yarn</span> <span class="n">build</span>
-</pre></div>
-</div>
-<p>You can then push and merge the client to the GitHub repository.</p>
-</section>
 </section>
 
         </article>
@@ -305,23 +286,23 @@ yarn
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="documentation.html">
+          <a class="next-page" href="../development/guide.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Documentation development</div>
+                <div class="title">Development guide</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="structure.html">
+          <a class="prev-page" href="historic.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Understanding the project structure</div>
+                <div class="title">Converting historical data</div>
                 
               </div>
             </a>
@@ -350,29 +331,8 @@ yarn
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Client development</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#developing-client">Developing client</a></li>
-<li><a class="reference internal" href="#building-client">Building client</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

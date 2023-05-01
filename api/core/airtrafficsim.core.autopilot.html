@@ -153,10 +153,9 @@
       <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
+    <img class="sidebar-logo" src="../../_static/Logo-full.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -178,6 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/flight_plan.html">   Adding flight plan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/historic.html">   Converting historical data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/openap.html">   Using OpenAP model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -260,17 +260,11 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.autopilot.Autopilot.add_aircraft" title="airtrafficsim.core.autopilot.Autopilot.add_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_aircraft</span></code></a>(lat, long, alt, heading, cas, ...)</p></td>
 <td><p>Add aircraft and init flight plan</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.autopilot.Autopilot.update" title="airtrafficsim.core.autopilot.Autopilot.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(traffic)</p></td>
-<td><p>Update the autopilot status for each timestep</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#airtrafficsim.core.autopilot.Autopilot.del_aircraft" title="airtrafficsim.core.autopilot.Autopilot.del_aircraft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">del_aircraft</span></code></a>(index)</p></td>
+<td><p>Delete aircraft</p></td>
 </tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><strong>del_aircraft</strong></p></td>
-<td></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.autopilot.Autopilot.update" title="airtrafficsim.core.autopilot.Autopilot.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(traffic)</p></td>
+<td><p>Update the autopilot status for each timestep</p></td>
 </tr>
 </tbody>
 </table>
@@ -454,7 +448,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.autopilot.Autopilot.del_aircraft">
 <span class="sig-name descname"><span class="pre">del_aircraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.autopilot.Autopilot.del_aircraft" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Delete aircraft</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>index</strong><span class="classifier">float</span></dt><dd><p>The index of the aircraft to be deleted</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.autopilot.Autopilot.update">

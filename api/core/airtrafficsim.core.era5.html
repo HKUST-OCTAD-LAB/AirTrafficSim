@@ -153,10 +153,9 @@
       <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../../_static/Logo-large.svg" alt="Logo"/>
+    <img class="sidebar-logo" src="../../_static/Logo-full.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">AirTrafficSim</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -178,6 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/flight_plan.html">   Adding flight plan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/weather.html">   Using weather database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/historic.html">   Converting historical data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/openap.html">   Using OpenAP model</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -254,11 +254,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airtrafficsim.core.weather.era5.</span></span><span class="sig-name descname"><span class="pre">Era5</span></span><a class="headerlink" href="#airtrafficsim.core.weather.era5.Era5" title="Permalink to this definition">#</a></dt>
 <dd><p>A utility class to handle ERA5 weather data</p>
 <p class="rubric">Methods</p>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>download_data</strong></p></td>
-<td></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#airtrafficsim.core.weather.era5.Era5.download_data" title="airtrafficsim.core.weather.era5.Era5.download_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_data</span></code></a>(start_time, end_time, file_name)</p></td>
+<td><p>Download ERA5 data</p></td>
 </tr>
 </tbody>
 </table>
@@ -266,7 +266,26 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="airtrafficsim.core.weather.era5.Era5.download_data">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">download_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#airtrafficsim.core.weather.era5.Era5.download_data" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Download ERA5 data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>start_time</strong><span class="classifier">datetime</span></dt><dd><p>Start time of the simulation [ISO time in UTC]</p>
+</dd>
+<dt><strong>end_time</strong><span class="classifier">float</span></dt><dd><p>Duration of the simulation [seconds]</p>
+</dd>
+<dt><strong>file_name</strong><span class="classifier">float</span></dt><dd><p>Simulation environment name</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>path: Path</dt><dd><p>Path to the downloaded weather data</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
