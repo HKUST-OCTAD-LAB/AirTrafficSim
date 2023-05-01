@@ -1,4 +1,4 @@
-![AirTrafficSim](docs/source/images/Logo-full.png)
+<img src="docs/source/images/Logo-full.png" width=50% />
 
 ![Tests](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/actions/workflows/tests.yml/badge.svg)
 [![Code Coverage](https://img.shields.io/codecov/c/github/HKUST-OCTAD-LAB/AirTrafficSim.svg)](https://codecov.io/gh/HKUST-OCTAD-LAB/AirTrafficSim)
