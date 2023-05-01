@@ -12,6 +12,7 @@
 //         "simulation"
 //     ],
 //     "testing.defaultGutterClickAction": "debug"
+//     flake8 --docstring-convention numpy
 // }
 "python.linting.flake8Enabled": true,
 "python.formatting.provider": "yapf",

@@ -1,0 +1,10 @@
+[flake8]
+exclude = 
+    .git,
+    .github, 
+    .viscode, 
+    __pycache__,
+    docs/, 
+    client, 
+    airtrafficsim/data
+docstring-convention=numpy

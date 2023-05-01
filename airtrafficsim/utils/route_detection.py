@@ -4,10 +4,42 @@ from airtrafficsim.core.navigation import Nav
 
 
 def distance(a, b):
+    """
+    Helper function to calculate distance between two points
+
+    Parameters
+    ----------
+    a : [float, float]
+        Lat, Long of point a [deg, deg]
+    b : [float, float]
+        Lat, Long of point b [deg, deg]
+
+    Returns
+    -------
+    float
+        Distance between two point
+    """
     return np.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
 
 
 def point_line_distance(point, start, end):
+    """
+    Helper function to calculate distance between a point and a line
+
+    Parameters
+    ----------
+    point : [float, float]
+        Lat, Long of point a [deg, deg]
+    start : [float, float]
+        Lat, Long of the start point of the line [deg, deg]
+    end : [float, float]
+        Lat, Long of the end point of the line [deg, deg]
+
+    Returns
+    -------
+    float
+        Minimum distance between the point and the line
+    """
     if (start == end).all():
         return distance(point, start)
     else:
@@ -22,8 +54,16 @@ def point_line_distance(point, start, end):
 
 
 def rdp(points, epsilon):
-    """Reduces a series of points to a simplified version that loses detail, but
+    """
+    Reduces a series of points to a simplified version that loses detail, but
     maintains the general shape of the series.
+
+    Parameters
+    ----------
+    points : float[lat, long]
+        Trajectory points
+    epsilon : float
+        Maximum distance between the original line and the simplified line
     """
     dmax = 0.0
     index = 0
@@ -91,6 +131,23 @@ def detect_sid_star(simplified_trajectory, procedure_dict, waypoints_coord_dict)
 
 
 def get_arrival_data(airport, runway):
+    """
+    Get arrival data
+
+    Parameters
+    ----------
+    airport : string
+        Airport ICAO code
+    runway : string
+        Runway name
+
+    Returns
+    -------
+    arrivals_dict : dict
+        Arrival dictionary
+    arrival_waypoints_coord_dict : dict
+        Arrival waypoint coordinate dictionary
+    """
     lat, long, _ = Nav.get_runway_coord(airport, runway)
     arrival_procedures = Nav.get_airport_procedures(airport, "STAR")
     # Get all arrival route and related waypoints
@@ -112,6 +169,23 @@ def get_arrival_data(airport, runway):
 
 
 def get_approach_data(airport, runway):
+    """
+    Get approach data
+
+    Parameters
+    ----------
+    airport : string
+        Airport ICAO code
+    runway : string
+        Runway name
+
+    Returns
+    -------
+    approach_dict : dict
+        Approach procedures dictionary
+    approach_waypoints_coord_dict : dict
+        Approach waypoint coordinate dictionary
+    """
     lat, long, _ = Nav.get_runway_coord(airport, runway)
     approach_procedures = Nav.get_airport_procedures(airport, "APPCH")
     ils = [str for str in approach_procedures if "I" in str]

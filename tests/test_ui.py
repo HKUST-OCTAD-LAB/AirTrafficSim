@@ -41,10 +41,12 @@ def test_get_replay_dir(client):
     print(list(path.glob('DemoEnv*'))[0].name)
     assert r == {'historic': ['2018-05-01'], 
                  'simulation': [list(path.glob('WeatherDemo*'))[0].name,
+                                list(path.glob('OpenApDemo*'))[0].name,
                                 list(path.glob('FullFlightDemo*'))[0].name,
                                 list(path.glob('DemoEnv*'))[0].name,
                                 list(path.glob('ConvertHistoricDemo*'))[0].name],
                  'simulation_files': {list(path.glob('WeatherDemo*'))[0].name : [list(path.glob('WeatherDemo*/WeatherDemo*.csv'))[0].name],
+                                     list(path.glob('OpenApDemo*'))[0].name : [list(path.glob('OpenApDemo*/OpenApDemo*.csv'))[0].name],
                                      list(path.glob('FullFlightDemo*'))[0].name : [list(path.glob('FullFlightDemo*/FullFlightDemo*.csv'))[0].name],
                                      list(path.glob('DemoEnv*'))[0].name : [list(path.glob('DemoEnv*/DemoEnv*.csv'))[0].name],
                                      list(path.glob('ConvertHistoricDemo*'))[0].name : [list(path.glob('ConvertHistoricDemo*/ConvertHistoricDemo*.csv'))[0].name]}}
@@ -53,7 +55,7 @@ def test_get_replay_dir(client):
 def test_get_simulation_file(client):
     r = client.emit('getSimulationFile', callback=True)
     print(r)
-    assert r == ['ConvertHistoricDemo', 'DemoEnv', 'FullFlightDemo', 'WeatherDemo']
+    assert r == ['ConvertHistoricDemo', 'DemoEnv', 'FullFlightDemo', 'OpenApDemo', 'WeatherDemo']
 
 def test_get_replay_czml(client):
     r = client.emit('getReplayCZML', 'historic', '2018-05-01', callback=True)

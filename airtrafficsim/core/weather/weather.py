@@ -7,32 +7,51 @@ from airtrafficsim.core.weather.era5 import Era5
 
 
 class Weather:
+    """
+    Weather class
+    """
 
     def __init__(self, start_time, end_time, weather_mode, file_name):
+        """
+        Weather class constructor
+        
+        Parameters
+        ----------
+        start_time : datetime
+            Start time of the simulation
+        end_time : datetime
+            End time of the simulation
+        weather_mode : str
+            Weather mode [ISA, ERA5]
+        file_name : str
+            File name of the weather data
+        """
         self.mode = weather_mode
         """Weather mode [ISA, ERA5]"""
         self.start_time = start_time
+        """Start time of the simulation [datetime]"""
 
         # Wind speed
-        # Wind speed [knots]
         self.wind_speed = np.zeros([0])
-        # Wind direction [deg]
+        """Wind speed [knots]"""
         self.wind_direction = np.zeros([0])
-        # Wind - North [knots]
+        """Wind direction [deg]"""
         self.wind_north = np.zeros([0])
-        # Wind - East [knots]
+        """Wind - North [knots]"""
         self.wind_east = np.zeros([0])
+        """Wind - East [knots]"""
 
         # Atmospheric condition
-        # Temperature difference compare to ISA [K]
         self.d_T = np.zeros([0])
-        # Pressure difference compare to ISA [Pa]
+        """Temperature difference compare to ISA [K]"""
         self.d_p = np.zeros([0])
-        # Temperature [K]
+        """Pressure difference compare to ISA [Pa]"""
         self.T = np.zeros([0])
-        self.p = np.zeros([0])                                  # Pressure [Pa]
-        # Density [kg/m^3]
+        """Temperature [K]"""
+        self.p = np.zeros([0])       
+        """Pressure [Pa]"""
         self.rho = np.zeros([0])
+        """Density [kg/m^3]"""
 
         # Download ERA5 data
         if self.mode == "ERA5":
@@ -42,6 +61,16 @@ class Weather:
             self.radar_data = xr.open_dataset(surface)
 
     def add_aircraft(self, alt, perf: Performance):
+        """
+        Add aircraft to the weather class
+
+        Parameters
+        ----------
+        alt : float
+            Altitude of the aircraft [ft]
+        perf : Performance
+            Performance class
+        """
         self.wind_speed = np.append(self.wind_speed, 0.0)
         self.wind_direction = np.append(self.wind_direction, 0.0)
         self.wind_north = np.append(self.wind_north, 0.0)
@@ -56,6 +85,14 @@ class Weather:
             self.rho, perf.cal_air_density(self.p[-1], self.T[-1]))
 
     def del_aircraft(self, index):
+        """
+        Delete aircraft from the weather class
+
+        Parameters
+        ----------
+        index : int
+            Index of the aircraft
+        """
         self.wind_speed = np.delete(self.wind_speed, index)
         self.wind_direction = np.delete(self.wind_direction, index)
         self.wind_north = np.delete(self.wind_north, index)
@@ -67,6 +104,22 @@ class Weather:
         self.rho = np.delete(self.rho, index)
 
     def update(self, lat, long, alt, perf: Performance, global_time):
+        """
+        Update weather data
+
+        Parameters
+        ----------
+        lat : float[]
+            Latitude of the aircraft [deg]
+        long : float[]
+            Longitude of the aircraft [deg]
+        alt : float[]
+            Altitude of the aircraft [ft]
+        perf : Performance
+            Performance class
+        global_time : float
+            Time since the start of the simulation [seconds]
+        """
         if self.mode == "ERA5":
             ds = self.weather_data.sel(longitude=xr.DataArray(long, dims="points"), latitude=xr.DataArray(lat, dims="points"), time=np.datetime64(
                 (self.start_time+timedelta(seconds=global_time)).replace(second=0, minute=0), 'ns'), method="ffill")
