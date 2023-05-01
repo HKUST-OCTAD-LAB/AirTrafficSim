@@ -30,7 +30,7 @@ This allows the UI to properly stream and render the map, terrain, 3D building, 
 
 ## Developing client
 
-The client code base are written in `client/src/pages/Simulation.tsx` with a React functional component called `Simulation`. The `client/src/utils/websocket.ts` file contains the setup of the Socket.IO WebSocket connection with the server's URL and port number.
+The client code base is written in `client/src/pages/Simulation.tsx` with a React functional component called `Simulation`. The `client/src/utils/websocket.ts` file contains the setup of the Socket.IO WebSocket connection with the server's URL and port number.
 
 To run the UI development environment:
 

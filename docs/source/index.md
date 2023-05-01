@@ -42,12 +42,12 @@ AirTrafficSim is open-sourced at [https://github.com/HKUST-OCTAD-LAB/AirTrafficS
    :hidden:
    
    Navigating the UI <tutorial/UI>
-   Understanding the project structure <tutorial/structure>
+   Understanding the data folder <tutorial/data>
    Replaying data <tutorial/replay>
    Creating a simulation environment <tutorial/creating_env>
    Running a simulation <tutorial/simulation>
    Adding flight plan <tutorial/flight_plan>
-   Using historical weather database <tutorial/weather>
+   Using weather database <tutorial/weather>
    Converting historical data <tutorial/historic>
 ```
 
@@ -56,7 +56,9 @@ AirTrafficSim is open-sourced at [https://github.com/HKUST-OCTAD-LAB/AirTrafficS
    :hidden:
    
    Development guide <development/guide>
+   Understanding the project structure <development/structure>
    Web client <development/client>
    Documentation <development/documentation>
+   Testing <development/test>
    AirTrafficSim API reference <api/index>
 ```
