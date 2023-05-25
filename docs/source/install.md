@@ -14,13 +14,13 @@ Then, please initialise AirTrafficSim by specifying a folder path to create a sy
 
 ```bash
 conda activate airtrafficsim
-airtrafficsim -- init <path to a folder>
+airtrafficsim --init <path to a folder>
 ```
 This will allow you to provide or retrieve any data and create simulation environments for AirTrafficSim through this folder alias. Please visit the [documentation](https://hkust-octad-lab.github.io/AirTrafficSim/index.html) for more information.
 
 ```{attention}
 
-After installation, please also download, unzip, and store BADA 3.15 data files in `airtrafficsim_data/performance/BADA/`. You will need to follow the instructions to request a license. In addition, please follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to set up the API key for the weather database from ECMWF Climate Data Store.
+After installation, please also download, unzip, and store BADA 3.15 data files in `airtrafficsim_data/performance/BADA/`. You will need to follow the instructions from [EUROCONTROL](https://www.eurocontrol.int/model/bada) to request a license. In addition, please follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to set up the API key for the weather database from ECMWF Climate Data Store.
 ```
 
 Please be reminded to activate the environment each time you want to use AirTrafficSim:
