@@ -13,6 +13,7 @@ authors:
   - name: Chris HC. Nguyen
     affiliation: 1
   - name: Go Nam Lui
+    corresponding: true # (This is how to denote the corresponding author)
     affiliation: 1
   - name: Rhea P. Liem
     corresponding: true # (This is how to denote the corresponding author)
