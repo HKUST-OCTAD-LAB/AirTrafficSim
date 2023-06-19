@@ -34,7 +34,7 @@ To facilitate microscopic ATM research, an agent-based simulation and visualizat
 # Summary
 
 
-![Architecture of AirTrafficSim.\label{fig:Architecture}](figures/Architecture.png){ width=75% }
+![Architecture of AirTrafficSim.\label{fig:Architecture}](figures/Architecture.png){ width=90% }
 
 AirTrafficSim is a web-based air traffic simulation software written in Python and JavaScript. It is designed to visualize historical and research data, perform microscopic studies of air traffic movement with the integration of a weather database, and evaluate the performance of ATM algorithms. \autoref{fig:Architecture} shows the architecture of AirTrafficSim.
 
