@@ -23,7 +23,7 @@ AirTrafficSim is a web-based air traffic simulation software written in Python a
 
 ## Credits
 
-If you find AirTrafficSim useful for your research, please cite the following until any relevant material is published:
+If you find AirTrafficSim useful for your research, please cite the following:
 
 ```bibtex
 @article{Hui2023,
