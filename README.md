@@ -26,12 +26,17 @@ AirTrafficSim is a web-based air traffic simulation software written in Python a
 If you find AirTrafficSim useful for your research, please cite the following until any relevant material is published:
 
 ```bibtex
-@software{AirTrafficSim,
-  author  = {Ka Yiu Hui, Chris HC. Nguyen, Go Nam Lui, Rhea P. Liem},
-  title   = {AirTrafficSim},
-  url     = {https://github.com/HKUST-OCTAD-LAB/AirTrafficSim},
-  version = {0.0.1},
-  date    = {2023-05-01},
+@article{Hui2023,
+  title = {AirTrafficSim: An open-source web-based air traffic simulation platform.}, 
+  author = {Ka Yiu Hui and Chris Hc. Nguyen and Go Nam Lui and Rhea P. Liem}, 
+  journal = {Journal of Open Source Software},
+  publisher = {The Open Journal}, 
+  year = {2023}, 
+  volume = {8}, 
+  number = {86}, 
+  pages = {4916},
+  doi = {10.21105/joss.04916}, 
+  url = {https://doi.org/10.21105/joss.04916}
 }
 ```
 
