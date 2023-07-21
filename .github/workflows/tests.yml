@@ -62,7 +62,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: HKUST-OCTAD-LAB/AirTrafficSim-data
-        ref: 'main'
         ssh-key: ${{ secrets.SSH_KEY }}
         path: AirTrafficSim-data
 
