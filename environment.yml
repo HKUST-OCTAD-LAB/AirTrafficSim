@@ -1,4 +1,4 @@
-name: airtrafficsim
+name: airtrafficsim_develop
 channels:
   - conda-forge
   - defaults
