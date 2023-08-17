@@ -54,7 +54,7 @@ Then, please initialise AirTrafficSim by specifying a folder path to create a sy
 
 ```
 conda activate airtrafficsim
-airtrafficsim -- init <path to a folder>
+airtrafficsim --init <path to a folder>
 ```
 This will alow you to provide or retrieve any data and create simulation environments to AirTrafficSim through this folder alias. Please visit the [documentation](https://hkust-octad-lab.github.io/AirTrafficSim/index.html) for more information.
 
