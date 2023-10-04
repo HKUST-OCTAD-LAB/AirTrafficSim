@@ -15,7 +15,7 @@ git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
 conda env create -f environment.yml
 
 cd AirTrafficSim
-conda activate airtrafficsim
+conda activate airtrafficsim_develop
 <!-- With UI -->
 python -m airtrafficsim
 <!-- Without UI -->
