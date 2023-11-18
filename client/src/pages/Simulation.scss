@@ -1,0 +1,17 @@
+main {
+    background-color: red;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+
+    > #map {
+        width: 70%;
+        height: 100%;
+    }
+
+    > #panel {
+        width: 30%;
+        height: 100%;
+    }
+}

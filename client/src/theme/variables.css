@@ -1,3 +1,7 @@
+.cesium-viewer-bottom {
+  display: none !important;
+}
+
 /* Ionic Variables and Theming. For more info, please see:
 http://ionicframework.com/docs/theming/ */
 
