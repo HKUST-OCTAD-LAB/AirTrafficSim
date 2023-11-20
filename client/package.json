@@ -1,59 +1,33 @@
 {
-  "name": "client",
-  "version": "0.0.1",
+  "name": "client_new",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
   "dependencies": {
-    "@craco/craco": "^7.1.0",
-    "@ionic/react": "^7.5.5",
-    "@ionic/react-router": "^7.5.5",
-    "@testing-library/jest-dom": "^6.1.4",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/user-event": "^14.5.1",
     "cesium": "^1.111.0",
-    "craco-cesium": "^1.2.0",
-    "ionicons": "^7.2.1",
-    "plotly.js-gl2d-dist-min": "^2.27.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-plotly.js": "^2.6.0",
-    "react-router": "^5.0.1",
-    "react-router-dom": "^5.0.1",
     "resium": "^1.17.2",
     "sass": "^1.69.5",
-    "socket.io-client": "^4.7.2",
-    "typescript": "^5.2.2"
-  },
-  "scripts": {
-    "start": "craco start",
-    "build": "BUILD_PATH='../airtrafficsim/data/client/build' craco build",
-    "postbuild": "cd ../airtrafficsim/data/client/ && rm -f build.zip && zip -r build.zip .",
-    "test": "craco test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "socket.io-client": "^4.7.2"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.8",
-    "@types/node": "^20.9.1",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
-    "@types/react-router": "^5.1.20",
-    "@types/react-router-dom": "^5.3.3"
-  },
-  "description": "An Ionic project"
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "eslint": "^8.53.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.4",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0",
+    "vite-plugin-cesium": "^1.2.22"
+  }
 }

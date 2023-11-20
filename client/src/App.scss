@@ -5,6 +5,10 @@ main {
     display: flex;
     flex-direction: row;
 
+    .cesium-viewer-bottom {
+        display: none !important;
+    }
+
     > #map {
         width: 70%;
         height: 100%;

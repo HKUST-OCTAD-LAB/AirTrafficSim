@@ -83,16 +83,16 @@ const SimulationOld: React.FC = () => {
 
 
     useIonViewDidEnter(() => {
-        if (viewerRef.current?.cesiumElement) {
-            const viewer = viewerRef.current.cesiumElement;
-            viewer.dataSources.add(replayDataSource);
-            viewer.dataSources.add(simulationDataSource);
-            viewer.dataSources.add(navDataSource);
-            viewer.dataSources.add(era5WindDataSource);
-            viewer.dataSources.add(era5RainDataSource);
-            viewer.dataSources.add(radarImageDataSource);
-            setStartTime(viewer.clock.startTime)
-        }
+        // if (viewerRef.current?.cesiumElement) {
+        //     const viewer = viewerRef.current.cesiumElement;
+        //     viewer.dataSources.add(replayDataSource);
+        //     viewer.dataSources.add(simulationDataSource);
+        //     viewer.dataSources.add(navDataSource);
+        //     viewer.dataSources.add(era5WindDataSource);
+        //     viewer.dataSources.add(era5RainDataSource);
+        //     viewer.dataSources.add(radarImageDataSource);
+        //     setStartTime(viewer.clock.startTime)
+        // }
 
         setConnected(socket.connected);
 

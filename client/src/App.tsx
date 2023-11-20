@@ -1,39 +1,84 @@
-import { Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
+import { useState, useContext, useCallback } from "react";
+import { CesiumContext } from "./context/CesiumContext";
+import * as Cesium from 'cesium';
+import { Viewer, CesiumComponentRef, ImageryLayer } from "resium";
 
-/* Core CSS required for Ionic components to work properly */
-import '@ionic/react/css/core.css';
+import './App.scss';
 
-/* Basic CSS for apps built with Ionic */
-import '@ionic/react/css/normalize.css';
-import '@ionic/react/css/structure.css';
-import '@ionic/react/css/typography.css';
+Cesium.Ion.defaultAccessToken = import.meta.env.VITE_CESIUMION_ACCESS_TOKEN!;
+const bingImagery = Cesium.Ion.defaultAccessToken ? await Cesium.createWorldImageryAsync() : undefined;
+const terrainProvider = Cesium.Ion.defaultAccessToken ? await Cesium.createWorldTerrainAsync() : undefined;
+const osmBuilding = Cesium.Ion.defaultAccessToken ? await Cesium.createOsmBuildingsAsync({
+    style: new Cesium.Cesium3DTileStyle({ color: 'color("grey")' })
+}) : undefined;
+const dataSources = {
+    replay: new Cesium.CzmlDataSource(),
+    simulation: new Cesium.CzmlDataSource(),
+    nav: new Cesium.CzmlDataSource(),
+    era5Wind: new Cesium.CzmlDataSource(),
+    era5Rain: new Cesium.CzmlDataSource(),
+    radarImage: new Cesium.CzmlDataSource(),
+}
 
-/* Optional CSS utils that can be commented out */
-import '@ionic/react/css/padding.css';
-import '@ionic/react/css/float-elements.css';
-import '@ionic/react/css/text-alignment.css';
-import '@ionic/react/css/text-transformation.css';
-import '@ionic/react/css/flex-utils.css';
-import '@ionic/react/css/display.css';
+// time {
+    // start: number
+    // stop: number
+    // now: number
+// }
 
-/* Theme variables */
-import './theme/variables.css';
-import Simulation from './pages/Simulation';
+const App = () => {
+    const [viewerRef, setViewerRef] = useState<CesiumComponentRef<Cesium.Viewer> | null>(null);
+    const [timeStart, setTimeStart] = useState<number>(0);
+    const [timeStop, setTimeStop] = useState<number>(0);
+    const [timeNow, setTimeNow] = useState<number>(0);
 
-setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/">
-          <Simulation />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+    const handleRef = useCallback((ref: CesiumComponentRef<Cesium.Viewer> | null) => {
+        if (ref && ref.cesiumElement && !viewerRef) {
+            setViewerRef(ref);
+            ref.cesiumElement.scene.primitives.add(osmBuilding);
+            ref.cesiumElement.dataSources.add(dataSources.replay);
+            ref.cesiumElement.dataSources.add(dataSources.simulation);
+            ref.cesiumElement.dataSources.add(dataSources.nav);
+            ref.cesiumElement.dataSources.add(dataSources.era5Wind);
+            ref.cesiumElement.dataSources.add(dataSources.era5Rain);
+            ref.cesiumElement.dataSources.add(dataSources.radarImage);
+        }
+    }, [viewerRef]);
+
+    return <CesiumContext.Provider value={{ viewerRef: viewerRef }}>
+        <main>
+            <Viewer
+                id="map"
+                ref={handleRef}
+                animation={false}
+                timeline={false}
+                selectionIndicator={false}
+                homeButton={false}
+                baseLayerPicker={false}
+                sceneModePicker={false}
+                fullscreenButton={false}
+                navigationHelpButton={false}
+                geocoder={false}
+                terrainProvider={terrainProvider}
+            >
+                <ImageryLayer imageryProvider={bingImagery!} />
+            </Viewer>
+
+            <div id="panel">
+                {viewerRef ? <Panel /> : "Loading..."}
+            </div>
+        </main>
+    </CesiumContext.Provider>
+};
+
+const Panel = () => {
+    const { viewerRef } = useContext(CesiumContext);
+    const [connected, setConnected] = useState<boolean>(false);
+
+    console.log("component1 rendered", viewerRef);
+
+    return <div>Component1</div>;
+};
 
 export default App;
