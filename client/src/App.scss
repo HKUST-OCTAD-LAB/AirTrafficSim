@@ -1,5 +1,9 @@
+@use '@carbon/react' with (
+  $font-path: '@ibm/plex'
+);
+
 main {
-    background-color: red;
+    background-color: #222;
     width: 100%;
     height: 100%;
     display: flex;

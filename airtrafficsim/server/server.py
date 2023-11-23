@@ -262,5 +262,5 @@ def serve_client():
 def run_server(port=6111, host="127.0.0.1"):
     # Change host to 0.0.0.0 during deployment
     """Start the backend server."""
-    print("Running server at http://localhost:"+str(port))
+    print(f"Running server at http://{host}:{port}")
     socketio.run(app, port=port, host=host)

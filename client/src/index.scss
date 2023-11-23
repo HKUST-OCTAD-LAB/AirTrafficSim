@@ -1,3 +1,10 @@
+@import '@carbon/themes/scss/themes';
+// Use the gray 100 theme
+$carbon--theme: $carbon--theme--g100;
+@include carbon--theme();
+
+@import 'carbon-components/scss/globals/scss/styles.scss';
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   color: rgba(255, 255, 255, 0.87);

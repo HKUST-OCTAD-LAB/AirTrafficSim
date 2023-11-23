@@ -2,6 +2,8 @@ import { useState, useContext, useCallback } from "react";
 import { CesiumContext } from "./context/CesiumContext";
 import * as Cesium from 'cesium';
 import { Viewer, CesiumComponentRef, ImageryLayer } from "resium";
+import { socket } from "./socket";
+import { Button } from '@carbon/react';
 
 import './App.scss';
 
@@ -20,18 +22,9 @@ const dataSources = {
     radarImage: new Cesium.CzmlDataSource(),
 }
 
-// time {
-    // start: number
-    // stop: number
-    // now: number
-// }
-
 const App = () => {
     const [viewerRef, setViewerRef] = useState<CesiumComponentRef<Cesium.Viewer> | null>(null);
-    const [timeStart, setTimeStart] = useState<number>(0);
-    const [timeStop, setTimeStop] = useState<number>(0);
-    const [timeNow, setTimeNow] = useState<number>(0);
-
+    const [connected, setConnected] = useState<boolean>(false);
 
     const handleRef = useCallback((ref: CesiumComponentRef<Cesium.Viewer> | null) => {
         if (ref && ref.cesiumElement && !viewerRef) {
@@ -43,10 +36,26 @@ const App = () => {
             ref.cesiumElement.dataSources.add(dataSources.era5Wind);
             ref.cesiumElement.dataSources.add(dataSources.era5Rain);
             ref.cesiumElement.dataSources.add(dataSources.radarImage);
+
+            setConnected(socket.connected);
+            socket.on("connect", () => {
+                setConnected(true);
+                console.log("connected");
+            });
+            socket.on("disconnect", () => setConnected(false));
+            // socket.on("simulation_data", msg => {
+            //     console.log("simulation_data", msg);
+            // });
+            // socket.on("simulation_env", msg => {
+            //     console.log("simulation_env", msg);
+            // });
+            // socket.on("loading_msg", msg => {
+            //     console.log("loading_msg", msg);
+            // });
         }
     }, [viewerRef]);
 
-    return <CesiumContext.Provider value={{ viewerRef: viewerRef }}>
+    return <CesiumContext.Provider value={{ viewerRef: viewerRef, connected: connected }}>
         <main>
             <Viewer
                 id="map"
@@ -73,12 +82,63 @@ const App = () => {
 };
 
 const Panel = () => {
-    const { viewerRef } = useContext(CesiumContext);
-    const [connected, setConnected] = useState<boolean>(false);
+    const { viewerRef, connected } = useContext(CesiumContext);
+    // const [timeNow, setTimeNow] = useState<number>(0);
+    // const [timeStart, setTimeStart] = useState<number>(0);
+    // const [timeStop, setTimeStop] = useState<number>(0);
+    // const [timeSpeed, setTimeSpeed] = useState<number>(0);
 
-    console.log("component1 rendered", viewerRef);
+    const getReplayDirs = () => {
+        console.log("get_replay_dirs");
+    }
 
-    return <div>Component1</div>;
+    const getReplayCZML = (file: string) => {
+        console.log("get_replay_czml", file);
+    }
+
+    const getGraphHeader = (graph_type: string) => {
+        console.log("get_graph_header");
+    }
+
+    const getGraphData = () => {
+        console.log("get_graph_data");
+    }
+
+    const getSimulationFile = () => {
+        console.log("get_simulation_file");
+    }
+
+    const runSimulation = () => {
+        console.log("run_simulation");
+    }
+
+    const clearData = () => {
+        dataSources.replay.entities.removeAll();
+        dataSources.simulation.entities.removeAll();
+    }
+
+    const getNav = () => {
+        console.log("get_nav");
+    }
+
+    const getERA5Wind = () => {
+        console.log("get_era5_wind");
+    }
+    
+    const getEra5Rain = () => {
+        console.log("get_era5_rain");
+    }
+
+    const getRadarImage = () => {
+        console.log("get_radar_image");
+    }
+
+    return <div>
+        <div>AirTrafficSim ({connected ? "CONNECTED" : "DISCONNECTED"})</div>
+        <div>
+            <Button size="sm">Test</Button>
+        </div>
+    </div>
 };
 
 export default App;

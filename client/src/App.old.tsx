@@ -21,27 +21,7 @@ import {
 } from "cesium";
 import { Viewer, Globe, Cesium3DTileset, CesiumComponentRef, Scene, ImageryLayer, Clock, Camera } from "resium";
 import Plot from 'react-plotly.js';
-import socket from "../utils/websocket"
 
-Ion.defaultAccessToken = process.env.REACT_APP_CESIUMION_ACCESS_TOKEN!;
-const terrainProvider = await createWorldTerrainAsync();
-const osmBuilding = IonResource.fromAssetId(96188);
-const osmBuildingstyle = new Cesium3DTileStyle({
-    color: 'color("grey")'
-});
-const bingImagery = await createWorldImageryAsync();
-const simpleImagery = new OpenStreetMapImageryProvider({ url: 'https://stamen-tiles.a.ssl.fastly.net/toner-background/' });
-// const mapboxImagery = new MapboxStyleImageryProvider({
-//     styleId: 'dark-v10',
-//     accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN!
-// });
-
-const replayDataSource = new cesiumCzmlDataSource();
-const simulationDataSource = new cesiumCzmlDataSource();
-const navDataSource = new cesiumCzmlDataSource();
-const era5WindDataSource = new cesiumCzmlDataSource();
-const era5RainDataSource = new cesiumCzmlDataSource();
-const radarImageDataSource = new cesiumCzmlDataSource();
 
 const defaultZoom = new HeadingPitchRange(0, -90, 500000);
 
