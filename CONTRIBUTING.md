@@ -10,15 +10,15 @@ The roadmap of AirTrafficSim can be found in the [project board](https://github.
 
 If you would like to contribute to AirTrafficSim, please clone or fork this repository and create pull requests by creating a new channel in this repository such that the CI service can run automated tests and build tasks. You may download AirTrafficSim with:
 
-```
+```sh
 git clone https://github.com/HKUST-OCTAD-LAB/AirTrafficSim.git
 conda env create -f environment.yml
 
 cd AirTrafficSim
 conda activate airtrafficsim
-<!-- With UI -->
+# with ui
 python -m airtrafficsim
-<!-- Without UI -->
+# without ui
 python -m airtrafficsim --headless <environment name>
 ```
 

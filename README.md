@@ -1,4 +1,4 @@
-<img src="docs/source/images/Logo-full.png" width=50% />
+<img src="docs/assets/img/Logo-full.png" width=50% />
 
 <!-- ![Tests](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/actions/workflows/tests.yml/badge.svg) -->
 <!-- [![Code Coverage](https://img.shields.io/codecov/c/github/HKUST-OCTAD-LAB/AirTrafficSim.svg)](https://codecov.io/gh/HKUST-OCTAD-LAB/AirTrafficSim) -->
@@ -21,7 +21,7 @@ AirTrafficSim is a web-based air traffic simulation software written in Python a
 - Simulation and visualisation with weather data from [ECMWF ERA5](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview) and custom radar image (HKO 256km radar images)
 - Aircraft is controlled with  an API interface to simulate ATC interaction
 
-![AirTrafficSim](docs/source/images/UI_features.png)
+![AirTrafficSim](docs/assets/img/UI_features.png)
 
 
 ## Credits
@@ -52,17 +52,17 @@ Linux or [WSL](https://learn.microsoft.com/en-us/windows/wsl/) is recommended fo
 
 It is recommended to install AirTrafficSim in a new conda environment:
 
-```
+```sh
 conda create -n airtrafficsim -c conda-forge airtrafficsim 
 ```
 
 Then, please initialise AirTrafficSim by specifying a folder path to create a symbolic link to the [airtrafficsim_data](airtrafficsim/data/) folder:
 
-```
+```sh
 conda activate airtrafficsim
 airtrafficsim --init <path to a folder>
 ```
-This will alow you to provide or retrieve any data and create simulation environments to AirTrafficSim through this folder alias. Please visit the [documentation](https://hkust-octad-lab.github.io/AirTrafficSim/index.html) for more information.
+This will alow you to provide or retrieve any data and create simulation environments to AirTrafficSim through this folder alias. Please visit the [documentation](https://hkust-octad-lab.github.io/AirTrafficSim/) for more information.
 
 After installation, please also download, unzip, and store BADA 3.15 data files in [airtrafficsim_data/performance/BADA](airtrafficsim/data/performance/BADA/). In addition, follow [this guide](https://cds.climate.copernicus.eu/api-how-to) to set up the API key for the weather database from ECMWF Climate Data Store.
 

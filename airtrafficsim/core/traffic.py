@@ -24,8 +24,6 @@ class Traffic:
         ----------
         file_name : String
             Output file name
-        N :  int
-            Total number of aircraft
         """
 
         # Memory and index control vairable:

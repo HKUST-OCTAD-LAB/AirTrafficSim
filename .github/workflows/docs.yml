@@ -1,48 +1,44 @@
-name: Docs
+name: build docs
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-    
   workflow_dispatch:
-  
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -el {0}
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Cache conda
-      uses: actions/cache@v2
-      env:
-        # Increase this value to reset cache if etc/example-environment.yml has not changed
-        CACHE_NUMBER: 0
-      with:
-        path: ~/conda_pkgs_dir
-        key:
-          ${{ runner.os }}-conda-doc-${{ env.CACHE_NUMBER }}-${{ hashFiles('environment.yml') }}
+  push:
+    branches:
+      - main
 
-    - name: Setup miniconda
-      uses: conda-incubator/setup-miniconda@v2
-      with:
-        activate-environment: airtrafficsim
-        channel-priority: strict
-        environment-file: environment.yml
-        python-version: 3.11
-        use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
-        
-    - name: Build HTML
-      run: |
-        sphinx-build -b html docs/source/ docs/build/html
-        
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      if: github.ref == 'refs/heads/main'
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docs/build/html
+permissions:
+  contents: write
+jobs:
+  deploy:
+    if: startsWith(github.ref, 'refs/tags/') # only deploy pages on release tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+
+      - name: Install the project
+        run: uv sync
+
+      - run: uv run mkdocs gh-deploy --force

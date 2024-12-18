@@ -1,0 +1,117 @@
+site_name: airtrafficsim
+site_description: A web-based air traffic simulation software written in Python and TypeScript.
+repo_name: HKUST-OCTAD-LAB/AirTrafficSim
+repo_url: https://github.com/HKUST-OCTAD-LAB/AirTrafficSim
+site_url: https://hkust-octad-lab.github.io/AirTrafficSim/
+nav:
+  - Home: "README.md"
+  - Installation: "install.md"
+  - Getting Started: "start.md"
+  - Tutorial:
+    - Navigating the UI: "tutorial/UI.md"
+    - Understanding the data folder: "tutorial/data.md"
+    - Replaying data: "tutorial/replay.md"
+    - Creating a simulation environment: "tutorial/creating_env.md"
+    - Running a simulation: "tutorial/simulation.md"
+    - Adding flight plan: "tutorial/flight_plan.md"
+    - Using weather database: "tutorial/weather.md"
+    - Converting historical data: "tutorial/historic.md"
+    - Using OpenAP model: "tutorial/openap.md"
+  - Development:
+    - Development guide: "development/guide.md"
+    - Understanding the project structure: "development/structure.md"
+    - Web client: "development/client.md"
+    - Documentation: "development/documentation.md"
+    - Testing: "development/test.md"
+  - API reference: "api/index.md"
+
+theme:
+  name: material
+  features:
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - navigation.expand
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+plugins:
+  - search
+  - social
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [airtrafficsim]
+          import:
+            - https://docs.python.org/3/objects.inv
+            - https://numpy.org/doc/stable/objects.inv
+            - https://pola-rs.github.io/polars/py-polars/html/objects.inv # unstable, see https://github.com/pola-rs/polars/issues/7027
+          options:
+            inherited_members: true
+            members_order: source
+            separate_signature: true
+            show_signature_annotations: true
+            merge_init_into_class: true
+            docstring_section_style: table
+            signature_crossrefs: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_source: false
+            summary: true
+            show_submodules: true
+            docstring_style: numpy # TODO: move to sphinx
+      enable_inventory: true
+markdown_extensions:
+  - abbr
+  - attr_list
+  - admonition
+  - footnotes
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.blocks.tab:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tilde
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      pygments_lang_class: true
+  - pymdownx.inlinehilite:
+      style_plain_text: py3
+  - pymdownx.magiclink
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: "¤"
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - assets/js/katex.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js
+
+extra_css:
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css

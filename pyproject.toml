@@ -4,14 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "AirTrafficSim"
-version = "0.0.4"
+version = "0.2.0"
 authors = [
     { name = "Frankie Hui", email = "kyhuiaf@connect.ust.hk" },
 ]
 description = "A web-based air traffic simulation software written in Python and TypeScript."
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 keywords = ["air transportation", "atm", "simulations", "visualisation"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -61,7 +61,10 @@ openap = [
 
 [dependency-groups]
 dev = [
+    "black>=24.10.0",
     "ipykernel>=6.29.5",
+    "mkdocs-material[imaging]>=9.5.49",
+    "mkdocstrings-python>=1.12.2",
     "mypy>=1.13.0",
     "ruff>=0.8.3",
 ]
@@ -88,13 +91,13 @@ lint.select = [
     "RUF",
 ]
 line-length = 80
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint.isort]
 known-first-party = ["numpy", "pandas"]
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.10"
 platform = "posix"
 color_output = true
 pretty = true

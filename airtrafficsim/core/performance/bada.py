@@ -18,15 +18,9 @@ class Bada:
     BADA Performance class
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize BADA performance parameters
-
-        Parameters
-        ----------
-        N: int
-            Number of aircrafts. Maximum size of performance array (pre-initialize to eliminate inefficient append)
-            TODO: Revise the initial estimate
         """
         # ----------------------------  Operations Performance File (OPF) section 3.11 -----------------------------------------
         # Aircraft type
@@ -365,11 +359,8 @@ class Bada:
         self: Performance class instance
             Used to add data to the performance array.
 
-        ICAO: string
+        icao: string
             ICAO code of the specific aircraft.
-
-        mass: int
-            Mass of aircraft [kg]
 
         mass_class: int
             Aircraft mass for specific flight. To be used for APF. 1 = LO, 2 = AV, 3 = HI TODO: useful?
@@ -660,7 +651,7 @@ class Bada:
         configuration : float[]
             Configuration from Traffic class [Configuration enum]
 
-         H_p : float[]
+        H_p : float[]
             Geopotential pressuer altitude [ft]
 
         V_tas : float[]
@@ -730,7 +721,7 @@ class Bada:
         m: float[]
             Aircraft mass [kg]
 
-        v_ref: float[]
+        V_ref: float[]
             Velocity reference (e.g. v_stall) [m/s]
 
         Returns
@@ -816,7 +807,7 @@ class Bada:
         V_tas: float[]
             True airspeed [m/s]
 
-        bank_angles: float[]
+        bank_angle: float[]
             Bank angles from Traffic class [deg]
 
         m: float[]
@@ -1010,7 +1001,7 @@ class Bada:
         Thr_max_climb: float[]
             Maximum climb thrust [N]
 
-        Configuration: float[]
+        configuration: float[]
             Configuration from Traffic class [Configuration enum]
 
         Returns
@@ -1324,9 +1315,6 @@ class Bada:
 
         H_p_trans: float[]
             Transition altitude [ft]
-
-        m: float[]
-            Aircraft mass [kg]
 
         flight_phase: float[]
             Flight phase from Traffic class [Flight_phase enum]

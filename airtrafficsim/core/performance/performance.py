@@ -120,7 +120,7 @@ class Performance:
 
         Parameters
         ----------
-        m: float[]
+        mass: float[]
             Aircraft mass [kg]
 
         n: int
@@ -140,9 +140,6 @@ class Performance:
 
         H_p_trans: float[]
             Transition altitude [ft]
-
-        m: float[]
-            Aircraft mass [kg]
 
         flight_phase: float[]
             Flight phase from Traffic class [Flight_phase enum]
@@ -165,23 +162,23 @@ class Performance:
     # ----------------------------  Atmosphere model (Ref: BADA user menu section 3.1) -----------------------------------------
 
     def cal_temperature(self, H_p, d_T):
-        r"""
+        """
         Calculate Temperature (Equation 3.1-12~16)
 
         Parameters
         ----------
-        H\_p: float[]
+        H_p: float[]
             Geopotential pressuer altitude [m]
 
-        d\_T: float[]
+        d_T: float[]
             Temperature differential at MSL [K]
 
         Returns
         -------
-        T\_< if below tropopause: float[]
+        T_< if below tropopause: float[]
             Temperature [K]
 
-        T\_trop or T\_> if equal to or above tropopause: float[]
+        T_trop or T_> if equal to or above tropopause: float[]
             Temperature [K]
         """
         return np.where(
@@ -198,21 +195,21 @@ class Performance:
 
         Parameters
         ----------
-        H\_p: float[]
+        H_p: float[]
             Geopotential pressuer altitude [m]
 
         T: float[]
             Temperature from cal_temperature()[K]
 
-        d\_T: float[]
+        d_T: float[]
             Temperature differential at MSL [K]
 
         Returns
         -------
-        p\_< or p\_trop if below or equal to tropopause: float[]
+        p_< or p_trop if below or equal to tropopause: float[]
             Pressure [Pa]
 
-        p\_> if above tropopause: float[]
+        p_> if above tropopause: float[]
             Pressure [Pa]
         """
         return np.where(
@@ -410,12 +407,6 @@ class Performance:
 
         Parameters
         ----------
-        V_cas: float[]
-            Calibrated air speed [m/s]
-
-        M: float[]
-            Mach number [dimensionless]
-
         d_T: float[]
             Temperature differential at MSL [K]
 
@@ -739,7 +730,7 @@ class Performance:
         D: float[]
             Aerodynamic drag [N]
 
-        f{M}: float[]
+        f_M: float[]
             Energy share factor [dimenesionless]
 
         Thr: float[]
@@ -820,7 +811,7 @@ class Performance:
         m: float[]
             Aircraft mass [kg]
 
-        f{M}: float[]
+        f_M: float[]
             Energy share factor [dimenesionless]
 
         rocd: float[]
@@ -981,8 +972,6 @@ class Performance:
             Flight phase from Traffic class [Flight_phase enum]
         tas : float[]
             True airspeed [kt]
-        thrust : float[]
-            Thrust [N]
         alt : _type_
             Altitude [ft]
 
@@ -1030,7 +1019,7 @@ class Performance:
 
         Parameters
         ----------
-        Rate of turn : float[]
+        rate_of_turn: float[]
             Rate of turn [deg/s]
 
         V_tas: float[]
