@@ -10,46 +10,60 @@ socketio : SocketIO()
 
 """
 
-from pathlib import Path
 from importlib import import_module
+from pathlib import Path
+
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-# import eventlet
 
-from airtrafficsim.server.replay import Replay
 from airtrafficsim.server.data import Data
+
+# import eventlet
+from airtrafficsim.server.replay import Replay
 
 # eventlet.monkey_patch()
 
-app = Flask(__name__, static_url_path='', static_folder=Path(__file__).parent.parent.joinpath(
-    'data/client/build'), template_folder=str(Path(__file__).parent.parent.joinpath('data/client/build')))
-socketio = SocketIO(app, cors_allowed_origins='*', max_http_buffer_size=1e8,
-                    ping_timeout=60, async_mode='eventlet', logger=True)  # engineio_logger=True
+app = Flask(
+    __name__,
+    static_url_path="",
+    static_folder=Path(__file__).parent.parent.joinpath("data/client/build"),
+    template_folder=str(
+        Path(__file__).parent.parent.joinpath("data/client/build")
+    ),
+)
+socketio = SocketIO(
+    app,
+    cors_allowed_origins="*",
+    max_http_buffer_size=1e8,
+    ping_timeout=60,
+    async_mode="eventlet",
+    logger=True,
+)  # engineio_logger=True
 
 
-@socketio.on('connect')
+@socketio.on("connect")
 def test_connect():
     """
-    Debug function to test whether the client is connected. 
+    Debug function to test whether the client is connected.
     """
-    print('Client connected')
+    print("Client connected")
 
 
-@socketio.on('disconnect')
+@socketio.on("disconnect")
 def test_disconnect():
     """
-    Debug function to inform the client is disconnected. 
+    Debug function to inform the client is disconnected.
     """
-    print('Client disconnected')
+    print("Client disconnected")
 
 
-@socketio.on('getReplayDir')
+@socketio.on("getReplayDir")
 def get_replay_dir():
     """Get the list of directories in data/replay"""
     return Replay.get_replay_dir()
 
 
-@socketio.on('getReplayCZML')
+@socketio.on("getReplayCZML")
 def get_replay_czml(replayCategory, replayFile):
     """
     Generate a CZML file to client for replaying data.
@@ -69,7 +83,7 @@ def get_replay_czml(replayCategory, replayFile):
     return Replay.get_replay_czml(replayCategory, replayFile)
 
 
-@socketio.on('getGraphHeader')
+@socketio.on("getGraphHeader")
 def get_graph_header(mode, replayCategory, replayFile):
     """
     Get the list of parameters name of a file suitable for plotting graph.
@@ -91,7 +105,7 @@ def get_graph_header(mode, replayCategory, replayFile):
     return Replay.get_graph_header(mode, replayCategory, replayFile)
 
 
-@socketio.on('getGraphData')
+@socketio.on("getGraphData")
 def get_graph_data(mode, replayCategory, replayFile, simulationFile, graph):
     """
     Get the data for the selected parameters to plot a graph.
@@ -110,10 +124,12 @@ def get_graph_data(mode, replayCategory, replayFile, simulationFile, graph):
     {}
         JSON file for graph data for Plotly.js
     """
-    return Replay.get_graph_data(mode, replayCategory, replayFile, simulationFile, graph)
+    return Replay.get_graph_data(
+        mode, replayCategory, replayFile, simulationFile, graph
+    )
 
 
-@socketio.on('getSimulationFile')
+@socketio.on("getSimulationFile")
 def get_simulation_file():
     """
     Get the list of files in airtrafficsim/env/
@@ -124,13 +140,15 @@ def get_simulation_file():
         List of simulation environment file names
     """
     simulation_list = []
-    for file in sorted(Path(__file__).parent.parent.joinpath('data/environment/').glob('*.py')):
-        if file.name != '__init__.py':
-            simulation_list.append(file.name.removesuffix('.py'))
+    for file in sorted(
+        Path(__file__).parent.parent.joinpath("data/environment/").glob("*.py")
+    ):
+        if file.name != "__init__.py":
+            simulation_list.append(file.name.removesuffix(".py"))
     return simulation_list
 
 
-@socketio.on('runSimulation')
+@socketio.on("runSimulation")
 def run_simulation(file):
     """
     Start the simulation given file name.
@@ -142,18 +160,29 @@ def run_simulation(file):
     """
     print(file)
     if file == "ConvertHistoricDemo":
-        socketio.emit('loadingMsg', 'Converting historic data to simulation data... <br> Please check the terminal for progress.')
+        socketio.emit(
+            "loadingMsg",
+            "Converting historic data to simulation data... <br> Please check the terminal for progress.",
+        )
     elif file == "WeatherDemo":
-        socketio.emit('loadingMsg', 'Downloading weather data... <br> Please check the terminal for progress.')
+        socketio.emit(
+            "loadingMsg",
+            "Downloading weather data... <br> Please check the terminal for progress.",
+        )
     else:
-        socketio.emit('loadingMsg', 'Running simulation... <br> Please check the terminal for progress.')   
+        socketio.emit(
+            "loadingMsg",
+            "Running simulation... <br> Please check the terminal for progress.",
+        )
     socketio.sleep(0)
-    Env = getattr(import_module('airtrafficsim.data.environment.'+file, '...'), file)
+    Env = getattr(
+        import_module("airtrafficsim.data.environment." + file, "..."), file
+    )
     env = Env()
     env.run(socketio)
 
 
-@socketio.on('getNav')
+@socketio.on("getNav")
 def get_Nav(lat1, long1, lat2, long2):
     """
     Get the navigation waypoint data given
@@ -177,7 +206,7 @@ def get_Nav(lat1, long1, lat2, long2):
     return Data.get_nav(lat1, long1, lat2, long2)
 
 
-@socketio.on('getEra5Wind')
+@socketio.on("getEra5Wind")
 def get_era5_wind(lat1, long1, lat2, long2, file, time):
     """
     Get the ERA5 wind data image to client
@@ -201,7 +230,7 @@ def get_era5_wind(lat1, long1, lat2, long2, file, time):
     return Data.get_era5_wind(file, lat1, long1, lat2, long2, time)
 
 
-@socketio.on('getEra5Rain')
+@socketio.on("getEra5Rain")
 def get_era5_rain(lat1, long1, lat2, long2, file, time):
     """
     Get the ERA5 rain data image to client
@@ -225,7 +254,7 @@ def get_era5_rain(lat1, long1, lat2, long2, file, time):
     return Data.get_era5_rain(file, lat1, long1, lat2, long2, time)
 
 
-@socketio.on('getRadarImage')
+@socketio.on("getRadarImage")
 def get_radar_img(lat1, long1, lat2, long2, file, time):
     """
     Get the radar data image to client

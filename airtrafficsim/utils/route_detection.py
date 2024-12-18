@@ -1,6 +1,6 @@
 import numpy as np
-from airtrafficsim.utils.calculation import Cal
 from airtrafficsim.core.navigation import Nav
+from airtrafficsim.utils.calculation import Cal
 
 
 def distance(a, b):
@@ -44,12 +44,10 @@ def point_line_distance(point, start, end):
         return distance(point, start)
     else:
         n = abs(
-            (end[0] - start[0]) * (start[1] - point[1]) -
-            (start[0] - point[0]) * (end[1] - start[1])
+            (end[0] - start[0]) * (start[1] - point[1])
+            - (start[0] - point[0]) * (end[1] - start[1])
         )
-        d = np.sqrt(
-            (end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2
-        )
+        d = np.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
         return n / d
 
 
@@ -74,15 +72,18 @@ def rdp(points, epsilon):
             dmax = d
 
     if dmax >= epsilon:
-        results = rdp(points[:index+1], epsilon)[:-1] + \
-            rdp(points[index:], epsilon)
+        results = rdp(points[: index + 1], epsilon)[:-1] + rdp(
+            points[index:], epsilon
+        )
     else:
         results = [points[0], points[-1]]
 
     return results
 
 
-def detect_sid_star(simplified_trajectory, procedure_dict, waypoints_coord_dict):
+def detect_sid_star(
+    simplified_trajectory, procedure_dict, waypoints_coord_dict
+):
     """
     Detect SID and STAR
 
@@ -112,15 +113,39 @@ def detect_sid_star(simplified_trajectory, procedure_dict, waypoints_coord_dict)
         # Calculate total area between each segment and its cloest waypoint
         total_area = 0
         trajectory_in_area = np.empty([0, 2])
-        for i in range(len(simplified_trajectory)-1):
+        for i in range(len(simplified_trajectory) - 1):
             # If the segment is within the procedure region
-            if (simplified_trajectory[i][0] >= np.min(wp_lat)) & (simplified_trajectory[i][0] <= np.max(wp_lat)) & (simplified_trajectory[i][1] >= np.min(wp_long)) & (simplified_trajectory[i][1] <= np.max(wp_long)):
+            if (
+                (simplified_trajectory[i][0] >= np.min(wp_lat))
+                & (simplified_trajectory[i][0] <= np.max(wp_lat))
+                & (simplified_trajectory[i][1] >= np.min(wp_long))
+                & (simplified_trajectory[i][1] <= np.max(wp_long))
+            ):
                 trajectory_in_area = np.vstack(
-                    (trajectory_in_area, simplified_trajectory[i], simplified_trajectory[i+1]))
+                    (
+                        trajectory_in_area,
+                        simplified_trajectory[i],
+                        simplified_trajectory[i + 1],
+                    )
+                )
                 cross_dist = Cal.cal_cross_track_dist(
-                    simplified_trajectory[i][0], simplified_trajectory[i][1], simplified_trajectory[i + 1][0], simplified_trajectory[i + 1][1], wp_list[:, 0], wp_list[:, 1])
-                area = np.abs(Cal.cal_great_circle_dist(
-                    simplified_trajectory[i][0], simplified_trajectory[i][1], simplified_trajectory[i + 1][0], simplified_trajectory[i + 1][1]) * cross_dist / 2.0)
+                    simplified_trajectory[i][0],
+                    simplified_trajectory[i][1],
+                    simplified_trajectory[i + 1][0],
+                    simplified_trajectory[i + 1][1],
+                    wp_list[:, 0],
+                    wp_list[:, 1],
+                )
+                area = np.abs(
+                    Cal.cal_great_circle_dist(
+                        simplified_trajectory[i][0],
+                        simplified_trajectory[i][1],
+                        simplified_trajectory[i + 1][0],
+                        simplified_trajectory[i + 1][1],
+                    )
+                    * cross_dist
+                    / 2.0
+                )
                 total_area += np.min(area)
 
         area_list.append(total_area)
@@ -189,8 +214,9 @@ def get_approach_data(airport, runway):
     lat, long, _ = Nav.get_runway_coord(airport, runway)
     approach_procedures = Nav.get_airport_procedures(airport, "APPCH")
     ils = [str for str in approach_procedures if "I" in str]
-    ils_runway = [str.replace('I', '')
-                  for str in approach_procedures if "I" in str]
+    ils_runway = [
+        str.replace("I", "") for str in approach_procedures if "I" in str
+    ]
     # Runway without ils
     missed_procedure = []
     for procedure in approach_procedures:

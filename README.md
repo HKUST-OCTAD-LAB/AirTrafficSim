@@ -1,10 +1,13 @@
 <img src="docs/source/images/Logo-full.png" width=50% />
 
-![Tests](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/actions/workflows/tests.yml/badge.svg)
-[![Code Coverage](https://img.shields.io/codecov/c/github/HKUST-OCTAD-LAB/AirTrafficSim.svg)](https://codecov.io/gh/HKUST-OCTAD-LAB/AirTrafficSim)
-[![Docs](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/actions/workflows/docs.yml/badge.svg)](https://hkust-octad-lab.github.io/AirTrafficSim/)
-[![Conda version](https://img.shields.io/conda/vn/conda-forge/airtrafficsim)](https://anaconda.org/conda-forge/airtrafficsim)
-[![status](https://joss.theoj.org/papers/7d4a9fdfae0c862863fa3645d3ae80b1/status.svg)](https://joss.theoj.org/papers/7d4a9fdfae0c862863fa3645d3ae80b1)
+<!-- ![Tests](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/actions/workflows/tests.yml/badge.svg) -->
+<!-- [![Code Coverage](https://img.shields.io/codecov/c/github/HKUST-OCTAD-LAB/AirTrafficSim.svg)](https://codecov.io/gh/HKUST-OCTAD-LAB/AirTrafficSim) -->
+<!-- [![Docs](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/actions/workflows/docs.yml/badge.svg)](https://hkust-octad-lab.github.io/AirTrafficSim/) -->
+<!-- [![Conda version](https://img.shields.io/conda/vn/conda-forge/airtrafficsim)](https://anaconda.org/conda-forge/airtrafficsim) -->
+<!-- [![status](https://joss.theoj.org/papers/7d4a9fdfae0c862863fa3645d3ae80b1/status.svg)](https://joss.theoj.org/papers/7d4a9fdfae0c862863fa3645d3ae80b1) -->
+
+> [!WARNING]  
+> We are currently rewriting the project to make it more modular. Significant breaking changes are anticipated - progress is tracked [here](https://github.com/HKUST-OCTAD-LAB/AirTrafficSim/issues/62).
 
 AirTrafficSim is a web-based air traffic simulation software written in Python and javascript. It is designed to visualize historical and simulated flight data and perform microscopic studies of air traffic movement with the integration of a historical weather database. It aims to assist users to evaluate the performance of ATM algorithms.
 
@@ -42,7 +45,10 @@ If you find AirTrafficSim useful for your research, please cite the following:
 
 ## Installation
 
-Linux or [WSL on window](https://learn.microsoft.com/en-us/windows/wsl/) is recommended for AirTrafficSim. The latest stable release of AirTrafficSim can be installed from conda-forge. All dependencies will be installed automatically with the web client pre-built and ready for use directly after installation.
+> [!NOTE]  
+> Conda will not longer be required in the future
+
+Linux or [WSL](https://learn.microsoft.com/en-us/windows/wsl/) is recommended for AirTrafficSim. The latest stable release of AirTrafficSim can be installed from conda-forge. All dependencies will be installed automatically with the web client pre-built and ready for use directly after installation.
 
 It is recommended to install AirTrafficSim in a new conda environment:
 

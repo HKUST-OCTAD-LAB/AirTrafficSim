@@ -32,10 +32,12 @@ class Cal:
         Haversine distance using mean Earth radius 6371.009km for the WGS84 ellipsoid.
         https://www.movable-type.co.uk/scripts/latlong.html
         """
-        a = np.square(np.sin((np.deg2rad(lat2-lat1))/2.0)) + \
-            np.cos(np.deg2rad(lat1)) * np.cos(np.deg2rad(lat2)) * \
-            np.square(np.sin((np.deg2rad(long2-long1))/2.0))
-        return 2.0 * 6371.009 * np.arctan2(np.sqrt(a), np.sqrt(1.0-a))
+        a = np.square(np.sin((np.deg2rad(lat2 - lat1)) / 2.0)) + np.cos(
+            np.deg2rad(lat1)
+        ) * np.cos(np.deg2rad(lat2)) * np.square(
+            np.sin((np.deg2rad(long2 - long1)) / 2.0)
+        )
+        return 2.0 * 6371.009 * np.arctan2(np.sqrt(a), np.sqrt(1.0 - a))
 
     @staticmethod
     def cal_great_circle_bearing(lat1, long1, lat2, long2):
@@ -63,10 +65,22 @@ class Cal:
         Initial bearing or forward azimuth
         https://www.movable-type.co.uk/scripts/latlong.html
         """
-        return np.mod((np.rad2deg(np.arctan2(
-            np.sin(np.deg2rad(long2-long1)) * np.cos(np.deg2rad(lat2)),
-            np.cos(np.deg2rad(lat1))*np.sin(np.deg2rad(lat2)) - np.sin(np.deg2rad(lat1))*np.cos(np.deg2rad(lat2))*np.cos(np.deg2rad(long2-long1)))
-        ) + 360.0), 360.0)
+        return np.mod(
+            (
+                np.rad2deg(
+                    np.arctan2(
+                        np.sin(np.deg2rad(long2 - long1))
+                        * np.cos(np.deg2rad(lat2)),
+                        np.cos(np.deg2rad(lat1)) * np.sin(np.deg2rad(lat2))
+                        - np.sin(np.deg2rad(lat1))
+                        * np.cos(np.deg2rad(lat2))
+                        * np.cos(np.deg2rad(long2 - long1)),
+                    )
+                )
+                + 360.0
+            ),
+            360.0,
+        )
 
     @staticmethod
     def cal_dest_given_dist_bearing(lat, long, bearing, dist):
@@ -96,14 +110,29 @@ class Cal:
         Using mean Earth radius 6371.009km for the WGS84 ellipsoid.
         https://www.movable-type.co.uk/scripts/latlong.html
         """
-        lat2 = np.rad2deg(np.arcsin(np.sin(np.deg2rad(lat)) * np.cos(dist/6371.009) +
-                          np.cos(np.deg2rad(lat)) * np.sin(dist/6371.009) * np.cos(np.deg2rad(bearing))))
-        long2 = long + np.rad2deg(np.arctan2(np.sin(np.deg2rad(bearing)) * np.sin(dist/6371.009) * np.cos(np.deg2rad(lat)),
-                                             np.cos(dist/6371.009) - np.sin(np.deg2rad(lat)) * np.sin(np.deg2rad(lat2))))
-        return lat2, np.mod(long2+540.0, 360.0) - 180.0
+        lat2 = np.rad2deg(
+            np.arcsin(
+                np.sin(np.deg2rad(lat)) * np.cos(dist / 6371.009)
+                + np.cos(np.deg2rad(lat))
+                * np.sin(dist / 6371.009)
+                * np.cos(np.deg2rad(bearing))
+            )
+        )
+        long2 = long + np.rad2deg(
+            np.arctan2(
+                np.sin(np.deg2rad(bearing))
+                * np.sin(dist / 6371.009)
+                * np.cos(np.deg2rad(lat)),
+                np.cos(dist / 6371.009)
+                - np.sin(np.deg2rad(lat)) * np.sin(np.deg2rad(lat2)),
+            )
+        )
+        return lat2, np.mod(long2 + 540.0, 360.0) - 180.0
 
     @staticmethod
-    def cal_cross_track_dist(path_lat1, path_long1, path_lat2, path_long2, point_lat, point_long):
+    def cal_cross_track_dist(
+        path_lat1, path_long1, path_lat2, path_long2, point_lat, point_long
+    ):
         """
         Calculate the cross track distance between point(s) along a great circle path.
 
@@ -132,9 +161,27 @@ class Cal:
         Cross track distance using mean Earth radius 6371.009km for the WGS84 ellipsoid.
         https://www.movable-type.co.uk/scripts/latlong.html
         """
-        return np.arcsin(np.sin(Cal.cal_great_circle_dist(path_lat1, path_long1, point_lat, point_long)/6371.009)) * \
-            np.sin(np.deg2rad(Cal.cal_great_circle_bearing(path_lat1, path_lat2, point_lat, point_long) -
-                              Cal.cal_great_circle_bearing(path_lat1, path_long1, path_lat2, path_long2))) * 6371.009
+        return (
+            np.arcsin(
+                np.sin(
+                    Cal.cal_great_circle_dist(
+                        path_lat1, path_long1, point_lat, point_long
+                    )
+                    / 6371.009
+                )
+            )
+            * np.sin(
+                np.deg2rad(
+                    Cal.cal_great_circle_bearing(
+                        path_lat1, path_lat2, point_lat, point_long
+                    )
+                    - Cal.cal_great_circle_bearing(
+                        path_lat1, path_long1, path_lat2, path_long2
+                    )
+                )
+            )
+            * 6371.009
+        )
 
     @staticmethod
     def cal_angle_diff(current_angle, target_angle):

@@ -1,15 +1,22 @@
 import numpy as np
-
 from airtrafficsim.core.autopilot import Autopilot
-from airtrafficsim.core.weather.weather import Weather
 from airtrafficsim.core.performance.performance import Performance
-from airtrafficsim.utils.unit_conversion import Unit
-from airtrafficsim.utils.enums import FlightPhase, SpeedMode, APSpeedMode, APThrottleMode, APVerticalMode, Config, VerticalMode
+from airtrafficsim.core.weather.weather import Weather
 from airtrafficsim.utils.calculation import Cal
+from airtrafficsim.utils.enums import (
+    APSpeedMode,
+    Config,
+    FlightPhase,
+    SpeedMode,
+    VerticalMode,
+)
+from airtrafficsim.utils.unit_conversion import Unit
 
 
 class Traffic:
-    def __init__(self, file_name, start_time, end_time, weather_mode, performance_mode):
+    def __init__(
+        self, file_name, start_time, end_time, weather_mode, performance_mode
+    ):
         """
         Initialize base traffic array to store aircraft state variables for one timestep.
 
@@ -49,9 +56,9 @@ class Traffic:
         """Index array to indicate whether there is an aircraft active in each index."""
 
         # General information
-        self.call_sign = np.empty([0], dtype='U10')
+        self.call_sign = np.empty([0], dtype="U10")
         """Callsign [string]"""
-        self.aircraft_type = np.empty([0], dtype='U4')
+        self.aircraft_type = np.empty([0], dtype="U4")
         """Aircraft type in ICAO format [string]"""
         self.configuration = np.zeros([0])
         """Aircraft configuration [Configuration enum 1: Clean, 2: Take Off, 3: Approach, 4: Landing]"""
@@ -132,7 +139,29 @@ class Traffic:
         self.weather = Weather(start_time, end_time, weather_mode, file_name)
         """Weather class"""
 
-    def add_aircraft(self, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt):
+    def add_aircraft(
+        self,
+        call_sign,
+        aircraft_type,
+        flight_phase,
+        configuration,
+        lat,
+        long,
+        alt,
+        heading,
+        cas,
+        fuel_weight,
+        payload_weight,
+        departure_airport,
+        departure_runway,
+        sid,
+        arrival_airport,
+        arrival_runway,
+        star,
+        approach,
+        flight_plan,
+        cruise_alt,
+    ):
         """
         Add an aircraft to traffic array.
 
@@ -142,14 +171,27 @@ class Traffic:
             Index of the added aircraft
         """
 
-        print("Traffic.py - add_aircraft()",
-              call_sign, " Type:",  aircraft_type)
+        print("Traffic.py - add_aircraft()", call_sign, " Type:", aircraft_type)
 
         # Add aircraft in performance, weather, and autopilot array
         self.perf.add_aircraft(aircraft_type)
         self.weather.add_aircraft(alt, self.perf)
-        self.ap.add_aircraft(lat, long, alt, heading, cas, departure_airport, departure_runway,
-                             sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt)
+        self.ap.add_aircraft(
+            lat,
+            long,
+            alt,
+            heading,
+            cas,
+            departure_airport,
+            departure_runway,
+            sid,
+            arrival_airport,
+            arrival_runway,
+            star,
+            approach,
+            flight_plan,
+            cruise_alt,
+        )
 
         self.index = np.append(self.index, self.n)
         self.call_sign = np.append(self.call_sign, call_sign)
@@ -165,12 +207,22 @@ class Traffic:
         self.bank_angle = np.append(self.bank_angle, 0.0)
         self.path_angle = np.append(self.path_angle, 0.0)
         self.cas = np.append(self.cas, cas)
-        self.tas = np.append(self.tas, Unit.mps2kts(self.perf.cas_to_tas(
-            Unit.kts2mps(cas), self.weather.p[-1], self.weather.rho[-1])))
+        self.tas = np.append(
+            self.tas,
+            Unit.mps2kts(
+                self.perf.cas_to_tas(
+                    Unit.kts2mps(cas), self.weather.p[-1], self.weather.rho[-1]
+                )
+            ),
+        )
         self.gs_north = np.append(self.gs_north, 0.0)
         self.gs_east = np.append(self.gs_east, 0.0)
-        self.mach = np.append(self.mach, self.perf.tas_to_mach(
-            Unit.kts2mps(self.tas[-1]), self.weather.T[-1]))
+        self.mach = np.append(
+            self.mach,
+            self.perf.tas_to_mach(
+                Unit.kts2mps(self.tas[-1]), self.weather.T[-1]
+            ),
+        )
         self.accel = np.append(self.accel, 0.0)
         self.speed_mode = np.append(self.speed_mode, SpeedMode.CAS)
         self.max_alt = np.append(self.max_alt, 0.0)
@@ -180,17 +232,21 @@ class Traffic:
         self.fpa = np.append(self.fpa, 0.0)
         self.vertical_mode = np.append(self.vertical_mode, VerticalMode.LEVEL)
         self.empty_weight = np.append(
-            self.empty_weight, self.perf.get_empty_weight(-1))
+            self.empty_weight, self.perf.get_empty_weight(-1)
+        )
         self.fuel_weight = np.append(self.fuel_weight, fuel_weight)
         self.payload_weight = np.append(self.payload_weight, payload_weight)
         self.mass = np.append(
-            self.mass, self.empty_weight[-1] + fuel_weight + payload_weight)
+            self.mass, self.empty_weight[-1] + fuel_weight + payload_weight
+        )
         self.fuel_consumed = np.append(self.fuel_consumed, 0.0)
 
         # Init Procedural speed
         self.perf.init_procedure_speed(self.mass[-1], -1)
-        self.trans_alt = np.append(self.trans_alt, Unit.m2ft(
-            self.perf.cal_transition_alt(-1, self.weather.d_T[-1])))
+        self.trans_alt = np.append(
+            self.trans_alt,
+            Unit.m2ft(self.perf.cal_transition_alt(-1, self.weather.d_T[-1])),
+        )
 
         self.max_alt = self.perf.cal_maximum_alt(self.weather.d_T, self.mass)
         self.max_cas, self.max_mach = self.perf.cal_maximum_speed()
@@ -259,8 +315,9 @@ class Traffic:
         """
 
         # Update atmosphere
-        self.weather.update(self.lat, self.long, self.alt,
-                            self.perf, global_time)
+        self.weather.update(
+            self.lat, self.long, self.alt, self.perf, global_time
+        )
 
         # Ceiling
         # min_speed = self.perf.cal_minimum_speed(self.flight_phase)
@@ -268,7 +325,8 @@ class Traffic:
         # max_d_rocd = self.perf.cal_max_d_rocd(d_t, self.unit.knots_to_mps(self.d_cas), tas, self.unit.ftpm_to_mps(self.vs))
 
         self.speed_mode = np.where(
-            self.alt < self.trans_alt, SpeedMode.CAS, SpeedMode.MACH)
+            self.alt < self.trans_alt, SpeedMode.CAS, SpeedMode.MACH
+        )
 
         # Update autopilot
         self.ap.update(self)
@@ -282,45 +340,50 @@ class Traffic:
         # # Cruise-Descent
         # self.flight_phase = np.where(self.vertical_mode == Vertical_mode.DESCENT, Flight_phase.DESCENT, self.flight_phase)
         self.configuration = self.perf.update_configuration(
-            self.cas, self.alt, self.vertical_mode)
+            self.cas, self.alt, self.vertical_mode
+        )
         # !TODO Is flight phase needed anymore?
-        self.flight_phase = np.select(condlist=[
-            (self.configuration == Config.TAKEOFF) & (self.alt > 0.0),
-            self.configuration == Config.INITIAL_CLIMB,
-            (self.vertical_mode == VerticalMode.CLIMB) & (
-                self.alt < self.cruise_alt),
-            self.alt == self.cruise_alt,
-            (self.vertical_mode == VerticalMode.DESCENT) & (self.alt <
-                                                            self.cruise_alt) & (self.configuration == Config.CLEAN),
-            self.configuration == Config.APPROACH,
-            self.configuration == Config.LANDING,
-            (self.flight_phase == FlightPhase.LANDING) & (self.alt == 0.0)
-        ],
+        self.flight_phase = np.select(
+            condlist=[
+                (self.configuration == Config.TAKEOFF) & (self.alt > 0.0),
+                self.configuration == Config.INITIAL_CLIMB,
+                (self.vertical_mode == VerticalMode.CLIMB)
+                & (self.alt < self.cruise_alt),
+                self.alt == self.cruise_alt,
+                (self.vertical_mode == VerticalMode.DESCENT)
+                & (self.alt < self.cruise_alt)
+                & (self.configuration == Config.CLEAN),
+                self.configuration == Config.APPROACH,
+                self.configuration == Config.LANDING,
+                (self.flight_phase == FlightPhase.LANDING) & (self.alt == 0.0),
+            ],
             choicelist=[
-            FlightPhase.TAKEOFF,
-            FlightPhase.INITIAL_CLIMB,
-            FlightPhase.CLIMB,
-            FlightPhase.CRUISE,
-            FlightPhase.DESCENT,
-            FlightPhase.APPROACH,
-            FlightPhase.LANDING,
-            FlightPhase.TAXI_DEST
-        ],
-            default=FlightPhase.CRUISE)
+                FlightPhase.TAKEOFF,
+                FlightPhase.INITIAL_CLIMB,
+                FlightPhase.CLIMB,
+                FlightPhase.CRUISE,
+                FlightPhase.DESCENT,
+                FlightPhase.APPROACH,
+                FlightPhase.LANDING,
+                FlightPhase.TAXI_DEST,
+            ],
+            default=FlightPhase.CRUISE,
+        )
 
         # Bank angle
         d_heading = Cal.cal_angle_diff(self.heading, self.ap.heading)
-        self.bank_angle = np.select(condlist=[
-            d_heading > 0.5,
-            d_heading < -0.5,
-        ],
+        self.bank_angle = np.select(
+            condlist=[
+                d_heading > 0.5,
+                d_heading < -0.5,
+            ],
             choicelist=[
-            self.perf.get_bank_angles(
-                self.configuration),                   # Turn right
-            np.negative(self.perf.get_bank_angles(
-                self.configuration))       # Turn left
-        ],
-            default=0.0
+                self.perf.get_bank_angles(self.configuration),  # Turn right
+                np.negative(
+                    self.perf.get_bank_angles(self.configuration)
+                ),  # Turn left
+            ],
+            default=0.0,
         )
 
         tas = Unit.kts2mps(self.tas)  # TAS in m/s
@@ -330,121 +393,158 @@ class Traffic:
         # self.tas = self.perf.cas_to_tas(self.cas, self.weather.p, self.weather.rho)
         tas = tas + self.accel
         self.mach = self.perf.tas_to_mach(tas, self.weather.T)
-        self.cas = Unit.mps2kts(self.perf.tas_to_cas(
-            tas, self.weather.p, self.weather.rho))
+        self.cas = Unit.mps2kts(
+            self.perf.tas_to_cas(tas, self.weather.p, self.weather.rho)
+        )
 
         # Bound to autopilot
-        self.mach = np.select(condlist=[
-            (self.speed_mode == SpeedMode.MACH) & (
-                self.ap.speed_mode == APSpeedMode.ACCELERATE),
-            (self.speed_mode == SpeedMode.MACH) & (
-                self.ap.speed_mode == APSpeedMode.DECELERATE),
-            (self.speed_mode == SpeedMode.MACH) & (
-                self.ap.speed_mode == APSpeedMode.CONSTANT_MACH)
-        ],
+        self.mach = np.select(
+            condlist=[
+                (self.speed_mode == SpeedMode.MACH)
+                & (self.ap.speed_mode == APSpeedMode.ACCELERATE),
+                (self.speed_mode == SpeedMode.MACH)
+                & (self.ap.speed_mode == APSpeedMode.DECELERATE),
+                (self.speed_mode == SpeedMode.MACH)
+                & (self.ap.speed_mode == APSpeedMode.CONSTANT_MACH),
+            ],
             choicelist=[
-            np.where(self.mach > self.ap.mach,
-                     self.ap.mach, self.mach),
-            np.where(self.mach < self.ap.mach,
-                     self.ap.mach, self.mach),
-            self.ap.mach
-        ],
-            default=self.mach)
+                np.where(self.mach > self.ap.mach, self.ap.mach, self.mach),
+                np.where(self.mach < self.ap.mach, self.ap.mach, self.mach),
+                self.ap.mach,
+            ],
+            default=self.mach,
+        )
 
-        self.cas = np.select(condlist=[
-            (self.speed_mode == SpeedMode.CAS) & (
-                self.ap.speed_mode == APSpeedMode.ACCELERATE),
-            (self.speed_mode == SpeedMode.CAS) & (
-                self.ap.speed_mode == APSpeedMode.DECELERATE),
-            (self.speed_mode == SpeedMode.CAS) & (
-                self.ap.speed_mode == APSpeedMode.CONSTANT_CAS)
-        ],
+        self.cas = np.select(
+            condlist=[
+                (self.speed_mode == SpeedMode.CAS)
+                & (self.ap.speed_mode == APSpeedMode.ACCELERATE),
+                (self.speed_mode == SpeedMode.CAS)
+                & (self.ap.speed_mode == APSpeedMode.DECELERATE),
+                (self.speed_mode == SpeedMode.CAS)
+                & (self.ap.speed_mode == APSpeedMode.CONSTANT_CAS),
+            ],
             choicelist=[
-            np.where(self.cas > self.ap.cas, self.ap.cas,
-                     self.cas),  # TODO: change to minimum
-            np.where(self.cas < self.ap.cas,
-                     self.ap.cas, self.cas),
-            self.ap.cas
-        ],
-            default=self.cas)
+                np.where(
+                    self.cas > self.ap.cas, self.ap.cas, self.cas
+                ),  # TODO: change to minimum
+                np.where(self.cas < self.ap.cas, self.ap.cas, self.cas),
+                self.ap.cas,
+            ],
+            default=self.cas,
+        )
 
-        tas = np.select(condlist=[
-            self.ap.speed_mode == APSpeedMode.CONSTANT_MACH,
-            self.ap.speed_mode == APSpeedMode.CONSTANT_CAS
-        ],
+        tas = np.select(
+            condlist=[
+                self.ap.speed_mode == APSpeedMode.CONSTANT_MACH,
+                self.ap.speed_mode == APSpeedMode.CONSTANT_CAS,
+            ],
             choicelist=[
-            self.perf.mach_to_tas(self.mach, self.weather.T),
-            self.perf.cas_to_tas(Unit.kts2mps(
-                self.cas), self.weather.p, self.weather.rho)
-        ],
-            default=tas)
+                self.perf.mach_to_tas(self.mach, self.weather.T),
+                self.perf.cas_to_tas(
+                    Unit.kts2mps(self.cas), self.weather.p, self.weather.rho
+                ),
+            ],
+            default=tas,
+        )
 
-        tas = np.select(condlist=[
-            (self.speed_mode == SpeedMode.CAS) & ((self.ap.speed_mode == APSpeedMode.ACCELERATE) | (
-                self.ap.speed_mode == APSpeedMode.DECELERATE)) & (self.cas == self.ap.cas),
-            (self.speed_mode == SpeedMode.MACH) & ((self.ap.speed_mode == APSpeedMode.ACCELERATE) | (
-                self.ap.speed_mode == APSpeedMode.DECELERATE)) & (self.mach == self.ap.mach)
-        ],
+        tas = np.select(
+            condlist=[
+                (self.speed_mode == SpeedMode.CAS)
+                & (
+                    (self.ap.speed_mode == APSpeedMode.ACCELERATE)
+                    | (self.ap.speed_mode == APSpeedMode.DECELERATE)
+                )
+                & (self.cas == self.ap.cas),
+                (self.speed_mode == SpeedMode.MACH)
+                & (
+                    (self.ap.speed_mode == APSpeedMode.ACCELERATE)
+                    | (self.ap.speed_mode == APSpeedMode.DECELERATE)
+                )
+                & (self.mach == self.ap.mach),
+            ],
             choicelist=[
-            self.perf.cas_to_tas(Unit.kts2mps(
-                self.cas), self.weather.p, self.weather.rho),
-            self.perf.mach_to_tas(self.mach, self.weather.T)
-        ],
-            default=tas)
+                self.perf.cas_to_tas(
+                    Unit.kts2mps(self.cas), self.weather.p, self.weather.rho
+                ),
+                self.perf.mach_to_tas(self.mach, self.weather.T),
+            ],
+            default=tas,
+        )
 
-        self.mach = np.where((self.speed_mode == SpeedMode.CAS) & ((self.ap.speed_mode == APSpeedMode.ACCELERATE) | (self.ap.speed_mode == APSpeedMode.DECELERATE)) & (self.cas == self.ap.cas),
-                             self.perf.tas_to_mach(tas, self.weather.T),
-                             self.mach)
+        self.mach = np.where(
+            (self.speed_mode == SpeedMode.CAS)
+            & (
+                (self.ap.speed_mode == APSpeedMode.ACCELERATE)
+                | (self.ap.speed_mode == APSpeedMode.DECELERATE)
+            )
+            & (self.cas == self.ap.cas),
+            self.perf.tas_to_mach(tas, self.weather.T),
+            self.mach,
+        )
 
-        self.cas = np.where((self.speed_mode == SpeedMode.MACH) & ((self.ap.speed_mode == APSpeedMode.ACCELERATE) | (self.ap.speed_mode == APSpeedMode.DECELERATE)) & (self.mach == self.ap.mach),
-                            Unit.mps2kts(self.perf.tas_to_cas(
-                                tas, self.weather.p, self.weather.rho)),
-                            self.cas)
+        self.cas = np.where(
+            (self.speed_mode == SpeedMode.MACH)
+            & (
+                (self.ap.speed_mode == APSpeedMode.ACCELERATE)
+                | (self.ap.speed_mode == APSpeedMode.DECELERATE)
+            )
+            & (self.mach == self.ap.mach),
+            Unit.mps2kts(
+                self.perf.tas_to_cas(tas, self.weather.p, self.weather.rho)
+            ),
+            self.cas,
+        )
 
         self.tas = Unit.mps2kts(tas)
 
         # Heading
         # TODO: https://skybrary.aero/articles/rate-turn
         rate_of_turn = self.perf.cal_rate_of_turn(self.bank_angle, tas)
-        self.heading = np.where((np.abs(d_heading) < np.abs(rate_of_turn)) | (
-            np.abs(d_heading) < 0.5), self.ap.heading, self.heading + rate_of_turn)
-        self.heading = np.select(condlist=[
-            self.heading > 360.0,
-            self.heading < 0.0
-        ],
-            choicelist=[
-            self.heading - 360.0,
-            self.heading + 360.0
-        ],
-            default=self.heading)
+        self.heading = np.where(
+            (np.abs(d_heading) < np.abs(rate_of_turn))
+            | (np.abs(d_heading) < 0.5),
+            self.ap.heading,
+            self.heading + rate_of_turn,
+        )
+        self.heading = np.select(
+            condlist=[self.heading > 360.0, self.heading < 0.0],
+            choicelist=[self.heading - 360.0, self.heading + 360.0],
+            default=self.heading,
+        )
 
         # Ground speed
-        self.gs_north = self.tas * \
-            np.cos(np.deg2rad(self.heading)) + self.weather.wind_north
-        self.gs_east = self.tas * \
-            np.sin(np.deg2rad(self.heading)) + self.weather.wind_east
+        self.gs_north = (
+            self.tas * np.cos(np.deg2rad(self.heading))
+            + self.weather.wind_north
+        )
+        self.gs_east = (
+            self.tas * np.sin(np.deg2rad(self.heading)) + self.weather.wind_east
+        )
 
         self.path_angle = np.rad2deg(
-            np.arctan((self.vs/60.0)/(self.tas * 1.68781)))
+            np.arctan((self.vs / 60.0) / (self.tas * 1.68781))
+        )
 
         # Position
         self.lat = self.lat + self.gs_north / 216000.0
         self.long = self.long + self.gs_east / 216000.0
         self.alt = self.alt + self.vs / 60.0
-        self.alt = np.select(condlist=[  # handle overshoot
-            self.vertical_mode == VerticalMode.CLIMB,
-            self.vertical_mode == VerticalMode.DESCENT
-        ],
+        self.alt = np.select(
+            condlist=[  # handle overshoot
+                self.vertical_mode == VerticalMode.CLIMB,
+                self.vertical_mode == VerticalMode.DESCENT,
+            ],
             choicelist=[
-            np.where(self.alt > self.ap.alt,
-                     self.ap.alt, self.alt),
-            np.where(self.alt < self.ap.alt,
-                     self.ap.alt, self.alt)
-        ],
-            default=self.alt)
+                np.where(self.alt > self.ap.alt, self.ap.alt, self.alt),
+                np.where(self.alt < self.ap.alt, self.ap.alt, self.alt),
+            ],
+            default=self.alt,
+        )
 
         # Fuel
         fuel_burn = self.perf.cal_fuel_burn(
-            self.configuration, self.tas, self.alt)
+            self.configuration, self.tas, self.alt
+        )
         self.fuel_consumed = self.fuel_consumed + fuel_burn
         self.mass = self.mass - fuel_burn

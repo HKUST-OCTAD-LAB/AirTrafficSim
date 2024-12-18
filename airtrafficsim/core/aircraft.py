@@ -1,10 +1,9 @@
 import numpy as np
-
-from airtrafficsim.core.traffic import Traffic
 from airtrafficsim.core.navigation import Nav
-from airtrafficsim.utils.unit_conversion import Unit
+from airtrafficsim.core.traffic import Traffic
 from airtrafficsim.utils.calculation import Cal
 from airtrafficsim.utils.enums import APLateralMode, APThrottleMode
+from airtrafficsim.utils.unit_conversion import Unit
 
 
 class Aircraft:
@@ -12,7 +11,30 @@ class Aircraft:
     Aircraft class to represent the states of one individual aircraft, including get and set functions.
     """
 
-    def __init__(self, traffic: Traffic, call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight, departure_airport="", departure_runway="", sid="", arrival_airport="", arrival_runway="", star="", approach="", flight_plan=[], cruise_alt=-1):
+    def __init__(
+        self,
+        traffic: Traffic,
+        call_sign,
+        aircraft_type,
+        flight_phase,
+        configuration,
+        lat,
+        long,
+        alt,
+        heading,
+        cas,
+        fuel_weight,
+        payload_weight,
+        departure_airport="",
+        departure_runway="",
+        sid="",
+        arrival_airport="",
+        arrival_runway="",
+        star="",
+        approach="",
+        flight_plan=[],
+        cruise_alt=-1,
+    ):
         """
         Initialize one aircraft and add the aircraft to traffic array.
 
@@ -61,9 +83,29 @@ class Aircraft:
         cruise_alt : int, optional
             Target cruise altitude [ft], by default -1
         """
-        self.traffic = traffic          # Pass traffic array reference
-        self.index = self.traffic.add_aircraft(call_sign, aircraft_type, flight_phase, configuration, lat, long, alt, heading, cas, fuel_weight, payload_weight,
-                                               departure_airport, departure_runway, sid, arrival_airport, arrival_runway, star, approach, flight_plan, cruise_alt)        # Add aircraft. Obtain aircraft index
+        self.traffic = traffic  # Pass traffic array reference
+        self.index = self.traffic.add_aircraft(
+            call_sign,
+            aircraft_type,
+            flight_phase,
+            configuration,
+            lat,
+            long,
+            alt,
+            heading,
+            cas,
+            fuel_weight,
+            payload_weight,
+            departure_airport,
+            departure_runway,
+            sid,
+            arrival_airport,
+            arrival_runway,
+            star,
+            approach,
+            flight_plan,
+            cruise_alt,
+        )  # Add aircraft. Obtain aircraft index
         self.vectoring = ""
 
     def set_heading(self, heading):
@@ -82,7 +124,7 @@ class Aircraft:
     def set_speed(self, speed):
         """
         Set the speed of the aircraft.
-        
+
         Parameters
         ----------
         speed : float
@@ -148,7 +190,8 @@ class Aircraft:
         index = np.where(self.traffic.index == self.index)[0][0]
         self.traffic.ap.holding_round[index] = holding_time
         self.traffic.ap.holding_info[index] = Nav.get_holding_procedure(
-            holding_fix, region)
+            holding_fix, region
+        )
 
     def set_vectoring(self, vectoring_time, v_2, fix):
         """
@@ -167,12 +210,24 @@ class Aircraft:
             self.vectoring = fix
             index = np.where(self.traffic.index == self.index)[0][0]
 
-            new_dist = self.traffic.ap.dist[index] + Unit.kts2mps(
-                self.traffic.cas[index] + v_2) * (vectoring_time) / 2000.0
-            bearing = np.mod(self.traffic.ap.heading[index]+np.rad2deg(
-                np.arccos(self.traffic.ap.dist[index]/new_dist)) + 360.0, 360.0)
+            new_dist = (
+                self.traffic.ap.dist[index]
+                + Unit.kts2mps(self.traffic.cas[index] + v_2)
+                * (vectoring_time)
+                / 2000.0
+            )
+            bearing = np.mod(
+                self.traffic.ap.heading[index]
+                + np.rad2deg(np.arccos(self.traffic.ap.dist[index] / new_dist))
+                + 360.0,
+                360.0,
+            )
             lat, long = Cal.cal_dest_given_dist_bearing(
-                self.traffic.lat[index], self.traffic.long[index], bearing, new_dist / 2)
+                self.traffic.lat[index],
+                self.traffic.long[index],
+                bearing,
+                new_dist / 2,
+            )
 
             # Add new virtual waypoint
             i = self.traffic.ap.flight_plan_index[index]
@@ -180,10 +235,12 @@ class Aircraft:
             self.traffic.ap.flight_plan_long[index].insert(i, long)
             self.traffic.ap.flight_plan_name[index].insert(i, "VECT")
             self.traffic.ap.flight_plan_target_alt[index].insert(
-                i, self.traffic.ap.flight_plan_target_alt[index][i])
+                i, self.traffic.ap.flight_plan_target_alt[index][i]
+            )
             self.traffic.ap.flight_plan_target_speed[index][i] = v_2
             self.traffic.ap.flight_plan_target_speed[index].insert(
-                i, self.traffic.ap.flight_plan_target_speed[index][i])
+                i, self.traffic.ap.flight_plan_target_speed[index][i]
+            )
 
     def resume_own_navigation(self):
         """
@@ -299,7 +356,9 @@ class Aircraft:
             ICAO code of the next waypoing
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.ap.flight_plan_name[index][self.traffic.ap.flight_plan_index[index]]
+        return self.traffic.ap.flight_plan_name[index][
+            self.traffic.ap.flight_plan_index[index]
+        ]
 
     def get_wake(self):
         """
