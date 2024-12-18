@@ -1,0 +1,25 @@
+@use '@carbon/react' with (
+  $font-path: '@ibm/plex'
+);
+
+main {
+    background-color: #222;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+
+    .cesium-viewer-bottom {
+        display: none !important;
+    }
+
+    > #map {
+        width: 70%;
+        height: 100%;
+    }
+
+    > #panel {
+        width: 30%;
+        height: 100%;
+    }
+}
