@@ -1,59 +1,108 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "AirTrafficSim"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
-    {name = "Frankie Hui", email = "kyhuiaf@connect.ust.hk"},
+    { name = "Frankie Hui", email = "kyhuiaf@connect.ust.hk" },
 ]
-description = "A web-based air traffic simulation software written in Python and javascript."
+description = "A web-based air traffic simulation software written in Python and TypeScript."
 readme = "README.md"
-requires-python = ">=3.7"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
 keywords = ["air transportation", "atm", "simulations", "visualisation"]
-license = {text = "GPL-3.0"}
 classifiers = [
-    "Framework :: Flask",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    # "Framework :: Flask",
+    # "Typing :: Typed",
 ]
 dependencies = [
-    "numpy",
-    "pandas",
-    "Flask",
-    "Flask-SocketIO",
-    "Eventlet",
-    "cartopy",
-    "cdsapi",
-    "xarray",
-    "openap"
+    "numpy>=2.2.0",
+    "pandas>=2.2.3",
 ]
 
 [project.urls]
-documentation = "https://hkust-octad-lab.github.io/AirTrafficSim/"
-repository = "https://github.com/HKUST-OCTAD-LAB/AirTrafficSim"
+Documentation = "https://hkust-octad-lab.github.io/AirTrafficSim/"
+Repository = "https://github.com/HKUST-OCTAD-LAB/AirTrafficSim"
 
 [project.scripts]
 airtrafficsim = "airtrafficsim.__main__:main"
-
-[tool.setuptools]
-packages = ["airtrafficsim", 
-            "airtrafficsim.core",
-            "airtrafficsim.core.weather",
-            "airtrafficsim.core.performance",
-            "airtrafficsim.data", 
-            "airtrafficsim.server", 
-            "airtrafficsim.utils"]
-include-package-data = true
+# [tool.setuptools]
+# packages = ["airtrafficsim", 
+#             "airtrafficsim.core",
+#             "airtrafficsim.core.weather",
+#             "airtrafficsim.core.performance",
+#             "airtrafficsim.data", 
+#             "airtrafficsim.server", 
+#             "airtrafficsim.utils"]
+# include-package-data = true
 
 [project.optional-dependencies]
-tests = [
-  'pytest',
-  'coverage'
+web = [
+    "flask-socketio>=5.4.1",
+    "flask>=3.1.0",
+    "eventlet>=0.38.2",
+]
+era5 = [
+    "cartopy>=0.24.1",
+    "xarray>=2024.11.0",
+]
+openap = [
+    "openap>=2.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "mypy>=1.13.0",
+    "ruff>=0.8.3",
+]
+test = [
+    "coverage>=7.6.9",
+    "pytest>=8.3.4",
 ]
 docs = [
-  'sphinx',
-  'myst-parser',
-  'furo',
-  'numpydoc'
+    "furo>=2024.8.6",
+    "myst-parser>=4.0.0",
+    "numpydoc>=1.8.0",
+    "sphinx>=8.1.3",
 ]
+
+[tool.ruff]
+lint.select = [
+    "E",
+    "W",   # pycodestyle
+    "F",   # pyflakes
+    "I",   # isort
+    "NPY", # numpy
+    # "PD",  # pandas
+    "DTZ", # flake8-datetimez
+    "RUF",
+]
+line-length = 80
+target-version = "py39"
+
+[tool.ruff.lint.isort]
+known-first-party = ["numpy", "pandas"]
+
+[tool.mypy]
+python_version = "3.9"
+platform = "posix"
+color_output = true
+pretty = true
+show_column_numbers = true
+strict = true
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_unused_ignores = true
