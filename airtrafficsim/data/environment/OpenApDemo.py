@@ -7,14 +7,14 @@ from airtrafficsim.utils.enums import Config, FlightPhase
 
 
 class OpenApDemo(Environment):
-    def __init__(self):
+    def __init__(self) -> None:
         # Initialize environment super class
         super().__init__(
             file_name=Path(__file__).name.removesuffix(
                 ".py"
             ),  # File name (do not change)
             start_time=datetime.fromisoformat("2022-03-22T00:00:00+00:00"),
-            end_time=1000,
+            duration_s=1000,
             weather_mode="",
             performance_mode="OpenAP",
         )
@@ -50,29 +50,26 @@ class OpenApDemo(Environment):
             payload_weight=12000.0,
             cruise_alt=37000,
         )
-        self.aircraft_head.set_speed(
-            250.0
-        )  # To set the aircraft to follow given speed command instead of auto procedural
-        self.aircraft_fol.set_speed(
-            310.0
-        )  # To set the aircraft to follow given speed command instead of auto procedural
+        # follow given speed command instead of auto procedural
+        self.aircraft_head.set_speed(250.0)
+        self.aircraft_fol.set_speed(310.0)
 
-    def should_end(self):
+    def should_end(self) -> bool:
         return False
 
-    def atc_command(self):
+    def atc_command(self) -> None:
         # User algorithm
-        if self.global_time == 100:
+        if self.seconds_since_start == 100:
             # Right
             self.aircraft_fol.set_heading(220)
             # Left
             self.aircraft_head.set_heading(150)
 
-        if self.global_time == 500:
+        if self.seconds_since_start == 500:
             # Climb
             self.aircraft_fol.set_alt(30000)
             # Descend
             self.aircraft_head.set_alt(11000)
 
-        if self.global_time == 900:
+        if self.seconds_since_start == 900:
             self.traffic.del_aircraft(self.aircraft_head.index)

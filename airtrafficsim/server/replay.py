@@ -1,21 +1,38 @@
 import csv
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Literal, TypedDict
 
 import numpy as np
 import pandas as pd
 
+from . import Czml
+
+
+class ReplayDir(TypedDict):
+    historic: list[str]
+    simulation: list[str]
+    simulation_files: dict[str, list[str]]
+
+
+ReplayMode = Literal["replay", "simulation"]
+"""AirTrafficSim mode"""
+
+ReplayCategory = Literal["historic", "simulation"]
+"""Replay category"""
+
 
 class Replay:
     @staticmethod
-    def get_replay_dir():
+    def get_replay_dir() -> ReplayDir:
         """
         Return a list of historic/simulation data directories in data/replay
 
         Returns
         -------
         {}
-            JSON file of historic file list and simulation file list in data/replay directory
+            JSON file of historic file list and simulation file list in
+            data/replay directory
         """
         historic_list = []
         for dir in (
@@ -45,8 +62,11 @@ class Replay:
             "simulation_files": simulation_file_list,
         }
 
+    # FIXME(abrah): split this up.
     @staticmethod
-    def get_replay_czml(replayCategory, replayFile):
+    def get_replay_czml(
+        replayCategory: ReplayCategory, replayFile: str
+    ) -> Czml:
         """
         Generate CZML file for visualization given replay file name.
 
@@ -78,9 +98,6 @@ class Replay:
                     file_content = pd.read_csv(file)
 
                     if replayCategory == "historic":
-                        # start = datetime.utcfromtimestamp(file_content.iloc[0]['timestamp'])
-                        # end = datetime.utcfromtimestamp(file_content.iloc[-1]['timestamp'])
-
                         id = file.name
                         if (
                             "timestamp"
@@ -186,12 +203,6 @@ class Replay:
                             ]
                             label = label[0::60]
 
-                        # positions =  np.column_stack((file_content['timestamp'].map(lambda x : datetime.utcfromtimestamp(x).isoformat()),
-                        #                         file_content['long'].values, file_content['lat'].values, file_content['alt'].values/3.2808)).flatten().tolist()
-                        # label = [{"interval": datetime.utcfromtimestamp(time).isoformat()+"/"+end.isoformat(),
-                        #         "string": file.name+"\n"+str(alt)+"ft "+str(gspeed)+"kt"}
-                        #         for time, alt, gspeed in zip(file_content['timestamp'], file_content['alt'], file_content['gspeed'])]
-
                     if start_time is None and end_time is None:
                         start_time = start
                         end_time = end
@@ -238,6 +249,10 @@ class Replay:
                         },
                     }
                     trajectories.append(trajectory)
+            if start_time is None or end_time is None:
+                raise RuntimeError(
+                    "panic: no start time or end time"
+                )  # FIXME(abrah)
             trajectories.insert(
                 0,
                 {
@@ -312,17 +327,6 @@ class Replay:
                             "pixelSize": 5,
                             "color": {"rgba": [39, 245, 106, 215]},
                         },
-                        # "billboard": {
-                        #     "image":{
-                        #         "interval": content.iloc[0]['timestamp']+"/"+ content.iloc[-1]['timestamp'],
-                        #         "uri": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjU5MiIgeT0iMzEyIiB3aWR0aD0iOTYiIGhlaWdodD0iOTYiLz48L2NsaXBQYXRoPjwvZGVmcz48ZyBjbGlwLXBhdGg9InVybCgjY2xpcDApIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNTkyIC0zMTIpIj48cGF0aCBkPSJNNjc0IDM3OCA2NzQgMzY5IDY0NSAzNDguNSA2NDUgMzI5QzY0NSAzMjUuMSA2NDMgMzIwIDY0MCAzMjAgNjM3LjEgMzIwIDYzNSAzMjUuMSA2MzUgMzI5TDYzNSAzNDguNSA2MDYgMzY5IDYwNiAzNzggNjM1IDM2My41IDYzNSAzODUuMyA2MjUgMzk0IDYyNSA0MDAgNjQwIDM5NCA2NTUgNDAwIDY1NSAzOTQgNjQ1IDM4NS4zIDY0NSAzNjMuNSA2NzQgMzc4WiIgZmlsbD0iIzAwQ0MzMyIvPjwvZz48L3N2Zz4="
-                        #     },
-                        #     "scale": 1.0,
-                        #     # "rotation": 1.3,
-                        #     "alignedAxis": {
-                        #         "velocityReference": id+"#position"
-                        #     }
-                        # },
                         "path": {
                             "leadTime": 0,
                             "trailTime": 20,
@@ -352,7 +356,9 @@ class Replay:
             return document
 
     @staticmethod
-    def get_graph_header(mode, replayCategory, replayFile):
+    def get_graph_header(
+        mode: ReplayMode, replayCategory: ReplayCategory, replayFile: str
+    ) -> list[str]:
         """
         Get the list of parameters name of a file suitable for plotting graph.
 
@@ -388,7 +394,13 @@ class Replay:
         return header
 
     @staticmethod
-    def get_graph_data(mode, replayCategory, replayFile, simulationFile, graph):
+    def get_graph_data(
+        mode: ReplayMode,
+        replayCategory: ReplayCategory,
+        replayFile: str,
+        simulationFile: str,
+        graph: str,
+    ) -> Czml:
         """
         Get the data for the selected parameters to plot a graph.
 
@@ -410,7 +422,7 @@ class Replay:
         if (
             mode == "replay"
             and replayCategory == "simulation"
-            and graph != "None"
+            and graph != "None"  # FIXME(abrah): adopt Option<String> instead
         ):
             df = pd.read_csv(
                 Path(__file__).parent.parent.joinpath(

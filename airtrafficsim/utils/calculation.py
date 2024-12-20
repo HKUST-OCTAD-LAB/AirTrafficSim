@@ -1,13 +1,19 @@
 import numpy as np
 
+from ..types import array
+
 
 class Cal:
     """
     A utility class for calculation
     """
 
+    # TODO: refactor to use Point2D namedtuple instead.
+    # verify we need it in radians.
     @staticmethod
-    def cal_great_circle_dist(lat1, long1, lat2, long2):
+    def cal_great_circle_dist(
+        lat1: array, long1: array, lat2: array, long2: array
+    ) -> array:
         """
         Calculate great circle distance in km between two point.
 
@@ -29,7 +35,8 @@ class Cal:
 
         Notes
         -----
-        Haversine distance using mean Earth radius 6371.009km for the WGS84 ellipsoid.
+        Haversine distance using mean Earth radius 6371.009km for the WGS84
+        ellipsoid.
         https://www.movable-type.co.uk/scripts/latlong.html
         """
         a = np.square(np.sin((np.deg2rad(lat2 - lat1)) / 2.0)) + np.cos(
@@ -37,10 +44,12 @@ class Cal:
         ) * np.cos(np.deg2rad(lat2)) * np.square(
             np.sin((np.deg2rad(long2 - long1)) / 2.0)
         )
-        return 2.0 * 6371.009 * np.arctan2(np.sqrt(a), np.sqrt(1.0 - a))
+        return 2.0 * 6371.009 * np.arctan2(np.sqrt(a), np.sqrt(1.0 - a))  # type: ignore
 
     @staticmethod
-    def cal_great_circle_bearing(lat1, long1, lat2, long2):
+    def cal_great_circle_bearing(
+        lat1: array, long1: array, lat2: array, long2: array
+    ) -> array:
         """
         Calculate the great circle bearing of two points.
 
@@ -65,7 +74,7 @@ class Cal:
         Initial bearing or forward azimuth
         https://www.movable-type.co.uk/scripts/latlong.html
         """
-        return np.mod(
+        bearing = np.mod(
             (
                 np.rad2deg(
                     np.arctan2(
@@ -81,11 +90,15 @@ class Cal:
             ),
             360.0,
         )
+        return bearing  # type: ignore
 
     @staticmethod
-    def cal_dest_given_dist_bearing(lat, long, bearing, dist):
+    def cal_dest_given_dist_bearing(
+        lat: array, long: array, bearing: array, dist: array
+    ) -> tuple[array, array]:
         """
-        Calculate the destination point(s) given start point(s), bearing(s) and distance(s)
+        Calculate the destination point(s) given start point(s), bearing(s) and
+        distance(s)
 
         Parameters
         ----------
@@ -131,10 +144,16 @@ class Cal:
 
     @staticmethod
     def cal_cross_track_dist(
-        path_lat1, path_long1, path_lat2, path_long2, point_lat, point_long
-    ):
+        path_lat1: array,
+        path_long1: array,
+        path_lat2: array,
+        path_long2: array,
+        point_lat: array,
+        point_long: array,
+    ) -> array:
         """
-        Calculate the cross track distance between point(s) along a great circle path.
+        Calculate the cross track distance between point(s) along a great circle
+        path.
 
         Parameters
         ----------
@@ -158,10 +177,11 @@ class Cal:
 
         Notes
         -----
-        Cross track distance using mean Earth radius 6371.009km for the WGS84 ellipsoid.
+        Cross track distance using mean Earth radius 6371.009km for the WGS84
+        ellipsoid.
         https://www.movable-type.co.uk/scripts/latlong.html
         """
-        return (
+        distance_cross_track = (
             np.arcsin(
                 np.sin(
                     Cal.cal_great_circle_dist(
@@ -182,11 +202,13 @@ class Cal:
             )
             * 6371.009
         )
+        return distance_cross_track  # type: ignore
 
     @staticmethod
-    def cal_angle_diff(current_angle, target_angle):
+    def cal_angle_diff(current_angle: array, target_angle: array) -> array:
         """
-        Calculate the difference of two angle (+ve clockwise, -ve anti-clockwise.
+        Calculate the difference of two angles
+        (+ve clockwise, -ve anti-clockwise).
 
         Parameters
         ----------

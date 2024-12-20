@@ -1,19 +1,27 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
+from typing import Literal, TypeAlias
 
 import xarray as xr
 
 import numpy as np
-from airtrafficsim.core.performance.performance import Performance
-from airtrafficsim.core.weather.era5 import Era5
-from airtrafficsim.utils.unit_conversion import Unit
+
+from ...types import array
+from ...utils.unit_conversion import Unit
+from ..performance.performance import Performance
+from ..weather.era5 import Era5
+
+WeatherMode: TypeAlias = Literal["ISA", "ERA5", ""]
+# TODO(abrah): repalce with str | None instead of this.
 
 
 class Weather:
-    """
-    Weather class
-    """
-
-    def __init__(self, start_time, end_time, weather_mode, file_name):
+    def __init__(
+        self,
+        start_time: datetime,
+        duration_s: float,
+        weather_mode: WeatherMode,
+        file_name: str,
+    ) -> None:
         """
         Weather class constructor
 
@@ -21,14 +29,14 @@ class Weather:
         ----------
         start_time : datetime
             Start time of the simulation
-        end_time : datetime
-            End time of the simulation
+        duration : float
+            Duration of the simulation
         weather_mode : str
             Weather mode [ISA, ERA5]
         file_name : str
             File name of the weather data
         """
-        self.mode = weather_mode
+        self.weather_mode = weather_mode
         """Weather mode [ISA, ERA5]"""
         self.start_time = start_time
         """Start time of the simulation [datetime]"""
@@ -43,6 +51,7 @@ class Weather:
         self.wind_east = np.zeros([0])
         """Wind - East [knots]"""
 
+        # FIXME(abrah): this is duplicated in ..performance. remove this.
         # Atmospheric condition
         self.d_T = np.zeros([0])
         """Temperature difference compare to ISA [K]"""
@@ -56,14 +65,14 @@ class Weather:
         """Density [kg/m^3]"""
 
         # Download ERA5 data
-        if self.mode == "ERA5":
+        if self.weather_mode == "ERA5":
             multilevel, surface = Era5.download_data(
-                start_time, end_time, file_name
+                start_time, duration_s, file_name
             )
             self.weather_data = xr.open_dataset(multilevel)
             self.radar_data = xr.open_dataset(surface)
 
-    def add_aircraft(self, alt, perf: Performance):
+    def add_aircraft(self, alt: float, perf: Performance) -> None:
         """
         Add aircraft to the weather class
 
@@ -91,7 +100,7 @@ class Weather:
             self.rho, perf.cal_air_density(self.p[-1], self.T[-1])
         )
 
-    def del_aircraft(self, index):
+    def del_aircraft(self, index: int) -> None:
         """
         Delete aircraft from the weather class
 
@@ -110,7 +119,14 @@ class Weather:
         self.p = np.delete(self.p, index)
         self.rho = np.delete(self.rho, index)
 
-    def update(self, lat, long, alt, perf: Performance, global_time):
+    def update(
+        self,
+        lat: array,
+        long: array,
+        alt: array,
+        perf: Performance,
+        seconds_since_start: float,
+    ) -> None:
         """
         Update weather data
 
@@ -124,17 +140,17 @@ class Weather:
             Altitude of the aircraft [ft]
         perf : Performance
             Performance class
-        global_time : float
+        seconds_since_start : float
             Time since the start of the simulation [seconds]
         """
-        if self.mode == "ERA5":
+        if self.weather_mode == "ERA5":
             ds = self.weather_data.sel(
                 longitude=xr.DataArray(long, dims="points"),
                 latitude=xr.DataArray(lat, dims="points"),
                 time=np.datetime64(
-                    (self.start_time + timedelta(seconds=global_time)).replace(
-                        second=0, minute=0
-                    ),
+                    (
+                        self.start_time + timedelta(seconds=seconds_since_start)
+                    ).replace(second=0, minute=0),
                     "ns",
                 ),
                 method="ffill",
@@ -143,7 +159,9 @@ class Weather:
                 np.array(
                     [
                         np.searchsorted(
-                            -x, -Unit.ft2m(alt) * 9.80665, side="right"
+                            -x,
+                            -Unit.ft2m(alt) * 9.80665,  # type: ignore
+                            side="right",
                         )
                         for x, alt in zip(ds["z"].values.T, alt)
                     ]
@@ -151,14 +169,16 @@ class Weather:
                 - 1
             )
             temp = np.array([x[i] for x, i in zip(ds["t"].values.T, index)])
-            self.d_T = temp - perf.cal_temperature(Unit.ft2m(alt), 0.0)
+            self.d_T = temp - perf.cal_temperature(
+                Unit.ft2m(alt), np.array(0.0)
+            )  # type: ignore
             self.wind_east = Unit.mps2kts(
                 np.array([x[i] for x, i in zip(ds["u"].values.T, index)])
-            )
+            )  # type: ignore
             self.wind_north = Unit.mps2kts(
                 np.array([x[i] for x, i in zip(ds["v"].values.T, index)])
-            )
+            )  # type: ignore
 
-        self.T = perf.cal_temperature(Unit.ft2m(alt), self.d_T)
-        self.p = perf.cal_air_pressure(Unit.ft2m(alt), self.T, self.d_T)
-        self.rho = perf.cal_air_density(self.p, self.T)
+        self.T = perf.cal_temperature(Unit.ft2m(alt), self.d_T)  # type: ignore
+        self.p = perf.cal_air_pressure(Unit.ft2m(alt), self.T, self.d_T)  # type: ignore
+        self.rho = perf.cal_air_density(self.p, self.T)  # type: ignore

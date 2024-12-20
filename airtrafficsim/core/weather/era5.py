@@ -1,6 +1,7 @@
-from datetime import time, timedelta
+from datetime import datetime, time, timedelta
 from pathlib import Path
 
+# NOTE(abrah): consider using google arco instead
 import cdsapi
 
 
@@ -9,8 +10,11 @@ class Era5:
     A utility class to handle ERA5 weather data
     """
 
+    # FIXME(abrah): rename end_time.
     @staticmethod
-    def download_data(start_time, end_time, file_name):
+    def download_data(
+        start_time: datetime, duration_s: float, file_name: str
+    ) -> tuple[Path, Path]:
         """
         Download ERA5 data
 
@@ -26,11 +30,11 @@ class Era5:
         Returns
         -------
         path: Path
-            Path to the downloaded weather data
+            Path to the multi-level and surface ERA5 data
         """
         c = cdsapi.Client()
         if Path(__file__).parent.parent.parent.resolve().joinpath(
-            "data/weather/era5/" + file_name
+            "data/weather/era5/" + file_name  # FIXME(abrah): injection attack.
         ).exists() and any(
             Path(__file__)
             .parent.parent.parent.resolve()
@@ -41,7 +45,9 @@ class Era5:
         else:
             print("Downloading ERA5 data.")
             print(
-                "Download expected to complete in few minutes. Visit https://cds.climate.copernicus.eu/cdsapp#!/yourrequests for the status of the request. \n"
+                "Download expected to complete in few minutes."
+                "Visit https://cds.climate.copernicus.eu/cdsapp#!/yourrequests "
+                "for the status of the request. \n"
             )
             if (
                 not Path(__file__)
@@ -53,11 +59,11 @@ class Era5:
                     "data/weather/era5/" + file_name
                 ).mkdir()
             tmp = start_time
-            year = []
-            month = []
-            day = []
-            hour = []
-            while tmp < (start_time + timedelta(seconds=end_time)):
+            year: list[str] = []
+            month: list[str] = []
+            day: list[str] = []
+            hour: list[str] = []
+            while tmp < (start_time + timedelta(seconds=duration_s)):
                 if not year or tmp.strftime("%Y") != year[-1]:
                     year.append(tmp.strftime("%Y"))
                 if not month or tmp.strftime("%m") != month[-1]:

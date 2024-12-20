@@ -1,24 +1,31 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any, NewType
+
 import numpy as np
-from airtrafficsim.core.navigation import Nav
-from airtrafficsim.utils.calculation import Cal
-from airtrafficsim.utils.enums import (
+
+from ..types import array
+from ..utils.calculation import Cal
+from ..utils.enums import (
     APLateralMode,
     APSpeedMode,
     APThrottleMode,
     SpeedMode,
     VerticalMode,
 )
-from airtrafficsim.utils.unit_conversion import Unit
+from ..utils.unit_conversion import Unit
+from .navigation import Nav
+
+if TYPE_CHECKING:
+    from .traffic import Traffic
+
+AutopilotIdx = NewType("AutopilotIdx", int)
+"""Index of the autopilot entry in the arrays"""
 
 
 class Autopilot:
-    """
-    Autopilot class
-    """
-
-    def __init__(self):
+    def __init__(self) -> None:
+        # FIXME(abrah): why 0? also pass in explicit dtype.
         # Target altitude
         self.alt = np.zeros([0])
         """Autopilot target altitude [feet]"""
@@ -60,53 +67,59 @@ class Autopilot:
         # Flight plan
         self.flight_plan_index = np.zeros([0], dtype=int)
         """Index of next waypoint in flight plan array [int]"""
-        self.flight_plan_name = []
+        self.flight_plan_name: list[list[str]] = []
         """2D array to store the string of waypoints [[string]]"""
-        self.flight_plan_lat = []
+        self.flight_plan_lat: list[list[float]] = []
         """2D array to store the latitude of waypoints [[deg...]]"""
-        self.flight_plan_long = []
+        self.flight_plan_long: list[list[float]] = []
         """2D array to store the longitude of waypoints [[deg...]]"""
-        self.flight_plan_target_alt = []
+        self.flight_plan_target_alt: list[list[float]] = []
         """2D array of target altitude at each waypoint [[ft...]]"""
-        self.flight_plan_target_speed = []
+        self.flight_plan_target_speed: list[
+            list[float]
+        ] = []  # FIXME(abrah): use algebraic data type for target speed.
         """2D array of target speed at each waypoint [[cas/mach...]]"""
-        self.procedure_speed = np.zeros([0])
+
+        self.procedure_speed: array = np.zeros([0])
         """Procedural target speed from BADA"""
 
         # Flight mode
-        self.speed_mode = np.zeros([0])
-        """Autopilot speed mode [1: constant Mach, 2: constant CAS, 3: accelerate, 4: decelerate]"""
-        self.auto_throttle_mode = np.zeros([0])
+        self.speed_mode = np.zeros([0], dtype=np.uint16)
+        """Autopilot speed mode
+        [1: constant Mach, 2: constant CAS, 3: accelerate, 4: decelerate]"""
+        self.auto_throttle_mode = np.zeros([0], dtype=np.uint16)
         """Autothrottle mode [1: Auto, 2: Speed]"""
-        self.vertical_mode = np.zeros([0])
-        """Autopilot vertical mode [1: alt hold, 2: vs mode, 3: flc mode (flight level change), 4. VNAV]"""
-        self.lateral_mode = np.zeros([0])
-        """Autopilot lateral mode [1: heading, 2: LNAV] ATC only use heading, LNAV -> track angle"""
+        self.vertical_mode = np.zeros([0], dtype=np.uint16)
+        """Autopilot vertical mode
+        [1: alt hold, 2: vs mode, 3: flc mode (flight level change), 4. VNAV]"""
+        self.lateral_mode = np.zeros([0], dtype=np.uint16)
+        """Autopilot lateral mode
+        [1: heading, 2: LNAV] ATC only use heading, LNAV -> track angle"""
         self.expedite_descent = np.zeros([0], dtype=bool)
         """Autopilot expedite climb setting [bool]"""
 
         # Holding
         self.holding = np.zeros([0], dtype=bool)
         self.holding_round = np.zeros([0])
-        self.holding_info = []
+        self.holding_info: list[list[Any]] = []  # FIXME(abrah): what is this???
 
     def add_aircraft(
         self,
-        lat,
-        long,
-        alt,
-        heading,
-        cas,
-        departure_airport,
-        departure_runway,
-        sid,
-        arrival_airport,
-        arrival_runway,
-        star,
-        approach,
-        flight_plan,
-        cruise_alt,
-    ):
+        lat: float,
+        long: float,
+        alt: float,
+        heading: float,
+        cas: float,
+        departure_airport: str,
+        departure_runway: str,
+        sid: str,
+        arrival_airport: str,
+        arrival_runway: str,
+        star: str,
+        approach: str,
+        flight_plan: list[str],
+        cruise_alt: float,
+    ) -> None:
         """
         Add aircraft and init flight plan
 
@@ -171,7 +184,8 @@ class Autopilot:
                 speed_resctriction_type,
                 speed_restriction,
             ) = Nav.get_procedure(departure_airport, departure_runway, sid)
-            # TODO: Ignored alt restriction 2, alt restriction type, and speed restriction type
+            # TODO: Ignored alt restriction 2, alt restriction type,
+            # and speed restriction type
             self.flight_plan_name[-1].extend(waypoint)
             self.flight_plan_target_alt[-1].extend(alt_restriction)
             self.flight_plan_target_speed[-1].extend(speed_restriction)
@@ -251,8 +265,12 @@ class Autopilot:
             # Add Final Approach flight plan with missed approach removed)
             # waypoint_idx = waypoint.index(' ')
             # self.flight_plan_name[-1].extend(waypoint[:waypoint_idx])
-            # self.flight_plan_target_alt[-1].extend(alt_restriction_1[:waypoint_idx])
-            # self.flight_plan_target_speed[-1].extend(speed_restriction[:waypoint_idx])
+            # self.flight_plan_target_alt[-1].extend(
+            # alt_restriction_1[:waypoint_idx]
+            # )
+            # self.flight_plan_target_speed[-1].extend(
+            # speed_restriction[:waypoint_idx]
+            # )
             self.flight_plan_name[-1].extend(waypoint)
             self.flight_plan_target_alt[-1].extend(alt_restriction)
             self.flight_plan_target_speed[-1].extend(speed_restriction)
@@ -294,20 +312,26 @@ class Autopilot:
 
         # Populate alt and speed target from last waypoint
         if len(self.flight_plan_target_alt[-1]) > 1:
-            self.flight_plan_target_alt[-1][-1] = 0.0
-            for i, val in reversed(
-                list(enumerate(self.flight_plan_target_alt[-1]))
-            ):
-                if val == -1:
-                    self.flight_plan_target_alt[-1][i] = (
-                        self.flight_plan_target_alt[-1][i + 1]
-                    )
+            # self.flight_plan_target_alt[-1][-1] = 0.0
+            # for i, val in reversed(
+            #     list(enumerate(self.flight_plan_target_alt[-1]))
+            # ):
+            #     if val == -1.0:
+            #         self.flight_plan_target_alt[-1][i] = (
+            #             self.flight_plan_target_alt[-1][i + 1]
+            #         )
+            raise NotImplementedError
+            # NOTE(abrah): unsure what this is doing, commenting out for now.
 
-        # for i, val in reversed(list(enumerate(self.flight_plan_target_speed[n]))):
+        # for i, val in reversed(enumerate(
+        # self.flight_plan_target_speed[n]
+        # )):
         #     if val == -1:
-        #         self.flight_plan_target_speed[n][i] = self.flight_plan_target_speed[n][i+1]
+        #         self.flight_plan_target_speed[n][i] = (
+        # self.flight_plan_target_speed[n][i+1]
+        # )
 
-    def del_aircraft(self, index):
+    def del_aircraft(self, index: AutopilotIdx) -> None:
         """
         Delete aircraft
 
@@ -331,7 +355,7 @@ class Autopilot:
         self.hv_next_wp = np.delete(self.hv_next_wp, index)
         self.dist = np.delete(self.dist, index)
         self.flight_plan_index = np.delete(self.flight_plan_index, index)
-        del self.flight_plan_name[index]
+        del self.flight_plan_name[index]  # FIXME(abrah): not necessary.
         del self.flight_plan_lat[index]
         del self.flight_plan_long[index]
         del self.flight_plan_target_alt[index]
@@ -346,7 +370,7 @@ class Autopilot:
         self.holding_round = np.delete(self.holding_round, index)
         del self.holding_info[index]
 
-    def update(self, traffic: Traffic):
+    def update(self, traffic: Traffic) -> None:
         """
         Update the autopilot status for each timestep
 
@@ -473,7 +497,9 @@ class Autopilot:
         )
 
         # Waypoint, track angle, and heading
-        # dist = np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, Calculation.cal_great_circle_distance(traffic.lat, traffic.long, self.lat, self.long))   #km
+        # dist = np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0,
+        # Calculation.cal_great_circle_distance(traffic.lat, traffic.long,
+        # self.lat, self.long))   #km
         dist = Cal.cal_great_circle_dist(
             traffic.lat, traffic.long, self.lat, self.long
         )  # km
@@ -495,7 +521,8 @@ class Autopilot:
         )  # Next track angle to next next waypoint
         curr_track_angle = Cal.cal_great_circle_bearing(
             traffic.lat, traffic.long, self.lat, self.long
-        )  # Current track angle to next waypoint #!TODO consider current heading
+        )  # Current track angle to next waypoint
+        #!TODO consider current heading
         turn_dist = turn_radius * np.tan(
             np.deg2rad(
                 np.abs(Cal.cal_angle_diff(next_track_angle, curr_track_angle))
@@ -542,9 +569,22 @@ class Autopilot:
         )
 
         # Fly over turn
-        # self.track_angle =  np.where(self.lateral_mode == AP_lateral_mode.HEADING, 0.0, np.where(dist<1.0, self.track_angle, Calculation.cal_great_circle_bearing(traffic.lat, traffic.long, self.lat, self.long)))
-        # self.heading = np.where(self.lateral_mode == AP_lateral_mode.HEADING, self.heading, self.track_angle + np.arcsin(traffic.weather.wind_speed/traffic.tas * np.sin(self.track_angle-traffic.weather.wind_direction))) #https://www.omnicalculator.com/physics/wind-correction-angle
-        # self.flight_plan_index = np.where((self.lateral_mode == AP_lateral_mode.LNAV) & (dist < 1.0) & (dist > self.dist), self.flight_plan_index+1, self.flight_plan_index)
+        # self.track_angle =  np.where(
+        # self.lateral_mode == AP_lateral_mode.HEADING,
+        # 0.0,
+        # np.where(dist<1.0,
+        # self.track_angle,
+        # alculation.cal_great_circle_bearing(traffic.lat, traffic.long,
+        # self.lat, self.long)))
+        # self.heading = np.where(self.lateral_mode == AP_lateral_mode.HEADING,
+        # self.heading,
+        # self.track_angle + np.arcsin(
+        # traffic.weather.wind_speed/traffic.tas * np.sin(
+        # self.track_angle-traffic.weather.wind_direction)))
+        # #https://www.omnicalculator.com/physics/wind-correction-angle
+        # self.flight_plan_index = np.where(
+        # (self.lateral_mode == AP_lateral_mode.LNAV) & (dist < 1.0) &
+        # (dist > self.dist), self.flight_plan_index+1, self.flight_plan_index)
         # self.dist = dist
 
         # Holding

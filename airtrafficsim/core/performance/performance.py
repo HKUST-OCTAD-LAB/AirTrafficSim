@@ -1,28 +1,27 @@
 """Performance base class"""
+# FIXME(abrah): move entire thing to __init__.py
 
+from typing import TYPE_CHECKING, Any, Literal
+
+# FIXME(abrah): openap should be optional.
 from openap import WRAP, Drag, FuelFlow, Thrust, prop
 
 import numpy as np
-from airtrafficsim.core.performance.bada import Bada
-from airtrafficsim.utils.enums import APSpeedMode, Config, VerticalMode
-from airtrafficsim.utils.unit_conversion import Unit
+
+from ...types import ArrayOrFloat, array, uint_array
+from ...utils.enums import APSpeedMode, Config, VerticalMode
+from ...utils.unit_conversion import Unit
+from .bada import Bada, MassClass
+
+if TYPE_CHECKING:
+    from ..traffic import Traffic
+
+PerformanceMode = Literal["BADA", "OpenAP"]
 
 
 class Performance:
-    """
-    Performance base class
-    """
-
-    def __init__(self, performance_mode):
-        """
-        Initialize Performance base class
-
-        Parameters
-        ----------
-        performance_mode : string, optional
-            Which performance model to use [BADA, OpenAP]
-        """
-
+    # FIXME(abrah): don't mix BADA and OpenAP.
+    def __init__(self, performance_mode: PerformanceMode) -> None:
         self.performance_mode = performance_mode
         """Whether BADA performance model is used [string]"""
 
@@ -30,18 +29,13 @@ class Performance:
             self.perf_model = Bada()
         else:
             # OpenAP
-            self.prop_model = []
-            self.thrust_model = []
-            self.drag_model = []
-            self.fuel_flow_model = []
-            self.wrap_model = []
+            self.prop_model: list[dict[str, Any]] = []
+            self.thrust_model: list[Thrust] = []
+            self.drag_model: list[Drag] = []
+            self.fuel_flow_model: list[FuelFlow] = []
+            self.wrap_model: list[WRAP] = []
 
-            # self.prop_model = np.empty([N], dtype=np.void)
-            # self.thrust_model = np.empty([N], dtype=np.void)
-            # self.drag_model = np.empty([N], dtype=np.void)
-            # self.fuel_flow_model = np.empty([N], dtype=np.void)
-            # self.wrap_model = np.empty([N], dtype=np.void)
-
+        # FIXME(abrah): why are we storing state here?
         self.drag = np.zeros([0])
         """Drag [N]"""
         self.thrust = np.zeros([0])
@@ -49,7 +43,7 @@ class Performance:
         self.esf = np.zeros([0])
         """Energy share factor [dimensionless]"""
 
-        # ----------------------------  Atmosphere model (Ref: BADA user menu section 3.1) -----------------------------------------
+        ## Atmosphere model (Ref: BADA user menu section 3.1)
         # MSL Standard atmosphere condition
         self.__T_0 = 288.15
         """Standard atmospheric temperature at MSL [K]"""
@@ -68,11 +62,15 @@ class Performance:
         """Gravitational acceleration [m/s^2]"""
         self.__BETA_T_BELOW_TROP = -0.0065
         """ISA temperature gradient with altitude below the tropopause [K/m]"""
-        # Tropopause (separation between troposphere (below) and stratosphere (above))
+        # Tropopause (separation between troposphere (below)
+        # and stratosphere (above))
         self.__H_P_TROP = 11000
         """Geopotential pressure altitude [m]"""
 
-    def add_aircraft(self, icao, engine=None, mass_class=2):
+    # FIXME(abrah): mass class should be enum
+    def add_aircraft(
+        self, icao: str, mass_class: MassClass = MassClass.AV
+    ) -> None:
         """
         Add an aircraft to traffic array.
 
@@ -98,7 +96,7 @@ class Performance:
             )
             self.wrap_model.append(WRAP(ac=icao))
 
-    def del_aircraft(self, index):
+    def del_aircraft(self, index: int) -> None:
         """
         Delete an aircraft from traffic array.
         """
@@ -114,9 +112,10 @@ class Performance:
             del self.fuel_flow_model[index]
             del self.wrap_model[index]
 
-    def init_procedure_speed(self, mass, n):
+    def init_procedure_speed(self, mass: array, n: int) -> None:
         """
-        Initialize standard air speed schedule for all flight phases (Section 4.1-4.3)
+        Initialize standard air speed schedule for all flight phases
+        (Section 4.1-4.3)
 
         Parameters
         ----------
@@ -129,7 +128,9 @@ class Performance:
         if self.performance_mode == "BADA":
             self.perf_model.init_procedure_speed(mass, n)
 
-    def get_procedure_speed(self, H_p, H_p_trans, flight_phase):
+    def get_procedure_speed(
+        self, H_p: array, H_p_trans: array, flight_phase: uint_array
+    ) -> array:
         """
         Get the standard air speed schedule
 
@@ -152,6 +153,7 @@ class Performance:
         M_std: float[]
             Standard Mach [dimensionless]
         """
+        # FIXME(abrah): dont return v or M!!!
         if self.performance_mode == "BADA":
             return self.perf_model.get_procedure_speed(
                 H_p, H_p_trans, flight_phase
@@ -159,9 +161,9 @@ class Performance:
         else:
             return np.where(H_p > 0, 20000, 20000)
 
-    # ----------------------------  Atmosphere model (Ref: BADA user menu section 3.1) -----------------------------------------
+    ### Atmosphere model (Ref: BADA user menu section 3.1)
 
-    def cal_temperature(self, H_p, d_T):
+    def cal_temperature(self, H_p: array | float, d_T: array | float) -> array:
         """
         Calculate Temperature (Equation 3.1-12~16)
 
@@ -189,7 +191,9 @@ class Performance:
             self.__T_0 + d_T + self.__BETA_T_BELOW_TROP * self.__H_P_TROP,
         )
 
-    def cal_air_pressure(self, H_p, T, d_T):
+    def cal_air_pressure(
+        self, H_p: array | float, T: array, d_T: array
+    ) -> array:
         r"""
         Calculate Air Pressure (Equation 3.1-17~20)
 
@@ -214,13 +218,15 @@ class Performance:
         """
         return np.where(
             H_p <= self.__H_P_TROP,
-            # If below or equal Geopotential pressure altitude of tropopause (Equation 3.1-18)
+            # If below or equal Geopotential pressure altitude of tropopause
+            # (Equation 3.1-18)
             self.__P_0
             * np.power(
                 (T - d_T) / self.__T_0,
                 -self.__G_0 / (self.__BETA_T_BELOW_TROP * self.__R),
             ),
-            # If above Geopotential pressure altitude of tropopause (Equation 3.1-20)
+            # If above Geopotential pressure altitude of tropopause
+            # (Equation 3.1-20)
             self.__P_0
             * np.power(
                 (self.cal_temperature(self.__H_P_TROP, d_T) - d_T) / self.__T_0,
@@ -233,7 +239,7 @@ class Performance:
             ),
         )
 
-    def cal_air_density(self, p, T):
+    def cal_air_density(self, p: ArrayOrFloat, T: ArrayOrFloat) -> ArrayOrFloat:
         """
         Calculate Air Density (Equation 3.1-21)
 
@@ -252,7 +258,7 @@ class Performance:
         """
         return p / (self.__R * T)
 
-    def cal_speed_of_sound(self, T):
+    def cal_speed_of_sound(self, T: ArrayOrFloat) -> ArrayOrFloat:
         """
         Calculate speed of sound. (Equation 3.1-22)
 
@@ -266,9 +272,11 @@ class Performance:
         a: float[]
             Speed of sound [m/s]
         """
-        return np.sqrt(self.__KAPPA * self.__R * T)
+        return (self.__KAPPA * self.__R * T) ** 0.5  # type: ignore
 
-    def cas_to_tas(self, V_cas, p, rho):
+    def cas_to_tas(
+        self, V_cas: ArrayOrFloat, p: ArrayOrFloat, rho: ArrayOrFloat
+    ) -> ArrayOrFloat:
         """
         Convert Calibrated air speed to True air speed. (Equation 3.1-23)
 
@@ -289,36 +297,33 @@ class Performance:
             True air speed [m/s]
         """
         mu = (self.__KAPPA - 1) / self.__KAPPA
-        return np.power(
-            2.0
-            / mu
-            * p
-            / rho
+        V_tas = (
+            (2.0 / mu * p / rho)
             * (
-                np.power(
+                (
                     1.0
                     + self.__P_0
                     / p
                     * (
-                        np.power(
+                        (
                             1.0
                             + mu
                             / 2.0
                             * self.__RHO_0
                             / self.__P_0
-                            * np.square(V_cas),
-                            1.0 / mu,
+                            * np.square(V_cas)
                         )
+                        ** (1.0 / mu)
                         - 1
-                    ),
-                    mu,
+                    )
                 )
+                ** mu
                 - 1
-            ),
-            0.5,
-        )
+            )
+        ) ** 0.5
+        return V_tas  # type: ignore
 
-    def tas_to_cas(self, V_tas, p, rho):
+    def tas_to_cas(self, V_tas: array, p: array, rho: array) -> array:
         """
         Convert True air speed to Calibrated air speed. (Equation 3.1-24)
 
@@ -339,7 +344,7 @@ class Performance:
             Calibrated air speed [m/s]
         """
         mu = (self.__KAPPA - 1) / self.__KAPPA
-        return np.power(
+        V_cas = np.power(
             2
             / mu
             * self.__P_0
@@ -361,8 +366,9 @@ class Performance:
             ),
             0.5,
         )
+        return V_cas  # type: ignore
 
-    def mach_to_tas(self, M, T):
+    def mach_to_tas(self, M: array, T: array) -> array:
         """
         Convert Mach number to True Air speed (Equation 3.1-26)
 
@@ -379,9 +385,9 @@ class Performance:
         V_tas: float[]
             True air speed [m/s]
         """
-        return M * np.sqrt(self.__KAPPA * self.__R * T)
+        return M * np.sqrt(self.__KAPPA * self.__R * T)  # type: ignore
 
-    def tas_to_mach(self, V_tas, T):
+    def tas_to_mach(self, V_tas: ArrayOrFloat, T: ArrayOrFloat) -> ArrayOrFloat:
         """
         Convert True Air speed to Mach number (Equation 3.1-26)
 
@@ -398,10 +404,10 @@ class Performance:
         M: float[]
             Mach number [dimensionless]
         """
-        return V_tas / np.sqrt(self.__KAPPA * self.__R * T)
+        return V_tas / (self.__KAPPA * self.__R * T) ** 0.5  # type: ignore
 
-    # ----------------------------  Operation limit -----------------------------------------
-    def cal_transition_alt(self, n, d_T):
+    ### Operation limit
+    def cal_transition_alt(self, n: int, d_T: array) -> array:
         """
         Calculate Mach/CAS transition altitude. (Equation 3.1-27~28)
 
@@ -417,9 +423,10 @@ class Performance:
 
         Note
         ----
-        Transition altitude is defined to be the geopotential pressure altitude at which V_CAS and M represent the same TAS value.
-        TODO: Separate climb and descent trans altitude?
+        Transition altitude is defined to be the geopotential pressure altitude
+        at which V_CAS and M represent the same TAS value.
         """
+        # TODO: Separate climb and descent trans altitude?
         if self.performance_mode == "BADA":
             V_cas = Unit.kts2mps(self.perf_model.climb_schedule[n, -2])
             M = self.perf_model.climb_schedule[n, -1]
@@ -469,11 +476,12 @@ class Performance:
             )
 
         else:
-            return (
-                self.wrap_model[n].climb_cross_alt_conmach()["default"] * 1000.0
-            )
+            wrap = self.wrap_model[n]
+            if not isinstance(wrap, WRAP):
+                raise RuntimeError("panic: wrap_model is not WRAP")
+            return wrap.climb_cross_alt_conmach()["default"] * 1000.0  # type: ignore
 
-    def get_empty_weight(self, n):
+    def get_empty_weight(self, n: int) -> float:
         """
         Get Empty Weight of an aircraft
 
@@ -488,11 +496,11 @@ class Performance:
             Empty weight(BADA) or Operating empty weight(OpenAP) [kg]
         """
         if self.performance_mode == "BADA":
-            return self.perf_model.m_min[n] * 1000.0
+            return self.perf_model.m_min[n] * 1000.0  # type: ignore
         else:
-            return self.prop_model[n]["limits"]["OEW"]
+            return self.prop_model[n]["limits"]["OEW"]  # type: ignore
 
-    def cal_maximum_alt(self, d_T, m):
+    def cal_maximum_alt(self, d_T: array, m: array) -> array:
         """
         Calculate maximum altitude
 
@@ -516,7 +524,7 @@ class Performance:
                 np.array([x["limits"]["ceiling"] for x in self.prop_model])
             )
 
-    def cal_maximum_speed(self):
+    def cal_maximum_speed(self) -> tuple[array, array]:
         """
         Calculate maximum altitude
 
@@ -532,7 +540,7 @@ class Performance:
                 len(self.prop_model), 1000
             )
 
-    def cal_minimum_speed(self, configuration):
+    def cal_minimum_speed(self, configuration: uint_array) -> array:
         """
         Calculate minimum speed
 
@@ -549,9 +557,10 @@ class Performance:
         if self.performance_mode == "BADA":
             return self.perf_model.cal_minimum_speed(configuration)
         else:
-            return 0.0  # TODO: OpenAP no minimum/stall speed?
+            # NOTE(abrah): should be resolved when we split the two
+            raise RuntimeError("panic: OpenAP has no minimum/stall speed")
 
-    def cal_max_d_tas(self, d_t):
+    def cal_max_d_tas(self, d_t: array) -> array:
         """
         Calculate maximum delta true air speed
 
@@ -570,7 +579,7 @@ class Performance:
         else:
             return 2 * d_t
 
-    def cal_max_d_rocd(self, d_t, V_tas, rocd):
+    def cal_max_d_rocd(self, d_t: array, V_tas: array, rocd: array) -> array:
         """
         Calculate maximum delta rate of climb or descend (equation 5.2-2)
 
@@ -593,16 +602,23 @@ class Performance:
         if self.performance_mode == "BADA":
             return self.perf_model.cal_max_d_rocd(d_t, V_tas, rocd)
         else:
-            return np.sin(np.arcsin(rocd / V_tas) - 5.0 * d_t / V_tas) * (
+            d_rocd = np.sin(np.arcsin(rocd / V_tas) - 5.0 * d_t / V_tas) * (
                 V_tas + d_t
             )
+            return d_rocd  # type: ignore
 
-    # ----------------------------  Performance -----------------------------------------
-    # ----------------------------  Total-Energy Model Section 3.2 -----------------------------------------
+    ## Performance
+    ### Total Energy Model (3.2)
 
     def cal_energy_share_factor(
-        self, H_p, T, d_T, M, ap_speed_mode, vertical_mode
-    ):
+        self,
+        H_p: array,
+        T: array,
+        d_T: array,
+        M: array,
+        ap_speed_mode: uint_array,
+        vertical_mode: uint_array,
+    ) -> array:
         """
         Calculate energy share factor (Equation 3.2-5, 8~11)
 
@@ -642,9 +658,11 @@ class Performance:
                 # Constant Mach
                 np.where(
                     H_p > self.__H_P_TROP,
-                    # Conditiona a: Constant Mach number in stratosphere (Equation 3.2-8)
+                    # Condition a: Constant Mach number in stratosphere
+                    # (Equation 3.2-8)
                     1.0,
-                    # Condition b: Constant Mach number below tropopause (Equation 3.2-9)
+                    # Condition b: Constant Mach number below tropopause
+                    # (Equation 3.2-9)
                     np.power(
                         1.0
                         + self.__KAPPA
@@ -661,7 +679,8 @@ class Performance:
                 # Constnt CAS
                 np.where(
                     H_p <= self.__H_P_TROP,
-                    # Condition c: Constant Calibrated Airspeed (CAS) below tropopause (Equation 3.2-10)
+                    # Condition c: Constant Calibrated Airspeed (CAS) below
+                    # tropopause (Equation 3.2-10)
                     np.power(
                         1.0
                         + self.__KAPPA
@@ -685,7 +704,8 @@ class Performance:
                         ),
                         -1.0,
                     ),
-                    # Condition d: Constant Calibrated Airspeed (CAS) above tropopause (Equation 3.2-11)
+                    # Condition d: Constant Calibrated Airspeed (CAS) above
+                    # tropopause (Equation 3.2-11)
                     np.power(
                         1.0
                         + np.power(
@@ -711,10 +731,22 @@ class Performance:
             ],
         )
 
-    def cal_tem_rocd(self, T, d_T, m, D, f_M, Thr, V_tas, C_pow_red):
+    def cal_tem_rocd(
+        self,
+        T: array,
+        d_T: array,
+        m: array,
+        D: array,
+        f_M: array,
+        Thr: array,
+        V_tas: array,
+        C_pow_red: array,
+    ) -> array:
         """
-        Total Energy Model. Speed and Throttle Controller. (BADA User Menu Equation 3.2-1a and 3.2-7)
-        Calculate Rate of climb or descent given velocity(constant) and thrust (max climb thrust/idle descent).
+        Total Energy Model. Speed and Throttle Controller.
+        (BADA User Menu Equation 3.2-1a and 3.2-7)
+        Calculate Rate of climb or descent given velocity(constant) and thrust
+        (max climb thrust/idle descent).
 
         Parameters
         ----------
@@ -746,15 +778,28 @@ class Performance:
         -------
         rocd: float[]
             Rate of climb or descent [m/s]
-            Defined as variation with time of the aircraft geopotential pressure altitude H_p
+            Defined as variation with time of the aircraft geopotential pressure
+            altitude H_p
         """
-        return (
+        rocd = (
             (T - d_T) / T * (Thr - D) * V_tas * C_pow_red / m / self.__G_0 * f_M
         )
+        return rocd
 
-    def cal_tem_accel(self, T, d_T, m, D, rocd, Thr, V_tas):
+    def cal_tem_accel(
+        self,
+        T: array,
+        d_T: array,
+        m: array,
+        D: array,
+        rocd: array,
+        Thr: array,
+        V_tas: array,
+    ) -> array:
+        # NOTE: changed to equation  3.2-1
         """
-        Total Energy Model. ROCD and Throttle Controller. (BADA User Menu Equation 3.2-1b and 3.2-7) NOTE: changed to equation  3.2-1
+        Total Energy Model. ROCD and Throttle Controller.
+        (BADA User Menu Equation 3.2-1b and 3.2-7)
         Calculate accel given ROCD and thrust.
 
         Parameters
@@ -792,9 +837,20 @@ class Performance:
             (Thr - D) / m - self.__G_0 / V_tas * rocd * T / (T - d_T),
         )
 
-    def cal_tem_thrust(self, T, d_T, m, D, f_M, rocd, V_tas):
+    def cal_tem_thrust(
+        self,
+        T: array,
+        d_T: array,
+        m: array,
+        D: array,
+        f_M: array,
+        rocd: array,
+        V_tas: array,
+    ) -> array:
+        # TODO: change to equation  3.2-1
         """
-        Total Energy Model. Speed and ROCD Controller. (BADA User Menu Equation 3.2-1c and 3.2-7) TODO: change to equation  3.2-1
+        Total Energy Model. Speed and ROCD Controller.
+        (BADA User Menu Equation 3.2-1c and 3.2-7)
         Calculate thrust given ROCD and speed.
 
         Parameters
@@ -825,9 +881,12 @@ class Performance:
         Thr: float[]
             Thrust acting parallel to the aircraft velocity vector [N]
         """
-        return rocd / f_M / ((T - d_T) / T) * m * self.__G_0 / V_tas + D
+        Thr = rocd / f_M / ((T - d_T) / T) * m * self.__G_0 / V_tas + D
+        return Thr
 
-    def cal_vs_accel(self, traffic, tas):
+    def cal_vs_accel(
+        self, traffic: "Traffic", tas: array
+    ) -> tuple[array, array]:
         """
         Calculate vertical speed and acceleration given true airspeed.
 
@@ -854,9 +913,9 @@ class Performance:
                 traffic.weather.rho,
                 traffic.configuration,
                 self.perf_model.cal_expedite_descend_factor(
-                    traffic.ap.expedite_descent
+                    traffic.autopilot.expedite_descent
                 ),
-            )
+            )  # type: ignore
             self.thrust = self.perf_model.cal_thrust(
                 traffic.vertical_mode,
                 traffic.configuration,
@@ -864,8 +923,8 @@ class Performance:
                 traffic.tas,
                 traffic.weather.d_T,
                 self.drag,
-                traffic.ap.speed_mode,
-            )
+                traffic.autopilot.speed_mode,
+            )  # type: ignore
         else:
             self.drag = np.array(
                 [
@@ -878,7 +937,8 @@ class Performance:
                     for i, x in enumerate(self.drag_model)
                 ]
             )
-            # drag.nonclean(mass=60000, tas=150, alt=100, flap_angle=20, path_angle=10, landing_gear=True)
+            # drag.nonclean(mass=60000, tas=150, alt=100, flap_angle=20,
+            # path_angle=10, landing_gear=True)
             self.thrust = np.array(
                 [
                     x.cruise(tas=traffic.cas[i], alt=traffic.alt[i])
@@ -889,7 +949,10 @@ class Performance:
             for i, x in enumerate(self.thrust_model):
                 if (traffic.vertical_mode[i] == VerticalMode.CLIMB) | (
                     (traffic.vertical_mode[i] == VerticalMode.LEVEL)
-                    & (traffic.ap.speed_mode[i] == APSpeedMode.ACCELERATE)
+                    & (
+                        traffic.autopilot.speed_mode[i]
+                        == APSpeedMode.ACCELERATE
+                    )
                 ):
                     thrust.append(
                         x.climb(
@@ -897,29 +960,39 @@ class Performance:
                         )
                     )
                 elif (traffic.vertical_mode[i] == VerticalMode.LEVEL) & (
-                    (traffic.ap.speed_mode[i] == APSpeedMode.CONSTANT_CAS)
-                    | (traffic.ap.speed_mode[i] == APSpeedMode.CONSTANT_MACH)
+                    (
+                        traffic.autopilot.speed_mode[i]
+                        == APSpeedMode.CONSTANT_CAS
+                    )
+                    | (
+                        traffic.autopilot.speed_mode[i]
+                        == APSpeedMode.CONSTANT_MACH
+                    )
                 ):
                     thrust.append(self.drag[i])
                 elif (traffic.vertical_mode[i] == VerticalMode.DESCENT) | (
                     (traffic.vertical_mode[i] == VerticalMode.LEVEL)
-                    & (traffic.ap.speed_mode[i] == APSpeedMode.DECELERATE)
+                    & (
+                        traffic.autopilot.speed_mode[i]
+                        == APSpeedMode.DECELERATE
+                    )
                 ):
                     thrust.append(
                         x.descent_idle(tas=traffic.tas[i], alt=traffic.alt[i])
                     )
             self.thrust = np.array(thrust)
-            # T = thrust.takeoff(tas=100, alt=0) T = thrust.climb(tas=200, alt=20000, roc=1000)
+            # T = thrust.takeoff(tas=100, alt=0) T = thrust.climb(
+            # tas=200, alt=20000, roc=1000)
 
-        # Total Energy Model
+        # total energy model energy share factor
         self.esf = self.cal_energy_share_factor(
             Unit.ft2m(traffic.alt),
             traffic.weather.T,
             traffic.weather.d_T,
             traffic.mach,
-            traffic.ap.speed_mode,
+            traffic.autopilot.speed_mode,
             traffic.vertical_mode,
-        )  # Energy share factor
+        )  # type: ignore
         if self.performance_mode == "BADA":
             rocd = self.cal_tem_rocd(
                 traffic.weather.T,
@@ -942,12 +1015,12 @@ class Performance:
                 self.esf,
                 self.thrust,
                 tas,
-                1.0,
+                np.ones_like(tas),
             )
 
         accel = np.where(
-            (traffic.ap.speed_mode == APSpeedMode.ACCELERATE)
-            | (traffic.ap.speed_mode == APSpeedMode.DECELERATE),
+            (traffic.autopilot.speed_mode == APSpeedMode.ACCELERATE)
+            | (traffic.autopilot.speed_mode == APSpeedMode.DECELERATE),
             self.cal_tem_accel(
                 traffic.weather.T,
                 traffic.weather.d_T,
@@ -962,7 +1035,9 @@ class Performance:
 
         return Unit.mps2ftpm(rocd), accel
 
-    def cal_fuel_burn(self, flight_phase, tas, alt):
+    def cal_fuel_burn(
+        self, flight_phase: uint_array, tas: array, alt: array
+    ) -> array:
         """
         Calculate fuel burn
 
@@ -972,7 +1047,7 @@ class Performance:
             Flight phase from Traffic class [Flight_phase enum]
         tas : float[]
             True airspeed [kt]
-        alt : _type_
+        alt : float[]
             Altitude [ft]
 
         Returns
@@ -985,16 +1060,18 @@ class Performance:
                 flight_phase, tas, self.thrust, alt
             )
         else:
-            return [
-                x.at_thrust(acthr=self.thrust[i], alt=alt[i])
-                for i, x in enumerate(self.fuel_flow_model)
-            ]
+            return np.array(
+                [
+                    x.at_thrust(acthr=self.thrust[i], alt=alt[i])
+                    for i, x in enumerate(self.fuel_flow_model)
+                ]
+            )
         # FF = fuelflow.takeoff(tas=100, alt=0, throttle=1)
         # FF = fuelflow.enroute(mass=60000, tas=200, alt=20000, path_angle=3)
         # FF = fuelflow.enroute(mass=60000, tas=230, alt=32000, path_angle=0)
 
-    # ----------------------------  Turning -----------------------------------------
-    def cal_rate_of_turn(self, bank_angle, V_tas):
+    ## TURNING
+    def cal_rate_of_turn(self, bank_angle: array, V_tas: array) -> array:
         """
         Calculate rate of turn (Equation 5.3-1)
 
@@ -1011,9 +1088,12 @@ class Performance:
         Rate of turn : float[]
             Rate of turn [deg/s]
         """
-        return np.rad2deg(self.__G_0 / V_tas * np.tan(np.deg2rad(bank_angle)))
+        rate_of_turn = np.rad2deg(
+            self.__G_0 / V_tas * np.tan(np.deg2rad(bank_angle))
+        )
+        return rate_of_turn  # type: ignore
 
-    def cal_bank_angle(self, rate_of_turn, V_tas):
+    def cal_bank_angle(self, rate_of_turn: array, V_tas: array) -> array:
         """
         Calculate rate of turn (Equation 5.3-1)
 
@@ -1030,11 +1110,12 @@ class Performance:
         bank_angle: float[]
             Bank angle [deg]
         """
-        return np.rad2deg(
+        bank_angle = np.rad2deg(
             np.arctan(np.deg2rad(rate_of_turn) * V_tas / self.__G_0)
         )
+        return bank_angle  # type: ignore
 
-    def cal_turn_radius(self, bank_angle, V_tas):
+    def cal_turn_radius(self, bank_angle: array, V_tas: array) -> array:
         """
         Calculate rate of turn (Equation 5.3-1)
 
@@ -1051,9 +1132,12 @@ class Performance:
         turn_radius: float[]
             Turn radius [m]
         """
-        return np.square(V_tas) / self.__G_0 / np.tan(np.deg2rad(bank_angle))
+        turn_radius = (
+            np.square(V_tas) / self.__G_0 / np.tan(np.deg2rad(bank_angle))
+        )
+        return turn_radius  # type: ignore
 
-    def get_bank_angles(self, configuration):
+    def get_bank_angles(self, configuration: uint_array) -> array:
         """
         Get standard nominal bank angles (Session 5.3)
 
@@ -1071,8 +1155,9 @@ class Performance:
             return np.where(
                 (configuration == Config.TAKEOFF)
                 | (configuration == Config.LANDING),
-                self.perf_model._Bada__PHI_NORM_CIV_TOLD,
-                self.perf_model._Bada__PHI_NORM_CIV_OTHERS,
+                self.perf_model._Bada__PHI_NORM_CIV_TOLD,  # type: ignore
+                self.perf_model._Bada__PHI_NORM_CIV_OTHERS,  # type: ignore
+                # FIXME(abrah): why access private???
             )
         else:
             return np.where(
@@ -1082,7 +1167,9 @@ class Performance:
                 30.0,
             )
 
-    def update_configuration(self, V_cas, H_p, vertical_mode):
+    def update_configuration(
+        self, V_cas: array, H_p: array, vertical_mode: uint_array
+    ) -> uint_array:
         """
         Update Flight Phase (section 3.5)
 

@@ -1,39 +1,47 @@
+from typing import Any
+
 import numpy as np
 from airtrafficsim.core.navigation import Nav
 from airtrafficsim.core.traffic import Traffic
 from airtrafficsim.utils.calculation import Cal
-from airtrafficsim.utils.enums import APLateralMode, APThrottleMode
+from airtrafficsim.utils.enums import (
+    APLateralMode,
+    APThrottleMode,
+    Config,
+    FlightPhase,
+)
 from airtrafficsim.utils.unit_conversion import Unit
 
 
 class Aircraft:
     """
-    Aircraft class to represent the states of one individual aircraft, including get and set functions.
+    Aircraft class to represent the states of one individual aircraft, including
+    get and set functions.
     """
 
     def __init__(
         self,
         traffic: Traffic,
-        call_sign,
-        aircraft_type,
-        flight_phase,
-        configuration,
-        lat,
-        long,
-        alt,
-        heading,
-        cas,
-        fuel_weight,
-        payload_weight,
-        departure_airport="",
-        departure_runway="",
-        sid="",
-        arrival_airport="",
-        arrival_runway="",
-        star="",
-        approach="",
-        flight_plan=[],
-        cruise_alt=-1,
+        call_sign: str,
+        aircraft_type: str,
+        flight_phase: FlightPhase,
+        configuration: Config,
+        lat: float,
+        long: float,
+        alt: float,
+        heading: float,
+        cas: float,
+        fuel_weight: float,
+        payload_weight: float,
+        departure_airport: str = "",
+        departure_runway: str = "",
+        sid: str = "",
+        arrival_airport: str = "",
+        arrival_runway: str = "",
+        star: str = "",
+        approach: str = "",
+        flight_plan: list[Any] = [],  # FIXME: check correct type
+        cruise_alt: int = -1,
     ):
         """
         Initialize one aircraft and add the aircraft to traffic array.
@@ -108,7 +116,7 @@ class Aircraft:
         )  # Add aircraft. Obtain aircraft index
         self.vectoring = ""
 
-    def set_heading(self, heading):
+    def set_heading(self, heading: float) -> None:
         """
         Set the heading of the aircraft.
 
@@ -118,10 +126,10 @@ class Aircraft:
             Heading [deg]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        self.traffic.ap.heading[index] = heading
-        self.traffic.ap.lateral_mode[index] = APLateralMode.HEADING
+        self.traffic.autopilot.heading[index] = heading
+        self.traffic.autopilot.lateral_mode[index] = APLateralMode.HEADING
 
-    def set_speed(self, speed):
+    def set_speed(self, speed: float) -> None:
         """
         Set the speed of the aircraft.
 
@@ -131,14 +139,10 @@ class Aircraft:
             Speed [kt]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        self.traffic.ap.cas[index] = speed
-        self.traffic.ap.auto_throttle_mode[index] = APThrottleMode.SPEED
+        self.traffic.autopilot.cas[index] = speed
+        self.traffic.autopilot.auto_throttle_mode[index] = APThrottleMode.SPEED
 
-    # def set_mach(self, mach):
-    #     """Set Mach [dimensionless]"""
-    #     self.traffic.ap.mach[self.index] = mach
-
-    def set_vs(self, vs):
+    def set_vs(self, vs: float) -> None:
         """
         Set vertical speed.
 
@@ -148,9 +152,9 @@ class Aircraft:
             Vertical speed [ft/min]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        self.traffic.ap.vs[index] = vs
+        self.traffic.autopilot.vs[index] = vs
 
-    def set_alt(self, alt):
+    def set_alt(self, alt: float) -> None:
         """
         Set altitude.
 
@@ -160,9 +164,9 @@ class Aircraft:
             Altitude [ft]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        self.traffic.ap.alt[index] = alt
+        self.traffic.autopilot.alt[index] = alt
 
-    def set_direct(self, waypoint):
+    def set_direct(self, waypoint: str) -> None:
         """
         Set direct to a waypoint.
 
@@ -172,9 +176,11 @@ class Aircraft:
             ICAO code of the waypoint
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        self.traffic.ap.lateral_mode[index] = APLateralMode.LNAV
+        self.traffic.autopilot.lateral_mode[index] = APLateralMode.LNAV
 
-    def set_holding(self, holding_time, holding_fix, region):
+    def set_holding(
+        self, holding_time: float, holding_fix: str, region: str
+    ) -> None:
         """
         Set holding procedure.
 
@@ -182,18 +188,20 @@ class Aircraft:
         ----------
         holding_time : float
             How long should the aircraft hold [second]
-        holding_fix : float
+        holding_fix : str
             ICAO code of the fix that the aircraft should hold
-        region : float
+        region : str
             ICAO code of the region that the aircraft should hold
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        self.traffic.ap.holding_round[index] = holding_time
-        self.traffic.ap.holding_info[index] = Nav.get_holding_procedure(
+        self.traffic.autopilot.holding_round[index] = holding_time
+        self.traffic.autopilot.holding_info[index] = Nav.get_holding_procedure(
             holding_fix, region
         )
 
-    def set_vectoring(self, vectoring_time, v_2, fix):
+    def set_vectoring(
+        self, vectoring_time: float, v_2: float, fix: str
+    ) -> None:
         """
         Set vectoring procedure.
 
@@ -211,14 +219,16 @@ class Aircraft:
             index = np.where(self.traffic.index == self.index)[0][0]
 
             new_dist = (
-                self.traffic.ap.dist[index]
+                self.traffic.autopilot.dist[index]
                 + Unit.kts2mps(self.traffic.cas[index] + v_2)
                 * (vectoring_time)
                 / 2000.0
             )
             bearing = np.mod(
-                self.traffic.ap.heading[index]
-                + np.rad2deg(np.arccos(self.traffic.ap.dist[index] / new_dist))
+                self.traffic.autopilot.heading[index]
+                + np.rad2deg(
+                    np.arccos(self.traffic.autopilot.dist[index] / new_dist)
+                )
                 + 360.0,
                 360.0,
             )
@@ -230,27 +240,27 @@ class Aircraft:
             )
 
             # Add new virtual waypoint
-            i = self.traffic.ap.flight_plan_index[index]
-            self.traffic.ap.flight_plan_lat[index].insert(i, lat)
-            self.traffic.ap.flight_plan_long[index].insert(i, long)
-            self.traffic.ap.flight_plan_name[index].insert(i, "VECT")
-            self.traffic.ap.flight_plan_target_alt[index].insert(
-                i, self.traffic.ap.flight_plan_target_alt[index][i]
+            i = self.traffic.autopilot.flight_plan_index[index]
+            self.traffic.autopilot.flight_plan_lat[index].insert(i, lat)
+            self.traffic.autopilot.flight_plan_long[index].insert(i, long)
+            self.traffic.autopilot.flight_plan_name[index].insert(i, "VECT")
+            self.traffic.autopilot.flight_plan_target_alt[index].insert(
+                i, self.traffic.autopilot.flight_plan_target_alt[index][i]
             )
-            self.traffic.ap.flight_plan_target_speed[index][i] = v_2
-            self.traffic.ap.flight_plan_target_speed[index].insert(
-                i, self.traffic.ap.flight_plan_target_speed[index][i]
+            self.traffic.autopilot.flight_plan_target_speed[index][i] = v_2
+            self.traffic.autopilot.flight_plan_target_speed[index].insert(
+                i, self.traffic.autopilot.flight_plan_target_speed[index][i]
             )
 
-    def resume_own_navigation(self):
+    def resume_own_navigation(self) -> None:
         """
         Resume own navigation to use autopilot instead of user commanded target.
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        self.traffic.ap.lateral_mode[index] = APLateralMode.LNAV
-        self.traffic.ap.auto_throttle_mode[index] = APThrottleMode.AUTO
+        self.traffic.autopilot.lateral_mode[index] = APLateralMode.LNAV
+        self.traffic.autopilot.auto_throttle_mode[index] = APThrottleMode.AUTO
 
-    def get_heading(self):
+    def get_heading(self) -> float:
         """
         Get heading of aircraft.
 
@@ -260,9 +270,9 @@ class Aircraft:
             Heading [deg]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.heading[index]
+        return float(self.traffic.heading[index])
 
-    def get_cas(self):
+    def get_cas(self) -> float:
         """
         Get Calibrated air speed of aircraft.
 
@@ -272,9 +282,9 @@ class Aircraft:
             Calibrated air speed [knots]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.cas[index]
+        return float(self.traffic.cas[index])
 
-    def get_mach(self):
+    def get_mach(self) -> float:
         """
         Get Mach number of aircraft.
 
@@ -284,9 +294,9 @@ class Aircraft:
             Mach number [dimensionless]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.mach[index]
+        return float(self.traffic.mach[index])
 
-    def get_vs(self):
+    def get_vs(self) -> float:
         """
         Get vertical speed of aircraft.
 
@@ -296,9 +306,9 @@ class Aircraft:
             Vertical speed [ft/min]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.vs[index]
+        return float(self.traffic.vs[index])
 
-    def get_alt(self):
+    def get_alt(self) -> float:
         """
         Get altitude of aircraft.
 
@@ -308,9 +318,9 @@ class Aircraft:
             Altitude [ft]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.alt[index]
+        return float(self.traffic.alt[index])
 
-    def get_long(self):
+    def get_long(self) -> float:
         """
         Get longitude of aircraft.
 
@@ -320,9 +330,9 @@ class Aircraft:
             Longitude [deg]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.long[index]
+        return float(self.traffic.long[index])
 
-    def get_lat(self):
+    def get_lat(self) -> float:
         """
         Get latitude of aircraft.
 
@@ -332,9 +342,9 @@ class Aircraft:
             Latitude [deg]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.lat[index]
+        return float(self.traffic.lat[index])
 
-    def get_fuel_consumed(self):
+    def get_fuel_consumed(self) -> float:
         """
         Get the total fuel consumed of aircraft.
 
@@ -344,9 +354,9 @@ class Aircraft:
             Fuel consumed [kg]
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.fuel_consumed[index]
+        return float(self.traffic.fuel_consumed[index])
 
-    def get_next_wp(self):
+    def get_next_wp(self) -> str:
         """
         Get next waypoint.
 
@@ -356,11 +366,13 @@ class Aircraft:
             ICAO code of the next waypoing
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.ap.flight_plan_name[index][
-            self.traffic.ap.flight_plan_index[index]
-        ]
+        return str(
+            self.traffic.autopilot.flight_plan_name[index][
+                self.traffic.autopilot.flight_plan_index[index]
+            ]
+        )
 
-    def get_wake(self):
+    def get_wake(self) -> str:
         """
         Get wake category of aircraft.
 
@@ -370,4 +382,7 @@ class Aircraft:
             The ICAO wake category of the aircraft.
         """
         index = np.where(self.traffic.index == self.index)[0][0]
-        return self.traffic.perf.perf_model._Bada__wake_category[index]
+        return str(
+            self.traffic.perf.perf_model._Bada__wake_category[index]  # type: ignore
+            # FIXME(abrah): why access private?????
+        )

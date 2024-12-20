@@ -3,10 +3,13 @@ import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from flask_socketio import SocketIO
+
 import numpy as np
 import pandas as pd
-from airtrafficsim.core.traffic import Traffic
-from airtrafficsim.utils.enums import (
+
+from ..types import array
+from ..utils.enums import (
     APLateralMode,
     APSpeedMode,
     APThrottleMode,
@@ -15,41 +18,45 @@ from airtrafficsim.utils.enums import (
     SpeedMode,
     VerticalMode,
 )
-from airtrafficsim.utils.unit_conversion import Unit
+from ..utils.unit_conversion import Unit
+from .performance.performance import PerformanceMode
+from .traffic import Traffic
+from .weather.weather import WeatherMode
 
 
+# FIXME(abrah): single responsibility principle - split this up.
 class Environment:
     """
-    Base class for simulation environment
-
+    Base class for simulation environment.
+    inherit this to create a new simulation environment.
     """
 
     def __init__(
         self,
-        file_name,
-        start_time,
-        end_time,
-        weather_mode="ISA",
-        performance_mode="BADA",
+        file_name: str,
+        start_time: datetime,
+        duration_s: float,
+        weather_mode: WeatherMode = "ISA",
+        performance_mode: PerformanceMode = "BADA",
     ):
         # User setting
         self.start_time = start_time
         """The simulation start time [datetime object]"""
-        self.end_time = end_time
-        """The simulation end time [s]"""
+        self.duration_s = duration_s
+        """The simulation duration [s]"""
 
         # Simulation variable
         self.traffic = Traffic(
-            file_name, start_time, end_time, weather_mode, performance_mode
+            file_name, start_time, duration_s, weather_mode, performance_mode
         )
-        self.global_time = 0  # [s]
+        self.seconds_since_start: float = 0.0  # [s]
 
         # Handle io
         self.datetime = datetime.now(timezone.utc)
         self.last_sent_time = time.time()
         self.graph_type = "None"
         self.packet_id = 0
-        self.buffer_data = []
+        self.buffer_data: list[array] = []
 
         # File IO
         self.file_name = (
@@ -108,19 +115,21 @@ class Environment:
         self.header.remove("id")
         self.header.remove("callsign")
 
-    def atc_command(self):
+    # FIXME(abrah): use protocols instead
+    def atc_command(self) -> None:
         """
         Virtual method to execute user command each timestep.
         """
         pass
 
-    def should_end(self):
+    def should_end(self) -> bool:
         """
-        Virtual method to determine whether the simulation should end each timestep.
+        Virtual method to determine whether the simulation should end each
+        timestep.
         """
         return False
 
-    def step(self, socketio=None):
+    def step(self, socketio: SocketIO | None = None) -> None:
         """
         Conduct one simulation timestep.
         """
@@ -129,15 +138,15 @@ class Environment:
         # Run atc command
         self.atc_command()
         # Run update loop
-        self.traffic.update(self.global_time)
+        self.traffic.update(self.seconds_since_start)
         # Save to file
         self.save()
 
         print(
             "Environment - step() for global time",
-            self.global_time,
+            self.seconds_since_start,
             "/",
-            self.end_time,
+            self.duration_s,
             "finished at",
             time.time() - start_time,
         )
@@ -152,7 +161,7 @@ class Environment:
                         len(self.traffic.index),
                         (
                             self.start_time
-                            + timedelta(seconds=self.global_time)
+                            + timedelta(seconds=self.seconds_since_start)
                         ).isoformat(timespec="seconds"),
                     ),
                     self.traffic.long,
@@ -163,29 +172,30 @@ class Environment:
             )
             self.buffer_data.extend(data)
 
-            @socketio.on("setSimulationGraphType")
-            def set_simulation_graph_type(graph_type):
+            @socketio.on("setSimulationGraphType")  # type: ignore
+            def set_simulation_graph_type(graph_type: str):
                 self.graph_type = graph_type
 
             now = time.time()
             if ((now - self.last_sent_time) > 0.5) or (
-                self.global_time == self.end_time
+                self.seconds_since_start == self.duration_s
             ):
                 self.send_to_client(socketio)
                 socketio.sleep(0)
                 self.last_sent_time = now
                 self.buffer_data = []
 
-        self.global_time += 1
+        self.seconds_since_start += 1
 
-    def run(self, socketio=None):
+    def run(self, socketio: SocketIO | None = None) -> None:
         """
         Run the simulation for all timesteps.
 
         Parameters
         ----------
         socketio : socketio object, optional
-            Socketio object to handle communciation when running simulation, by default None
+            Socketio object to handle communciation when running simulation, by
+            default None
         """
         if socketio:
             socketio.emit(
@@ -193,12 +203,13 @@ class Environment:
                 {"header": self.header, "file": self.file_name},
             )
 
-        for _ in range(self.end_time + 1):
+        # FIXME: are we sure we want \Delta t = 1s
+        for _ in range(int(self.duration_s + 1)):
             # One timestep
 
             # Check if the simulation should end
             if self.should_end():
-                self.end_time = self.global_time
+                self.duration_s = self.seconds_since_start
                 break
 
             self.step(socketio)
@@ -209,17 +220,18 @@ class Environment:
         print("")
         print("Simulation finished")
 
-    def save(self):
+    def save(self) -> None:
         """
         Save all states variable of one timestemp to csv file.
         """
         data = np.column_stack(
             (
-                np.full(len(self.traffic.index), self.global_time),
+                np.full(len(self.traffic.index), self.seconds_since_start),
                 np.full(
                     len(self.traffic.index),
                     (
-                        self.start_time + timedelta(seconds=self.global_time)
+                        self.start_time
+                        + timedelta(seconds=self.seconds_since_start)
                     ).isoformat(timespec="seconds"),
                 ),
                 self.traffic.index,
@@ -240,37 +252,46 @@ class Environment:
                 self.traffic.perf.drag,
                 self.traffic.perf.esf,
                 self.traffic.accel,
-                self.traffic.ap.track_angle,
-                self.traffic.ap.heading,
-                self.traffic.ap.alt,
-                self.traffic.ap.cas,
-                self.traffic.ap.mach,
-                self.traffic.ap.procedure_speed,
-                self.traffic.ap.flight_plan_index,
+                self.traffic.autopilot.track_angle,
+                self.traffic.autopilot.heading,
+                self.traffic.autopilot.alt,
+                self.traffic.autopilot.cas,
+                self.traffic.autopilot.mach,
+                self.traffic.autopilot.procedure_speed,
+                self.traffic.autopilot.flight_plan_index,
                 [
-                    self.traffic.ap.flight_plan_name[i][val]
-                    if (val < len(self.traffic.ap.flight_plan_name[i]))
+                    self.traffic.autopilot.flight_plan_name[i][val]
+                    if (val < len(self.traffic.autopilot.flight_plan_name[i]))
                     else "NONE"
-                    for i, val in enumerate(self.traffic.ap.flight_plan_index)
+                    for i, val in enumerate(
+                        self.traffic.autopilot.flight_plan_index
+                    )
                 ],
-                self.traffic.ap.dist,
-                self.traffic.ap.holding_round,  # autopilot variable
+                self.traffic.autopilot.dist,
+                self.traffic.autopilot.holding_round,  # autopilot variable
                 [FlightPhase(i).name for i in self.traffic.flight_phase],
                 [Config(i).name for i in self.traffic.configuration],
                 [SpeedMode(i).name for i in self.traffic.speed_mode],
                 [VerticalMode(i).name for i in self.traffic.vertical_mode],
-                [APSpeedMode(i).name for i in self.traffic.ap.speed_mode],
-                [APLateralMode(i).name for i in self.traffic.ap.lateral_mode],
+                [
+                    APSpeedMode(i).name
+                    for i in self.traffic.autopilot.speed_mode
+                ],
+                [
+                    APLateralMode(i).name
+                    for i in self.traffic.autopilot.lateral_mode
+                ],
                 [
                     APThrottleMode(i).name
-                    for i in self.traffic.ap.auto_throttle_mode
+                    for i in self.traffic.autopilot.auto_throttle_mode
                 ],
             )
         )  # mode
 
         self.writer.writerows(data)
 
-    def export_to_csv(self):
+    # FIXME(abrah): allow custom path instead.
+    def export_to_csv(self) -> None:
         """
         Export the simulation result to a csv file.
         """
@@ -281,7 +302,7 @@ class Environment:
             )
         # self.file_path.unlink()
 
-    def send_to_client(self, socketio):
+    def send_to_client(self, socketio: SocketIO) -> None:
         """
         Send the simulation data to client.
 
@@ -301,7 +322,7 @@ class Environment:
                     "interval": self.start_time.isoformat()
                     + "/"
                     + (
-                        self.start_time + timedelta(seconds=self.end_time)
+                        self.start_time + timedelta(seconds=self.duration_s)
                     ).isoformat(),
                     "currentTime": self.start_time.isoformat(),
                 },
@@ -322,7 +343,7 @@ class Environment:
                         "interval": time
                         + "/"
                         + (
-                            self.start_time + timedelta(seconds=self.end_time)
+                            self.start_time + timedelta(seconds=self.duration_s)
                         ).isoformat(),
                         "string": call_sign
                         + "\n"
@@ -387,7 +408,7 @@ class Environment:
             "simulationData",
             {
                 "czml": document,
-                "progress": self.global_time / self.end_time,
+                "progress": self.seconds_since_start / self.duration_s,
                 "packet_id": self.packet_id,
                 "graph": graph_data,
             },

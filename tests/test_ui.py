@@ -1,36 +1,38 @@
 from pathlib import Path
 
 import pytest
+from flask.testing import FlaskClient
+from flask_socketio import SocketIOTestClient
 
 import airtrafficsim.server.server as server
 
 
 @pytest.fixture()
-def app():
+def app() -> FlaskClient:
     return server.app.test_client()
 
 
 @pytest.fixture()
-def client():
+def client() -> SocketIOTestClient:
     return server.socketio.test_client(server.app)
 
 
-def test_client(app):
+def test_client(app: FlaskClient) -> None:
     response = app.get("/")
     assert response.data != ""
     # assert response.status_code == 200
 
 
-def test_socketio(client):
+def test_socketio(client: SocketIOTestClient) -> None:
     assert client.is_connected()
 
 
-def test_get_nav(client):
+def test_get_nav(client: SocketIOTestClient) -> None:
     r = client.emit("getNav", -10, -10, 10, 10, callback=True)
     assert len(r) > 1
 
 
-def test_get_era5_wind(client):
+def test_get_era5_wind(client: SocketIOTestClient) -> None:
     r = client.emit(
         "getEra5Wind",
         -10,
@@ -44,7 +46,7 @@ def test_get_era5_wind(client):
     assert r[1]["rectangle"]["material"]["image"]["image"]["uri"] != ""
 
 
-def test_get_era5_rain(client):
+def test_get_era5_rain(client: SocketIOTestClient) -> None:
     r = client.emit(
         "getEra5Rain",
         10,
@@ -58,7 +60,7 @@ def test_get_era5_rain(client):
     assert r[1]["rectangle"]["material"]["image"]["image"]["uri"] != ""
 
 
-def test_get_radar_img(client):
+def test_get_radar_img(client: SocketIOTestClient) -> None:
     r = client.emit(
         "getRadarImage",
         15.0,
@@ -72,7 +74,7 @@ def test_get_radar_img(client):
     assert r[1]["rectangle"]["material"]["image"]["image"]["uri"] != ""
 
 
-def test_get_replay_dir(client):
+def test_get_replay_dir(client: SocketIOTestClient) -> None:
     r = client.emit("getReplayDir", callback=True)
     path = Path(__file__).parent.parent.joinpath("airtrafficsim/data/result")
     print(next(iter(path.glob("DemoEnv*"))).name)
@@ -113,9 +115,8 @@ def test_get_replay_dir(client):
     }
 
 
-def test_get_simulation_file(client):
+def test_get_simulation_file(client: SocketIOTestClient) -> None:
     r = client.emit("getSimulationFile", callback=True)
-    print(r)
     assert r == [
         "ConvertHistoricDemo",
         "DemoEnv",
@@ -125,12 +126,12 @@ def test_get_simulation_file(client):
     ]
 
 
-def test_get_replay_czml(client):
+def test_get_replay_czml(client: SocketIOTestClient) -> None:
     r = client.emit("getReplayCZML", "historic", "2018-05-01", callback=True)
     assert len(r) > 1
 
 
-def test_get_graph_header(client):
+def test_get_graph_header(client: SocketIOTestClient) -> None:
     path = next(
         iter(
             Path(__file__)
@@ -181,7 +182,7 @@ def test_get_graph_header(client):
     ]
 
 
-def test_get_graph_data(client):
+def test_get_graph_data(client: SocketIOTestClient) -> None:
     path = next(
         iter(
             Path(__file__)
@@ -201,7 +202,7 @@ def test_get_graph_data(client):
     assert len(r[0]["x"]) > 1 and len(r[0]["y"]) > 1
 
 
-def test_run_simulation(client):
+def test_run_simulation(client: SocketIOTestClient) -> None:
     client.emit("runSimulation", "DemoEnv")
     r = client.get_received()
     assert len(r) > 0

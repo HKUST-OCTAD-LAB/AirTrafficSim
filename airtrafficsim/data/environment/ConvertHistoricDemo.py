@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import TypeAlias
 
 import numpy as np
 import pandas as pd
@@ -14,16 +15,18 @@ from airtrafficsim.utils.route_detection import (
     rdp,
 )
 
+Callsign: TypeAlias = str
+
 
 class ConvertHistoricDemo(Environment):
-    def __init__(self):
+    def __init__(self) -> None:
         # Initialize environment super class
         super().__init__(
             file_name=Path(__file__).name.removesuffix(
                 ".py"
             ),  # File name (do not change)
             start_time=datetime.fromisoformat("2018-05-01T00:00:00+00:00"),
-            end_time=3600 * 2,
+            duration_s=3600 * 2,
             weather_mode="",
             performance_mode="BADA",
         )
@@ -45,7 +48,7 @@ class ConvertHistoricDemo(Environment):
         )
 
         # Storage for historic aircraft data
-        self.call_sign = []
+        self.call_sign: list[Callsign] = []
         self.type = []
         self.star = []
         self.approach = []
@@ -53,8 +56,8 @@ class ConvertHistoricDemo(Environment):
         self.speed = []
         self.start_alt = []
         self.heading = []
-        self.time = []
-        self.aircraft_list = {}
+        timestamps = []
+        self.aircraft_list: dict[Callsign, Aircraft] = {}
 
         # Loop all historic data files
         for file in self.historic_data_path.iterdir():
@@ -78,9 +81,13 @@ class ConvertHistoricDemo(Environment):
             self.approach.append(approach_result)
 
             # Determine aircraft appearance point (150km to hong kong)
+            num_points = traj.shape[0]
             index = np.where(
                 Cal.cal_great_circle_dist(
-                    traj[:, 0], traj[:, 1], 22.3193, 114.1694
+                    traj[:, 0],
+                    traj[:, 1],
+                    np.full((num_points,), 22.3193),
+                    np.full((num_points,), 114.1694),
                 )
                 < 200
             )[0][0]
@@ -88,7 +95,7 @@ class ConvertHistoricDemo(Environment):
             self.speed.append(df["gspeed"].iloc[index])
             self.start_alt.append(df["alt"].iloc[index])
             self.heading.append(df["hangle"].iloc[index])
-            self.time.append(df["timestamp"].iloc[index])
+            timestamps.append(df["timestamp"].iloc[index])
 
             print(
                 file.name.removesuffix(".csv"), arrival_result, approach_result
@@ -96,17 +103,15 @@ class ConvertHistoricDemo(Environment):
 
         print("Finished analyzing data")
 
-        # Get starting time
-        self.time = np.array(self.time)
+        self.timestamps = np.array(timestamps)
 
-    def should_end(self):
+    def should_end(self) -> bool:
         return False
 
-    def atc_command(self):
+    def atc_command(self) -> None:
         # Handle creation and deletion of aircraft
-        time = self.start_time + timedelta(seconds=self.global_time)
-        time = int(time.timestamp())
-        index = np.where(self.time == time)[0]
+        time = self.start_time + timedelta(seconds=self.seconds_since_start)
+        index = np.where(self.timestamps == int(time.timestamp()))[0]
         # Add aircraft
         for i in index:
             self.aircraft_list[self.call_sign[i]] = Aircraft(
@@ -129,7 +134,7 @@ class ConvertHistoricDemo(Environment):
                 cruise_alt=37000,
             )
         # Delete aircraft
-        index = self.traffic.index[self.traffic.ap.hv_next_wp is False]
+        index = self.traffic.index[self.traffic.autopilot.hv_next_wp is False]
         for i in index:
             self.traffic.del_aircraft(i)
 
@@ -137,5 +142,5 @@ class ConvertHistoricDemo(Environment):
         # Holding and vectoring
         if "5J150" in self.aircraft_list:
             # self.aircraft_list["5J150"].set_vectoring(60, 195, "GUAVA")
-            if self.global_time == 1600:
+            if self.seconds_since_start == 1600:
                 self.aircraft_list["5J150"].set_holding(2, "BETTY", "VH")

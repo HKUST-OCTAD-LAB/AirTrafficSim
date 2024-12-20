@@ -53,6 +53,7 @@ web = [
 ]
 era5 = [
     "cartopy>=0.24.1",
+    "cdsapi>=0.7.5",
     "xarray>=2024.11.0",
 ]
 openap = [
@@ -63,21 +64,20 @@ openap = [
 dev = [
     "black>=24.10.0",
     "ipykernel>=6.29.5",
-    "mkdocs-material[imaging]>=9.5.49",
-    "mkdocstrings-python>=1.12.2",
     "mypy>=1.13.0",
     "ruff>=0.8.3",
 ]
 test = [
-    "coverage>=7.6.9",
+    "pytest-cov>=6.0.0",
     "pytest>=8.3.4",
 ]
 docs = [
-    "furo>=2024.8.6",
-    "myst-parser>=4.0.0",
-    "numpydoc>=1.8.0",
-    "sphinx>=8.1.3",
+    "mkdocs-material[imaging]>=9.5.49",
+    "mkdocstrings-python>=1.12.2",
 ]
+
+[tool.uv]
+default-groups = ["dev", "test", "docs"]
 
 [tool.ruff]
 lint.select = [

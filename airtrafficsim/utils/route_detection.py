@@ -1,9 +1,18 @@
+from typing import Any, NamedTuple
+
 import numpy as np
-from airtrafficsim.core.navigation import Nav
-from airtrafficsim.utils.calculation import Cal
+
+from ..core.navigation import Nav
+from ..geometry import Point2D
+from ..types import ArrayOrFloat, array
+from ..utils.calculation import Cal
 
 
-def distance(a, b):
+# FIXME(abrah): specify this as euclidean, not haversine
+# TODO(abrah): updated deg -> rad, check logic errors
+def distance(
+    a: Point2D[ArrayOrFloat], b: Point2D[ArrayOrFloat]
+) -> ArrayOrFloat:
     """
     Helper function to calculate distance between two points
 
@@ -19,10 +28,13 @@ def distance(a, b):
     float
         Distance between two point
     """
-    return np.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
+    return ((a.lng - b.lng) ** 2 + (a.lat - b.lat) ** 2) ** 0.5  # type: ignore
 
 
-def point_line_distance(point, start, end):
+# TODO(abrah): updated deg -> rad, check logic errors
+def point_line_distance(
+    point: Point2D[float], start: Point2D[float], end: Point2D[float]
+) -> float:
     """
     Helper function to calculate distance between a point and a line
 
@@ -40,18 +52,19 @@ def point_line_distance(point, start, end):
     float
         Minimum distance between the point and the line
     """
-    if (start == end).all():
+    if start.lat == end.lat and start.lng == end.lng:
         return distance(point, start)
     else:
         n = abs(
-            (end[0] - start[0]) * (start[1] - point[1])
-            - (start[0] - point[0]) * (end[1] - start[1])
+            (end.lat - start.lat) * (start.lng - point.lng)
+            - (start.lat - point.lat) * (end.lng - start.lng)
         )
-        d = np.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
-        return n / d
+        d = np.sqrt((end.lat - start.lat) ** 2 + (end.lng - start.lng) ** 2)
+        return n / d  # type: ignore
 
 
-def rdp(points, epsilon):
+# TODO(abrah): updated deg -> rad, check logic errors
+def rdp(points: list[Point2D[float]], epsilon: float) -> list[Point2D[float]]:
     """
     Reduces a series of points to a simplified version that loses detail, but
     maintains the general shape of the series.
@@ -81,9 +94,17 @@ def rdp(points, epsilon):
     return results
 
 
+# NOTE(abrah): what does this do?
+class _IdentifiedSidStar(NamedTuple):
+    ats: Any
+    trajectory_in_area: array
+
+
 def detect_sid_star(
-    simplified_trajectory, procedure_dict, waypoints_coord_dict
-):
+    simplified_trajectory: array,
+    procedure_dict: dict[Any, Any],
+    waypoints_coord_dict: dict[Any, Any],
+) -> _IdentifiedSidStar:
     """
     Detect SID and STAR
 
@@ -101,6 +122,7 @@ def detect_sid_star(
     SID/STAR : string
         Identified SID/STAR
     """
+    # NOTE(abrah): wrong docstring.
     area_list = []
     ats_list = []
     wp_lat = np.array(list(waypoints_coord_dict.values()))[:, 0]
@@ -152,10 +174,18 @@ def detect_sid_star(
         ats_list.append(ats)
         # print(ats, total_area)
 
-    return ats_list[np.argmin(area_list)], trajectory_in_area
+    return _IdentifiedSidStar(
+        ats=ats_list[np.argmin(area_list)],
+        trajectory_in_area=trajectory_in_area,
+    )
 
 
-def get_arrival_data(airport, runway):
+class ArrivalData(NamedTuple):
+    arrivals: dict[str, list[str]]
+    arrival_waypoints_coord: dict[Any, Any]
+
+
+def get_arrival_data(airport: str, runway: str) -> ArrivalData:
     """
     Get arrival data
 
@@ -176,24 +206,32 @@ def get_arrival_data(airport, runway):
     lat, long, _ = Nav.get_runway_coord(airport, runway)
     arrival_procedures = Nav.get_airport_procedures(airport, "STAR")
     # Get all arrival route and related waypoints
-    arrival_waypoints = []
+    arrival_waypoints: list[str] = []
     arrivals_dict = {}
     for star in arrival_procedures:
         wp = Nav.get_procedure(airport, "", star)[0]
         wp = [ele for ele in wp if ele.strip()]
         arrival_waypoints.extend(wp)
         arrivals_dict[star] = wp
-    arrival_waypoints = np.unique(arrival_waypoints)
+    arrival_waypoints = np.unique(arrival_waypoints).tolist()  # type: ignore
     # Get coordinate of all arrival waypoints
     arrival_waypoints_coord_dict = {}
-    for wp in arrival_waypoints:
-        coord = Nav.get_wp_coord(wp, lat, long)
+    for name in arrival_waypoints:
+        coord = Nav.get_wp_coord(name, lat, long)
         arrival_waypoints_coord_dict[wp] = list(coord)
 
-    return arrivals_dict, arrival_waypoints_coord_dict
+    return ArrivalData(
+        arrivals=arrivals_dict,
+        arrival_waypoints_coord=arrival_waypoints_coord_dict,
+    )
 
 
-def get_approach_data(airport, runway):
+class ApproachData(NamedTuple):
+    approach: dict[str, list[str]]
+    approach_waypoints_coord: dict[str, list[float]]
+
+
+def get_approach_data(airport: str, runway: str) -> ApproachData:
     """
     Get approach data
 
@@ -218,24 +256,26 @@ def get_approach_data(airport, runway):
         str.replace("I", "") for str in approach_procedures if "I" in str
     ]
     # Runway without ils
-    missed_procedure = []
+    missed_procedures = []
     for procedure in approach_procedures:
         hv_runway = [runway for runway in ils_runway if runway in procedure]
         if len(hv_runway) == 0:
-            missed_procedure.append(procedure)
-    approach_procedures = ils + missed_procedure
+            missed_procedures.append(procedure)
     # Get all approach route and related waypoints
-    approach_waypoints = []
+    approach_waypoints: list[str] = []
     approach_dict = {}
-    for approach in approach_procedures:
+    for approach in ils + missed_procedures:
         wp = Nav.get_procedure("VHHH", "", approach)[0]
         wp = [ele for ele in wp if ele.strip() and "RW" not in ele]
         approach_waypoints.extend(wp)
         approach_dict[approach] = wp
-    approach_waypoints = np.unique(approach_waypoints)
+    approach_waypoints = np.unique(approach_waypoints).tolist()  # type: ignore
     # Get coordinate of all approach waypoints
     approach_waypoints_coord_dict = {}
-    for wp in approach_waypoints:
-        coord = Nav.get_wp_coord(wp, lat, long)
-        approach_waypoints_coord_dict[wp] = list(coord)
-    return approach_dict, approach_waypoints_coord_dict
+    for name in approach_waypoints:
+        coord = Nav.get_wp_coord(name, lat, long)
+        approach_waypoints_coord_dict[name] = list(coord)
+    return ApproachData(
+        approach=approach_dict,
+        approach_waypoints_coord=approach_waypoints_coord_dict,
+    )

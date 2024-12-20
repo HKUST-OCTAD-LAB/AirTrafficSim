@@ -1,24 +1,37 @@
+from datetime import datetime
+from typing import NewType
+
 import numpy as np
-from airtrafficsim.core.autopilot import Autopilot
-from airtrafficsim.core.performance.performance import Performance
-from airtrafficsim.core.weather.weather import Weather
-from airtrafficsim.utils.calculation import Cal
-from airtrafficsim.utils.enums import (
+
+from ..utils.calculation import Cal
+from ..utils.enums import (
     APSpeedMode,
     Config,
     FlightPhase,
     SpeedMode,
     VerticalMode,
 )
-from airtrafficsim.utils.unit_conversion import Unit
+from ..utils.unit_conversion import Unit
+from .autopilot import Autopilot
+from .performance.performance import Performance, PerformanceMode
+from .weather.weather import Weather, WeatherMode
+
+AircraftIdx = NewType("AircraftIdx", int)
+"""Index of the aircraft in the arrays"""
 
 
 class Traffic:
     def __init__(
-        self, file_name, start_time, end_time, weather_mode, performance_mode
-    ):
+        self,
+        file_name: str,
+        start_time: datetime,
+        duration_s: float,
+        weather_mode: WeatherMode,
+        performance_mode: PerformanceMode,
+    ) -> None:
         """
-        Initialize base traffic array to store aircraft state variables for one timestep.
+        Initialize base traffic array to store aircraft state variables for one
+        timestep.
 
         Parameters
         ----------
@@ -32,35 +45,83 @@ class Traffic:
         # self.N = N
         # """Maximum aircraft count"""
 
-        # self.df = np.empty([0], dtype=[
-        #     ('index', 'i8'), ('callsign', 'U10'), ('type', 'U4'), ('configuration', 'i8'), ('flight_phase', 'i8'),
-        #     ('lat', 'f8'), ('long', 'f8'), ('alt', 'f8'), ('trans_alt', 'f8'),
-        #     ('heading', 'f8'), ('track_angle', 'f8'), ('bank_angle', 'f8'), ('path_angle', 'f8'),
-        #     ('cas', 'f8'), ('tas', 'f8'), ('gs_north', 'f8'), ('gs_east', 'f8'), ('mach', 'f8'), ('accel', 'f8'), ('speed_mode', 'i8'),
-        #     ('max_alt', 'f8'), ('max_cas', 'f8'), ('max_mach', 'f8'),
-        #     ('vs', 'f8'), ('fpa', 'f8'), ('vertical_mode', 'i8'),
-        #     ('mass', 'f8'), ('empty_weight', 'f8'), ('fuel_weight', 'f8'), ('payload_weight', 'f8'), ('fuel_consumed', 'f8'),
-        #     # Autopilot
-        #     ('ap_alt', 'f8'), ('ap_heading', 'f8'), ('ap_track_angle', 'f8'), ('ap_rate_of_turn', 'f8'),
-        #     ('ap_cas', 'f8'), ('ap_mach', 'f8'), ('ap_vs', 'f8'), ('ap_fpa', 'f8'),
-        #     ('ap_lat', 'f8'), ('ap_long', 'f8'), ('ap_lat_next', 'f8'), ('ap_long_next', 'f8'), ('ap_hv_next_wp', '?'), ('ap_dist_wp', 'f8')
-        #     ('ap_flight_plan_index', 'i8'), ('ap_procedure_speed', 'f8')
-        #     # Weather
-        #     ('wind_speed', 'f8'), ('wind_dir', 'f8'), ('wind_north', 'f8'), ('wind_east', 'f8'),
-        #     ('d_T', 'f8'), ('d_p', 'f8'), ('T', 'f8'), ('p', 'f8'), ('rho', 'f8')
-        # ])
+        # FIXME(abrah): consider using pl.DataFrame if we really want to use SoA
+        # self.df = np.empty(
+        #     [0],
+        #     dtype=[
+        #         ("index", "i8"),
+        #         ("callsign", "U10"),
+        #         ("type", "U4"),
+        #         ("configuration", "i8"),
+        #         ("flight_phase", "i8"),
+        #         ("lat", "f8"),
+        #         ("long", "f8"),
+        #         ("alt", "f8"),
+        #         ("trans_alt", "f8"),
+        #         ("heading", "f8"),
+        #         ("track_angle", "f8"),
+        #         ("bank_angle", "f8"),
+        #         ("path_angle", "f8"),
+        #         ("cas", "f8"),
+        #         ("tas", "f8"),
+        #         ("gs_north", "f8"),
+        #         ("gs_east", "f8"),
+        #         ("mach", "f8"),
+        #         ("accel", "f8"),
+        #         ("speed_mode", "i8"),
+        #         ("max_alt", "f8"),
+        #         ("max_cas", "f8"),
+        #         ("max_mach", "f8"),
+        #         ("vs", "f8"),
+        #         ("fpa", "f8"),
+        #         ("vertical_mode", "i8"),
+        #         ("mass", "f8"),
+        #         ("empty_weight", "f8"),
+        #         ("fuel_weight", "f8"),
+        #         ("payload_weight", "f8"),
+        #         ("fuel_consumed", "f8"),
+        #         # Autopilot
+        #         ("ap_alt", "f8"),
+        #         ("ap_heading", "f8"),
+        #         ("ap_track_angle", "f8"),
+        #         ("ap_rate_of_turn", "f8"),
+        #         ("ap_cas", "f8"),
+        #         ("ap_mach", "f8"),
+        #         ("ap_vs", "f8"),
+        #         ("ap_fpa", "f8"),
+        #         ("ap_lat", "f8"),
+        #         ("ap_long", "f8"),
+        #         ("ap_lat_next", "f8"),
+        #         ("ap_long_next", "f8"),
+        #         ("ap_hv_next_wp", "?"),
+        #         ("ap_dist_wp", "f8")("ap_flight_plan_index", "i8"),
+        #         ("ap_procedure_speed", "f8")
+        #         # Weather
+        #         ("wind_speed", "f8"),
+        #         ("wind_dir", "f8"),
+        #         ("wind_north", "f8"),
+        #         ("wind_east", "f8"),
+        #         ("d_T", "f8"),
+        #         ("d_p", "f8"),
+        #         ("T", "f8"),
+        #         ("p", "f8"),
+        #         ("rho", "f8"),
+        #     ],
+        # )
 
         self.index = np.zeros([0])
-        """Index array to indicate whether there is an aircraft active in each index."""
+        """Index array to indicate whether there is an aircraft active in each
+        index."""
 
         # General information
         self.call_sign = np.empty([0], dtype="U10")
         """Callsign [string]"""
         self.aircraft_type = np.empty([0], dtype="U4")
         """Aircraft type in ICAO format [string]"""
-        self.configuration = np.zeros([0])
-        """Aircraft configuration [Configuration enum 1: Clean, 2: Take Off, 3: Approach, 4: Landing]"""
-        self.flight_phase = np.zeros([0])
+        self.configuration = np.zeros([0], dtype=np.uint16)
+        """Aircraft configuration [Configuration enum 1: Clean, 2: Take Off,
+        3: Approach, 4: Landing]"""
+        self.flight_phase = np.zeros([0], dtype=np.uint16)
         """Flight phase [Flight_phase enum] (BADA section 3.5)"""
 
         # Position
@@ -94,7 +155,7 @@ class Traffic:
         """Ground speed - North[knot]"""
         self.gs_east = np.zeros([0])
         """Ground speed - East [knot]  """
-        self.mach = np.zeros([0])
+        self.mach = np.zeros([0], dtype=np.float64)
         """Mach number [dimensionless]"""
         self.accel = np.zeros([0])
         """Acceleration [m/s^2]"""
@@ -114,7 +175,7 @@ class Traffic:
         """Vertical speed [feet/min]"""
         self.fpa = np.zeros([0])
         """Flight path angle [deg]"""
-        self.vertical_mode = np.zeros([0])
+        self.vertical_mode = np.zeros([0], dtype=np.uint16)
         """Vertical mode [Vertical mode enum 1: LEVEL, 2: CLIMB, 3: DESCENT]"""
 
         # Weight and balance
@@ -132,34 +193,35 @@ class Traffic:
         # Sub classes
         self.perf = Performance(performance_mode)
         """Performance class"""
-        self.ap = Autopilot()
+        self.autopilot = Autopilot()
         """Autopilot class"""
-        self.weather = Weather(start_time, end_time, weather_mode, file_name)
+        self.weather = Weather(start_time, duration_s, weather_mode, file_name)
         """Weather class"""
 
+    # FIXME(abrah): this is doing way too much stuff.
     def add_aircraft(
         self,
-        call_sign,
-        aircraft_type,
-        flight_phase,
-        configuration,
-        lat,
-        long,
-        alt,
-        heading,
-        cas,
-        fuel_weight,
-        payload_weight,
-        departure_airport,
-        departure_runway,
-        sid,
-        arrival_airport,
-        arrival_runway,
-        star,
-        approach,
-        flight_plan,
-        cruise_alt,
-    ):
+        call_sign: str,
+        aircraft_type: str,
+        flight_phase: FlightPhase,
+        configuration: Config,
+        lat: float,
+        long: float,
+        alt: float,
+        heading: float,
+        cas: float,
+        fuel_weight: float,
+        payload_weight: float,
+        departure_airport: str,
+        departure_runway: str,
+        sid: str,
+        arrival_airport: str,
+        arrival_runway: str,
+        star: str,
+        approach: str,
+        flight_plan: list[str],
+        cruise_alt: float,
+    ) -> AircraftIdx:
         """
         Add an aircraft to traffic array.
 
@@ -169,12 +231,13 @@ class Traffic:
             Index of the added aircraft
         """
 
+        # FIXME: use logger.
         print("Traffic.py - add_aircraft()", call_sign, " Type:", aircraft_type)
 
         # Add aircraft in performance, weather, and autopilot array
         self.perf.add_aircraft(aircraft_type)
         self.weather.add_aircraft(alt, self.perf)
-        self.ap.add_aircraft(
+        self.autopilot.add_aircraft(
             lat,
             long,
             alt,
@@ -209,7 +272,9 @@ class Traffic:
             self.tas,
             Unit.mps2kts(
                 self.perf.cas_to_tas(
-                    Unit.kts2mps(cas), self.weather.p[-1], self.weather.rho[-1]
+                    Unit.kts2mps(cas),
+                    self.weather.p[-1],
+                    self.weather.rho[-1],
                 )
             ),
         )
@@ -246,15 +311,15 @@ class Traffic:
             Unit.m2ft(self.perf.cal_transition_alt(-1, self.weather.d_T[-1])),
         )
 
-        self.max_alt = self.perf.cal_maximum_alt(self.weather.d_T, self.mass)
-        self.max_cas, self.max_mach = self.perf.cal_maximum_speed()
+        self.max_alt = self.perf.cal_maximum_alt(self.weather.d_T, self.mass)  # type: ignore
+        self.max_cas, self.max_mach = self.perf.cal_maximum_speed()  # type: ignore
 
         # Increase aircraft count
         self.n = self.n + 1
 
-        return self.n - 1
+        return AircraftIdx(self.n - 1)
 
-    def del_aircraft(self, index):
+    def del_aircraft(self, index: AircraftIdx) -> None:
         """
         Delete an aircraft from traffic array.
 
@@ -299,44 +364,50 @@ class Traffic:
         self.fuel_consumed = np.delete(self.fuel_consumed, i)
 
         self.perf.del_aircraft(i)
-        self.ap.del_aircraft(i)
+        self.autopilot.del_aircraft(i)
         self.weather.del_aircraft(i)
 
-    def update(self, global_time, d_t=1):
+    def update(self, seconds_since_start: float) -> None:
         """
         Update aircraft state for each timestep given ATC/autopilot command.
-
-        Parameters
-        ----------
-        d_t: float
-            delta time per timestep [s] TODO: need?
         """
 
         # Update atmosphere
         self.weather.update(
-            self.lat, self.long, self.alt, self.perf, global_time
+            self.lat, self.long, self.alt, self.perf, seconds_since_start
         )
 
         # Ceiling
         # min_speed = self.perf.cal_minimum_speed(self.flight_phase)
         # max_d_tas = self.perf.cal_max_d_tas(d_t)
-        # max_d_rocd = self.perf.cal_max_d_rocd(d_t, self.unit.knots_to_mps(self.d_cas), tas, self.unit.ftpm_to_mps(self.vs))
+        # max_d_rocd = self.perf.cal_max_d_rocd(d_t,
+        # self.unit.knots_to_mps(self.d_cas), tas,
+        # self.unit.ftpm_to_mps(self.vs))
 
         self.speed_mode = np.where(
             self.alt < self.trans_alt, SpeedMode.CAS, SpeedMode.MACH
         )
 
         # Update autopilot
-        self.ap.update(self)
+        self.autopilot.update(self)
 
         # Flight phase and configuration
         # Take off -> climb
-        # self.flight_phase = np.where((self.flight_phase == Flight_phase.TAKEOFF) & (self.alt > 1500.0), Flight_phase.CLIMB, self.flight_phase)
-        # self.flight_phase = np.where((self.flight_phase != Flight_phase.TAKEOFF) & (self.vertical_mode == Vertical_mode.CLIMB), Flight_phase.CLIMB, self.flight_phase)
+        # self.flight_phase = np.where(
+        # (self.flight_phase == Flight_phase.TAKEOFF) &
+        # (self.alt > 1500.0), Flight_phase.CLIMB, self.flight_phase)
+        # self.flight_phase = np.where(
+        # (self.flight_phase != Flight_phase.TAKEOFF) &
+        # (self.vertical_mode == Vertical_mode.CLIMB),
+        # Flight_phase.CLIMB, self.flight_phase)
         # # Climb -> Cruise
-        # self.flight_phase = np.where(self.vertical_mode == Vertical_mode.LEVEL, Flight_phase.CRUISE, self.flight_phase)         #TODO: Or use cruise altitude?
+        # self.flight_phase = np.where(
+        # self.vertical_mode == Vertical_mode.LEVEL,
+        # Flight_phase.CRUISE, self.flight_phase) #TODO: Or use cruise altitude?
         # # Cruise-Descent
-        # self.flight_phase = np.where(self.vertical_mode == Vertical_mode.DESCENT, Flight_phase.DESCENT, self.flight_phase)
+        # self.flight_phase = np.where(
+        # self.vertical_mode ==Vertical_mode.DESCENT,
+        # Flight_phase.DESCENT, self.flight_phase)
         self.configuration = self.perf.update_configuration(
             self.cas, self.alt, self.vertical_mode
         )
@@ -369,7 +440,7 @@ class Traffic:
         )
 
         # Bank angle
-        d_heading = Cal.cal_angle_diff(self.heading, self.ap.heading)
+        d_heading = Cal.cal_angle_diff(self.heading, self.autopilot.heading)
         self.bank_angle = np.select(
             condlist=[
                 d_heading > 0.5,
@@ -385,30 +456,39 @@ class Traffic:
         )
 
         tas = Unit.kts2mps(self.tas)  # TAS in m/s
-        self.vs, self.accel = self.perf.cal_vs_accel(self, tas)
+        self.vs, self.accel = self.perf.cal_vs_accel(self, tas)  # type: ignore
 
         # Air Speed
-        # self.tas = self.perf.cas_to_tas(self.cas, self.weather.p, self.weather.rho)
+        # self.tas = self.perf.cas_to_tas(self.cas, self.weather.p,
+        # self.weather.rho)
         tas = tas + self.accel
-        self.mach = self.perf.tas_to_mach(tas, self.weather.T)
+        self.mach = self.perf.tas_to_mach(tas, self.weather.T)  # type: ignore
         self.cas = Unit.mps2kts(
             self.perf.tas_to_cas(tas, self.weather.p, self.weather.rho)
-        )
+        )  # type: ignore
 
         # Bound to autopilot
         self.mach = np.select(
             condlist=[
                 (self.speed_mode == SpeedMode.MACH)
-                & (self.ap.speed_mode == APSpeedMode.ACCELERATE),
+                & (self.autopilot.speed_mode == APSpeedMode.ACCELERATE),
                 (self.speed_mode == SpeedMode.MACH)
-                & (self.ap.speed_mode == APSpeedMode.DECELERATE),
+                & (self.autopilot.speed_mode == APSpeedMode.DECELERATE),
                 (self.speed_mode == SpeedMode.MACH)
-                & (self.ap.speed_mode == APSpeedMode.CONSTANT_MACH),
+                & (self.autopilot.speed_mode == APSpeedMode.CONSTANT_MACH),
             ],
             choicelist=[
-                np.where(self.mach > self.ap.mach, self.ap.mach, self.mach),
-                np.where(self.mach < self.ap.mach, self.ap.mach, self.mach),
-                self.ap.mach,
+                np.where(
+                    self.mach > self.autopilot.mach,
+                    self.autopilot.mach,
+                    self.mach,
+                ),
+                np.where(
+                    self.mach < self.autopilot.mach,
+                    self.autopilot.mach,
+                    self.mach,
+                ),
+                self.autopilot.mach,
             ],
             default=self.mach,
         )
@@ -416,26 +496,28 @@ class Traffic:
         self.cas = np.select(
             condlist=[
                 (self.speed_mode == SpeedMode.CAS)
-                & (self.ap.speed_mode == APSpeedMode.ACCELERATE),
+                & (self.autopilot.speed_mode == APSpeedMode.ACCELERATE),
                 (self.speed_mode == SpeedMode.CAS)
-                & (self.ap.speed_mode == APSpeedMode.DECELERATE),
+                & (self.autopilot.speed_mode == APSpeedMode.DECELERATE),
                 (self.speed_mode == SpeedMode.CAS)
-                & (self.ap.speed_mode == APSpeedMode.CONSTANT_CAS),
+                & (self.autopilot.speed_mode == APSpeedMode.CONSTANT_CAS),
             ],
             choicelist=[
                 np.where(
-                    self.cas > self.ap.cas, self.ap.cas, self.cas
+                    self.cas > self.autopilot.cas, self.autopilot.cas, self.cas
                 ),  # TODO: change to minimum
-                np.where(self.cas < self.ap.cas, self.ap.cas, self.cas),
-                self.ap.cas,
+                np.where(
+                    self.cas < self.autopilot.cas, self.autopilot.cas, self.cas
+                ),
+                self.autopilot.cas,
             ],
             default=self.cas,
         )
 
         tas = np.select(
             condlist=[
-                self.ap.speed_mode == APSpeedMode.CONSTANT_MACH,
-                self.ap.speed_mode == APSpeedMode.CONSTANT_CAS,
+                self.autopilot.speed_mode == APSpeedMode.CONSTANT_MACH,
+                self.autopilot.speed_mode == APSpeedMode.CONSTANT_CAS,
             ],
             choicelist=[
                 self.perf.mach_to_tas(self.mach, self.weather.T),
@@ -450,16 +532,16 @@ class Traffic:
             condlist=[
                 (self.speed_mode == SpeedMode.CAS)
                 & (
-                    (self.ap.speed_mode == APSpeedMode.ACCELERATE)
-                    | (self.ap.speed_mode == APSpeedMode.DECELERATE)
+                    (self.autopilot.speed_mode == APSpeedMode.ACCELERATE)
+                    | (self.autopilot.speed_mode == APSpeedMode.DECELERATE)
                 )
-                & (self.cas == self.ap.cas),
+                & (self.cas == self.autopilot.cas),
                 (self.speed_mode == SpeedMode.MACH)
                 & (
-                    (self.ap.speed_mode == APSpeedMode.ACCELERATE)
-                    | (self.ap.speed_mode == APSpeedMode.DECELERATE)
+                    (self.autopilot.speed_mode == APSpeedMode.ACCELERATE)
+                    | (self.autopilot.speed_mode == APSpeedMode.DECELERATE)
                 )
-                & (self.mach == self.ap.mach),
+                & (self.mach == self.autopilot.mach),
             ],
             choicelist=[
                 self.perf.cas_to_tas(
@@ -473,10 +555,10 @@ class Traffic:
         self.mach = np.where(
             (self.speed_mode == SpeedMode.CAS)
             & (
-                (self.ap.speed_mode == APSpeedMode.ACCELERATE)
-                | (self.ap.speed_mode == APSpeedMode.DECELERATE)
+                (self.autopilot.speed_mode == APSpeedMode.ACCELERATE)
+                | (self.autopilot.speed_mode == APSpeedMode.DECELERATE)
             )
-            & (self.cas == self.ap.cas),
+            & (self.cas == self.autopilot.cas),
             self.perf.tas_to_mach(tas, self.weather.T),
             self.mach,
         )
@@ -484,17 +566,17 @@ class Traffic:
         self.cas = np.where(
             (self.speed_mode == SpeedMode.MACH)
             & (
-                (self.ap.speed_mode == APSpeedMode.ACCELERATE)
-                | (self.ap.speed_mode == APSpeedMode.DECELERATE)
+                (self.autopilot.speed_mode == APSpeedMode.ACCELERATE)
+                | (self.autopilot.speed_mode == APSpeedMode.DECELERATE)
             )
-            & (self.mach == self.ap.mach),
+            & (self.mach == self.autopilot.mach),
             Unit.mps2kts(
                 self.perf.tas_to_cas(tas, self.weather.p, self.weather.rho)
             ),
             self.cas,
         )
 
-        self.tas = Unit.mps2kts(tas)
+        self.tas = Unit.mps2kts(tas)  # type: ignore
 
         # Heading
         # TODO: https://skybrary.aero/articles/rate-turn
@@ -502,7 +584,7 @@ class Traffic:
         self.heading = np.where(
             (np.abs(d_heading) < np.abs(rate_of_turn))
             | (np.abs(d_heading) < 0.5),
-            self.ap.heading,
+            self.autopilot.heading,
             self.heading + rate_of_turn,
         )
         self.heading = np.select(
@@ -534,8 +616,12 @@ class Traffic:
                 self.vertical_mode == VerticalMode.DESCENT,
             ],
             choicelist=[
-                np.where(self.alt > self.ap.alt, self.ap.alt, self.alt),
-                np.where(self.alt < self.ap.alt, self.ap.alt, self.alt),
+                np.where(
+                    self.alt > self.autopilot.alt, self.autopilot.alt, self.alt
+                ),
+                np.where(
+                    self.alt < self.autopilot.alt, self.autopilot.alt, self.alt
+                ),
             ],
             default=self.alt,
         )
@@ -544,5 +630,5 @@ class Traffic:
         fuel_burn = self.perf.cal_fuel_burn(
             self.configuration, self.tas, self.alt
         )
-        self.fuel_consumed = self.fuel_consumed + fuel_burn
-        self.mass = self.mass - fuel_burn
+        self.fuel_consumed = self.fuel_consumed + fuel_burn  # type: ignore
+        self.mass = self.mass - fuel_burn  # type: ignore

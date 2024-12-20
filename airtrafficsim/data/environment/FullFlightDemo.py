@@ -8,14 +8,14 @@ from airtrafficsim.utils.enums import Config, FlightPhase
 
 
 class FullFlightDemo(Environment):
-    def __init__(self):
+    def __init__(self) -> None:
         # Initialize environment super class
         super().__init__(
             file_name=Path(__file__).name.removesuffix(
                 ".py"
             ),  # File name (do not change)
             start_time=datetime.fromisoformat("2022-03-22T00:00:00+00:00"),
-            end_time=7000,
+            duration_s=7000,
             weather_mode="",
             performance_mode="BADA",
         )
@@ -46,12 +46,12 @@ class FullFlightDemo(Environment):
             cruise_alt=37000,
         )
 
-    def should_end(self):
+    def should_end(self) -> bool:
         # if (self.global_time > 60 and  np.all((self.traffic.alt == 0))):
         #     return True
         # else:
         return False
 
-    def atc_command(self):
+    def atc_command(self) -> None:
         # User algorithm
         pass

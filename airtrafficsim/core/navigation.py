@@ -1,12 +1,27 @@
 import csv
 from pathlib import Path
+from typing import Any, NamedTuple
 from zipfile import ZipFile
 
 import numpy as np
 import pandas as pd
-from airtrafficsim.utils.calculation import Cal
+
+from ..types import array
+from ..utils.calculation import Cal
 
 
+class HoldingProcedure(NamedTuple):
+    inbound_holding_course: Any
+    leg_time: Any
+    leg_length: Any
+    direction: Any
+    min_alt: Any
+    max_alt: Any
+    speed: Any
+
+
+# FIXME(abrah): do not hardcode paths.
+# FIXME(abrah): do not use singleton.
 class Nav:
     """
     Nav class to provide navigation data from x-plane 11.
@@ -29,10 +44,12 @@ class Nav:
         Minimum off route grid altitudes https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MORA1150-Spec.pdf
 
     Nav.min_sector_alt : pandas.dataframe
-        Minimum sector altitudes for navaids, fixes, airports and runway threshold https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MSA1150-Spec.pdf
+        Minimum sector altitudes for navaids, fixes, airports & runway threshold
+        https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MSA1150-Spec.pdf
 
     Nav.airports : pandas.dataframe
-        Airports data (extracted to contain only runway coordinates) https://developer.x-plane.com/article/airport-data-apt-dat-file-format-specification/
+        Airports data (extracted to contain only runway coordinates)
+        https://developer.x-plane.com/article/airport-data-apt-dat-file-format-specification/
 
     Notes
     -----
@@ -67,7 +84,7 @@ class Nav:
 
         # Extract apt.dat to runways.csv and individual csv in xplane/airports/
         print("Unpacking airport data (apt.dat). This will take a while...")
-        airport = []
+        airport: list[str] = []
         icao = ""
         alt = 0.0
 
@@ -110,7 +127,7 @@ class Nav:
                         # Reset if not the end
                         if not row[0] == "99":
                             icao = row[4]
-                            alt = row[1]
+                            alt = float(row[1])
                             airport = []
                     # If row code equals to land runway
                     if row[0] == "100":
@@ -198,17 +215,23 @@ class Nav:
         header=None,
         names=np.arange(0, 26),
     )
-    """Minimum sector altitudes for navaids, fixes, airports and runway threshold https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MSA1150-Spec.pdf"""
+    """
+    Minimum sector altitudes for navaids, fixes, airports and runway threshold
+    https://developer.x-plane.com/wp-content/uploads/2020/03/XP-MSA1150-Spec.pdf
+    """
     airports = pd.read_csv(
         Path(__file__)
         .parent.parent.resolve()
         .joinpath("./data/navigation/xplane/airports.csv"),
         header=None,
     )
-    """Airports data (extracted to contain only runway coordinates) https://developer.x-plane.com/article/airport-data-apt-dat-file-format-specification/"""
+    """
+    Airports data (extracted to contain only runway coordinates)
+    https://developer.x-plane.com/article/airport-data-apt-dat-file-format-specification/
+    """
 
     @staticmethod
-    def get_wp_coord(name, lat, long):
+    def get_wp_coord(name: str, lat: float, long: float) -> tuple[float, float]:
         """
         Get the nearest waypoint (fix and navaid) coordinate given name.
 
@@ -241,12 +264,17 @@ class Nav:
         wp_long = np.append(fix_long, nav_long)
         # Find index of minimum distance
         index = np.argmin(
-            Cal.cal_great_circle_dist(lat, long, wp_lat, wp_long), axis=0
+            Cal.cal_great_circle_dist(
+                np.array(lat), np.array(long), wp_lat, wp_long
+            ),
+            axis=0,
         )
         return wp_lat[index], wp_long[index]
 
     @staticmethod
-    def get_wp_in_area(lat1, long1, lat2, long2):
+    def get_wp_in_area(
+        lat1: float, long1: float, lat2: float, long2: float
+    ) -> tuple[array, list[str]]:
         """
         Get all waypoints(fix, navaids) within area
 
@@ -263,8 +291,7 @@ class Nav:
 
         Returns
         -------
-        [lat, long, name] : [float[], float[], string[]]
-            [Latitude, Longitude, Name] array of all waypoints in the area
+        [[lat, long], name] : [[float[], float[]], string[]]
         """
         if lat1 < lat2 and long1 < long2:
             # If normal condition
@@ -362,10 +389,12 @@ class Nav:
                 .iloc[:, [1, 2, 7]]
                 .to_numpy()
             )
-        return np.vstack((fix, nav))
+        return fix, nav
 
     @staticmethod
-    def get_runway_coord(airport, runway):
+    def get_runway_coord(
+        airport: str, runway: str
+    ) -> tuple[float, float, float]:
         """
         Get runway coordinate
 
@@ -384,10 +413,10 @@ class Nav:
         """
         # TODO: Convert MSL to Geopotentail altitude
         airport = Nav.airports[(Nav.airports[0].to_numpy() == airport)]
-        return tuple(airport[airport[1].str.contains(runway)].iloc[0, 2:5])
+        return tuple(airport[airport[1].str.contains(runway)].iloc[0, 2:5])  # type: ignore
 
     @staticmethod
-    def find_closest_airport_runway(lat, long):
+    def find_closest_airport_runway(lat: float, long: float) -> tuple[str, str]:
         """
         Find the closest runway and airport given lat long.
 
@@ -410,12 +439,16 @@ class Nav:
             & (Nav.airports.iloc[:, 3].between(long - 0.1, long + 0.1))
         ]
         dist = Cal.cal_great_circle_dist(
-            tmp.iloc[:, 2].to_numpy(), tmp.iloc[:, 3].to_numpy(), lat, long
+            tmp.iloc[:, 2].to_numpy(),
+            tmp.iloc[:, 3].to_numpy(),
+            np.array(lat),
+            np.array(long),
         )
-        return tmp.iloc[np.argmin(dist)].tolist()
+        airport, runway = tmp.iloc[np.argmin(dist), 0:2].tolist()
+        return airport, runway
 
     @staticmethod
-    def get_airport_procedures(airport, procedure_type):
+    def get_airport_procedures(airport: str, procedure_type: str) -> array:
         """
         Get instrument procedures of an airport.
 
@@ -438,12 +471,19 @@ class Nav:
             .joinpath("./data/navigation/xplane/CIFP/" + airport + ".dat"),
             header=None,
         )
-        return procedures[procedures[0].str.contains(procedure_type)][
-            2
-        ].unique()
+        procedure_names = procedures[
+            procedures[0].str.contains(procedure_type)
+        ][2].unique()
+        return procedure_names  # type: ignore
 
     @staticmethod
-    def get_procedure(airport, runway, procedure, appch="", iaf=""):
+    def get_procedure(
+        airport: str,
+        runway: str,
+        procedure: str,
+        appch: str = "",
+        iaf: str = "",
+    ) -> tuple[list[str], list[float], array, list[float], array]:
         """
         Get the details of standard instrument procedure
 
@@ -487,7 +527,8 @@ class Nav:
 
         Note
         ----
-            Terminal procedures (SID/STAR/Approach/Runway) https://developer.x-plane.com/wp-content/uploads/2019/01/XP-CIFP1101-Spec.pd f
+            Terminal procedures (SID/STAR/Approach/Runway)
+            https://developer.x-plane.com/wp-content/uploads/2019/01/XP-CIFP1101-Spec.pdf
             https://wiki.flightgear.org/User:Www2/XP11_Data_Specification
         """
         procedures = pd.read_csv(
@@ -523,16 +564,18 @@ class Nav:
         if len(index) > 0:
             procedure_df = procedure_df.loc[: index[0] - 1, :]
 
-        alt_restriction_1 = []
-        alt_restriction_2 = []
-        speed_restriction = []
+        alt_restriction_1: list[float] = []
+        alt_restriction_2: list[float] = []
+        speed_restriction: list[float] = []
 
         for val in procedure_df[23].values:
             if "FL" in val:
                 alt_restriction_1.append(float(val.replace("FL", "")) * 100.0)
             else:
                 if val == "     ":
-                    alt_restriction_1.append(-1)
+                    alt_restriction_1.append(
+                        -1.0
+                    )  # FIXME(abrah): use Optional[float] instead
                 else:
                     alt_restriction_1.append(float(val))
 
@@ -541,13 +584,13 @@ class Nav:
                 alt_restriction_2.append(float(val.replace("FL", "")) * 100.0)
             else:
                 if val == "     ":
-                    alt_restriction_2.append(-1)
+                    alt_restriction_2.append(-1.0)
                 else:
                     alt_restriction_2.append(float(val))
 
         for val in procedure_df[27].values:
             if val == "   ":
-                speed_restriction.append(-1)
+                speed_restriction.append(-1.0)
             else:
                 speed_restriction.append(float(val))
 
@@ -558,8 +601,9 @@ class Nav:
             alt_restriction_1,
         )
 
+        # FIXME(abrah): dont index into df with integers
         return (
-            procedure_df[4].values.tolist(),
+            procedure_df[4].values.tolist(),  # type: ignore
             procedure_df[22].values.tolist(),
             alt_restriction,
             procedure_df[26].values.tolist(),
@@ -567,7 +611,7 @@ class Nav:
         )
 
     @staticmethod
-    def get_holding_procedure(fix, region):
+    def get_holding_procedure(fix: str, region: str) -> HoldingProcedure:
         """
         Get holding procedure.
 
@@ -580,7 +624,8 @@ class Nav:
 
         Returns
         -------
-        [inbound holding course, legtime, leg length, direction, min alt, max alt, speed] : []
+        [inbound holding course, legtime, leg length, direction, min alt,
+        max alt, speed] : []
 
         Note
         ----
@@ -589,4 +634,4 @@ class Nav:
         holding = Nav.holding[
             (Nav.holding[1] == region) & (Nav.holding[0] == fix)
         ]
-        return holding.iloc[0, :].tolist()
+        return holding.iloc[0, :].tolist()  # type: ignore

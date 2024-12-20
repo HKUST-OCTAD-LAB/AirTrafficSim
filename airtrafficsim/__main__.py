@@ -7,7 +7,7 @@ from zipfile import ZipFile
 import airtrafficsim.server.server as server
 
 
-def main():
+def main() -> None:
     # Unpack client
     if (
         not Path(__file__)
@@ -21,6 +21,7 @@ def main():
         ).extractall(Path(__file__).parent.resolve().joinpath("./data/client/"))
 
     # Create a parser for command line arguments
+    # FIXME(abrah): use typer.
     parser = argparse.ArgumentParser(
         prog="AirTrafficSim",
         description="Command line interfaces of AirTrafficSim.",
@@ -28,12 +29,18 @@ def main():
     parser.add_argument(
         "--init",
         type=Path,
-        help="Create a symbloic link to the data folder: airtrafficsim init <path to a folder>.",
+        help=(
+            "Create a symbolic link to the data folder: "
+            "airtrafficsim init <path to a folder>."
+        ),
     )
     parser.add_argument(
         "--headless",
         type=str,
-        help="Run user defined environment without UI: airtrafficsim --headless <env name>.",
+        help=(
+            "Run user defined environment without UI: "
+            "airtrafficsim --headless <env name>."
+        ),
     )
 
     args = parser.parse_args()
@@ -59,10 +66,12 @@ def main():
             )
         else:
             raise IOError(
-                "The path you provided does not exist. Please provide a valid path."
+                "The path you provided does not exist. "
+                "Please provide a valid path."
             )
     else:
-        # Give error if BADA data is missing TODO: To be removed when OpenAP is implemented
+        # Give error if BADA data is missing
+        # TODO: To be removed when OpenAP is implemented
         if (
             len(
                 list(
@@ -75,7 +84,8 @@ def main():
             <= 1
         ):
             raise IOError(
-                "BADA folder is empty. Remember to put the BADA performance data into /data/performance/BADA/."
+                "BADA folder is empty. Remember to put the BADA performance "
+                "data into /data/performance/BADA/."
             )
         if args.headless:
             # Run user defined environment without UI

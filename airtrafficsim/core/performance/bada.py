@@ -1,18 +1,28 @@
 """Aircraft performance class calculation using BADA 3.15"""
 
+from enum import IntEnum
 from pathlib import Path
 
 import numpy as np
-from airtrafficsim.utils.enums import (
+
+from ...types import array, uint_array
+from ...utils.enums import (
     APSpeedMode,
     Config,
     EngineType,
     FlightPhase,
     VerticalMode,
 )
-from airtrafficsim.utils.unit_conversion import Unit
+from ...utils.unit_conversion import Unit
 
 
+class MassClass(IntEnum):
+    LO = 1
+    AV = 2
+    HI = 3
+
+
+# FIXME(abrah): split into multiple classes
 class Bada:
     """
     BADA Performance class
@@ -22,7 +32,7 @@ class Bada:
         """
         Initialize BADA performance parameters
         """
-        # ----------------------------  Operations Performance File (OPF) section 3.11 -----------------------------------------
+        # 3.11 Operations Performance File (OPF)
         # Aircraft type
         self.__n_eng = np.zeros([0])
         """Number of engines"""
@@ -89,11 +99,13 @@ class Bada:
 
         # Engine thrust
         self.__c_tc_1 = np.zeros([0])
-        """1st maximum climb thrust coefficient [Newton (jet/piston) knot-Newton (turboprop)]"""
+        """1st maximum climb thrust coefficient
+        [Newton (jet/piston) knot-Newton (turboprop)]"""
         self.__c_tc_2 = np.zeros([0])
         """2nd maximum climb thrust coefficient [feet]"""
         self.__c_tc_3 = np.zeros([0])
-        """3rd maximum climb thrust coefficient [1/feet^2 (jet) Newton (turboprop) knot-Newton (piston)]"""
+        """3rd maximum climb thrust coefficient
+        [1/feet^2 (jet) Newton (turboprop) knot-Newton (piston)]"""
         self.__c_tc_4 = np.zeros([0])
         """1st thrust temperature coefficient [K]"""
         self.__c_tc_5 = np.zeros([0])
@@ -115,7 +127,8 @@ class Bada:
 
         # Fuel flow
         self.__c_f1 = np.zeros([0])
-        """1st thrust specific fuel consumption coefficient [kg/(min*kN) (jet) kg/(min*kN*knot) (turboprop) kg/min (piston)]"""
+        """1st thrust specific fuel consumption coefficient
+        [kg/(min*kN) (jet) kg/(min*kN*knot) (turboprop) kg/min (piston)]"""
         self.__c_f2 = np.zeros([0])
         """2nd thrust specific fuel consumption coefficient [knots]"""
         self.__c_f3 = np.zeros([0])
@@ -135,12 +148,13 @@ class Bada:
         self.__length = np.zeros([0])
         """length [m]"""
 
-        # ----------------------------  Airline Procedure Models (APF) section 4 -----------------------------------------
+        # 4. Airline Procedure Models (APF)
         # Climb
         self.__v_cl_1 = np.zeros([0])
         """standard climb CAS [knots] between 1,500/6,000 and 10,000 ft"""
         self.__v_cl_2 = np.zeros([0])
-        """standard climb CAS [knots] between 10,000 ft and Mach transition altitude"""
+        """standard climb CAS [knots] between 10,000 ft and Mach transition
+        altitude"""
         self.__m_cl = np.zeros([0])
         """standard climb Mach number above Mach transition altitude"""
 
@@ -148,7 +162,8 @@ class Bada:
         self.__v_cr_1 = np.zeros([0])
         """standard cruise CAS [knots] between 3,000 and 10,000 ft"""
         self.__v_cr_2 = np.zeros([0])
-        """standard cruise CAS [knots] between 10,000 ft and Mach transition altitude"""
+        """standard cruise CAS [knots] between 10,000 ft and Mach transition
+        altitude"""
         self.__m_cr = np.zeros([0])
         """standard cruise Mach number above Mach transition altitude"""
 
@@ -156,7 +171,8 @@ class Bada:
         self.__v_des_1 = np.zeros([0])
         """standard descent CAS [knots] between 3,000/6,000 and 10,000 ft"""
         self.__v_des_2 = np.zeros([0])
-        """standard descent CAS [knots] between 10,000 ft and Mach transition altitude"""
+        """standard descent CAS [knots] between 10,000 ft and Mach transition
+        altitude"""
         self.__m_des = np.zeros([0])
         """standard descent Mach number above Mach transition altitude"""
 
@@ -168,7 +184,7 @@ class Bada:
         self.descent_schedule = np.zeros([0, 8])
         """Standard descent CAS schedule [knots*8] (section 4.3)"""
 
-        # ----------------------------  Global Aircraft Parameters (GPF) section 5 -----------------------------------------
+        ## 5. Global Aircraft Parameters (GPF)
         # Read data from GPF file (section 6.8)
         # 'CD', 1X, A15, 1X, A7, 1X, A16, 1x, A29, 1X, E10.5
         if (
@@ -189,111 +205,125 @@ class Bada:
             )
 
             # Maximum acceleration
-            self.__A_L_MAX_CIV = GPF[0][5]
+            self.__A_L_MAX_CIV: float = float(GPF[0][5])
             """Maximum longitudinal acceleration for civil flights [2 ft/s^2]"""
-            self.__A_N_MAX_CIV = GPF[1][5]
+            self.__A_N_MAX_CIV: float = float(GPF[1][5])
             """Maximum normal acceleration for civil flights [5 ft/s^2]"""
 
             # Bank angles
-            self.__PHI_NORM_CIV_TOLD = GPF[2][5]
+            self.__PHI_NORM_CIV_TOLD: float = float(GPF[2][5])
             """Nominal bank angles fpr civil flight during TO and LD [15 deg]"""
-            self.__PHI_NORM_CIV_OTHERS = GPF[3][5]
-            """Nominal bank angles for civil flight during all other phases [30 deg]"""
-            self.__PHI_NORM_MIL = GPF[4][5]
+            self.__PHI_NORM_CIV_OTHERS: float = float(GPF[3][5])
+            """Nominal bank angles for civil flight during all other phases
+            [30 deg]"""
+            self.__PHI_NORM_MIL: float = float(GPF[4][5])
             """Nominal bank angles for military flight (all phases) [50 deg]"""
-            self.__PHI_MAX_CIV_TOLD = GPF[5][5]
+            self.__PHI_MAX_CIV_TOLD: float = float(GPF[5][5])
             """Maximum bank angles for civil flight during TO and LD [25 deg]"""
-            self.__PHI_MAX_CIV_HOLD = GPF[6][5]
+            self.__PHI_MAX_CIV_HOLD: float = float(GPF[6][5])
             """Maximum bank angles for civil flight during HOLD [35 deg]"""
-            self.__PHI_MAX_CIV_OTHERS = GPF[7][5]
-            """Maximum bank angles for civil flight during all other phases [45 deg]"""
-            self.__PHI_MAX_MIL = GPF[8][5]
+            self.__PHI_MAX_CIV_OTHERS: float = float(GPF[7][5])
+            """Maximum bank angles for civil flight during all other phases [45
+            deg]"""
+            self.__PHI_MAX_MIL: float = float(GPF[8][5])
             """Maximum bank angles for military flight (all phases) [70 deg]"""
 
-            # Expedited descent (drag multiplication factor during expedited descent to simulate use of spoilers)
-            self.__C_DES_EXP = GPF[9][5]
+            # Expedited descent (drag multiplication factor during expedited
+            # descent to simulate use of spoilers)
+            self.__C_DES_EXP: float = float(GPF[9][5])
             """Expedited descent factor [1.6]"""
 
             # Thrust factors
-            self.__C_TCR = GPF[11][5]
-            """Maximum cruise thrust coefficient [0.95] (postition different between GPF and user menu)"""
-            self.__C_TH_TO = GPF[10][5]
-            """Take-off thrust coefficient [1.2] (no longer used since BADA 3.0) (postition different between GPF and user menu)"""
+            self.__C_TCR: float = float(GPF[11][5])
+            """Maximum cruise thrust coefficient [0.95] (postition different
+            between GPF and user menu)"""
+            self.__C_TH_TO: float = float(GPF[10][5])
+            """Take-off thrust coefficient [1.2] (no longer used since BADA 3.0)
+            (postition different between GPF and user menu)"""
 
             # Configuration altitude threshold
-            self.__H_MAX_TO = GPF[12][5]
+            self.__H_MAX_TO: float = float(GPF[12][5])
             """Maximum altitude threshold for take-off [400 ft]"""
-            self.__H_MAX_IC = GPF[13][5]
+            self.__H_MAX_IC: float = float(GPF[13][5])
             """Maximum altitude threshold for initial climb [2,000 ft]"""
-            self.__H_MAX_AP = GPF[14][5]
+            self.__H_MAX_AP: float = float(GPF[14][5])
             """Maximum altitude threshold for approach [8,000 ft]"""
-            self.__H_MAX_LD = GPF[15][5]
+            self.__H_MAX_LD: float = float(GPF[15][5])
             """Maximum altitude threshold for landing [3,000 ft]"""
 
             # Minimum speed coefficient
-            self.__C_V_MIN = GPF[16][5]
+            self.__C_V_MIN: float = float(GPF[16][5])
             """Minimum speed coefficient (all other phases) [1.3]"""
-            self.__C_V_MIN_TO = GPF[17][5]
+            self.__C_V_MIN_TO: float = float(GPF[17][5])
             """Minimum speed coefficient for take-off [1.2]"""
 
             # Speed schedules
-            self.__V_D_CL_1 = GPF[18][5]
+            self.__V_D_CL_1: float = float(GPF[18][5])
             """Climb speed increment below 1,500 ft (jet) [5 knot CAS]"""
-            self.__V_D_CL_2 = GPF[19][5]
+            self.__V_D_CL_2: float = float(GPF[19][5])
             """Climb speed increment below 3,000 ft (jet) [10 knot CAS]"""
-            self.__V_D_CL_3 = GPF[20][5]
+            self.__V_D_CL_3: float = float(GPF[20][5])
             """Climb speed increment below 4,000 ft (jet) [30 knot CAS]"""
-            self.__V_D_CL_4 = GPF[21][5]
+            self.__V_D_CL_4: float = float(GPF[21][5])
             """Climb speed increment below 5,000 ft (jet) [60 knot CAS]"""
-            self.__V_D_CL_5 = GPF[22][5]
+            self.__V_D_CL_5: float = float(GPF[22][5])
             """Climb speed increment below 6,000 ft (jet) [80 knot CAS]"""
-            self.__V_D_CL_6 = GPF[23][5]
-            """Climb speed increment below 500 ft (turbo/piston) [20 knot CAS]"""
-            self.__V_D_CL_7 = GPF[24][5]
-            """Climb speed increment below 1,000 ft (turbo/piston) [30 knot CAS]"""
-            self.__V_D_CL_8 = GPF[25][5]
-            """ Climb speed increment below 1,500 ft (turbo/piston) [35 knot CAS]"""
-            self.__V_D_DSE_1 = GPF[26][5]
-            """Descent speed increment below 1,000 ft (jet/turboprop) [5 knot CAS]"""
-            self.__V_D_DSE_2 = GPF[27][5]
-            """Descent speed increment below 1,500 ft (jet/turboprop) [10 knot CAS]"""
-            self.__V_D_DSE_3 = GPF[28][5]
-            """Descent speed increment below 2,000 ft (jet/turboprop) [20 knot CAS]"""
-            self.__V_D_DSE_4 = GPF[29][5]
-            """Descent speed increment below 3,000 ft (jet/turboprop) [50 knot CAS]"""
-            self.__V_D_DSE_5 = GPF[30][5]
+            self.__V_D_CL_6: float = float(GPF[23][5])
+            """Climb speed increment below 500 ft (turbo/piston)
+            [20 knot CAS]"""
+            self.__V_D_CL_7: float = float(GPF[24][5])
+            """Climb speed increment below 1,000 ft (turbo/piston)
+            [30 knot CAS]"""
+            self.__V_D_CL_8: float = float(GPF[25][5])
+            """ Climb speed increment below 1,500 ft (turbo/piston)
+            [35 knot CAS]"""
+            self.__V_D_DSE_1: float = float(GPF[26][5])
+            """Descent speed increment below 1,000 ft (jet/turboprop)
+            [5 knot CAS]"""
+            self.__V_D_DSE_2: float = float(GPF[27][5])
+            """Descent speed increment below 1,500 ft (jet/turboprop)
+            [10 knot CAS]"""
+            self.__V_D_DSE_3: float = float(GPF[28][5])
+            """Descent speed increment below 2,000 ft (jet/turboprop)
+            [20 knot CAS]"""
+            self.__V_D_DSE_4: float = float(GPF[29][5])
+            """Descent speed increment below 3,000 ft (jet/turboprop)
+            [50 knot CAS]"""
+            self.__V_D_DSE_5: float = float(GPF[30][5])
             """Descent speed increment below 500 ft (piston) [5 knot CAS]"""
-            self.__V_D_DSE_6 = GPF[31][5]
+            self.__V_D_DSE_6: float = float(GPF[31][5])
             """Descent speed increment below 1,000 ft (piston) [10 knot CAS]"""
-            self.__V_D_DSE_7 = GPF[32][5]
+            self.__V_D_DSE_7: float = float(GPF[32][5])
             """Descent speed increment below 1,500 ft (piston) [20 knot CAS]"""
 
             # Holding speeds
-            self.__V_HOLD_1 = GPF[33][5]
+            self.__V_HOLD_1: float = float(GPF[33][5])
             """Holding speed below FL140 [230 knot CAS]"""
-            self.__V_HOLD_2 = GPF[34][5]
+            self.__V_HOLD_2: float = float(GPF[34][5])
             """Holding speed between FL140 and FL220 [240 knot CAS]"""
-            self.__V_HOLD_3 = GPF[35][5]
+            self.__V_HOLD_3: float = float(GPF[35][5])
             """Holding speed between FL220 and FL340 [265 knot CAS]"""
-            self.__V_HOLD_4 = GPF[36][5]
+            self.__V_HOLD_4: float = float(GPF[36][5])
             """Holding speed above FL340 [0.83 Mach]"""
 
             # Ground speed
-            self.__V_BACKTRACK = GPF[37][5]
+            self.__V_BACKTRACK: float = float(GPF[37][5])
             """Runway backtrack speed [35 knot CAS]"""
-            self.__V_TAXI = GPF[38][5]
+            self.__V_TAXI: float = float(GPF[38][5])
             """Taxi speed [15 knot CAS]"""
-            self.__V_APRON = GPF[39][5]
+            self.__V_APRON: float = float(GPF[39][5])
             """Apron speed [10 knot CAS]"""
-            self.__V_GATE = GPF[40][5]
+            self.__V_GATE: float = float(GPF[40][5])
             """Gate speed [5 knot CAS]"""
 
             # Reduced power coefficient
-            self.__C_RED_TURBO = GPF[42][5]
-            """Maximum reduction in power for turboprops [0.25] (postition different between GPF and user menu)"""
-            self.__C_RED_PISTON = GPF[41][5]
-            """Maximum reduction in power for pistons [0.0] (postition different between GPF and user menu)"""
-            self.__C_RED_JET = GPF[43][5]
+            self.__C_RED_TURBO: float = float(GPF[42][5])
+            """Maximum reduction in power for turboprops [0.25]
+            (position different between GPF and user menu)"""
+            self.__C_RED_PISTON: float = float(GPF[41][5])
+            """Maximum reduction in power for pistons [0.0]
+            (position different between GPF and user menu)"""
+            self.__C_RED_JET: float = float(GPF[43][5])
             """Maximum reduction in power for jets [0.15]"""
 
             # Delete variable to free memory
@@ -302,7 +332,7 @@ class Bada:
         else:
             print("BADA.GPF File does not exit")
 
-        # ----------------------------  Atmosphere model section 3.1 -----------------------------------------
+        # 3.1 Atmosphere model
         # MSL Standard atmosphere condition (section 3.1.1)
         self.__T_0 = 288.15
         """Standard atmospheric temperature at MSL [K]"""
@@ -323,12 +353,14 @@ class Bada:
         self.__BETA_T_BELOW_TROP = -0.0065
         """ISA temperature gradient with altitude below the tropopause [K/m]"""
 
-        # Tropopause (separation between troposphere (below) and stratosphere (above))
+        # Tropopause (separation between troposphere (below) and stratosphere
+        # (above))
         self.__H_P_TROP = 11000
         """Geopotential pressure altitude [m]"""
 
-        # ----------------------------  SYNONYM FILE FORMAT (SYNONYM.NEW) section 6.3 -----------------------------------------
-        # | 'CD' | SUPPORT TYPE (-/*) | AIRCRAFT Code | MANUFACTURER | NAME OR MODEL | FILE NAME | ICAO (Y/N) |
+        # 6.3 Synonym
+        # | 'CD' | SUPPORT TYPE (-/*) | AIRCRAFT Code | MANUFACTURER |
+        # NAME OR MODEL | FILE NAME | ICAO (Y/N) |
         self.__SYNONYM = np.genfromtxt(
             Path(__file__)
             .parent.parent.parent.resolve()
@@ -350,9 +382,14 @@ class Bada:
             encoding="unicode_escape",
         )
 
-    def add_aircraft(self, icao, mass_class=2):
+    def add_aircraft(
+        self,
+        icao: str,
+        mass_class: MassClass = MassClass.AV,  # TODO: useful?
+    ) -> None:
         """
-        Add one specific aircraft performance data to the performance array according to index.
+        Add one specific aircraft performance data to the performance array
+        according to index.
 
         Parameters
         ----------
@@ -363,11 +400,7 @@ class Bada:
             ICAO code of the specific aircraft.
 
         mass_class: int
-            Aircraft mass for specific flight. To be used for APF. 1 = LO, 2 = AV, 3 = HI TODO: useful?
-
-        Returns
-        -------
-        TODO:
+            Aircraft mass for specific flight. To be used for APF.
         """
 
         # Get file name by searching in SYNONYM.NEW
@@ -390,8 +423,11 @@ class Bada:
             skip_footer=1,
         )
 
-        # 'CD', 3X, A6, 9X, I1, 12X, A9, 17X, A1 - aircraft type block - 1 data line
-        # | 'CD' | ICAO | # of engine | 'engines' | engine type ( Jet,  Turboprop  or  Piston) | wake category ( J (jumbo), H (heavy), M (medium) or L (light))
+        # 'CD', 3X, A6, 9X, I1, 12X, A9, 17X, A1 - aircraft type block - 1 data
+        # line
+        # | 'CD' | ICAO | # of engine | 'engines' |
+        # engine type ( Jet,  Turboprop  or  Piston) |
+        # wake category ( J (jumbo), H (heavy), M (medium) or L (light))
         OPF_Actype = np.genfromtxt(
             Path(__file__)
             .parent.parent.parent.resolve()
@@ -404,7 +440,8 @@ class Bada:
         )
 
         # Get data from Airlines Procedures File (Section 6.5)
-        # 'CD', 25X, 2(I3, 1X), I2, 10X, 2(Ix, 1X), I2, 2X, I2, 2(1X, I3) - procedures specification block - 3 dataline
+        # 'CD', 25X, 2(I3, 1X), I2, 10X, 2(Ix, 1X), I2, 2X, I2, 2(1X, I3) -
+        # procedures specification block - 3 dataline
         APF = np.genfromtxt(
             Path(__file__)
             .parent.parent.parent.resolve()
@@ -440,7 +477,9 @@ class Bada:
         self.__n_eng = np.append(self.__n_eng, OPF_Actype.item()[2])
         self.__engine_type = np.append(
             self.__engine_type,
-            {"Jet": 1, "Turboprop": 2, "Piston": 3}.get(OPF_Actype.item()[4]),
+            {"Jet": 1, "Turboprop": 2, "Piston": 3}.get(
+                OPF_Actype.item()[4], 0
+            ),  # NOTE(abrah): added 0 as None. probably a better way to do this
         )
         self.__wake_category = np.append(
             self.__wake_category, OPF_Actype.item()[5]
@@ -519,9 +558,11 @@ class Bada:
         del OPF_Actype
         del OPF
 
-    def del_aircraft(self, index):
+    def del_aircraft(self, index: int) -> None:
         """
-        Delete one specific aircraft performance data to the performance array according to index. This is done by setting all parameters to 0 for reuse in future.
+        Delete one specific aircraft performance data to the performance array
+        according to index.
+        This is done by setting all parameters to 0 for reuse in future.
 
         Parameters
         ----------
@@ -593,7 +634,13 @@ class Bada:
         self.cruise_schedule = np.delete(self.cruise_schedule, index, axis=0)
         self.descent_schedule = np.delete(self.descent_schedule, index, axis=0)
 
-    def cal_fuel_burn(self, flight_phase, tas, thrust, alt):
+    def cal_fuel_burn(
+        self,
+        flight_phase: uint_array,
+        tas: array,
+        thrust: array,
+        alt: array,
+    ) -> array:
         """
         Calculate fuel burn
 
@@ -605,7 +652,7 @@ class Bada:
             True airspeed [kt]
         thrust : float[]
             Thrust [N]
-        alt : _type_
+        alt : float[]
             Altitude [ft]
 
         Returns
@@ -638,8 +685,15 @@ class Bada:
         )
 
     def cal_thrust(
-        self, vertical_mode, configuration, H_p, V_tas, d_T, drag, ap_speed_mode
-    ):
+        self,
+        vertical_mode: uint_array,
+        configuration: uint_array,
+        H_p: array,
+        V_tas: array,
+        d_T: array,
+        drag: array,
+        ap_speed_mode: uint_array,
+    ) -> uint_array:
         """
         Calculate thrust given flight phases.
 
@@ -664,13 +718,12 @@ class Bada:
             Drag forces [N]
 
         ap_speed_mode : AP_speed_mode enum []
-            Autopilot speed mode [1: Constant CAS, 2: Constant Mach, 3: Acceleration, 4: Deceleration]
+            Autopilot speed mode [1: Constant CAS, 2: Constant Mach,
+            3: Acceleration, 4: Deceleration]
 
-        Returns
-        -------
-        _type_
-            _description_
         """
+        vertical_mode = np.array(vertical_mode)
+        configuration = np.array(configuration)
         return np.select(
             condlist=[
                 (vertical_mode == VerticalMode.CLIMB)
@@ -691,7 +744,8 @@ class Bada:
             ],
             choicelist=[
                 self.__cal_max_climb_to_thrust(H_p, V_tas, d_T),
-                # max climb thrust when acceleration, T = D at cruise, but limited at max cruise thrust
+                # max climb thrust when acceleration, T = D at cruise, but
+                # limited at max cruise thrust
                 np.minimum(
                     drag,
                     self.__cal_max_cruise_thrust(
@@ -706,13 +760,8 @@ class Bada:
             ],
         )
 
-    # -----------------------------------------------------------------------------------------------------
-    # ----------------------------- BADA Implementation----------------------------------------------------
-    # -----------------------------------------------------------------------------------------------------
-
-    # ----------------------------  Mass section 3.4 -----------------------------------------
-
-    def __cal_operating_speed(self, m, V_ref):
+    # 3.4 Mass
+    def __cal_operating_speed(self, m: array, V_ref: array) -> array:
         """
         Calculate operating speed given mass (Equation 3.4-1)
 
@@ -729,11 +778,11 @@ class Bada:
         V: float[]
             Operating velocity [m/s]
         """
-        return V_ref * np.sqrt(m / (self.__m_ref * 1000.0))
+        return V_ref * np.sqrt(m / (self.__m_ref * 1000.0))  # type: ignore
 
-    # ----------------------------  Flight envelope section 3.5 -----------------------------------------
+    # Flight envelope
 
-    def cal_maximum_altitude(self, d_T, m):
+    def cal_maximum_altitude(self, d_T: array, m: array) -> array:
         """
         Calculate flight envelope (Section 3.5-1)
 
@@ -763,7 +812,7 @@ class Bada:
             ),
         )
 
-    def cal_minimum_speed(self, configuration):
+    def cal_minimum_speed(self, configuration: uint_array) -> array:
         """
         Calculate minimum speed for aircraft (3.5-2~3)
 
@@ -775,7 +824,7 @@ class Bada:
         Returns
         -------
         v_min: float[]
-            Minimum at speed at specific configuration [knots] TODO: need to consider mass using __calculate_operating_speed?
+            Minimum at speed at specific configuration [knots]
         """
 
         return np.select(
@@ -792,13 +841,19 @@ class Bada:
                 self.__C_V_MIN * self.__v_stall_ld,
             ],
             default=self.__C_V_MIN * self.__v_stall_cr,
-        )
+        )  # TODO: need to consider mass using __calculate_operating_speed?
 
-    # ----------------------------  Aerodynamic section 3.6 -----------------------------------------
+    # 3.6 Aerodynamics
 
     def cal_aerodynamic_drag(
-        self, V_tas, bank_angle, m, rho, configuration, c_des_exp
-    ):
+        self,
+        V_tas: array,
+        bank_angle: array,
+        m: array,
+        rho: array,
+        configuration: uint_array,
+        c_des_exp: array,
+    ) -> array:
         """
         Calculate Aerodynamic drag (Section 3.6.1)
 
@@ -871,9 +926,12 @@ class Bada:
             c_D * rho * np.square(V_tas) * self.__S / 2.0 * c_des_exp,
         )
 
-    def cal_low_speed_buffeting_limit(self, p, M, m):
+    def cal_low_speed_buffeting_limit(
+        self, p: array, M: array, m: array
+    ) -> array:
         """
-        Low speed buffeting limit for jet and turboprop aircraft. It is expressed as Mach number. (Equation 3.6-6)
+        Low speed buffeting limit for jet and turboprop aircraft.
+        It is expressed as Mach number. (Equation 3.6-6)
         TODO: Appendix B
 
         Parameters
@@ -894,7 +952,8 @@ class Bada:
 
         Notes
         -----
-        TODO: Calculate minimum speed for Jet and Turboprop when H_p >= 15000. V_min = MAX(V_min_stall, M_b) (<- same unit)
+        TODO: Calculate minimum speed for Jet and Turboprop when H_p >= 15000.
+        V_min = MAX(V_min_stall, M_b) (<- same unit)
               If H_p < 15000, V_min = V_min_stall
         """
         Q = -np.square(-self.__c_lbo / self.__k) / 9.0
@@ -918,13 +977,16 @@ class Bada:
         )
 
         arr = np.array([X_1, X_2, X_3])
-        return np.max(np.where(arr <= 0, np.inf, arr), axis=0)
+        return np.max(np.where(arr <= 0, np.inf, arr), axis=0)  # type: ignore
 
-    # ----------------------------  Engine Thrust section 3.7 -----------------------------------------
+    ## 3.7 Engine Thrust
 
-    def __cal_max_climb_to_thrust(self, H_p, V_tas, d_T):
+    def __cal_max_climb_to_thrust(
+        self, H_p: array, V_tas: array, d_T: array
+    ) -> array:
         """
-        Calculate maximum climb thrust for both take-off and climb phases (Section 3.7.1)
+        Calculate maximum climb thrust for both take-off and climb phases
+        (Section 3.7.1)
 
         Parameters
         ----------
@@ -942,7 +1004,8 @@ class Bada:
         Thr_max_climb: float[]
             Maximum climb thrust [N]
         """
-        # Maximum climb thrust at standard atmosphere conditions (Equations 3.7-1~3)
+        # Maximum climb thrust at standard atmosphere conditions
+        # (Equations 3.7-1~3)
         thr_max_climb_isa = np.select(
             [
                 self.__engine_type == EngineType.JET,
@@ -960,7 +1023,7 @@ class Bada:
         )
 
         # Corrected for temperature deviation from ISA
-        return thr_max_climb_isa * (
+        thr_max_climb = thr_max_climb_isa * (
             1.0
             - np.clip(
                 np.clip(self.__c_tc_5, 0.0, None) * (d_T - self.__c_tc_4),
@@ -968,8 +1031,9 @@ class Bada:
                 0.4,
             )
         )
+        return thr_max_climb  # type: ignore
 
-    def __cal_max_cruise_thrust(self, Thr_max_climb):
+    def __cal_max_cruise_thrust(self, Thr_max_climb: array) -> array:
         """
         Calculate maximum cruise thrust (Equation 3.7-8)
 
@@ -985,11 +1049,18 @@ class Bada:
 
         Notes
         -----
-        The normal cruise thrust is by definition set equal to drag (Thr=D). However, the maximum amount of thrust available in cruise situation is limited.
+        The normal cruise thrust is by definition set equal to drag (Thr=D).
+        However, the maximum amount of thrust available in cruise situation is
+        limited.
         """
         return self.__C_TCR * Thr_max_climb
 
-    def __cal_descent_thrust(self, H_p, Thr_max_climb, configuration):
+    def __cal_descent_thrust(
+        self,
+        H_p: array,
+        Thr_max_climb: array,
+        configuration: uint_array,
+    ) -> array:
         """
         Calculate descent thrust (Section 3.7.3)
 
@@ -1009,7 +1080,8 @@ class Bada:
         Thr_des: float[]
             Descent thrust [N]
         """
-        # When “non-clean” data (see Section 3.6.1) is available, H_p,des cannot be below H_max,AP.
+        # When “non-clean” data (see Section 3.6.1) is available, H_p,
+        # des cannot be below H_max,AP.
         return np.where(
             H_p
             > np.where(
@@ -1034,9 +1106,11 @@ class Bada:
             ),
         )  # Equation 3.7-12
 
-    # ----------------------------  Reduced climb power section 3.8 -----------------------------------------
+    ## 3.8 Reduced climb power
 
-    def cal_reduced_climb_power(self, m, H_p, H_max):
+    def cal_reduced_climb_power(
+        self, m: array, H_p: array, H_max: array
+    ) -> array:
         """
         Calculate reduced climb power (section 3.8)
 
@@ -1049,7 +1123,8 @@ class Bada:
             Geopotential pressuer altitude [m]
 
         H_max: float[]
-            Actual maximum altitude for any given mass [kg] (obtained from __cal_maximum_altitude())
+            Actual maximum altitude for any given mass [kg]
+            (obtained from __cal_maximum_altitude())
 
         Returns
         -------
@@ -1058,7 +1133,7 @@ class Bada:
 
         Notes
         -----
-        The result can be applied in the calculation of ROCD during climb phase TODO:
+        The result can be applied in the calculation of ROCD during climb phase
         """
         c_red = np.where(
             H_p < 0.8 * H_max,
@@ -1080,11 +1155,12 @@ class Bada:
             self.__m_max - self.m_min
         )
 
-    # ----------------------------  Fuel consumption section 3.9 -----------------------------------------
+    ## 3.9 Fuel consumption
 
-    def __cal_nominal_fuel_flow(self, V_tas, Thr):
+    def __cal_nominal_fuel_flow(self, V_tas: array, Thr: array) -> array:
         """
-        Calculate nominal fuel flow (except idle descent and cruise) (equations 3.9-1~3 and 3.9-7)
+        Calculate nominal fuel flow (except idle descent and cruise)
+        (equations 3.9-1~3 and 3.9-7)
 
         Parameters
         ----------
@@ -1118,7 +1194,7 @@ class Bada:
             ],
         )  # Equation 3.9-7
 
-    def __cal_minimum_fuel_flow(self, H_p):
+    def __cal_minimum_fuel_flow(self, H_p: array) -> array:
         """
         Calculate fuel flow for idle descent (equations 3.9-4 and 3.9-8)
 
@@ -1141,7 +1217,9 @@ class Bada:
             self.__c_f3,
         )  # Equation 3.9-8
 
-    def __cal_approach_landing_fuel_flow(self, V_tas, Thr, H_p):
+    def __cal_approach_landing_fuel_flow(
+        self, V_tas: array, Thr: array, H_p: array
+    ) -> array:
         """
         Calculate fuel flow for approach and landing (equations 3.9-5 and 3.9-8)
 
@@ -1172,7 +1250,7 @@ class Bada:
             self.__cal_minimum_fuel_flow(H_p),
         )  # Equation 3.9-8
 
-    def __cal_cruise_fuel_flow(self, V_tas, Thr):
+    def __cal_cruise_fuel_flow(self, V_tas: array, Thr: array) -> array:
         """
         Calculate fuel flow for cruise (equations 3.9-6 and 3.9-9)
 
@@ -1210,11 +1288,12 @@ class Bada:
             ],
         )  # Equation 3.9-9
 
-    # ----------------------------  Airline Procedure Models section 4 -----------------------------------------
+    ## 4. Airline Procedure Models
 
-    def init_procedure_speed(self, m, n):
+    def init_procedure_speed(self, m: array, n: int) -> None:
         """
-        Initialize standard air speed schedule for all flight phases (Section 4.1-4.3)
+        Initialize standard air speed schedule for all flight phases
+        (Section 4.1-4.3)
 
         Parameters
         ----------
@@ -1304,7 +1383,9 @@ class Bada:
                 0.0,
             ]
 
-    def get_procedure_speed(self, H_p, H_p_trans, flight_phase):
+    def get_procedure_speed(
+        self, H_p: array, H_p_trans: array, flight_phase: uint_array
+    ) -> array:
         """
         Get the standard air speed schedule
 
@@ -1329,8 +1410,10 @@ class Bada:
 
         Notes
         -----
-        TODO: Recommended to determine the speed schedule from the highest altitude to the lowest one,
-        and to use at each step the speed of the higher altitude range as a ceiling value for the lower altitude range.
+        TODO: Recommended to determine the speed schedule from the highest
+        altitude to the lowest one,
+        and to use at each step the speed of the higher altitude range as a
+        ceiling value for the lower altitude range.
 
         TODO: Bound the speed schedule form the minimum and maximum speed.
         """
@@ -1474,7 +1557,9 @@ class Bada:
             ],
         )
 
-    def update_configuration(self, V_cas, H_p, vertical_mode):
+    def update_configuration(
+        self, V_cas: array, H_p: array, vertical_mode: uint_array
+    ) -> uint_array:
         """
         Update configuration (section 3.5)
 
@@ -1529,8 +1614,8 @@ class Bada:
             default=Config.CLEAN,
         )
 
-    # ----------------------------  Global aircraft parameters section 5 -----------------------------------------
-    def cal_max_d_tas(self, d_t):
+    ## 5. Global aircraft parameters
+    def cal_max_d_tas(self, d_t: array) -> array:
         """
         Calculate maximum delta true air speed (equation 5.2-1)
 
@@ -1546,7 +1631,7 @@ class Bada:
         """
         return self.__A_L_MAX_CIV * d_t
 
-    def cal_max_d_rocd(self, d_t, V_tas, rocd):
+    def cal_max_d_rocd(self, d_t: array, V_tas: array, rocd: array) -> array:
         """
         Calculate maximum delta rate of climb or descend (equation 5.2-2)
 
@@ -1566,13 +1651,15 @@ class Bada:
         d_rocd: float[]
             Delta rate of climb or descent [ft/s^2]
         """
-        return np.sin(
+        d_rocd = np.sin(
             np.arcsin(rocd / V_tas) - self.__A_N_MAX_CIV * d_t / V_tas
         ) * (V_tas + d_t)
+        return d_rocd  # type: ignore
 
-    def cal_expedite_descend_factor(self, expedite_descent):
+    def cal_expedite_descend_factor(self, expedite_descent: array) -> array:
         """
-        Calculate expedited descent factor for drag multiplication. (Equation 5.4-1)
+        Calculate expedited descent factor for drag multiplication.
+        (Equation 5.4-1)
 
         Parameters
         ----------

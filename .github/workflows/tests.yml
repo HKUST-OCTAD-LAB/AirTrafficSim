@@ -1,87 +1,72 @@
-name: Tests
+name: tests
 
 on:
+  workflow_dispatch:
+  pull_request_target:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
-    
+  style-check:
+    name: "style and type checking"
+    if: (github.event_name != 'pull_request' && ! github.event.pull_request.head.repo.fork) || (github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork || startsWith(github.head_ref, 'dependabot/')))
+    runs-on: ${{ matrix.platform }}
     strategy:
-      max-parallel: 5
+      fail-fast: false
       matrix:
-        include:
-          - os: ubuntu-latest
-            label: linux-64
-            prefix: /usr/share/miniconda3/envs/airtrafficsim
-
-          # - os: macos-latest
-          #   label: osx-64
-          #   prefix: /Users/runner/miniconda3/envs/airtrafficsim
-
-          # - os: windows-latest
-          #   label: win-64
-          #   prefix: C:\Miniconda3\envs\airtrafficsim
-
-    name: ${{ matrix.label }}
-    runs-on: ${{ matrix.os }}
-    
-    defaults:
-      run:
-        shell: bash -el {0}
+        platform: [ubuntu-latest]
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Cache conda
-      uses: actions/cache@v2
-      env:
-        # Increase this value to reset cache if etc/example-environment.yml has not changed
-        CACHE_NUMBER: 0
-      with:
-        path: ~/conda_pkgs_dir
-        key:
-          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('environment.yml') }}
-          
-    - name: Setup miniconda
-      uses: conda-incubator/setup-miniconda@v2
-      with:
-        activate-environment: airtrafficsim
-        channel-priority: strict
-        environment-file: environment.yml
-        python-version: 3.11
-        use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install the project
+        run: uv sync
+
+      - name: Style checking
+        run: |
+          uv run ruff check airtrafficsim tests
+          uv run ruff format --check airtrafficsim tests
         
-    - run: |
-        conda info
-        conda list
-        
-    - name: Download data from private repository
-      uses: actions/checkout@v3
-      with:
-        repository: HKUST-OCTAD-LAB/AirTrafficSim-data
-        ssh-key: ${{ secrets.SSH_KEY }}
-        path: AirTrafficSim-data
+      - name: Type checking
+        run: uv run mypy airtrafficsim tests
 
-    - name: Unzip data
-      run: |
-        unzip AirTrafficSim-data/BADA.zip -d airtrafficsim/data/performance/BADA
-        mv AirTrafficSim-data/.cdsapirc $HOME/
 
-    # - name: Lint with flake8
-    #   run: |
-    #     conda install flake8
-    #     # stop the build if there are Python syntax errors or undefined names
-    #     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-    #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-    #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      # testing
+      - name: Download data from private repository
+        uses: actions/checkout@v3
+        with:
+          repository: HKUST-OCTAD-LAB/AirTrafficSim-data
+          ssh-key: ${{ secrets.SSH_KEY }}
+          path: AirTrafficSim-data
 
-    - name: Test with pytest
-      run: |
-        coverage run -m pytest
-        coverage xml
+      - name: Unzip data
+        run: |
+          unzip AirTrafficSim-data/BADA.zip -d airtrafficsim/data/performance/BADA
+          mv AirTrafficSim-data/.cdsapirc $HOME/
 
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
+      - name: Run tests
+        run: |
+          uv run pytest --cov --cov-report xml
+
+      - name: Upload coverage to Codecov
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: codecov/codecov-action@v5
+        with:
+          env_vars: ${{ matrix.python-version }}
