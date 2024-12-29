@@ -29,7 +29,7 @@ class Weather:
         ----------
         start_time : datetime
             Start time of the simulation
-        duration : float
+        duration_s : float
             Duration of the simulation
         weather_mode : str
             Weather mode [ISA, ERA5]

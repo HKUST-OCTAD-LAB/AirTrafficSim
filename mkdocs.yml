@@ -24,6 +24,7 @@ nav:
     - Documentation: "development/documentation.md"
     - Testing: "development/test.md"
   - API reference: "api/index.md"
+  - Experimental API: "api/experimental.md"
 
 theme:
   name: material

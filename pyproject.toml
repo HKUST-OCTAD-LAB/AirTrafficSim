@@ -7,6 +7,7 @@ name = "AirTrafficSim"
 version = "0.2.0"
 authors = [
     { name = "Frankie Hui", email = "kyhuiaf@connect.ust.hk" },
+    { name = "Abraham Cheung", email = "abraham@ylcheung.com" }
 ]
 description = "A web-based air traffic simulation software written in Python and TypeScript."
 readme = "README.md"
@@ -26,7 +27,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=2.2.0",
-    "pandas>=2.2.3",
+    "pandas>=2.2.3", # to be made optional
 ]
 
 [project.urls]
@@ -35,15 +36,6 @@ Repository = "https://github.com/HKUST-OCTAD-LAB/AirTrafficSim"
 
 [project.scripts]
 airtrafficsim = "airtrafficsim.__main__:main"
-# [tool.setuptools]
-# packages = ["airtrafficsim", 
-#             "airtrafficsim.core",
-#             "airtrafficsim.core.weather",
-#             "airtrafficsim.core.performance",
-#             "airtrafficsim.data", 
-#             "airtrafficsim.server", 
-#             "airtrafficsim.utils"]
-# include-package-data = true
 
 [project.optional-dependencies]
 web = [
@@ -70,6 +62,7 @@ dev = [
 test = [
     "pytest-cov>=6.0.0",
     "pytest>=8.3.4",
+    "jax>=0.4.38",
 ]
 docs = [
     "mkdocs-material[imaging]>=9.5.49",

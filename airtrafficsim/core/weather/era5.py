@@ -10,7 +10,6 @@ class Era5:
     A utility class to handle ERA5 weather data
     """
 
-    # FIXME(abrah): rename end_time.
     @staticmethod
     def download_data(
         start_time: datetime, duration_s: float, file_name: str
@@ -22,7 +21,7 @@ class Era5:
         ----------
         start_time : datetime
             Start time of the simulation [ISO time in UTC]
-        end_time : float
+        duration_s : float
             Duration of the simulation [seconds]
         file_name : float
             Simulation environment name
