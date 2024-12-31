@@ -1,25 +1,31 @@
-@use '@carbon/react' with (
-  $font-path: '@ibm/plex'
-);
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-main {
-    background-color: #222;
-    width: 100%;
+html,
+body {
     height: 100%;
-    display: flex;
-    flex-direction: row;
+    width: 100%;
+    font-family: 'JetBrains Mono Variable', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #1a1a1a;
+    color: #eee;
+}
 
-    .cesium-viewer-bottom {
-        display: none !important;
-    }
+button {
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
 
-    > #map {
-        width: 70%;
-        height: 100%;
-    }
-
-    > #panel {
-        width: 30%;
-        height: 100%;
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px var(--color-primary);
     }
 }

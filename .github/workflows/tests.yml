@@ -58,7 +58,7 @@ jobs:
 
       - name: Unzip data
         run: |
-          unzip AirTrafficSim-data/BADA.zip -d airtrafficsim/data/performance/BADA
+          unzip -qq AirTrafficSim-data/BADA.zip -d airtrafficsim/data/performance/BADA
           mv AirTrafficSim-data/.cdsapirc $HOME/
 
       - name: Run tests
