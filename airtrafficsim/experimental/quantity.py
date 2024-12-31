@@ -9,7 +9,9 @@ For example:
 ```pycon
 >>> from typing import Annotated
 >>> from airtrafficsim.experimental.quantity import CAS, EAS
->>> def cas_to_eas(cas: Annotated[float, CAS]) -> Annotated[float, EAS]:
+>>> def cas_to_eas(
+...     cas: Annotated[float, CAS("m s⁻¹")]
+... ) -> Annotated[float, EAS("m s⁻¹")]:
 >>>     ...
 ```
 
@@ -18,9 +20,10 @@ At runtime, the types are effectively erased and static type checkers will
 not catch incompatible quantities.
 """
 # TODO: beartype integration
+# TODO: add optional LaTeX protocol
 
 from dataclasses import dataclass
-from typing import Generic, Literal, TypeAlias, TypeVar
+from typing import Any, Generic, Literal, TypeAlias, TypeVar
 
 Units = TypeVar("Units", bound=str | None)
 """
@@ -34,15 +37,19 @@ should be specified.
 class _Quantity(Generic[Units]):
     unit: Units
 
+    def __truediv__(self, other: "_Quantity[Any]") -> "Div":
+        return Div(numerator=self, denominator=other)
+
 
 #
 # Base
 #
 
-Length: TypeAlias = _Quantity[Literal["m", "ft"]]
+Time: TypeAlias = _Quantity[Literal["s", "min", "hr"]]
+Length: TypeAlias = _Quantity[Literal["m", "ft", "nmi", "mi"]]
 Mass: TypeAlias = _Quantity[Literal["kg", "lbm"]]
 Temperature: TypeAlias = _Quantity[Literal["K", "°C", "°F", "°R"]]
-# Angle: TypeAlias = Dimension[Literal["rad", "deg"]]
+Angle: TypeAlias = _Quantity[Literal["rad", "deg"]]
 
 #
 # Derived
@@ -52,116 +59,140 @@ Force: TypeAlias = _Quantity[Literal["N", "lbf"]]
 Pressure: TypeAlias = _Quantity[Literal["Pa", "psi"]]
 Energy: TypeAlias = _Quantity[Literal["J"]]
 Power: TypeAlias = _Quantity[Literal["W"]]
-Speed: TypeAlias = _Quantity[Literal["m s⁻¹", "knots"]]
+Velocity: TypeAlias = _Quantity[
+    Literal["m s⁻¹", "kt", "ft min⁻¹", "mi hr⁻¹", "km hr⁻¹"]
+]
 Acceleration: TypeAlias = _Quantity[Literal["m s⁻²", "ft s⁻²"]]
 Density: TypeAlias = _Quantity[Literal["kg m⁻³", "slug ft⁻³"]]
 GasConstant: TypeAlias = _Quantity[Literal["J mol⁻¹ K⁻¹"]]
 MolarMass: TypeAlias = _Quantity[Literal["kg mol⁻¹"]]
 SpecificGasConstant: TypeAlias = _Quantity[Literal["J kg⁻¹ K⁻¹"]]
+ThrustSpecificFuelConsumption: TypeAlias = _Quantity[
+    Literal["kg s⁻¹ N⁻¹", "g s⁻¹ kN⁻¹", "lbm hr⁻¹ lbf⁻¹"]
+]
 
 #
 # disambiguation
 #
 
 
-@dataclass(frozen=True)
+# ICAO definitions:
+# - altitude: measured from the mean sea level (MSL)
+# - height: measured from specific datum
+
+
+class PressureAltitude(Length):
+    """Pressure altitude, as measured from altimeter"""
+
+
+class DensityAltitude(Length):
+    """Density altitude, as measured from altimeter"""
+
+
 class GeopotentialAltitude(Length):
-    """Geopotential altitude above mean sea level"""
+    """Geopotential altitude, as measured from mean sea level"""
 
 
-@dataclass(frozen=True)
 class GeometricAltitude(Length):
-    """Geometric altitude"""
+    """Geometric altitude, as measured from mean sea level"""
 
 
-@dataclass(frozen=True)
+class GeodeticHeight(Length):
+    """
+    Geodetic height
+
+    See: https://en.wikipedia.org/wiki/Geodetic_coordinates
+    """
+
+
 class StaticTemperature(Temperature):
     """Static temperature"""
 
 
-@dataclass(frozen=True)
 class DynamicTemperature(Temperature):
     """Dynamic temperature"""
 
 
-@dataclass(frozen=True)
 class TotalTemperature(Temperature):
     """Total temperature"""
 
 
-@dataclass(frozen=True)
 class StaticPressure(Pressure):
     """Static pressure"""
 
 
-@dataclass(frozen=True)
 class DynamicPressure(Pressure):
     """Dynamic pressure"""
 
 
-@dataclass(frozen=True)
 class TotalPressure(Pressure):
     """Total pressure"""
 
 
-@dataclass(frozen=True)
-class IAS(Speed):
+class IAS(Velocity):
     """Indicated airspeed"""
 
 
-@dataclass(frozen=True)
-class CAS(Speed):
+class CAS(Velocity):
     """Calibrated airspeed"""
 
 
-@dataclass(frozen=True)
-class EAS(Speed):
+class EAS(Velocity):
     """Equivalent airspeed"""
 
 
-@dataclass(frozen=True)
-class TAS(Speed):
+class TAS(Velocity):
     """True airspeed"""
 
 
-@dataclass(frozen=True)
-class GS(Speed):
+class GS(Velocity):
     """Ground speed"""
 
 
-@dataclass(frozen=True)
-class WindSpeed(Speed):
+class WindSpeed(Velocity):
     """Wind speed in the inertial reference frame"""
 
 
-@dataclass(frozen=True)
-class SpeedOfSound(Speed):
+class SpeedOfSound(Velocity):
     """Speed of sound"""
 
 
-@dataclass(frozen=True)
 class GravitationalAcceleration(Acceleration):
     """Gravitational acceleration"""
 
 
-@dataclass(frozen=True)
 class TemperatureGradient(_Quantity[Literal["K m⁻¹"]]):
-    """Lapse rate"""
+    """Lapse rate, below tropopause, ISA"""
 
 
-@dataclass(frozen=True)
 class MachNumber(_Quantity[None]):
     """Mach number"""
 
 
-@dataclass(frozen=True)
 class AdiabaticIndex(_Quantity[None]):
     """Ratio of specific heats, isentropic expansion factor"""
 
 
-# no generic newtypes: https://github.com/python/mypy/issues/3331
+#
+# Newtype-like wrapper to indicate deltas
+# see: https://github.com/python/mypy/issues/3331
+#
+
+
 @dataclass(frozen=True)
 class Delta(Generic[Units]):
     """A difference between two quantities"""
 
     quantity: _Quantity[Units]
+
+
+@dataclass(frozen=True)
+class Div:
+    """
+    A ratio between two quantities.
+
+    Used in [unit conversion][airtrafficsim.experimental.unit_conversion].
+    """
+
+    numerator: _Quantity[Any]
+    denominator: _Quantity[Any]

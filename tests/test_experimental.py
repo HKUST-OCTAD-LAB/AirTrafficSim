@@ -2,12 +2,8 @@ import jax
 import jax.numpy as jnp
 
 from airtrafficsim.experimental.common import G_0
-from airtrafficsim.experimental.performance.bada3 import (
-    atmosphere,
-)
-from airtrafficsim.experimental.thermodynamics import (
-    R_SPECIFIC_DRY_AIR,
-)
+from airtrafficsim.experimental.performance.bada3 import atmosphere
+from airtrafficsim.experimental.thermodynamics import R_SPECIFIC_DRY_AIR
 
 
 def test_jax() -> None:

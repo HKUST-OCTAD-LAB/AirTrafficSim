@@ -14,7 +14,7 @@ See also:
 import math
 from typing import Annotated
 
-from ..common import G_0  # 3.1.2
+from ..geospatial import G_0  # 3.1.2
 from ..quantity import (
     TAS,
     Delta,

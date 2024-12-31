@@ -5,6 +5,8 @@ def deprecated(
     replacement: Callable[..., Any] | None = None,
 ) -> Callable[..., Any]:
     """
+    Decorator to mark a function as deprecated (to be used in the parent module)
+
     :param replacement: The function that should be used instead of the
     deprecated function.
     """
