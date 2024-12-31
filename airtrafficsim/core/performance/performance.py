@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any, Literal
 
 # FIXME(abrah): openap should be optional.
 from openap import WRAP, Drag, FuelFlow, Thrust, prop
+from typing_extensions import deprecated
 
 import numpy as np
 
@@ -17,6 +18,8 @@ if TYPE_CHECKING:
     from ..traffic import Traffic
 
 PerformanceMode = Literal["BADA", "OpenAP"]
+
+_REPLACEMENT = "[airtrafficsim.experimental.performance.bada3][]"
 
 
 class Performance:
@@ -163,6 +166,7 @@ class Performance:
 
     ### Atmosphere model (Ref: BADA user menu section 3.1)
 
+    @deprecated(_REPLACEMENT)
     def cal_temperature(self, H_p: array | float, d_T: array | float) -> array:
         """
         Calculate Temperature (Equation 3.1-12~16)
@@ -191,6 +195,7 @@ class Performance:
             self.__T_0 + d_T + self.__BETA_T_BELOW_TROP * self.__H_P_TROP,
         )
 
+    @deprecated(_REPLACEMENT)
     def cal_air_pressure(
         self, H_p: array | float, T: array, d_T: array
     ) -> array:
@@ -239,6 +244,7 @@ class Performance:
             ),
         )
 
+    @deprecated(_REPLACEMENT)
     def cal_air_density(self, p: ArrayOrFloat, T: ArrayOrFloat) -> ArrayOrFloat:
         """
         Calculate Air Density (Equation 3.1-21)
@@ -258,6 +264,7 @@ class Performance:
         """
         return p / (self.__R * T)
 
+    @deprecated(_REPLACEMENT)
     def cal_speed_of_sound(self, T: ArrayOrFloat) -> ArrayOrFloat:
         """
         Calculate speed of sound. (Equation 3.1-22)
@@ -274,6 +281,7 @@ class Performance:
         """
         return (self.__KAPPA * self.__R * T) ** 0.5  # type: ignore
 
+    @deprecated(_REPLACEMENT)
     def cas_to_tas(
         self, V_cas: ArrayOrFloat, p: ArrayOrFloat, rho: ArrayOrFloat
     ) -> ArrayOrFloat:
@@ -323,6 +331,7 @@ class Performance:
         ) ** 0.5
         return V_tas  # type: ignore
 
+    @deprecated(_REPLACEMENT)
     def tas_to_cas(self, V_tas: array, p: array, rho: array) -> array:
         """
         Convert True air speed to Calibrated air speed. (Equation 3.1-24)
@@ -368,6 +377,7 @@ class Performance:
         )
         return V_cas  # type: ignore
 
+    @deprecated(_REPLACEMENT)
     def mach_to_tas(self, M: array, T: array) -> array:
         """
         Convert Mach number to True Air speed (Equation 3.1-26)
@@ -387,6 +397,7 @@ class Performance:
         """
         return M * np.sqrt(self.__KAPPA * self.__R * T)  # type: ignore
 
+    @deprecated(_REPLACEMENT)
     def tas_to_mach(self, V_tas: ArrayOrFloat, T: ArrayOrFloat) -> ArrayOrFloat:
         """
         Convert True Air speed to Mach number (Equation 3.1-26)

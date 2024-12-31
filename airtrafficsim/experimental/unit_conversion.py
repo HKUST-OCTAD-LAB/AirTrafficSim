@@ -21,8 +21,7 @@ Unless or specified otherwise, numerical values are defined as exact by SI
 
 from typing import Annotated
 
-from .geospatial import G_0
-from .quantity import (
+from .annotations import (
     Force,
     Length,
     Mass,
@@ -30,6 +29,7 @@ from .quantity import (
     Time,
     Velocity,
 )
+from .geospatial import G_0
 
 #
 # base

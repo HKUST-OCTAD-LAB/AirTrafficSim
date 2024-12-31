@@ -1,6 +1,10 @@
+from typing_extensions import deprecated
+
 import numpy as np
 
 from ..types import array
+
+REPLACEMENT = "airtrafficsim.experimental.geospatial"
 
 
 class Cal:
@@ -11,6 +15,7 @@ class Cal:
     # TODO: refactor to use Point2D namedtuple instead.
     # verify we need it in radians.
     @staticmethod
+    @deprecated(REPLACEMENT)
     def cal_great_circle_dist(
         lat1: array, long1: array, lat2: array, long2: array
     ) -> array:
@@ -46,6 +51,7 @@ class Cal:
         )
         return 2.0 * 6371.009 * np.arctan2(np.sqrt(a), np.sqrt(1.0 - a))  # type: ignore
 
+    @deprecated(REPLACEMENT)
     @staticmethod
     def cal_great_circle_bearing(
         lat1: array, long1: array, lat2: array, long2: array

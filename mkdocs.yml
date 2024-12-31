@@ -23,8 +23,8 @@ nav:
     - Web client: "development/client.md"
     - Documentation: "development/documentation.md"
     - Testing: "development/test.md"
-  - API reference: "api/index.md"
-  - Experimental API: "api/experimental.md"
+  - API Reference: "api/index.md"
+  - API Reference (Experimental): "api/experimental.md"
 
 theme:
   name: material
@@ -73,6 +73,10 @@ plugins:
             summary: true
             show_submodules: true
             docstring_style: numpy # TODO: move to sphinx
+            extensions:
+            - griffe_warnings_deprecated:
+                kind: danger
+                title: Deprecated
       enable_inventory: true
 markdown_extensions:
   - abbr

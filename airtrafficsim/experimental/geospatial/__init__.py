@@ -1,14 +1,20 @@
-from typing import Annotated
+from __future__ import annotations
 
-from ..quantity import (
-    Angle,
-    Delta,
-    GeometricAltitude,
-    GravitationalAcceleration,
-    Length,
-)
-from ..types import Array
+from typing import TYPE_CHECKING
+
 from .point import Point3D
+
+if TYPE_CHECKING:
+    from typing import Annotated
+
+    from ..annotations import (
+        Angle,
+        Delta,
+        GeometricAltitude,
+        GravitationalAcceleration,
+        Length,
+    )
+    from ..types import Array
 
 G_0: Annotated[float, GravitationalAcceleration("m s⁻²")] = 9.80665
 """Standard gravitational acceleration, sea level"""
@@ -38,8 +44,8 @@ def distance(
     lat1: Annotated[Array, Angle("rad")],
 ) -> Annotated[Array, Length("m")]:
     """
-    Returns the [Haversine](https://en.wikipedia.org/wiki/Haversine_formula)
-    great-circle distance between two coordinates.
+    Returns the [Haversine great circle distance](https://en.wikipedia.org/wiki/Haversine_formula)
+    between two coordinates.
     """
     xp = lat0.__array_namespace__()
     d_lon = lon1 - lon0

@@ -1,9 +1,11 @@
 from typing import Generic, NamedTuple
 
+from typing_extensions import deprecated
+
 from .types import ArrayOrFloat
 
 
-# TODO(abrah): make this generic
+@deprecated("[airtrafficsim.experimental.geospatial.point.Point2D][]")
 class Point2D(NamedTuple, Generic[ArrayOrFloat]):
     """A coordinate in 2D."""
 

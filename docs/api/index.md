@@ -1,3 +1,7 @@
+!!! warning
+    This module is considered deprecated and will not receive any maintenance.
+    Please use the [experimental module][airtrafficsim.experimental] instead.
+
 AirTrafficSim contains three main modules:
 
 - `core`: Main simulation engine
@@ -42,3 +46,8 @@ The utils module provides support functionality for the simulation.
 ::: airtrafficsim.utils.enums
 ::: airtrafficsim.utils.calculation
 ::: airtrafficsim.utils.unit_conversion
+
+## Misc
+
+::: airtrafficsim.geometry
+::: airtrafficsim.types

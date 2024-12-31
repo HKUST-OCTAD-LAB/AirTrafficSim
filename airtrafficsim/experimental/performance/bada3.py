@@ -3,27 +3,49 @@ Implementation of the Base of aircraft data (BADA) Family 3.
 
 Revision: 3.12 (No. 14/04/24-44)
 
-See also:
+Contents:
 
-- determination of air density (3.1-21)
+- [ ] 3 Operational Performance Models
+    - [x] 3.1 Atmosphere Model
+    - [ ] 3.2 Total-Energy Model
+    - [ ] 3.3 Aircraft Type
+    - [ ] 3.4 Mass
+    - [ ] 3.5 Flight Envelope
+    - [ ] 3.6 Aerodynamics
+    - [ ] 3.7 Engine Thrust
+    - [ ] 3.8 Reduced Climb Power
+    - [ ] 3.9 Fuel Consumption
+    - [ ] 3.10 Ground Movement
+    - [ ] 3.11 Summary of Operations Performance Parameters
+- [ ] 4 Airline Procedure Models
+- [ ] 5 Global Aircraft Parameters
+- [ ] 6 File Structure
+    - [ ] 6.1 File Types
+    - [ ] 6.2 File Configuration Management
+    - [ ] 6.3 `Synonym` File Format
+    - [ ] 6.4 `OPF` File Format
+    - [ ] 6.5 `APF` File Format
+    - [ ] 6.6 `PTF` File Format
+    - [ ] 6.7 `PTD` File Format
+    - [ ] 6.8 `BADA.GPF` File Format
+
+The following functions are defined elsewhere:
+
+- 3.1-21 Determination of air density
 [airtrafficsim.experimental.thermodynamics.density][]
-- determination of speed of sound (3.1-22)
+- 3.1-22 Determination of speed of sound
 [airtrafficsim.experimental.thermodynamics.speed_of_sound][]
+- 3.1-23, 3.1-24 CAS/TAS conversion
+    - [airtrafficsim.experimental.performance.airspeed.tas_from_cas][]
+    - [airtrafficsim.experimental.performance.airspeed.cas_from_tas][]
 """
 
+from __future__ import annotations
+
 import math
-from typing import Annotated
+from typing import TYPE_CHECKING
 
 from ..geospatial import G_0  # 3.1.2
-from ..quantity import (
-    TAS,
-    Delta,
-    GeopotentialAltitude,
-    MachNumber,
-    SpeedOfSound,
-    StaticPressure,
-    StaticTemperature,
-)
 from ..thermodynamics import (
     GAMMA_DRY_AIR as KAPPA,  # 3.1.2
 )
@@ -34,6 +56,7 @@ from ..thermodynamics import (
 )
 from ..types import Array, ArrayOrScalarT
 from .isa import (
+    # A_0,  # 3.1.1
     BETA_BELOW_TROP,  # 3.1.2
     H_BELOW_TROP,  # 3.1-11
     P_0,  # 3.1.1
@@ -43,19 +66,31 @@ from .isa import (
     T_11,  # 3.1-14
 )
 
-A_0: Annotated[float, SpeedOfSound("m s⁻¹")] = 340.294  # 3.1.1
+if TYPE_CHECKING:
+    from typing import Annotated
 
-# NOTE: bada only considers <20km with two layers.
+    from ..annotations import (
+        TAS,
+        Delta,
+        GeopotentialAltitude,
+        MachNumber,
+        StaticPressure,
+        StaticTemperature,
+    )
+
+    class BelowTropopause:
+        """Marker to indicate the quantity is valid below the tropopause."""
+
+    class AboveTropopause:
+        """Marker to indicate the quantity is valid above the tropopause."""
+
+#
+# 3. Operational Performance Models
+#
+# BADA atmosphere only considers <20km with two layers: gradient and isothermal.
 # for full coverage (at a cost of performance), use the full resolution ISA
 # model instead (which uses np.searchsorted).
-
-
-class BelowTropopause:
-    """Marker to indicate the quantity is valid below the tropopause."""
-
-
-class AboveTropopause:
-    """Marker to indicate the quantity is valid above the tropopause."""
+#
 
 
 def temperature_below_tropopause(
@@ -142,5 +177,6 @@ def mach_number(
     tas: Annotated[Array | float, TAS("m s⁻¹")],
     temperature: Annotated[Array | float, StaticTemperature("K")],
 ) -> Annotated[Array | float, MachNumber(None)]:
+    """Mach/TAS conversion (3.1-26)"""
     a = speed_of_sound(temperature, KAPPA, R_SPECIFIC_DRY_AIR)
     return tas / a

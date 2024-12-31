@@ -12,6 +12,7 @@ name = "airtrafficsim"
 version = "0.2.0"
 source = { editable = "." }
 dependencies = [
+    { name = "annotated-types" },
     { name = "numpy" },
     { name = "pandas" },
 ]
@@ -39,6 +40,7 @@ dev = [
     { name = "ruff" },
 ]
 docs = [
+    { name = "griffe-warnings-deprecated" },
     { name = "mkdocs-material", extra = ["imaging"] },
     { name = "mkdocstrings-python" },
 ]
@@ -50,6 +52,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
+    { name = "annotated-types", specifier = ">=0.7.0" },
     { name = "cartopy", marker = "extra == 'era5'", specifier = ">=0.24.1" },
     { name = "cdsapi", marker = "extra == 'era5'", specifier = ">=0.7.5" },
     { name = "eventlet", marker = "extra == 'web'", specifier = ">=0.38.2" },
@@ -69,6 +72,7 @@ dev = [
     { name = "ruff", specifier = ">=0.8.3" },
 ]
 docs = [
+    { name = "griffe-warnings-deprecated", specifier = ">=1.1.0" },
     { name = "mkdocs-material", extras = ["imaging"], specifier = ">=9.5.49" },
     { name = "mkdocstrings-python", specifier = ">=1.12.2" },
 ]
@@ -76,6 +80,15 @@ test = [
     { name = "jax", specifier = ">=0.4.38" },
     { name = "pytest", specifier = ">=8.3.4" },
     { name = "pytest-cov", specifier = ">=6.0.0" },
+]
+
+[[package]]
+name = "annotated-types"
+version = "0.7.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ee/67/531ea369ba64dcff5ec9c3402f9f51bf748cec26dde048a2f973a4eea7f5/annotated_types-0.7.0.tar.gz", hash = "sha256:aff07c09a53a08bc8cfccb9c85b05f1aa9a2a6f23728d790723543408344ce89", size = 16081 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/78/b6/6307fbef88d9b5ee7421e68d78a9f162e0da4900bc5f5793f6d3d0e34fb8/annotated_types-0.7.0-py3-none-any.whl", hash = "sha256:1f02e8b43a8fbbc3f3e0d4f0f4bfc8131bcb4eebe8849b8e5c773f3a1c582a53", size = 13643 },
 ]
 
 [[package]]
@@ -799,6 +812,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/d4/c9/8167810358ca129839156dc002526e7398b5fad4a9d7b6e88b875e802d0d/griffe-1.5.1.tar.gz", hash = "sha256:72964f93e08c553257706d6cd2c42d1c172213feb48b2be386f243380b405d4b", size = 384113 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ab/00/e693a155da0a2a72fd2df75b8fe338146cae59d590ad6f56800adde90cb5/griffe-1.5.1-py3-none-any.whl", hash = "sha256:ad6a7980f8c424c9102160aafa3bcdf799df0e75f7829d75af9ee5aef656f860", size = 127132 },
+]
+
+[[package]]
+name = "griffe-warnings-deprecated"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "griffe" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/7e/0e/f034e1714eb2c694d6196c75f77a02f9c69d19f9961c4804a016397bf3e5/griffe_warnings_deprecated-1.1.0.tar.gz", hash = "sha256:7bf21de327d59c66c7ce08d0166aa4292ce0577ff113de5878f428d102b6f7c5", size = 33260 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/43/4c/b7241f03ad1f22ec2eed33b0f90c4f8c949e3395c4b7488670b07225a20b/griffe_warnings_deprecated-1.1.0-py3-none-any.whl", hash = "sha256:e7b0e8bfd6e5add3945d4d9805b2a41c72409e456733965be276d55f01e8a7a2", size = 5854 },
 ]
 
 [[package]]

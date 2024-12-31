@@ -1,5 +1,5 @@
 """
-Markers for use in type annotations.
+Context-specific metadata for types (PEP-593).
 
 It is important to note that they **do not** store any data, but merely serve
 as decoupled metadata for documentation.
@@ -8,8 +8,8 @@ For example:
 
 ```pycon
 >>> from typing import Annotated
->>> from airtrafficsim.experimental.quantity import CAS, EAS
->>> def cas_to_eas(
+>>> from airtrafficsim.experimental.annotations import CAS, EAS
+>>> def eas_from_cas(
 ...     cas: Annotated[float, CAS("m s⁻¹")]
 ... ) -> Annotated[float, EAS("m s⁻¹")]:
 >>>     ...
@@ -123,6 +123,15 @@ class StaticPressure(Pressure):
 
 class DynamicPressure(Pressure):
     """Dynamic pressure"""
+
+
+class ImpactPressure(Pressure):
+    """
+    Impact pressure
+
+    NOTE: For compressible flow, the measured impact pressure would be higher
+    than the dynamic pressure
+    """
 
 
 class TotalPressure(Pressure):

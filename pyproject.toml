@@ -26,6 +26,7 @@ classifiers = [
     # "Framework :: Flask",
 ]
 dependencies = [
+    "annotated-types>=0.7.0",
     "numpy>=2.2.0",
     "pandas>=2.2.3", # to be made optional
 ]
@@ -65,6 +66,7 @@ test = [
     "jax>=0.4.38",
 ]
 docs = [
+    "griffe-warnings-deprecated>=1.1.0",
     "mkdocs-material[imaging]>=9.5.49",
     "mkdocstrings-python>=1.12.2",
 ]

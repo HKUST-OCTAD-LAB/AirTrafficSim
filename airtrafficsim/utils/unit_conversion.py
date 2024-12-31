@@ -1,7 +1,11 @@
+from typing_extensions import deprecated
+
 from ..types import ArrayOrFloat
 
+REPLACEMENT = "[airtrafficsim.experimental.unit_conversion][]"
 
-# FIXME(abrah): get rid of staticmethod.
+
+@deprecated(REPLACEMENT)
 class Unit:
     @staticmethod
     def kts2mps(knots: ArrayOrFloat) -> ArrayOrFloat:
