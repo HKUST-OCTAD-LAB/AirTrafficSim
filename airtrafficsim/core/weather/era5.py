@@ -3,8 +3,10 @@ from pathlib import Path
 
 # NOTE(abrah): consider using google arco instead
 import cdsapi
+from typing_extensions import deprecated
 
 
+@deprecated("See [airtrafficsim.experimental.performance.era5]")
 class Era5:
     """
     A utility class to handle ERA5 weather data

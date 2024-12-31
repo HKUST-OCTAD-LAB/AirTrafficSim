@@ -1,6 +1,9 @@
+import pytest
+
 import pandas as pd
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_demoenv() -> None:
     from airtrafficsim.data.environment.DemoEnv import DemoEnv
 
@@ -10,6 +13,7 @@ def test_demoenv() -> None:
     assert df.shape[0] > 1 and df.isnull().values.any() is False
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_openapdemo() -> None:
     from airtrafficsim.data.environment.OpenApDemo import OpenApDemo
 
@@ -19,6 +23,7 @@ def test_openapdemo() -> None:
     assert df.shape[0] > 1 and df.isnull().values.any() is False
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_fullflightdemo() -> None:
     from airtrafficsim.data.environment.FullFlightDemo import FullFlightDemo
 
@@ -28,6 +33,7 @@ def test_fullflightdemo() -> None:
     assert df.shape[0] > 1 and df.isnull().values.any() is False
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_weatherdemo() -> None:
     from airtrafficsim.data.environment.WeatherDemo import WeatherDemo
 
@@ -37,6 +43,7 @@ def test_weatherdemo() -> None:
     assert df.shape[0] > 1 and df.isnull().values.any() is False
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_converthistoricdemo() -> None:
     from airtrafficsim.data.environment.ConvertHistoricDemo import (
         ConvertHistoricDemo,

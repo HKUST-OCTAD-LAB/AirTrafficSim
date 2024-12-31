@@ -8,6 +8,7 @@ import xarray as xr
 from matplotlib import colors
 from matplotlib.figure import Figure
 from PIL import Image
+from typing_extensions import deprecated
 
 import numpy as np
 
@@ -77,6 +78,7 @@ class Data:
 
         return document
 
+    @deprecated("Use [airtrafficsim.experimental.performance.era5][] instead")
     @staticmethod
     def get_era5_wind(
         file: str,

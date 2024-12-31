@@ -56,7 +56,7 @@ Angle: TypeAlias = _Quantity[Literal["rad", "deg"]]
 #
 
 Force: TypeAlias = _Quantity[Literal["N", "lbf"]]
-Pressure: TypeAlias = _Quantity[Literal["Pa", "psi"]]
+Pressure: TypeAlias = _Quantity[Literal["Pa", "psi", "hPa", "inHg"]]
 Energy: TypeAlias = _Quantity[Literal["J"]]
 Power: TypeAlias = _Quantity[Literal["W"]]
 Velocity: TypeAlias = _Quantity[

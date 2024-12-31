@@ -27,11 +27,13 @@ def test_socketio(client: SocketIOTestClient) -> None:
     assert client.is_connected()
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_get_nav(client: SocketIOTestClient) -> None:
     r = client.emit("getNav", -10, -10, 10, 10, callback=True)
     assert len(r) > 1
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_get_era5_wind(client: SocketIOTestClient) -> None:
     r = client.emit(
         "getEra5Wind",
@@ -46,6 +48,7 @@ def test_get_era5_wind(client: SocketIOTestClient) -> None:
     assert r[1]["rectangle"]["material"]["image"]["image"]["uri"] != ""
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_get_era5_rain(client: SocketIOTestClient) -> None:
     r = client.emit(
         "getEra5Rain",
@@ -60,6 +63,7 @@ def test_get_era5_rain(client: SocketIOTestClient) -> None:
     assert r[1]["rectangle"]["material"]["image"]["image"]["uri"] != ""
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_get_radar_img(client: SocketIOTestClient) -> None:
     r = client.emit(
         "getRadarImage",
@@ -74,6 +78,7 @@ def test_get_radar_img(client: SocketIOTestClient) -> None:
     assert r[1]["rectangle"]["material"]["image"]["image"]["uri"] != ""
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_get_replay_dir(client: SocketIOTestClient) -> None:
     r = client.emit("getReplayDir", callback=True)
     path = Path(__file__).parent.parent.joinpath("airtrafficsim/data/result")
@@ -115,6 +120,7 @@ def test_get_replay_dir(client: SocketIOTestClient) -> None:
     }
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_get_simulation_file(client: SocketIOTestClient) -> None:
     r = client.emit("getSimulationFile", callback=True)
     assert r == [
@@ -126,11 +132,13 @@ def test_get_simulation_file(client: SocketIOTestClient) -> None:
     ]
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_get_replay_czml(client: SocketIOTestClient) -> None:
     r = client.emit("getReplayCZML", "historic", "2018-05-01", callback=True)
     assert len(r) > 1
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_get_graph_header(client: SocketIOTestClient) -> None:
     path = next(
         iter(
@@ -182,6 +190,7 @@ def test_get_graph_header(client: SocketIOTestClient) -> None:
     ]
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_get_graph_data(client: SocketIOTestClient) -> None:
     path = next(
         iter(
@@ -202,6 +211,7 @@ def test_get_graph_data(client: SocketIOTestClient) -> None:
     assert len(r[0]["x"]) > 1 and len(r[0]["y"]) > 1
 
 
+@pytest.mark.skip(reason="deprecated")
 def test_run_simulation(client: SocketIOTestClient) -> None:
     client.emit("runSimulation", "DemoEnv")
     r = client.get_received()

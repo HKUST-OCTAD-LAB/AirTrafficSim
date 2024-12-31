@@ -44,10 +44,18 @@ web = [
     "flask>=3.1.0",
     "eventlet>=0.38.2",
 ]
+polars = [
+    "polars[calamine]>=1.18.0",
+]
+network = [
+    "httpx[http2]>=0.28.1", # for downloading external data
+]
 era5 = [
-    "cartopy>=0.24.1",
-    "cdsapi>=0.7.5",
+    "cartopy>=0.24.1", # to be removed, old api
     "xarray>=2024.11.0",
+]
+era5-cds = [
+    "cdsapi>=0.7.5",
 ]
 openap = [
     "openap>=2.1",
@@ -55,21 +63,25 @@ openap = [
 
 [dependency-groups]
 dev = [
+    "array-api-strict>=2.2",
     "black>=24.10.0",
     "ipykernel>=6.29.5",
     "mypy>=1.13.0",
     "ruff>=0.8.3",
+    "types-pytz>=2024.2.0.20241221",
 ]
 test = [
     "pytest-cov>=6.0.0",
     "pytest>=8.3.4",
     "jax>=0.4.38",
+    "anyio>=4.7.0",
 ]
 docs = [
     "griffe-warnings-deprecated>=1.1.0",
     "mkdocs-material[imaging]>=9.5.49",
     "mkdocstrings-python>=1.12.2",
 ]
+
 
 [tool.uv]
 default-groups = ["dev", "test", "docs"]

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Generic
+from typing import TYPE_CHECKING, Generic, NamedTuple
 
 from ..types import ArrayOrScalarT
 
@@ -40,8 +39,7 @@ def specific_gas_constant(
     return R / molar_mass
 
 
-@dataclass(frozen=True)
-class GasState(Generic[ArrayOrScalarT]):
+class GasState(NamedTuple, Generic[ArrayOrScalarT]):
     temperature: Annotated[ArrayOrScalarT, StaticTemperature("K")]
     pressure: Annotated[ArrayOrScalarT, StaticPressure("Pa")]
 
