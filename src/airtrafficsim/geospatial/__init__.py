@@ -91,7 +91,7 @@ def lla_to_ecef(
     lon: Annotated[Array, Angle("rad")],
     lat: Annotated[Array, Angle("rad")],
     alt: Annotated[Array, GeometricAltitude("m")],
-) -> Point3D[Annotated[Array, Length("m")]]:
+) -> Annotated[Point3D, Length("m")]:
     """
     Converts geodetic coordinates to Earth-centered, Earth-fixed coordinates.
     Equivalent to `epsg:4979 +proj=cart +ellps=WGS84` in PROJ.
@@ -114,7 +114,7 @@ def ecef_to_enu(
     dz: Annotated[Array, Delta(Length("m"))],
     lon_ref: Annotated[Array, Angle("rad")],
     lat_ref: Annotated[Array, Angle("rad")],
-) -> Point3D[Annotated[Array, Length("m")]]:
+) -> Annotated[Point3D, Length("m")]:
     """
     Converts Earth-centered, Earth-fixed coordinates
     (x, y, z with respect to a reference point)
