@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "AirTrafficSim"
-version = "0.2.0-alpha.2"
+version = "0.2.0-alpha.3"
 authors = [
     { name = "Frankie Hui", email = "kyhuiaf@connect.ust.hk" },
     { name = "Abraham Cheung", email = "abraham@ylcheung.com" },
