@@ -41,25 +41,24 @@ jobs:
 
       - name: Style checking
         run: |
-          uv run ruff check airtrafficsim tests
-          uv run ruff format --check airtrafficsim tests
-        
-      - name: Type checking
-        run: uv run mypy airtrafficsim tests
+          uv run ruff check src tests
+          uv run ruff format --check src tests
 
+      - name: Type checking
+        run: uv run mypy src tests
 
       # testing
-      - name: Download data from private repository
-        uses: actions/checkout@v3
-        with:
-          repository: HKUST-OCTAD-LAB/AirTrafficSim-data
-          ssh-key: ${{ secrets.SSH_KEY }}
-          path: AirTrafficSim-data
+      # - name: Download data from private repository
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: HKUST-OCTAD-LAB/AirTrafficSim-data
+      #     ssh-key: ${{ secrets.SSH_KEY }}
+      #     path: AirTrafficSim-data
 
-      - name: Unzip data
-        run: |
-          unzip -qq AirTrafficSim-data/BADA.zip -d airtrafficsim/data/performance/BADA
-          mv AirTrafficSim-data/.cdsapirc $HOME/
+      # - name: Unzip data
+      #   run: |
+      #     unzip -qq AirTrafficSim-data/BADA.zip -d airtrafficsim/data/performance/BADA
+      #     mv AirTrafficSim-data/.cdsapirc $HOME/
 
       - name: Run tests
         run: |
