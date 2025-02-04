@@ -6,9 +6,9 @@ and that it is under hydrostatic equilibrium.
 import jax
 import jax.numpy as jnp
 
-from airtrafficsim.experimental.geospatial import G_0
-from airtrafficsim.experimental.performance.bada3 import atmosphere
-from airtrafficsim.experimental.thermodynamics import R_SPECIFIC_DRY_AIR
+from airtrafficsim.geospatial import G_0
+from airtrafficsim.performance.bada3 import atmosphere
+from airtrafficsim.thermodynamics import R_SPECIFIC_DRY_AIR
 
 zs = jnp.linspace(0, 20000, 100)
 

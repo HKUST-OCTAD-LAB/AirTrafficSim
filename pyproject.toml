@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "AirTrafficSim"
-version = "0.2.0"
+version = "0.2.0-alpha.1"
 authors = [
     { name = "Frankie Hui", email = "kyhuiaf@connect.ust.hk" },
     { name = "Abraham Cheung", email = "abraham@ylcheung.com" }
 ]
-description = "A web-based air traffic simulation software written in Python and TypeScript."
+description = "A lightweight collection of tools for air traffic management research."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
@@ -23,42 +23,27 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
-    # "Framework :: Flask",
 ]
 dependencies = [
     "annotated-types>=0.7.0",
     "numpy>=2.2.0",
-    "pandas>=2.2.3", # to be made optional
 ]
 
 [project.urls]
-Documentation = "https://hkust-octad-lab.github.io/AirTrafficSim/"
 Repository = "https://github.com/HKUST-OCTAD-LAB/AirTrafficSim"
 
-[project.scripts]
-airtrafficsim = "airtrafficsim.__main__:main"
-
 [project.optional-dependencies]
-web = [
-    "flask-socketio>=5.4.1",
-    "flask>=3.1.0",
-    "eventlet>=0.38.2",
-]
 polars = [
     "polars[calamine]>=1.18.0",
 ]
-network = [
-    "httpx[http2]>=0.28.1", # for downloading external data
+networking = [
+    "httpx[http2]>=0.28.1",
 ]
 era5 = [
-    "cartopy>=0.24.1", # to be removed, old api
     "xarray>=2024.11.0",
 ]
-era5-cds = [
-    "cdsapi>=0.7.5",
-]
-openap = [
-    "openap>=2.1",
+all = [
+    "airtrafficsim[polars,networking,era5]",
 ]
 
 [dependency-groups]

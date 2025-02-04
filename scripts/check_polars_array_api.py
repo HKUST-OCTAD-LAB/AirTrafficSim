@@ -7,7 +7,7 @@ from typing import Any
 import array_api_strict
 import polars as pl
 
-import airtrafficsim.experimental._polars_array_api as polars_array_api
+import airtrafficsim._polars_array_api as polars_array_api
 
 logger = getLogger(__name__)
 

@@ -3,8 +3,16 @@
 
 import polars as pl
 
+# import airtrafficsim
+# x = pl.DataFrame({"alpha": [2, 3, 4, 5]})
+# def sq(x: pl.Expr):
+#     an = x.__array_namespace__()
+#     print(an.exp(x))
+#     return x
+# print(x.select(sq(pl.col("alpha"))))
+# raise SystemExit
 import numpy as np
-from airtrafficsim.experimental.performance.bada3 import atmosphere
+from airtrafficsim.performance.bada3 import atmosphere
 
 
 def calc_atmosphere(z: pl.Expr) -> tuple[pl.Expr, pl.Expr, pl.Expr]:
@@ -23,7 +31,8 @@ DATA = {
 
 lf = pl.DataFrame(DATA).lazy()
 query = lf.select(calc_atmosphere(pl.col("z")))
-print(query.explain(format="tree"))
+# print(query.explain(format="tree"))
+print(query.explain())
 """
              0                                                       1                                                                     2                                              3                                                   4                                       5
    ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

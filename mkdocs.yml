@@ -4,27 +4,7 @@ repo_name: HKUST-OCTAD-LAB/AirTrafficSim
 repo_url: https://github.com/HKUST-OCTAD-LAB/AirTrafficSim
 site_url: https://hkust-octad-lab.github.io/AirTrafficSim/
 nav:
-  - Home: "README.md"
-  - Installation: "install.md"
-  - Getting Started: "start.md"
-  - Tutorial:
-    - Navigating the UI: "tutorial/UI.md"
-    - Understanding the data folder: "tutorial/data.md"
-    - Replaying data: "tutorial/replay.md"
-    - Creating a simulation environment: "tutorial/creating_env.md"
-    - Running a simulation: "tutorial/simulation.md"
-    - Adding flight plan: "tutorial/flight_plan.md"
-    - Using weather database: "tutorial/weather.md"
-    - Converting historical data: "tutorial/historic.md"
-    - Using OpenAP model: "tutorial/openap.md"
-  - Development:
-    - Development guide: "development/guide.md"
-    - Understanding the project structure: "development/structure.md"
-    - Web client: "development/client.md"
-    - Documentation: "development/documentation.md"
-    - Testing: "development/test.md"
-  - API Reference: "api/index.md"
-  - API Reference (Experimental): "api/experimental.md"
+  - API Reference: "api.md"
 
 theme:
   name: material
@@ -53,10 +33,11 @@ plugins:
       handlers:
         python:
           paths: [airtrafficsim]
-          import:
+          inventories:
             - https://docs.python.org/3/objects.inv
             - https://numpy.org/doc/stable/objects.inv
             - https://pola-rs.github.io/polars/py-polars/html/objects.inv # unstable, see https://github.com/pola-rs/polars/issues/7027
+            - https://jax.readthedocs.io/en/latest/objects.inv
           options:
             inherited_members: true
             members_order: source
@@ -74,9 +55,9 @@ plugins:
             show_submodules: true
             docstring_style: numpy # TODO: remove once legacy code is fully deprecated
             extensions:
-            - griffe_warnings_deprecated:
-                kind: danger
-                title: Deprecated
+              - griffe_warnings_deprecated:
+                  kind: danger
+                  title: Deprecated
       enable_inventory: true
 markdown_extensions:
   - abbr
@@ -115,8 +96,8 @@ markdown_extensions:
 
 extra_javascript:
   - assets/js/katex.js
-  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js
-  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.21/katex.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.21/contrib/auto-render.min.js
 
 extra_css:
-  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.21/katex.min.css
