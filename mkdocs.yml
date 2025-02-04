@@ -72,7 +72,7 @@ plugins:
             show_source: false
             summary: true
             show_submodules: true
-            docstring_style: numpy # TODO: move to sphinx
+            docstring_style: numpy # TODO: remove once legacy code is fully deprecated
             extensions:
             - griffe_warnings_deprecated:
                 kind: danger

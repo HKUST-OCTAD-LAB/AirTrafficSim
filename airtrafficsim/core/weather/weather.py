@@ -171,7 +171,7 @@ class Weather:
             temp = np.array([x[i] for x, i in zip(ds["t"].values.T, index)])
             self.d_T = temp - perf.cal_temperature(
                 Unit.ft2m(alt), np.array(0.0)
-            )  # type: ignore
+            )
             self.wind_east = Unit.mps2kts(
                 np.array([x[i] for x, i in zip(ds["u"].values.T, index)])
             )  # type: ignore

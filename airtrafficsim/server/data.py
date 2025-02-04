@@ -78,7 +78,7 @@ class Data:
 
         return document
 
-    @deprecated("Use [airtrafficsim.experimental.performance.era5][] instead")
+    @deprecated("Use [airtrafficsim.experimental.data.era5][] instead")
     @staticmethod
     def get_era5_wind(
         file: str,

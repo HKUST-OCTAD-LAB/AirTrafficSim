@@ -64,7 +64,6 @@ openap = [
 [dependency-groups]
 dev = [
     "array-api-strict>=2.2",
-    "black>=24.10.0",
     "ipykernel>=6.29.5",
     "mypy>=1.13.0",
     "ruff>=0.8.3",
@@ -79,7 +78,7 @@ test = [
 docs = [
     "griffe-warnings-deprecated>=1.1.0",
     "mkdocs-material[imaging]>=9.5.49",
-    "mkdocstrings-python>=1.12.2",
+    "mkdocstrings-python>=1.13.0",
 ]
 
 

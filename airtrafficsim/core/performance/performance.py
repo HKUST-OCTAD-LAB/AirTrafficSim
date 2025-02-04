@@ -616,7 +616,7 @@ class Performance:
             d_rocd = np.sin(np.arcsin(rocd / V_tas) - 5.0 * d_t / V_tas) * (
                 V_tas + d_t
             )
-            return d_rocd  # type: ignore
+            return d_rocd
 
     ## Performance
     ### Total Energy Model (3.2)

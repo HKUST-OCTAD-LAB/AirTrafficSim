@@ -33,7 +33,7 @@ should be specified.
 """
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class _Quantity(Generic[Units]):
     unit: Units
 
@@ -188,14 +188,14 @@ class AdiabaticIndex(_Quantity[None]):
 #
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Delta(Generic[Units]):
     """A difference between two quantities"""
 
     quantity: _Quantity[Units]
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Div:
     """
     A ratio between two quantities.

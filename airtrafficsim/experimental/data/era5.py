@@ -31,7 +31,7 @@ import xarray as xr
 
 from .. import logger
 from ..annotations import StaticTemperature, WindSpeed
-from .bada3 import atmosphere
+from ..performance.bada3 import atmosphere
 
 if TYPE_CHECKING:
     from typing import Annotated

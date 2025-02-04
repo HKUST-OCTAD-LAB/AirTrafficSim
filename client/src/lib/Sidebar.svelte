@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { sidebarOpen } from "../stores";
+    import { sidebarState } from "./sidebar.svelte";
 </script>
 
-<aside class:closed={!$sidebarOpen}>
+<aside class:closed={!sidebarState.open}>
     <div class="sidebar-header">
         <h2>TODO</h2>
     </div>

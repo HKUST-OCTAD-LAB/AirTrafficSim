@@ -1031,7 +1031,7 @@ class Bada:
                 0.4,
             )
         )
-        return thr_max_climb  # type: ignore
+        return thr_max_climb
 
     def __cal_max_cruise_thrust(self, Thr_max_climb: array) -> array:
         """
@@ -1654,7 +1654,7 @@ class Bada:
         d_rocd = np.sin(
             np.arcsin(rocd / V_tas) - self.__A_N_MAX_CIV * d_t / V_tas
         ) * (V_tas + d_t)
-        return d_rocd  # type: ignore
+        return d_rocd
 
     def cal_expedite_descend_factor(self, expedite_descent: array) -> array:
         """

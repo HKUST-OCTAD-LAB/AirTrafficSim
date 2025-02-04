@@ -630,5 +630,5 @@ class Traffic:
         fuel_burn = self.perf.cal_fuel_burn(
             self.configuration, self.tas, self.alt
         )
-        self.fuel_consumed = self.fuel_consumed + fuel_burn  # type: ignore
-        self.mass = self.mass - fuel_burn  # type: ignore
+        self.fuel_consumed = self.fuel_consumed + fuel_burn
+        self.mass = self.mass - fuel_burn

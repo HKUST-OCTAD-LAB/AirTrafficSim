@@ -1,0 +1,357 @@
+{
+  "version": 8,
+  "name": "Dark Matter",
+  "metadata": {
+    "maputnik:renderer": "mlgljs"
+  },
+  "sources": {
+    "openmaptiles": {
+      "type": "vector",
+      "url": "https://d17gef4m69t9r4.cloudfront.net/planet.json"
+    }
+  },
+  "sprite": "https://openmaptiles.github.io/dark-matter-gl-style/sprite",
+  "glyphs": "https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {"background-color": "#1d3242"}
+    },
+    {
+      "id": "park_national-park",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "park",
+      "minzoom": 5,
+      "paint": {
+        "fill-color": "rgba(22, 61, 65, 1)",
+        "fill-opacity": {"stops": [[5, 0], [7, 1]]}
+      }
+    },
+    {
+      "id": "water",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "filter": [
+        "all",
+        ["==", "$type", "Polygon"],
+        ["!=", "brunnel", "tunnel"]
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-antialias": false, "fill-color": "rgba(0, 17, 17, 1)"}
+    },
+    {
+      "id": "glacier",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "landcover",
+      "maxzoom": 24,
+      "filter": [
+        "all",
+        ["==", "$type", "Polygon"],
+        ["==", "subclass", "glacier"]
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {
+        "fill-color": "rgba(34, 57, 76, 1)",
+        "fill-opacity": {"base": 1, "stops": [[0, 1], [8, 0.5]]}
+      }
+    },
+    {
+      "id": "waterway",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "waterway",
+      "filter": ["==", "$type", "LineString"],
+      "layout": {"visibility": "visible"},
+      "paint": {"line-color": "rgb(27 ,27 ,29)"}
+    },
+    {
+      "id": "landuse_residential",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "landuse",
+      "maxzoom": 20,
+      "filter": [
+        "all",
+        ["==", "$type", "Polygon"],
+        ["==", "class", "residential"]
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(69, 82, 64, .4)", "fill-opacity": 1}
+    },
+    {
+      "id": "building",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "building",
+      "minzoom": 11,
+      "filter": ["==", "$type", "Polygon"],
+      "paint": {
+        "fill-antialias": true,
+        "fill-color": "rgb(0,0,0,0.2)",
+        "fill-opacity": {"stops": [[12, 0], [14, 1]]}
+      }
+    },
+    {
+      "id": "landcover-grass",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "landcover",
+      "minzoom": 12,
+      "filter": ["all", ["==", "class", "grass"]],
+      "paint": {
+        "fill-color": "rgba(22, 66, 60, 1)",
+        "fill-opacity": {"stops": [[12, 0], [14, 1]]}
+      }
+    },
+    {
+      "id": "aeroway-area-apron",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "aeroway",
+      "minzoom": 4,
+      "filter": ["all", ["==", "$type", "Polygon"], ["==", "class", "apron"]],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(36, 62, 81, 1)", "fill-opacity": 1}
+    },
+    {
+      "id": "aeroway-taxiway",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "aeroway",
+      "minzoom": 10,
+      "filter": ["all", ["in", "class", "taxiway"]],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(53, 77, 104, 1)",
+        "line-opacity": 1,
+        "line-width": {"base": 1, "stops": [[10, 1], [20, 2]]}
+      }
+    },
+    {
+      "id": "aeroway-active-runway-active",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "aeroway",
+      "minzoom": 3,
+      "filter": [
+        "all",
+        ["==", "$type", "Polygon"],
+        ["in", "class", "runway", "taxiway"]
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {
+        "fill-color": "rgba(47, 76, 100, .5)",
+        "fill-opacity": 1,
+        "fill-outline-color": "rgba(93, 128, 164, 1)"
+      }
+    },
+    {
+      "id": "aeroway-label",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "aeroway"
+    },
+    {
+      "id": "highway_path",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "filter": ["all", ["==", "$type", "LineString"], ["==", "class", "path"]],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(61, 59, 59, 1)",
+        "line-opacity": {"stops": [[14, 0], [16, 1]]},
+        "line-width": {"base": 1.2, "stops": [[13, 1], [20, 2]]}
+      }
+    },
+    {
+      "id": "highway_minor",
+      "type": "line",
+      "metadata": {
+        "maputnik:comment": "removed service"
+      },
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 8,
+      "filter": [
+        "all",
+        ["==", "$type", "LineString"],
+        ["in", "class", "minor", "track"]
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(49, 49, 48, 1)",
+        "line-opacity": {"stops": [[14, 0], [16, 1]]},
+        "line-width": {"base": 1.55, "stops": [[13, 1.8], [20, 3]]}
+      }
+    },
+    {
+      "id": "highway_major_inner",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 11,
+      "filter": [
+        "all",
+        ["==", "$type", "LineString"],
+        ["in", "class", "primary", "secondary", "tertiary", "trunk"]
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(85, 82, 80, 1)",
+        "line-width": {"base": 1.3, "stops": [[10, 1], [20, 2]]},
+        "line-opacity": {"stops": [[12, 0], [14, 1]]}
+      }
+    },
+    {
+      "id": "highway_trunk",
+      "type": "line",
+      "metadata": {
+        "maputnik:comment": "minzoom 7"
+      },
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 10,
+      "filter": [
+        "all",
+        ["==", "$type", "LineString"],
+        ["in", "class", "trunk"]
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(159, 159, 159, 1)",
+        "line-width": {"stops": [[10, 0.1], [20, 1]]},
+        "line-opacity": {"stops": [[11, 0], [13, 1]]}
+      }
+    },
+    {
+      "id": "highway_motorway",
+      "type": "line",
+      "metadata": {
+        "maputnik:comment": "minzoom 6"
+      },
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 10,
+      "filter": [
+        "all",
+        ["==", "$type", "LineString"],
+        ["in", "class", "motorway"]
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "#997b58",
+        "line-width": {"stops": [[10, 0.1], [20, 2]]},
+        "line-opacity": {"stops": [[10, 0], [12, 1]]}
+      }
+    },
+    {
+      "id": "boundary_state",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "boundary",
+      "minzoom": 3,
+      "filter": ["==", "admin_level", 4],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(71, 128, 160, 1)",
+        "line-opacity": {"stops": [[3, 0], [5, 1]]},
+        "line-width": {"base": 1.3, "stops": [[3, 0.5], [25, 10]]},
+        "line-dasharray": [4, 4],
+        "line-blur": 0
+      }
+    },
+    {
+      "id": "boundary_country",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "boundary",
+      "maxzoom": 24,
+      "filter": ["all", ["<=", "admin_level", 2], ["==", "maritime", 0]],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(70, 85, 95, 1)",
+        "line-opacity": 1,
+        "line-width": {"stops": [[0, 0.5], [24, 3]]}
+      }
+    },
+    {
+      "id": "aerodrome-label",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "aerodrome_label",
+      "minzoom": 6,
+      "filter": ["all"],
+      "layout": {
+        "text-field": {"type": "identity", "property": "icao"},
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 12,
+        "visibility": "visible"
+      },
+      "paint": {
+        "text-color": "rgba(255, 255, 255, 1)",
+        "text-translate-anchor": "map",
+        
+        "text-translate": [0, 0],
+        "text-opacity": {"stops": [[8, 0], [9, 1], [13, 1], [14, 0]]}
+      }
+    },
+    {
+      "id": "aeroway-taxiway-label",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "aeroway",
+      "minzoom": 6,
+      "filter": ["all", ["==", "class", "taxiway"]],
+      "layout": {
+        "text-field": {"type": "identity", "property": "ref"},
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 12,
+        "visibility": "visible"
+      },
+      "paint": {
+        "text-color": "rgba(255, 255, 255, 1)",
+        "text-translate-anchor": "map",
+        "text-translate": [0, 0],
+        "text-opacity": {"stops": [[13, 0], [14, 1], [20, 1]]}
+      }
+    }
+  ],
+  "id": "dark-matter"
+}

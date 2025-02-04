@@ -3,12 +3,14 @@ from typing import AsyncGenerator
 import pytest
 from httpx import AsyncClient
 
-from airtrafficsim.experimental.aircraft_types import (
+from airtrafficsim.experimental.data.aircraft_types import (
     fetch_aircraft_types,
     fetch_manufacturers,
 )
-from airtrafficsim.experimental.engine_emissions import fetch_emissions_data
-from airtrafficsim.experimental.geospatial.airports import fetch_airports
+from airtrafficsim.experimental.data.airports import fetch_airports
+from airtrafficsim.experimental.data.engine_emissions import (
+    fetch_emissions_data,
+)
 
 
 @pytest.fixture(scope="session")

@@ -1,3 +1,5 @@
+"""Quick script to find equivalent Array API methods in polars."""
+
 import inspect
 from logging import getLogger
 from typing import Any
@@ -14,7 +16,7 @@ def get_signature(x: Any) -> Any:
     try:
         return inspect.signature(x)
     except TypeError:
-        return ""  # type: ignore
+        return ""
 
 
 def main() -> None:

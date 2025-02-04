@@ -4,6 +4,6 @@ Once stabilised, the code will be moved to the main directory.
 
 # Goals
 
-- minimal use of classes, pure functions
+- prefer pure functions over deep inheritance hierarchies
 - array first: any object that conforms to the [Array API](https://data-apis.org/array-api/) should be usable (e.g. NumPy, JAX, PyTorch, CuPy)
 - support for automatic differentiation via JAX
