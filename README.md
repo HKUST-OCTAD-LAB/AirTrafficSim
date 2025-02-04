@@ -3,6 +3,7 @@
 [![image](https://img.shields.io/pypi/v/airtrafficsim.svg)](https://pypi.python.org/pypi/airtrafficsim)
 [![image](https://img.shields.io/pypi/l/airtrafficsim.svg)](https://pypi.python.org/pypi/airtrafficsim)
 [![image](https://img.shields.io/pypi/pyversions/airtrafficsim.svg)](https://pypi.python.org/pypi/airtrafficsim)
+[![image](https://img.shields.io/pypi/status/airtrafficsim)](https://pypi.python.org/pypi/airtrafficsim)
 
 <img src="docs/assets/img/Logo-full.png" width=50% />
 
@@ -42,6 +43,8 @@ Using the command above will install a version with very minimal footprint. Depe
 - `polars`: support for polars DataFrame (used in simulation and postprocessing third party data)
 - `networking`: support for downloading data from external third party sources
 - `era5`: support for parsing NetCDF for Google ARCO ERA5.
+- `jax`: support for automatic differentiation
+- `plot`: utils for nicer plotting
 
 For example:
 

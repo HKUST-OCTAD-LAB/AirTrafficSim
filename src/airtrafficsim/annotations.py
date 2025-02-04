@@ -19,8 +19,10 @@ The function here expects a plain `float`, not a wrapped `CAS` object.
 At runtime, the types are effectively erased and static type checkers will
 not catch incompatible quantities.
 """
+
 # TODO: beartype integration
 # TODO: add optional LaTeX protocol
+from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Generic, Literal, TypeAlias, TypeVar
@@ -34,10 +36,10 @@ should be specified.
 
 
 @dataclass(frozen=True, slots=True)
-class _Quantity(Generic[Units]):
-    unit: Units
+class Quantity(Generic[Units]):
+    unit: Units  # keeping it as a string for simplicity.
 
-    def __truediv__(self, other: "_Quantity[Any]") -> "Div":
+    def __truediv__(self, other: Quantity[Any]) -> Div:
         return Div(numerator=self, denominator=other)
 
 
@@ -45,29 +47,29 @@ class _Quantity(Generic[Units]):
 # Base
 #
 
-Time: TypeAlias = _Quantity[Literal["s", "min", "hr"]]
-Length: TypeAlias = _Quantity[Literal["m", "ft", "nmi", "mi"]]
-Mass: TypeAlias = _Quantity[Literal["kg", "lbm"]]
-Temperature: TypeAlias = _Quantity[Literal["K", "°C", "°F", "°R"]]
-Angle: TypeAlias = _Quantity[Literal["rad", "deg"]]
+Time: TypeAlias = Quantity[Literal["s", "min", "hr"]]
+Length: TypeAlias = Quantity[Literal["m", "ft", "nmi", "mi"]]
+Mass: TypeAlias = Quantity[Literal["kg", "lbm"]]
+Temperature: TypeAlias = Quantity[Literal["K", "°C", "°F", "°R"]]
+Angle: TypeAlias = Quantity[Literal["rad", "deg"]]
 
 #
 # Derived
 #
 
-Force: TypeAlias = _Quantity[Literal["N", "lbf"]]
-Pressure: TypeAlias = _Quantity[Literal["Pa", "psi", "hPa", "inHg"]]
-Energy: TypeAlias = _Quantity[Literal["J"]]
-Power: TypeAlias = _Quantity[Literal["W"]]
-Velocity: TypeAlias = _Quantity[
+Force: TypeAlias = Quantity[Literal["N", "lbf"]]
+Pressure: TypeAlias = Quantity[Literal["Pa", "psi", "hPa", "inHg"]]
+Energy: TypeAlias = Quantity[Literal["J"]]
+Power: TypeAlias = Quantity[Literal["W"]]
+Velocity: TypeAlias = Quantity[
     Literal["m s⁻¹", "kt", "ft min⁻¹", "mi hr⁻¹", "km hr⁻¹"]
 ]
-Acceleration: TypeAlias = _Quantity[Literal["m s⁻²", "ft s⁻²"]]
-Density: TypeAlias = _Quantity[Literal["kg m⁻³", "slug ft⁻³"]]
-GasConstant: TypeAlias = _Quantity[Literal["J mol⁻¹ K⁻¹"]]
-MolarMass: TypeAlias = _Quantity[Literal["kg mol⁻¹"]]
-SpecificGasConstant: TypeAlias = _Quantity[Literal["J kg⁻¹ K⁻¹"]]
-ThrustSpecificFuelConsumption: TypeAlias = _Quantity[
+Acceleration: TypeAlias = Quantity[Literal["m s⁻²", "ft s⁻²"]]
+Density: TypeAlias = Quantity[Literal["kg m⁻³", "slug ft⁻³"]]
+GasConstant: TypeAlias = Quantity[Literal["J mol⁻¹ K⁻¹"]]
+MolarMass: TypeAlias = Quantity[Literal["kg mol⁻¹"]]
+SpecificGasConstant: TypeAlias = Quantity[Literal["J kg⁻¹ K⁻¹"]]
+ThrustSpecificFuelConsumption: TypeAlias = Quantity[
     Literal["kg s⁻¹ N⁻¹", "g s⁻¹ kN⁻¹", "lbm hr⁻¹ lbf⁻¹"]
 ]
 
@@ -82,11 +84,11 @@ ThrustSpecificFuelConsumption: TypeAlias = _Quantity[
 
 
 class PressureAltitude(Length):
-    """Pressure altitude, as measured from altimeter"""
+    """Pressure altitude, as measured by altimeter"""
 
 
 class DensityAltitude(Length):
-    """Density altitude, as measured from altimeter"""
+    """Density altitude, as measured by altimeter"""
 
 
 class GeopotentialAltitude(Length):
@@ -159,7 +161,7 @@ class GS(Velocity):
 
 
 class WindSpeed(Velocity):
-    """Wind speed in the inertial reference frame"""
+    """Wind speed, inertial reference frame"""
 
 
 class SpeedOfSound(Velocity):
@@ -170,16 +172,16 @@ class GravitationalAcceleration(Acceleration):
     """Gravitational acceleration"""
 
 
-class TemperatureGradient(_Quantity[Literal["K m⁻¹"]]):
+class TemperatureGradient(Quantity[Literal["K m⁻¹"]]):
     """Lapse rate, below tropopause, ISA"""
 
 
-class MachNumber(_Quantity[None]):
+class MachNumber(Quantity[None]):
     """Mach number"""
 
 
-class AdiabaticIndex(_Quantity[None]):
-    """Ratio of specific heats, isentropic expansion factor"""
+class RatioOfSpecificHeats(Quantity[None]):
+    """Ratio of specific heats"""
 
 
 #
@@ -192,7 +194,7 @@ class AdiabaticIndex(_Quantity[None]):
 class Delta(Generic[Units]):
     """A difference between two quantities"""
 
-    quantity: _Quantity[Units]
+    quantity: Quantity[Units]
 
 
 @dataclass(frozen=True, slots=True)
@@ -203,5 +205,5 @@ class Div:
     Used in [unit conversion][airtrafficsim.unit_conversion].
     """
 
-    numerator: _Quantity[Any]
-    denominator: _Quantity[Any]
+    numerator: Quantity[Any]
+    denominator: Quantity[Any]

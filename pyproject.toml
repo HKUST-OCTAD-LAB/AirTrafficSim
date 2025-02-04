@@ -4,10 +4,10 @@ build-backend = "hatchling.build"
 
 [project]
 name = "AirTrafficSim"
-version = "0.2.0-alpha.1"
+version = "0.2.0-alpha.2"
 authors = [
     { name = "Frankie Hui", email = "kyhuiaf@connect.ust.hk" },
-    { name = "Abraham Cheung", email = "abraham@ylcheung.com" }
+    { name = "Abraham Cheung", email = "abraham@ylcheung.com" },
 ]
 description = "A lightweight collection of tools for air traffic management research."
 readme = "README.md"
@@ -19,7 +19,13 @@ classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Scientific/Engineering :: Physics",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
@@ -42,6 +48,12 @@ networking = [
 era5 = [
     "xarray>=2024.11.0",
 ]
+jax = [
+    "jax>=0.5.0",
+]
+plot = [
+    "matplotlib>=3.10.0",
+]
 all = [
     "airtrafficsim[polars,networking,era5]",
 ]
@@ -57,7 +69,6 @@ dev = [
 test = [
     "pytest-cov>=6.0.0",
     "pytest>=8.3.4",
-    "jax>=0.4.38",
     "anyio>=4.7.0",
 ]
 docs = [

@@ -9,12 +9,12 @@ if TYPE_CHECKING:
 
     from ..annotations import (
         TAS,
-        AdiabaticIndex,
         Density,
         DynamicPressure,
         GasConstant,
         ImpactPressure,
         MolarMass,
+        RatioOfSpecificHeats,
         SpecificGasConstant,
         SpeedOfSound,
         StaticPressure,
@@ -30,7 +30,7 @@ M_DRY_AIR: Annotated[float, MolarMass("kg mol⁻¹")] = 0.028964917
 R_SPECIFIC_DRY_AIR: Annotated[float, SpecificGasConstant("J kg⁻¹ K⁻¹")] = (
     287.052874
 )
-GAMMA_DRY_AIR: Annotated[float, AdiabaticIndex(None)] = 1.4
+GAMMA_DRY_AIR: Annotated[float, RatioOfSpecificHeats(None)] = 1.4
 
 
 def specific_gas_constant(
@@ -66,7 +66,7 @@ def density(
 
 def speed_of_sound(
     temperature: Annotated[Array | float, StaticTemperature("K")],
-    adiabatic_index: Annotated[Array | float, AdiabaticIndex(None)],
+    adiabatic_index: Annotated[Array | float, RatioOfSpecificHeats(None)],
     specific_gas_constant: Annotated[
         Array | float, SpecificGasConstant("J kg⁻¹ K⁻¹")
     ],
@@ -87,7 +87,7 @@ def total_pressure(
     tas: Annotated[Array | float, TAS("m s⁻¹")],
     rho: Annotated[Array | float, Density("kg m⁻³")],
     p: Annotated[Array | float, StaticPressure("Pa")],
-    gamma: Annotated[Array | float, AdiabaticIndex(None)] = GAMMA_DRY_AIR,
+    gamma: Annotated[Array | float, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
 ) -> Annotated[Array | float, TotalPressure("Pa")]:
     """Total pressure, compressible flow"""
     # NOTE: from bernoulli's formula
@@ -99,7 +99,7 @@ def total_pressure_behind_normal_shock(
     tas: Annotated[Array | float, TAS("m s⁻¹")],
     rho: Annotated[Array | float, Density("kg m⁻³")],
     p: Annotated[Array | float, StaticPressure("Pa")],
-    gamma: Annotated[Array | float, AdiabaticIndex(None)] = GAMMA_DRY_AIR,
+    gamma: Annotated[Array | float, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
 ) -> Annotated[Array | float, TotalPressure("Pa")]:
     """Total pressure, behind normal shock wave, supersonic flow"""
     common = rho / p * tas**2
@@ -111,7 +111,7 @@ def impact_pressure(
     tas: Annotated[Array, TAS("m s⁻¹")],
     rho: Annotated[Array, Density("kg m⁻³")],
     p: Annotated[Array, StaticPressure("Pa")],
-    gamma: Annotated[Array, AdiabaticIndex(None)] = GAMMA_DRY_AIR,
+    gamma: Annotated[Array, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
 ) -> Annotated[Array, ImpactPressure("Pa")]:
     """Impact pressure, compressible flow"""
     return total_pressure(tas, rho, p, gamma) - p
@@ -121,7 +121,7 @@ def impact_pressure_behind_normal_shock(
     tas: Annotated[Array | float, TAS("m s⁻¹")],
     a: Annotated[Array | float, SpeedOfSound("m s⁻¹")],
     p: Annotated[Array | float, StaticPressure("Pa")],
-    gamma: Annotated[Array | float, AdiabaticIndex(None)] = GAMMA_DRY_AIR,
+    gamma: Annotated[Array | float, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
 ) -> Annotated[Array | float, TotalPressure("Pa")]:
     """Impact pressure, behind normal shock wave, supersonic flow"""
     inner = (gamma + 1) ** 2 / (4 * gamma - 2 * (gamma - 1) * (a / tas) ** 2)
