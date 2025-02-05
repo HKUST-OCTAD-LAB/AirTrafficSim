@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Annotated
 
+    from .. import units as u
     from ..annotations import (
         Density,
         GeopotentialAltitude,
@@ -23,18 +24,20 @@ if TYPE_CHECKING:
         TemperatureGradient,
     )
 
-H_BELOW_TROP: Annotated[float, GeopotentialAltitude("m")] = 11000.0
+H_BELOW_TROP: Annotated[float, GeopotentialAltitude(u.METER)] = 11000.0
 """
 The tropopause is the separation between the troposphere and the stratosphere.
 In ISA, its geopotential altitude is constant.
 """
-BETA_BELOW_TROP: Annotated[float, TemperatureGradient("K m⁻¹")] = -0.0065
+BETA_BELOW_TROP: Annotated[
+    float, TemperatureGradient(u.KELVIN * u.METER**-1)
+] = -0.0065
 
-T_0: Annotated[float, StaticTemperature("K")] = 288.15
-P_0: Annotated[float, StaticPressure("Pa")] = 101325.0
-RHO_0: Annotated[float, Density("kg m⁻³")] = 1.225
-A_0: Annotated[float, SpeedOfSound("m s⁻¹")] = 340.294
+T_0: Annotated[float, StaticTemperature(u.KELVIN)] = 288.15
+P_0: Annotated[float, StaticPressure(u.PASCAL)] = 101325.0
+RHO_0: Annotated[float, Density(u.KGM3)] = 1.225
+A_0: Annotated[float, SpeedOfSound(u.MPS)] = 340.294
 
 
-T_11: Annotated[float, StaticTemperature("K")] = 216.65
-P_11: Annotated[float, StaticPressure("Pa")] = 22632.06
+T_11: Annotated[float, StaticTemperature(u.KELVIN)] = 216.65
+P_11: Annotated[float, StaticPressure(u.PASCAL)] = 22632.06

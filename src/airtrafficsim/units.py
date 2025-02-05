@@ -1,5 +1,15 @@
 """
-SI and US Customary Units
+A system for representing units of measurement using an AST, with a code
+generator for `siunitx`.
+
+Current limitations:
+
+- missing division: `m/s` is not allowed - use `m * s**-1` instead.
+    - future versions may include a `Ratio` class for use in unit conversions
+- no unit canonicalisation: `m * s * s` will not be simplified,
+`m * (s**-1)**2` is not supported.
+
+Contains a selection of commonly used SI and US Customary Units
 
 [1] The International System of Units (SI): Text in English (updated in 2024),
 9th edition 2019, V3.01 August 2024. Sèvres Cedex BIPM 2024, 2024. Available: https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf
@@ -12,111 +22,159 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from fractions import Fraction
-from typing import Protocol, TypeAlias, runtime_checkable
+from typing import TypeAlias
+
+Exponent: TypeAlias = int | Fraction
 
 
-@runtime_checkable
-class HasSiUnitX(Protocol):
-    siunitx: str | None
+class UnitBase:
+    """Base class for all unit expressions."""
+
+    def to_siunitx(self) -> str:
+        """Convert the expression into a LaTeX `siunitx` string."""
+
+        # recursively traverse from the root unit expression.
+
+        def _to_siunitx(expr: UnitBase) -> str:
+            # operator precendence as follows:
+            if isinstance(expr, Mul):
+                return f"{_to_siunitx(expr.lhs)}{_to_siunitx(expr.rhs)}"
+            if isinstance(expr, Pow):
+                if expr.exponent == 1:
+                    return _to_siunitx(expr.base)
+                exponent = _format_exponent_latex(expr.exponent)
+                return rf"{_to_siunitx(expr.base)}\tothe{{{exponent}}}"
+            if isinstance(expr, Prefix):
+                return expr.siunitx
+            if isinstance(expr, Named):
+                return expr.siunitx
+            if isinstance(expr, Unit):
+                return expr.siunitx
+            raise NotImplementedError(expr)
+
+        return _to_siunitx(self)
 
 
-class SiUnitXMixin:
-    def to_siunitx(self, *, overrides: dict[Expr, str] = {}) -> str:
-        return to_siunitx(self, overrides=overrides)  # type: ignore
+def _format_exponent_latex(exponent: Exponent) -> str:
+    if isinstance(exponent, int):
+        return str(exponent)
+    elif isinstance(exponent, Fraction):
+        if exponent.denominator == 1:
+            return str(exponent.numerator)
+        # now a fraction
+        prefix = "-" if exponent < 1 else ""
+        return rf"{prefix}\frac{{{abs(exponent.numerator)}}}{{{exponent.denominator}}}"  # noqa: E501
+    raise NotImplementedError
 
 
 @dataclass(frozen=True, slots=True)
-class Mul(SiUnitXMixin):
-    left: "Expr"
-    right: "Expr"
+class Unit(UnitBase):
+    """A unit of measurement (e.g. `meter`, `slug`), acting as a leaf node."""
 
-    def __mul__(self, other: "Expr") -> "Mul":
-        return Mul(self, other)
-
-    def with_siunitx(self, siunitx: str) -> "NamedMul":
-        return NamedMul(self.left, self.right, siunitx=siunitx)
-
-
-@dataclass(frozen=True, slots=True)
-class NamedMul(Mul):
-    siunitx: str = field(kw_only=True)
-
-    # allow renamed units to be raised to the power of something, e.g. ohm**-1
-    def __pow__(self, other: int | Fraction) -> Pow:
-        return Pow(self, other)
-
-
-@dataclass(frozen=True, slots=True)
-class Pow(SiUnitXMixin):
-    base: "Unit" | NamedMul
-    exp: int | Fraction
-    siunitx: str | None = field(kw_only=True, default=None)
-
-    def __mul__(self, other: "Expr") -> Mul:
-        return Mul(self, other)
-
-    def with_siunitx(self, siunitx: str) -> "Pow":
-        return Pow(self.base, self.exp, siunitx=siunitx)
-
-
-@dataclass(frozen=True, slots=True)
-class Unit(SiUnitXMixin):
     symbol: str
-    """Human readable string, ideally ASCII"""
-    siunitx: str | None = field(kw_only=True, default=None)
+    siunitx: str
 
-    def __mul__(self, other: "Expr") -> Mul:
-        return Mul(self, other)
+    def __mul__(
+        self, rhs: "Unit" | "Named" | "Mul" | "Pow" | "Prefix"
+    ) -> "Mul":
+        if isinstance(rhs, (Unit, Named, Mul, Pow, Prefix)):
+            return Mul(lhs=self, rhs=rhs)
+        return NotImplemented
 
-    def __pow__(self, other: int | Fraction) -> Pow:
-        return Pow(self, other)
-
-    def with_siunitx(self, siunitx: str) -> "Unit":
-        return Unit(self.symbol, siunitx=siunitx)
-
-
-@dataclass(frozen=True, slots=True)
-class Prefix(SiUnitXMixin):
-    symbol: str
-    base: int = field(kw_only=True)  # keeping for metadata.
-    power: int = field(kw_only=True)  # keeping for metadata.
-    siunitx: str | None = field(kw_only=True, default=None)
-
-    def __mul__(self, other: Unit) -> Unit:
-        return Unit(
-            f"{self.symbol}{other.symbol}",
-            siunitx=f"{self.siunitx}{other.siunitx}",
+    def __pow__(self, rhs: Exponent) -> "Pow":
+        if isinstance(rhs, (int, Fraction)):
+            return Pow(base=self, exponent=rhs)
+        raise TypeError(
+            f"Cannot raise a `Named` to the power of {rhs}\n"
+            "help: must be an integer or fraction."
         )
 
 
-Expr: TypeAlias = Mul | Pow | Unit
+@dataclass(frozen=True, slots=True)
+class Named(UnitBase):
+    """
+    Provides aliases for a group of expressions (e.g. `Newton` for `kg·m·s⁻²`)
+    """
+
+    inner: UnitBase
+    symbol: str
+    siunitx: str
+
+    def __post_init__(self) -> None:
+        if isinstance(self.inner, Prefix):
+            raise ValueError("cannot rename a prefix.")  # otherwise it allows ^
+
+    def __mul__(
+        self, rhs: "Unit" | "Named" | "Mul" | "Pow" | "Prefix"
+    ) -> "Mul":
+        if isinstance(rhs, (Unit, Named, Mul, Prefix)):
+            return Mul(lhs=self, rhs=rhs)
+        return NotImplemented
+
+    def __pow__(self, rhs: Exponent) -> "Pow":
+        if isinstance(rhs, (int, Fraction)):
+            return Pow(base=self, exponent=rhs)
+        raise TypeError(
+            f"Cannot raise a `Named` to the power of {rhs}\n"
+            "help: must be an integer or fraction."
+        )
 
 
-def to_siunitx(expr: Expr, *, overrides: dict[Expr, str] = {}) -> str:
-    if isinstance(expr, HasSiUnitX) and expr.siunitx is not None:
-        return expr.siunitx
-    elif expr in overrides:
-        return overrides[expr]
-    elif isinstance(expr, Unit):  # unnamed bare unit
-        return rf"\text{{{expr.symbol}}}"
-    elif isinstance(expr, Pow):
-        base_latex = to_siunitx(expr.base, overrides=overrides)
-        exp = expr.exp
-        if isinstance(exp, Fraction):
-            if exp.denominator == 1:
-                exp_str = str(exp.numerator)
-            else:
-                # TODO: improve negative
-                exp_str = rf"\frac{{{exp.numerator}}}{{{exp.denominator}}}"
-        else:  # int
-            exp_str = str(exp)
-        return rf"{base_latex}\tothe{{{exp_str}}}"
-    elif isinstance(expr, Mul):
-        left_latex = to_siunitx(expr.left, overrides=overrides)
-        right_latex = to_siunitx(expr.right, overrides=overrides)
-        return rf"{left_latex}{right_latex}"
-    else:
-        raise TypeError(f"Unsupported expression type: {type(expr)}")
+@dataclass(frozen=True, slots=True)
+class Prefix(UnitBase):
+    """Modifiers to units (e.g. `kilo`, `milli`)"""
+
+    symbol: str
+    siunitx: str
+    # the following are used for metadata storage, and is not used for codegen.
+    base: int = field(kw_only=True)
+    power: int = field(kw_only=True)
+
+    def __mul__(self, other: "Unit" | "Named") -> "Mul":
+        if isinstance(other, (Unit, Named)):
+            return Mul(lhs=self, rhs=other)
+        elif isinstance(other, Prefix):
+            # kilo * kilo
+            raise TypeError("Cannot multiply two prefixes together.")
+        elif isinstance(other, Mul):
+            # kilo * (meter * s)
+            raise TypeError("Cannot multiply a prefix with a Mul expression.")
+        elif isinstance(other, Pow):
+            # kilo * (meter ^ 2)
+            raise TypeError("Cannot multiply a prefix with a Pow expression.")
+        return NotImplemented
+
+    # __pow__: cannot raise a prefix to the power of another prefix.
+
+
+@dataclass(frozen=True, slots=True)
+class Pow(UnitBase):
+    """Represents exponentiation of a unit"""
+
+    base: UnitBase
+    exponent: Exponent
+
+    def __mul__(self, other: "Unit" | "Named" | "Mul" | "Pow") -> "Mul":
+        if isinstance(other, (Unit, Named, Mul, Pow)):
+            return Mul(lhs=self, rhs=other)
+        return NotImplemented
+
+    # __pow__: cannot raise a (meter ^ 2) ^ 2, not implemented.
+
+
+@dataclass(frozen=True, slots=True)
+class Mul(UnitBase):
+    """Represents non-commutative multiplication of units."""
+
+    lhs: UnitBase
+    rhs: UnitBase
+
+    def __mul__(self, other: "Unit" | "Named" | "Mul" | "Pow") -> "Mul":
+        if isinstance(other, (Unit, Named, Mul, Pow)):
+            return Mul(lhs=self, rhs=other)
+        return NotImplemented
+
+    # __pow__: cannot raise a group of units to the power, it must be `Named`.
 
 
 #
@@ -125,149 +183,174 @@ def to_siunitx(expr: Expr, *, overrides: dict[Expr, str] = {}) -> str:
 
 SECOND = Unit("s", siunitx=r"\second")
 METER = Unit("m", siunitx=r"\meter")
-KILOGRAM = Unit("kg").with_siunitx(r"\kilogram")
+KILOGRAM = Unit("kg", siunitx=r"\kilogram")
 AMPERE = Unit("A", siunitx=r"\ampere")
 KELVIN = Unit("K", siunitx=r"\kelvin")
 MOLE = Unit("mol", siunitx=r"\mol")
 CANDELA = Unit("cd", siunitx=r"\candela")
 
+GRAM = Unit("g", siunitx=r"\gram")  # technically not base, but for convenience
+
 #
 # 2.3.4 Derived units (page 137)
 #
 
-RADIAN = Unit("rad").with_siunitx(r"\radian")  # plane angle
-STERADIAN = Unit("sr").with_siunitx(r"\steradian")  # solid angle
-HERTZ = (SECOND**-1).with_siunitx(r"\hertz")  # frequency
-NEWTON = (KILOGRAM * METER * SECOND**-2).with_siunitx(r"\newton")  # force
-PASCAL = (KILOGRAM * METER**-1 * SECOND**-2).with_siunitx(
-    r"\pascal"
+RAD = Unit("rad", r"\radian")  # plane angle
+STERADIAN = Unit("sr", r"\steradian")  # solid angle
+HERTZ = Named((SECOND**-1), "Hz", r"\hertz")  # frequency
+NEWTON = Named((KILOGRAM * METER * SECOND**-2), "N", r"\newton")  # force
+PASCAL = Named(
+    (KILOGRAM * METER**-1 * SECOND**-2), "Pa", r"\pascal"
 )  # pressure, stress
-JOULE = (KILOGRAM * METER**2 * SECOND**-2).with_siunitx(
-    r"\joule"
+JOULE = Named(
+    (KILOGRAM * METER**2 * SECOND**-2), "J", r"\joule"
 )  # energy, work, heat
-WATT = (KILOGRAM * METER**2 * SECOND**-3).with_siunitx(
-    r"\watt"
+WATT = Named(
+    (KILOGRAM * METER**2 * SECOND**-3), "W", r"\watt"
 )  # power, radiant flux
-COULOMB = (AMPERE * SECOND).with_siunitx(r"\coulomb")  # electric charge
-VOLT = (KILOGRAM * METER**2 * SECOND**-3 * AMPERE**-1).with_siunitx(
-    r"\volt"
+COULOMB = Named((AMPERE * SECOND), "C", r"\coulomb")  # electric charge
+VOLT = Named(
+    (KILOGRAM * METER**2 * SECOND**-3 * AMPERE**-1), "V", r"\volt"
 )  # electric potential, emf
-FARAD = (KILOGRAM**-1 * METER**-2 * SECOND**4 * AMPERE**2).with_siunitx(
-    r"\farad"
+FARAD = Named(
+    (KILOGRAM**-1 * METER**-2 * SECOND**4 * AMPERE**2), "F", r"\farad"
 )  # capacitance
-OHM = (KILOGRAM * METER**2 * SECOND**-3 * AMPERE**-2).with_siunitx(
-    r"\ohm"
+OHM = Named(
+    (KILOGRAM * METER**2 * SECOND**-3 * AMPERE**-2), "Ω", r"\ohm"
 )  # electric resistance
-SIEMENS = (KILOGRAM**-1 * METER**-2 * SECOND**3 * AMPERE**2).with_siunitx(
-    r"\siemens"
+SIEMENS = Named(
+    (KILOGRAM**-1 * METER**-2 * SECOND**3 * AMPERE**2), "S", r"\siemens"
 )  # electric conductance
-WEBER = (KILOGRAM * METER**2 * SECOND**-2 * AMPERE**-1).with_siunitx(
-    r"\weber"
+WEBER = Named(
+    (KILOGRAM * METER**2 * SECOND**-2 * AMPERE**-1), "Wb", r"\weber"
 )  # magnetic flux
-TESLA = (KILOGRAM * SECOND**-2 * AMPERE**-1).with_siunitx(
-    r"\tesla"
+TESLA = Named(
+    (KILOGRAM * SECOND**-2 * AMPERE**-1), "T", r"\tesla"
 )  # magnetic flux density
-HENRY = (KILOGRAM * METER**2 * SECOND**-2 * AMPERE**-2).with_siunitx(
-    r"\henry"
+HENRY = Named(
+    (KILOGRAM * METER**2 * SECOND**-2 * AMPERE**-2), "H", r"\henry"
 )  # inductance
-DEGREE_CELSIUS = Unit("°C").with_siunitx(
-    r"\degreeCelsius"
-)  # temperature Celsius
-LUMEN = (CANDELA * STERADIAN).with_siunitx(r"\lumen")  # luminous flux
-LUX = (CANDELA * METER**-2).with_siunitx(r"\lux")  # illuminance
-BECQUEREL = (SECOND**-1).with_siunitx(
-    r"\text{Bq}"  # NOTE: siunitx does not have a dedicated one
+CELSIUS = Unit("°C", r"\degreeCelsius")  # temperature Celsius
+LUMEN = Named((CANDELA * STERADIAN), "lm", r"\lumen")  # luminous flux
+LUX = Named((CANDELA * METER**-2), "lx", r"\lux")  # illuminance
+BECQUEREL = Named(
+    (SECOND**-1), "Bq", r"\text{Bq}"
 )  # activity referred to a radionuclide
-GRAY = (METER**2 * SECOND**-2).with_siunitx(
-    r"\gray"
+GRAY = Named(
+    (METER**2 * SECOND**-2), "Gy", r"\gray"
 )  # absorbed dose, specific energy imparted, kerma
-SIEVERT = (METER**2 * SECOND**-2).with_siunitx(r"\sievert")  # dose equivalent
-KATAL = (MOLE * SECOND**-1).with_siunitx(r"\katal")  # catalytic activity
+SIEVERT = Named((METER**2 * SECOND**-2), "Sv", r"\sievert")  # dose equivalent
+KATAL = Named((MOLE * SECOND**-1), "kat", r"\katal")  # catalytic activity
 
 #
 # 3. Decimal multiples and sub-multiples of SI units (page 143)
 #
 
-QUETTA = Prefix("Q", base=10, power=30, siunitx=r"\quetta")
-RONNA = Prefix("R", base=10, power=27, siunitx=r"\ronna")
-YOTTA = Prefix("Y", base=10, power=24, siunitx=r"\yotta")
-ZETTA = Prefix("Z", base=10, power=21, siunitx=r"\zetta")
-EXA = Prefix("E", base=10, power=18, siunitx=r"\exa")
-PETA = Prefix("P", base=10, power=15, siunitx=r"\peta")
-TERA = Prefix("T", base=10, power=12, siunitx=r"\tera")
-GIGA = Prefix("G", base=10, power=9, siunitx=r"\giga")
-MEGA = Prefix("M", base=10, power=6, siunitx=r"\mega")
-KILO = Prefix("k", base=10, power=3, siunitx=r"\kilo")
-HECTO = Prefix("h", base=10, power=2, siunitx=r"\hecto")
-DECA = Prefix("da", base=10, power=1, siunitx=r"\deca")
-DECI = Prefix("d", base=10, power=-1, siunitx=r"\deci")
-CENTI = Prefix("c", base=10, power=-2, siunitx=r"\centi")
-MILLI = Prefix("m", base=10, power=-3, siunitx=r"\milli")
-MICRO = Prefix("μ", base=10, power=-6, siunitx=r"\micro")
-NANO = Prefix("n", base=10, power=-9, siunitx=r"\nano")
-PICO = Prefix("p", base=10, power=-12, siunitx=r"\pico")
-FEMTO = Prefix("f", base=10, power=-15, siunitx=r"\femto")
-ATTO = Prefix("a", base=10, power=-18, siunitx=r"\atto")
-ZEPTO = Prefix("z", base=10, power=-21, siunitx=r"\zepto")
-YOCTO = Prefix("y", base=10, power=-24, siunitx=r"\yocto")
-RONTO = Prefix("r", base=10, power=-27, siunitx=r"\ronto")
-QUECTO = Prefix("q", base=10, power=-30, siunitx=r"\quecto")
+QUETTA = Prefix("Q", r"\quetta", base=10, power=30)
+RONNA = Prefix("R", r"\ronna", base=10, power=27)
+YOTTA = Prefix("Y", r"\yotta", base=10, power=24)
+ZETTA = Prefix("Z", r"\zetta", base=10, power=21)
+EXA = Prefix("E", r"\exa", base=10, power=18)
+PETA = Prefix("P", r"\peta", base=10, power=15)
+TERA = Prefix("T", r"\tera", base=10, power=12)
+GIGA = Prefix("G", r"\giga", base=10, power=9)
+MEGA = Prefix("M", r"\mega", base=10, power=6)
+KILO = Prefix("k", r"\kilo", base=10, power=3)
+HECTO = Prefix("h", r"\hecto", base=10, power=2)
+DECA = Prefix("da", r"\deca", base=10, power=1)
+DECI = Prefix("d", r"\deci", base=10, power=-1)
+CENTI = Prefix("c", r"\centi", base=10, power=-2)
+MILLI = Prefix("m", r"\milli", base=10, power=-3)
+MICRO = Prefix("μ", r"\micro", base=10, power=-6)
+NANO = Prefix("n", r"\nano", base=10, power=-9)
+PICO = Prefix("p", r"\pico", base=10, power=-12)
+FEMTO = Prefix("f", r"\femto", base=10, power=-15)
+ATTO = Prefix("a", r"\atto", base=10, power=-18)
+ZEPTO = Prefix("z", r"\zepto", base=10, power=-21)
+YOCTO = Prefix("y", r"\yocto", base=10, power=-24)
+RONTO = Prefix("r", r"\ronto", base=10, power=-27)
+QUECTO = Prefix("q", r"\quecto", base=10, power=-30)
 
-KIBI = Prefix("Ki", base=2, power=10, siunitx=r"\kibi")
-MEBI = Prefix("Mi", base=2, power=20, siunitx=r"\mebi")
-GIBI = Prefix("Gi", base=2, power=30, siunitx=r"\gibi")
-TEBI = Prefix("Ti", base=2, power=40, siunitx=r"\tebi")
-PEBI = Prefix("Pi", base=2, power=50, siunitx=r"\pebi")
-EXBI = Prefix("Ei", base=2, power=60, siunitx=r"\exbi")
-ZEBI = Prefix("Zi", base=2, power=70, siunitx=r"\zebi")
-YOBI = Prefix("Yi", base=2, power=80, siunitx=r"\yobi")
+KIBI = Prefix("Ki", r"\kibi", base=2, power=10)
+MEBI = Prefix("Mi", r"\mebi", base=2, power=20)
+GIBI = Prefix("Gi", r"\gibi", base=2, power=30)
+TEBI = Prefix("Ti", r"\tebi", base=2, power=40)
+PEBI = Prefix("Pi", r"\pebi", base=2, power=50)
+EXBI = Prefix("Ei", r"\exbi", base=2, power=60)
+ZEBI = Prefix("Zi", r"\zebi", base=2, power=70)
+YOBI = Prefix("Yi", r"\yobi", base=2, power=80)
 
 #
 # 4. Non-SI units accepted for use with the SI (page 145)
 #
 
-MINUTE = Unit("min").with_siunitx(r"\minute")  # time
-HOUR = Unit("h").with_siunitx(r"\hour")  # time
-DAY = Unit("d").with_siunitx(r"\day")  # time
-DEGREE_ANGLE = Unit("°").with_siunitx(r"\degree")  # plane angle
-ARCMINUTE = Unit("'").with_siunitx(r"\arcminute")  # plane angle
-ARCSECOND = Unit('"').with_siunitx(r"\arcsecond")  # plane angle
-HECTARE = Unit("ha").with_siunitx(r"\hectare")  # area
-LITRE = Unit("L").with_siunitx(r"\litre")  # volume
-TONNE = Unit("t").with_siunitx(r"\tonne")  # mass
-DALTON = Unit("Da").with_siunitx(r"\dalton")  # mass
-ELECTRONVOLT = Unit("eV").with_siunitx(r"\electronvolt")  # energy
-NEPER = Unit("Np").with_siunitx(r"\neper")  # ratio (logarithmic)
-BEL = Unit("B").with_siunitx(r"\bel")  # ratio (logarithmic)
-DECIBEL = Unit("dB").with_siunitx(r"\decibel")  # ratio (logarithmic)
-ASTRONOMICAL_UNIT = Unit("au").with_siunitx(r"\astronomicalunit")  # length
-GAL = ((CENTI * METER) * SECOND**-2).with_siunitx(r"\text{Gal}")  # acceleration
+MINUTE = Unit("min", r"\minute")  # time
+HOUR = Unit("h", r"\hour")  # time
+DAY = Unit("d", r"\day")  # time
+DEGREE = Unit("°", r"\degree")  # plane angle
+ARCMINUTE = Unit("'", r"\arcminute")  # plane angle
+ARCSECOND = Unit('"', r"\arcsecond")  # plane angle
+HECTARE = Unit("ha", r"\hectare")  # area
+LITRE = Unit("L", r"\litre")  # volume
+TONNE = Unit("t", r"\tonne")  # mass
+DALTON = Unit("Da", r"\dalton")  # mass
+ELECTRONVOLT = Unit("eV", r"\electronvolt")  # energy
+NEPER = Unit("Np", r"\neper")  # ratio (logarithmic)
+BEL = Unit("B", r"\bel")  # ratio (logarithmic)
+DECIBEL = Unit("dB", r"\decibel")  # ratio (logarithmic)
+ASTRONOMICAL_UNIT = Unit("au", r"\astronomicalunit")  # length
+GAL = Named(
+    ((CENTI * METER) * SECOND**-2), "Gal", r"\text{Gal}"
+)  # acceleration
 
 
 #
 # US Customary Units
 #
 
-INCH = Unit("in").with_siunitx(r"\text{in}")
-FOOT = Unit("ft").with_siunitx(r"\text{ft}")
-YARD = Unit("yd").with_siunitx(r"\text{yd}")
-MILE = Unit("mi").with_siunitx(r"\text{mi}")
-FATHOM = Unit("fathom").with_siunitx(r"\text{fathom}")
-NMI = Unit("nmi").with_siunitx(r"\text{nmi}")
+INCH = Unit("in", r"\text{in}")
+FOOT = Unit("ft", r"\text{ft}")
+YARD = Unit("yd", r"\text{yd}")
+MILE = Unit("mi", r"\text{mi}")
+FATHOM = Unit("fathom", r"\text{fathom}")
+NMI = Unit("nmi", r"\text{nmi}")
 
-ACRE = Unit("acre").with_siunitx(r"\text{acre}")
+ACRE = Unit("acre", r"\text{acre}")
 
-GALLON = Unit("gal").with_siunitx(r"\text{gal}")  # liquid, not apothecaries
+GALLON = Unit("gal", r"\text{gal}")  # liquid, not apothecaries
 
-OUNCE_AVOIRDUPOIS = Unit("oz").with_siunitx(r"\text{oz}")
-POUND_AVOIRDUPOIS = Unit("lb").with_siunitx(r"\text{lb}")  # not force
-TON_AVOIRDUPOIS = Unit("ton").with_siunitx(r"\text{tn}")  # avoirdupois short
+OUNCE = Unit("oz", r"\text{oz}")  # avoirdupois
+POUND = Unit("lb", r"\text{lb}")  # avoirdupois, not force
+TON = Unit("ton", r"\text{tn}")  # avoirdupois, short
 
-SLUG = Unit("slug").with_siunitx(r"\text{slug}")
+SLUG = Unit("slug", r"\text{slug}")
 
-KNOT = Unit("kt").with_siunitx(r"\text{kt}")
-ATM = Unit("atm").with_siunitx(r"\text{atm}")
-HORSEPOWER = Unit("hp").with_siunitx(r"\text{hp}")
-POUND_FORCE = Unit("lbf").with_siunitx(r"\text{lbf}")
-DEGREE_FAHRENHEIT = Unit("°F").with_siunitx(r"\degree\text{F}")
-DEGREE_RANKINE = Unit("°R").with_siunitx(r"\degree\text{R}")
+#
+# common aerospace units
+#
+
+KT = Unit("kt", r"\text{kt}")
+ATM = Unit("atm", r"\text{atm}")
+HORSEPOWER = Unit("hp", r"\text{hp}")
+POUND_FORCE = Unit("lbf", r"\text{lbf}")
+FAHRENHEIT = Unit("°F", r"\degree\text{F}")
+RANKINE = Unit("°R", r"\degree\text{R}")
+INHG = Unit("inHg", r"\text{inHg}")
+
+# useful aliases
+MPS = METER * SECOND**-1
+MPS2 = METER * SECOND**-2  # acceleration
+FPS = FOOT * SECOND**-1
+FPM = FOOT * MINUTE**-1
+MPH = MILE * HOUR**-1
+KPH = KILO * METER * HOUR**-1
+KGM3 = KILOGRAM * METER**-3  # density
+
+HPA = HECTO * PASCAL
+PSI = POUND_FORCE * INCH**-2
+
+
+JMOLK = JOULE * MOLE**-1 * KELVIN**-1  # gas constant
+JKGK = JOULE * KILOGRAM**-1 * KELVIN**-1  # specific gas constant
+KGNS = KILOGRAM * SECOND**-1 * NEWTON**-1  # tsfc
+LBLBFH = POUND * POUND_FORCE**-1 * HOUR**-1  # tsfc

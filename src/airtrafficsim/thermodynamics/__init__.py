@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Generic, NamedTuple
+from typing import TYPE_CHECKING, Generic
+
+from typing_extensions import NamedTuple
 
 from ..types import ArrayOrScalarT
 
 if TYPE_CHECKING:
     from typing import Annotated
 
+    from .. import units as u
     from ..annotations import (
         TAS,
         Density,
@@ -23,72 +26,70 @@ if TYPE_CHECKING:
     )
     from ..types import Array
 
-R: Annotated[float, GasConstant("J mol⁻¹ K⁻¹")] = 8.31446261815324
+R: Annotated[float, GasConstant(u.JMOLK)] = 8.31446261815324
 """Universal gas constant"""
 
-M_DRY_AIR: Annotated[float, MolarMass("kg mol⁻¹")] = 0.028964917
-R_SPECIFIC_DRY_AIR: Annotated[float, SpecificGasConstant("J kg⁻¹ K⁻¹")] = (
-    287.052874
-)
+M_DRY_AIR: Annotated[float, MolarMass(u.KILOGRAM * u.MOLE**-1)] = 0.028964917
+R_SPECIFIC_DRY_AIR: Annotated[float, SpecificGasConstant(u.JKGK)] = 287.052874
 GAMMA_DRY_AIR: Annotated[float, RatioOfSpecificHeats(None)] = 1.4
 
 
 def specific_gas_constant(
-    molar_mass: Annotated[ArrayOrScalarT, MolarMass("kg mol⁻¹")],
-) -> Annotated[ArrayOrScalarT, SpecificGasConstant("J kg⁻¹ K⁻¹")]:
+    molar_mass: Annotated[ArrayOrScalarT, MolarMass(u.KILOGRAM * u.MOLE**-1)],
+) -> Annotated[ArrayOrScalarT, SpecificGasConstant(u.JKGK)]:
     return R / molar_mass
 
 
 class GasState(NamedTuple, Generic[ArrayOrScalarT]):
-    temperature: Annotated[ArrayOrScalarT, StaticTemperature("K")]
-    pressure: Annotated[ArrayOrScalarT, StaticPressure("Pa")]
+    temperature: Annotated[ArrayOrScalarT, StaticTemperature(u.KELVIN)]
+    pressure: Annotated[ArrayOrScalarT, StaticPressure(u.PASCAL)]
 
     def density(
         self,
         specific_gas_constant: Annotated[
-            Array | float, SpecificGasConstant("J kg⁻¹ K⁻¹")
+            Array | float, SpecificGasConstant(u.JKGK)
         ],
-    ) -> Annotated[ArrayOrScalarT, Density("kg m⁻³")]:
+    ) -> Annotated[ArrayOrScalarT, Density(u.KGM3)]:
         """Density, perfect gas"""
         return density(self.temperature, self.pressure, specific_gas_constant)
 
 
 def density(
-    temperature: Annotated[Array | float, StaticTemperature("K")],
-    pressure: Annotated[Array | float, StaticPressure("Pa")],
+    temperature: Annotated[Array | float, StaticTemperature(u.KELVIN)],
+    pressure: Annotated[Array | float, StaticPressure(u.PASCAL)],
     specific_gas_constant: Annotated[
-        Array | float, SpecificGasConstant("J kg⁻¹ K⁻¹")
+        Array | float, SpecificGasConstant(u.JKGK)
     ],
-) -> Annotated[Array | float, Density("kg m⁻³")]:
+) -> Annotated[Array | float, Density(u.KGM3)]:
     """Density, perfect gas"""
     return pressure / (specific_gas_constant * temperature)
 
 
 def speed_of_sound(
-    temperature: Annotated[Array | float, StaticTemperature("K")],
+    temperature: Annotated[Array | float, StaticTemperature(u.KELVIN)],
     adiabatic_index: Annotated[Array | float, RatioOfSpecificHeats(None)],
     specific_gas_constant: Annotated[
-        Array | float, SpecificGasConstant("J kg⁻¹ K⁻¹")
+        Array | float, SpecificGasConstant(u.JKGK)
     ],
-) -> Annotated[Array | float, SpeedOfSound("m s⁻¹")]:
+) -> Annotated[Array | float, SpeedOfSound(u.MPS)]:
     """Speed of sound, perfect gas"""
     return (adiabatic_index * specific_gas_constant * temperature) ** 0.5
 
 
 def dynamic_pressure(
-    rho: Annotated[Array | float, Density("kg m⁻³")],
-    tas: Annotated[Array | float, TAS("m s⁻¹")],
-) -> Annotated[Array | float, DynamicPressure("Pa")]:
+    rho: Annotated[Array | float, Density(u.KGM3)],
+    tas: Annotated[Array | float, TAS(u.MPS)],
+) -> Annotated[Array | float, DynamicPressure(u.PASCAL)]:
     """Dynamic pressure, incompressible flow"""
     return 0.5 * rho * tas**2
 
 
 def total_pressure(
-    tas: Annotated[Array | float, TAS("m s⁻¹")],
-    rho: Annotated[Array | float, Density("kg m⁻³")],
-    p: Annotated[Array | float, StaticPressure("Pa")],
+    tas: Annotated[Array | float, TAS(u.MPS)],
+    rho: Annotated[Array | float, Density(u.KGM3)],
+    p: Annotated[Array | float, StaticPressure(u.PASCAL)],
     gamma: Annotated[Array | float, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array | float, TotalPressure("Pa")]:
+) -> Annotated[Array | float, TotalPressure(u.PASCAL)]:
     """Total pressure, compressible flow"""
     # NOTE: from bernoulli's formula
     inner = 1 + (gamma - 1) / (2 * gamma) * rho / p * tas**2
@@ -96,11 +97,11 @@ def total_pressure(
 
 
 def total_pressure_behind_normal_shock(
-    tas: Annotated[Array | float, TAS("m s⁻¹")],
-    rho: Annotated[Array | float, Density("kg m⁻³")],
-    p: Annotated[Array | float, StaticPressure("Pa")],
+    tas: Annotated[Array | float, TAS(u.MPS)],
+    rho: Annotated[Array | float, Density(u.KGM3)],
+    p: Annotated[Array | float, StaticPressure(u.PASCAL)],
     gamma: Annotated[Array | float, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array | float, TotalPressure("Pa")]:
+) -> Annotated[Array | float, TotalPressure(u.PASCAL)]:
     """Total pressure, behind normal shock wave, supersonic flow"""
     common = rho / p * tas**2
     inner = ((gamma + 1) ** 2 / gamma * common) / (4 * common - 2 * (gamma - 1))
@@ -108,21 +109,21 @@ def total_pressure_behind_normal_shock(
 
 
 def impact_pressure(
-    tas: Annotated[Array, TAS("m s⁻¹")],
-    rho: Annotated[Array, Density("kg m⁻³")],
-    p: Annotated[Array, StaticPressure("Pa")],
+    tas: Annotated[Array, TAS(u.MPS)],
+    rho: Annotated[Array, Density(u.KGM3)],
+    p: Annotated[Array, StaticPressure(u.PASCAL)],
     gamma: Annotated[Array, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array, ImpactPressure("Pa")]:
+) -> Annotated[Array, ImpactPressure(u.PASCAL)]:
     """Impact pressure, compressible flow"""
     return total_pressure(tas, rho, p, gamma) - p
 
 
 def impact_pressure_behind_normal_shock(
-    tas: Annotated[Array | float, TAS("m s⁻¹")],
-    a: Annotated[Array | float, SpeedOfSound("m s⁻¹")],
-    p: Annotated[Array | float, StaticPressure("Pa")],
+    tas: Annotated[Array | float, TAS(u.MPS)],
+    a: Annotated[Array | float, SpeedOfSound(u.MPS)],
+    p: Annotated[Array | float, StaticPressure(u.PASCAL)],
     gamma: Annotated[Array | float, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array | float, TotalPressure("Pa")]:
+) -> Annotated[Array | float, TotalPressure(u.PASCAL)]:
     """Impact pressure, behind normal shock wave, supersonic flow"""
     inner = (gamma + 1) ** 2 / (4 * gamma - 2 * (gamma - 1) * (a / tas) ** 2)
     return (

@@ -1,37 +1,25 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Generic, overload
+from typing import TYPE_CHECKING, overload
 
-from .annotations import Quantity, Units
+from .annotations import Quantity
 
 if TYPE_CHECKING:
     from typing import Any
 
     import polars as pl
-    from typing_extensions import Self
-
-
-def into_latex(unit: Units) -> str:
-    raise NotImplementedError
 
 
 @dataclass
-class Column(Generic[Units]):
-    quantity: Quantity[Units]
+class Column:
+    quantity: Quantity
     display_name: str | None = None
     symbol: str | None = None
     identifier: str | None = None
     """
     A unique identifier for retrieving the series in a dataframe (optional)
     """
-
-    @classmethod
-    def from_quantity(cls, quantity: Quantity[Units]) -> Self:
-        if (doc := quantity.__doc__) is not None:
-            display_name = doc.split("\n")[0].split(",")[0]
-            print(display_name)
-        return cls(quantity)
 
     @property
     def label(self) -> str:

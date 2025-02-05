@@ -69,6 +69,7 @@ from .isa import (
 if TYPE_CHECKING:
     from typing import Annotated
 
+    from .. import units as u
     from ..annotations import (
         TAS,
         Delta,
@@ -96,9 +97,9 @@ if TYPE_CHECKING:
 def temperature_below_tropopause(
     altitude: Annotated[Array | float, GeopotentialAltitude],
     delta_temperature: Annotated[
-        Array | float, Delta(StaticTemperature("K"))
+        Array | float, Delta(StaticTemperature(u.KELVIN))
     ] = 0.0,
-) -> Annotated[Array | float, StaticTemperature("K"), BelowTropopause]:
+) -> Annotated[Array | float, StaticTemperature(u.KELVIN), BelowTropopause]:
     """
     Temperature below the tropopause, lapsing linearly with altitude (3.1-13)
     """
@@ -106,20 +107,22 @@ def temperature_below_tropopause(
 
 
 def temperature_above_tropopause(
-    delta_temperature: Annotated[ArrayOrScalarT, Delta(StaticTemperature("K"))],
-) -> Annotated[ArrayOrScalarT, StaticTemperature("K"), AboveTropopause]:
+    delta_temperature: Annotated[
+        ArrayOrScalarT, Delta(StaticTemperature(u.KELVIN))
+    ],
+) -> Annotated[ArrayOrScalarT, StaticTemperature(u.KELVIN), AboveTropopause]:
     """Temperature above the tropopause, isothermal (3.1-15, 3.1-16)."""
     return T_11 + delta_temperature
 
 
 def pressure_below_tropopause(
     temperature_below_trop: Annotated[
-        Array | float, StaticTemperature("K"), BelowTropopause
+        Array | float, StaticTemperature(u.KELVIN), BelowTropopause
     ],
     delta_temperature: Annotated[
-        Array | float, Delta(StaticTemperature("K"))
+        Array | float, Delta(StaticTemperature(u.KELVIN))
     ] = 0.0,
-) -> Annotated[Array | float, StaticPressure("Pa"), BelowTropopause]:
+) -> Annotated[Array | float, StaticPressure(u.PASCAL), BelowTropopause]:
     """Pressure below tropopause (3.1-18)"""
     return P_0 * (
         ((temperature_below_trop - delta_temperature) / T_0)
@@ -128,8 +131,8 @@ def pressure_below_tropopause(
 
 
 def pressure_above_tropopause(
-    altitude: Annotated[ArrayOrScalarT, GeopotentialAltitude("m")],
-) -> Annotated[ArrayOrScalarT, StaticPressure("Pa"), AboveTropopause]:
+    altitude: Annotated[ArrayOrScalarT, GeopotentialAltitude(u.METER)],
+) -> Annotated[ArrayOrScalarT, StaticPressure(u.PASCAL), AboveTropopause]:
     """Pressure above tropopause (3.1-20)"""
     exp = (
         math.exp
@@ -142,8 +145,8 @@ def pressure_above_tropopause(
 
 
 def atmosphere(
-    altitude: Annotated[Array, GeopotentialAltitude("m")],
-    delta_temperature: Annotated[Array, Delta(StaticTemperature("K"))],
+    altitude: Annotated[Array, GeopotentialAltitude(u.METER)],
+    delta_temperature: Annotated[Array, Delta(StaticTemperature(u.KELVIN))],
 ) -> GasState[Array]:
     """
     BADA3 atmospheric model.
@@ -174,8 +177,8 @@ def atmosphere(
 
 
 def mach_number(
-    tas: Annotated[Array | float, TAS("m s⁻¹")],
-    temperature: Annotated[Array | float, StaticTemperature("K")],
+    tas: Annotated[Array | float, TAS(u.MPS)],
+    temperature: Annotated[Array | float, StaticTemperature(u.KELVIN)],
 ) -> Annotated[Array | float, MachNumber(None)]:
     """Mach/TAS conversion (3.1-26)"""
     a = speed_of_sound(temperature, KAPPA, R_SPECIFIC_DRY_AIR)

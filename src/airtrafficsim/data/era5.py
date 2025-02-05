@@ -36,12 +36,13 @@ from ..performance.bada3 import atmosphere
 if TYPE_CHECKING:
     from typing import Annotated
 
+    from .. import units as u
     from ..annotations import StaticPressure
 
 GOOGLE_STORAGE_URI = (
     "gs://gcp-public-data-arco-era5/raw/date-variable-pressure_level"
 )
-PRESSURE_LEVELS: Annotated[tuple[int], StaticPressure("hPa")] = (
+PRESSURE_LEVELS: Annotated[tuple[int], StaticPressure(u.HPA)] = (
     *range(100, 275, 25),
     *range(300, 750, 50),
     *range(750, 1025, 25),
@@ -65,9 +66,9 @@ VARIABLES: list[EcmwfParameter] = [
         246, "specific_cloud_liquid_water_content", "clwc", "kg kg⁻¹"
     ),
     EcmwfParameter(133, "specific_humidity", "q", "kg kg⁻¹"),
-    EcmwfParameter(130, "temperature", "t", StaticTemperature("K")),
-    EcmwfParameter(131, "u_component_of_wind", "u", WindSpeed("m s⁻¹")),
-    EcmwfParameter(132, "v_component_of_wind", "v", WindSpeed("m s⁻¹")),
+    EcmwfParameter(130, "temperature", "t", StaticTemperature(u.KELVIN)),
+    EcmwfParameter(131, "u_component_of_wind", "u", WindSpeed(u.MPS)),
+    EcmwfParameter(132, "v_component_of_wind", "v", WindSpeed(u.MPS)),
     EcmwfParameter(135, "vertical_velocity", "w", "Pa s⁻¹"),
 ]
 """Available variables under the `raw` bucket."""
