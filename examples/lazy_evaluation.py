@@ -3,14 +3,6 @@
 
 import polars as pl
 
-# import airtrafficsim
-# x = pl.DataFrame({"alpha": [2, 3, 4, 5]})
-# def sq(x: pl.Expr):
-#     an = x.__array_namespace__()
-#     print(an.exp(x))
-#     return x
-# print(x.select(sq(pl.col("alpha"))))
-# raise SystemExit
 import numpy as np
 from airtrafficsim.performance.bada3 import atmosphere
 

@@ -1,9 +1,9 @@
 """
 [ICAO Aircraft Engine Emissions Databank](https://www.easa.europa.eu/en/domains/environment/icao-aircraft-engine-emissions-databank)
 
-Requires:
+Requires extras:
 
-- airtrafficsim installed with extras `network`, `polars`
+- `network`, `polars`
 """
 
 from io import BytesIO

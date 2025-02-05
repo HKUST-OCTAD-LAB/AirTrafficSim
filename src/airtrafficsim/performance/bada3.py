@@ -70,7 +70,7 @@ if TYPE_CHECKING:
     from typing import Annotated
 
     from .. import units as u
-    from ..annotations import (
+    from ..quantity import (
         TAS,
         Delta,
         GeopotentialAltitude,
@@ -137,7 +137,7 @@ def pressure_above_tropopause(
     exp = (
         math.exp
         if isinstance(altitude, float)
-        else altitude.__array_namespace__().exp  # type: ignore
+        else altitude.__array_namespace__().exp
     )
     return P_11 * (
         exp((altitude - H_BELOW_TROP) * (-G_0 / (R_SPECIFIC_DRY_AIR * T_11)))

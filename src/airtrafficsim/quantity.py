@@ -8,7 +8,7 @@ For example:
 
 ```pycon
 >>> from typing import Annotated
->>> from airtrafficsim.annotations import CAS, EAS
+>>> from airtrafficsim.quantity import CAS, EAS
 >>> import airtrafficsim.units as u
 >>> def eas_from_cas(
 ...     cas: Annotated[float, CAS(u.MPS)]

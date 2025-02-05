@@ -11,10 +11,10 @@ See:
 
 Data License: [Copernicus license](https://apps.ecmwf.int/datasets/licences/copernicus/)
 
-Requires:
+Requires extras:
 
+- `network`, `polars`
 - `gcloud` CLI to be installed and authenticated
-- airtrafficsim installed with extras `network`, `polars`, `era5`
 """
 
 # TODO: use cdsapi as a fallback
@@ -30,14 +30,14 @@ import pytz
 import xarray as xr
 
 from .. import logger
-from ..annotations import StaticTemperature, WindSpeed
 from ..performance.bada3 import atmosphere
+from ..quantity import StaticTemperature, WindSpeed
 
 if TYPE_CHECKING:
     from typing import Annotated
 
     from .. import units as u
-    from ..annotations import StaticPressure
+    from ..quantity import StaticPressure
 
 GOOGLE_STORAGE_URI = (
     "gs://gcp-public-data-arco-era5/raw/date-variable-pressure_level"

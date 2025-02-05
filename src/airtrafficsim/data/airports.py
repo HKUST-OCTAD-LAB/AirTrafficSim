@@ -1,9 +1,9 @@
 """
 List of airports, from [ourairports](https://ourairports.com/data/)
 
-Requires:
+Requires extras:
 
-- airtrafficsim installed with extras `network`, `polars`
+- `network`, `polars`
 """
 
 from io import BytesIO

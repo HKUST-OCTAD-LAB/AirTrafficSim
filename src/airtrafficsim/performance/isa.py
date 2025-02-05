@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from typing import Annotated
 
     from .. import units as u
-    from ..annotations import (
+    from ..quantity import (
         Density,
         GeopotentialAltitude,
         SpeedOfSound,

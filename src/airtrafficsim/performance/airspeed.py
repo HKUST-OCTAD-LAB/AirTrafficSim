@@ -40,7 +40,7 @@ if TYPE_CHECKING:
     from annotated_types import Gt
 
     from .. import units as u
-    from ..annotations import (
+    from ..quantity import (
         CAS,
         EAS,
         TAS,

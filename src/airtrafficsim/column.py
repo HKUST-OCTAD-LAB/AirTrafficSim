@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, overload
 
-from .annotations import Quantity
+from .units import UnitBase
 
 if TYPE_CHECKING:
     from typing import Any
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 @dataclass
 class Column:
-    quantity: Quantity
+    unit: UnitBase | None
     display_name: str | None = None
     symbol: str | None = None
     identifier: str | None = None
@@ -31,8 +31,8 @@ class Column:
             label = f"{self.symbol}"
         else:
             raise ValueError("Either display_name or symbol must be provided.")
-        if self.quantity.unit is not None:  # hide for dimensionless
-            label += f" (${self.quantity.unit}$)"
+        if self.unit is not None:  # hide for dimensionless
+            label += f" (${self.unit.to_siunitx()}$)"
         return label
 
     @overload

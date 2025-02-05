@@ -1,9 +1,9 @@
 """
 List of aircraft types, from [ICAO DOC8643](https://www.icao.int/publications/DOC8643/Pages/default.aspx)
 
-Requires:
+Requires extras:
 
-- airtrafficsim installed with extras `network`, `polars`
+- `network`, `polars`
 """
 
 from io import BytesIO
