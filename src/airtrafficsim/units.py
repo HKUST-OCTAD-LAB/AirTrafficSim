@@ -14,8 +14,8 @@ Contains a selection of commonly used SI and US Customary Units
 [1] The International System of Units (SI): Text in English (updated in 2024),
 9th edition 2019, V3.01 August 2024. Sèvres Cedex BIPM 2024, 2024. Available: https://www.bipm.org/documents/20126/41483022/SI-Brochure-9-EN.pdf
 
-[2] “NIST Handbook 44 - 2024 - Appendix C. General Tables of Units of
-Measurement,” NIST, Available: https://www.nist.gov/document/nist-handbook-44-2024-appendix-c-pdf
+[2] "NIST Handbook 44 - 2024 - Appendix C. General Tables of Units of
+Measurement," NIST, Available: https://www.nist.gov/document/nist-handbook-44-2024-appendix-c-pdf
 """
 
 from __future__ import annotations
@@ -107,7 +107,7 @@ class Named(UnitBase):
     def __mul__(
         self, rhs: "Unit" | "Named" | "Mul" | "Pow" | "Prefix"
     ) -> "Mul":
-        if isinstance(rhs, (Unit, Named, Mul, Prefix)):
+        if isinstance(rhs, (Unit, Named, Mul, Pow, Prefix)):
             return Mul(lhs=self, rhs=rhs)
         return NotImplemented
 
