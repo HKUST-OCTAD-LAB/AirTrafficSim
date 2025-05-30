@@ -68,5 +68,9 @@ async def fetch_airports(client: httpx.AsyncClient) -> pl.DataFrame:
     response = await client.get(f"{URL_BASE}/airports.csv")
     data = BytesIO(response.content)
 
-    airports = pl.read_csv(data, schema=SCHEMA_AIRPORTS, truncate_ragged_lines=True).cast(SCHEMA_AIRPORTS)  # type: ignore
+    airports = (
+        pl.read_csv(
+            data, schema=SCHEMA_AIRPORTS, truncate_ragged_lines=True
+        ).cast(SCHEMA_AIRPORTS)  # type: ignore
+    )
     return airports
