@@ -1,20 +1,18 @@
-r"""
-ICAO International Standard Atmosphere.
-
-Assumptions:
-
-- air is dry, calorically perfect, perfect gas ($p = \rho R T$).
-- atmosphere is in hydrostatic equilibrium ($\frac{dp}{dz} = -\rho g$).
-"""
-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .. import types as t
+    from . import types as t
 
-
+#
+# ICAO International Standard Atmosphere.
+#
+# Assumptions:
+#
+# - air is dry, calorically perfect, perfect gas ($p = \rho R T$).
+# - atmosphere is in hydrostatic equilibrium ($\frac{dp}{dz} = -\rho g$).
+#
 H_BELOW_TROP: t.GeopotentialAltitudeM[float] = 11000.0
 """
 The tropopause is the separation between the troposphere and the stratosphere.

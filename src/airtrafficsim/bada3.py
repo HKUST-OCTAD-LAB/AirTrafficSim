@@ -45,16 +45,7 @@ from __future__ import annotations
 import math
 from typing import TYPE_CHECKING
 
-from ..geospatial import G_0  # 3.1.2
-from ..thermodynamics import (
-    GAMMA_DRY_AIR as KAPPA,  # 3.1.2
-)
-from ..thermodynamics import (
-    R_SPECIFIC_DRY_AIR,  # 3.1.2
-    GasState,
-    speed_of_sound,
-)
-from .isa import (
+from .constants import (
     # A_0,  # 3.1.1
     BETA_BELOW_TROP,  # 3.1.2
     H_BELOW_TROP,  # 3.1-11
@@ -64,9 +55,18 @@ from .isa import (
     T_0,  # 3.1.1
     T_11,  # 3.1-14
 )
+from .geo import G_0  # 3.1.2
+from .thermo import (
+    GAMMA_DRY_AIR as KAPPA,  # 3.1.2
+)
+from .thermo import (
+    R_SPECIFIC_DRY_AIR,  # 3.1.2
+    GasState,
+    speed_of_sound,
+)
 
 if TYPE_CHECKING:
-    from .. import types as t
+    from . import types as t
 
 #
 # 3. Operational Performance Models

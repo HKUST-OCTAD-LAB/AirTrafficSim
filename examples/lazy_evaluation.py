@@ -4,7 +4,7 @@
 import polars as pl
 
 import numpy as np
-from airtrafficsim.performance.bada3 import atmosphere
+from airtrafficsim.bada3 import atmosphere
 
 
 def calc_atmosphere(z: pl.Expr) -> tuple[pl.Expr, pl.Expr, pl.Expr]:

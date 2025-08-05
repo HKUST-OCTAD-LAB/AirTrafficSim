@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from typing_extensions import NamedTuple
 
 if TYPE_CHECKING:
-    from .. import types as t
+    from . import types as t
 
 R: t.GasConstantJMolK[float] = 8.31446261815324
 """Universal gas constant"""

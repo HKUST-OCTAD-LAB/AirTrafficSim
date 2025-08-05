@@ -16,9 +16,9 @@ def test_jax() -> None:
     import jax
     import jax.numpy as jnp
 
-    from airtrafficsim.geospatial import G_0
-    from airtrafficsim.performance.bada3 import atmosphere
-    from airtrafficsim.thermodynamics import R_SPECIFIC_DRY_AIR
+    from airtrafficsim.bada3 import atmosphere
+    from airtrafficsim.geo import G_0
+    from airtrafficsim.thermo import R_SPECIFIC_DRY_AIR
 
     zs = ATMOSPHERE_TEST["z"]
 
@@ -34,7 +34,7 @@ def test_polars_extension() -> None:
     """Check support for polars lazy API"""
     import polars as pl
 
-    from airtrafficsim.performance.bada3 import atmosphere
+    from airtrafficsim.bada3 import atmosphere
 
     def pressure(expr: pl.Expr) -> tuple[pl.Expr, pl.Expr]:
         res = atmosphere(expr, delta_temperature=0.0)
@@ -52,7 +52,7 @@ def test_polars_extension() -> None:
 
 
 def test_eas_tas() -> None:
-    from airtrafficsim.performance.airspeed import (
+    from airtrafficsim.airspeed import (
         eas_from_tas,
         tas_from_eas,
     )
@@ -67,7 +67,7 @@ def test_eas_tas() -> None:
 
 
 def test_cas_tas() -> None:
-    from airtrafficsim.performance.airspeed import (
+    from airtrafficsim.airspeed import (
         cas_from_tas,
         tas_from_cas,
     )

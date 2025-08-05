@@ -27,15 +27,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..thermodynamics import (
+from .constants import A_0, P_0, RHO_0
+from .thermo import (
     GAMMA_DRY_AIR,
     impact_pressure,
     impact_pressure_behind_normal_shock,
 )
-from .isa import A_0, P_0, RHO_0
 
 if TYPE_CHECKING:
-    from .. import types as t
+    from . import types as t
 
 
 def impact_pressure_from_cas(

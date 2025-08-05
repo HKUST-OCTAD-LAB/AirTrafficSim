@@ -196,9 +196,12 @@ def concat_dataset(
         concat_dim="isobaricInhPa",
         combine="nested",
         preprocess=add_dummy_pressure_dim,
-    ).assign_coords(isobaricInhPa=[int(fp.stem) for fp in weather_variable_fps])
+    )
+    ds.assign_coords(
+        isobaricInhPa=[int(fp.stem) for fp in weather_variable_fps]
+    )
 
-    return ds  # type: ignore
+    return ds
 
 
 def build_path(base_dir: Path, year: int, month: int, day: int) -> Path:

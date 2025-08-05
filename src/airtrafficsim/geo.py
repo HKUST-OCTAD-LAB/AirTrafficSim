@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Generic, TypeVar
 
-from .point import Point3D
+from typing_extensions import NamedTuple
 
 if TYPE_CHECKING:
-    from .. import types as t
+    from . import types as t
 
 G_0: t.GravitationalAcceleration[float] = 9.80665
 """Standard gravitational acceleration, sea level"""
@@ -76,6 +76,24 @@ def bearing(
 #
 # coordinate transformations
 #
+
+
+T = TypeVar("T")
+
+
+class Point2D(NamedTuple, Generic[T]):
+    """A point in 2D space"""
+
+    x: T
+    y: T
+
+
+class Point3D(NamedTuple, Generic[T]):
+    """A point in 3D space"""
+
+    x: T
+    y: T
+    z: T
 
 
 def lla_to_ecef(
