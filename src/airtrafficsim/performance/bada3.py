@@ -54,7 +54,6 @@ from ..thermodynamics import (
     GasState,
     speed_of_sound,
 )
-from ..types import Array, ArrayOrScalarT
 from .isa import (
     # A_0,  # 3.1.1
     BETA_BELOW_TROP,  # 3.1.2
@@ -67,23 +66,7 @@ from .isa import (
 )
 
 if TYPE_CHECKING:
-    from typing import Annotated
-
-    from .. import units as u
-    from ..quantity import (
-        TAS,
-        Delta,
-        GeopotentialAltitude,
-        MachNumber,
-        StaticPressure,
-        StaticTemperature,
-    )
-
-    class BelowTropopause:
-        """Marker to indicate the quantity is valid below the tropopause."""
-
-    class AboveTropopause:
-        """Marker to indicate the quantity is valid above the tropopause."""
+    from .. import types as t
 
 #
 # 3. Operational Performance Models
@@ -95,11 +78,9 @@ if TYPE_CHECKING:
 
 
 def temperature_below_tropopause(
-    altitude: Annotated[Array | float, GeopotentialAltitude],
-    delta_temperature: Annotated[
-        Array | float, Delta(StaticTemperature(u.KELVIN))
-    ] = 0.0,
-) -> Annotated[Array | float, StaticTemperature(u.KELVIN), BelowTropopause]:
+    altitude: t.GeopotentialAltitudeM,
+    delta_temperature: t.DeltaTemperatureK = 0.0,
+) -> t.StaticTemperatureKBelowTropo:
     """
     Temperature below the tropopause, lapsing linearly with altitude (3.1-13)
     """
@@ -107,22 +88,16 @@ def temperature_below_tropopause(
 
 
 def temperature_above_tropopause(
-    delta_temperature: Annotated[
-        ArrayOrScalarT, Delta(StaticTemperature(u.KELVIN))
-    ],
-) -> Annotated[ArrayOrScalarT, StaticTemperature(u.KELVIN), AboveTropopause]:
+    delta_temperature: t.DeltaTemperatureK,
+) -> t.StaticPressurePABelowTropo:
     """Temperature above the tropopause, isothermal (3.1-15, 3.1-16)."""
     return T_11 + delta_temperature
 
 
 def pressure_below_tropopause(
-    temperature_below_trop: Annotated[
-        Array | float, StaticTemperature(u.KELVIN), BelowTropopause
-    ],
-    delta_temperature: Annotated[
-        Array | float, Delta(StaticTemperature(u.KELVIN))
-    ] = 0.0,
-) -> Annotated[Array | float, StaticPressure(u.PASCAL), BelowTropopause]:
+    temperature_below_trop: t.StaticTemperatureK,
+    delta_temperature: t.DeltaTemperatureK = 0.0,
+) -> t.StaticPressurePA:
     """Pressure below tropopause (3.1-18)"""
     return P_0 * (
         ((temperature_below_trop - delta_temperature) / T_0)
@@ -131,8 +106,8 @@ def pressure_below_tropopause(
 
 
 def pressure_above_tropopause(
-    altitude: Annotated[ArrayOrScalarT, GeopotentialAltitude(u.METER)],
-) -> Annotated[ArrayOrScalarT, StaticPressure(u.PASCAL), AboveTropopause]:
+    altitude: t.GeopotentialAltitudeM,
+) -> t.StaticPressurePA:
     """Pressure above tropopause (3.1-20)"""
     exp = (
         math.exp
@@ -145,9 +120,9 @@ def pressure_above_tropopause(
 
 
 def atmosphere(
-    altitude: Annotated[Array, GeopotentialAltitude(u.METER)],
-    delta_temperature: Annotated[Array, Delta(StaticTemperature(u.KELVIN))],
-) -> GasState[Array]:
+    altitude: t.GeopotentialAltitudeM,
+    delta_temperature: t.DeltaTemperatureK,
+) -> GasState:
     """
     BADA3 atmospheric model.
 
@@ -177,9 +152,9 @@ def atmosphere(
 
 
 def mach_number(
-    tas: Annotated[Array | float, TAS(u.MPS)],
-    temperature: Annotated[Array | float, StaticTemperature(u.KELVIN)],
-) -> Annotated[Array | float, MachNumber(None)]:
+    tas: t.TasMPS,
+    temperature: t.StaticTemperatureK,
+) -> t.MachNumber:
     """Mach/TAS conversion (3.1-26)"""
     a = speed_of_sound(temperature, KAPPA, R_SPECIFIC_DRY_AIR)
     return tas / a

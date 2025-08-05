@@ -4,7 +4,11 @@ repo_name: HKUST-OCTAD-LAB/AirTrafficSim
 repo_url: https://github.com/HKUST-OCTAD-LAB/AirTrafficSim
 site_url: https://hkust-octad-lab.github.io/AirTrafficSim/
 nav:
-  - API Reference: "api.md"
+  - API Reference:
+      - Types: "api/types.md"
+      - Core: "api/core.md"
+      - Data: "api/data.md"
+      - Misc: "api/misc.md"
 
 theme:
   name: material
@@ -32,12 +36,12 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [airtrafficsim]
           inventories:
             - https://docs.python.org/3/objects.inv
             - https://numpy.org/doc/stable/objects.inv
             - https://pola-rs.github.io/polars/py-polars/html/objects.inv # unstable, see https://github.com/pola-rs/polars/issues/7027
             - https://jax.readthedocs.io/en/latest/objects.inv
+            - https://abc8747.github.io/isqx/objects.inv
           options:
             inherited_members: true
             members_order: source
@@ -46,18 +50,16 @@ plugins:
             merge_init_into_class: true
             docstring_section_style: table
             signature_crossrefs: true
+            show_if_no_docstring: true
+            show_submodules: false
+            show_source: true
             show_symbol_type_heading: true
             show_symbol_type_toc: true
             show_root_heading: true
             show_root_full_path: false
-            show_source: false
-            summary: true
-            show_submodules: true
-            docstring_style: numpy # TODO: remove once legacy code is fully deprecated
-            extensions:
-              - griffe_warnings_deprecated:
-                  kind: danger
-                  title: Deprecated
+            show_labels: false
+            docstring_style: sphinx
+            group_by_category: false
       enable_inventory: true
 markdown_extensions:
   - abbr
@@ -80,8 +82,13 @@ markdown_extensions:
   - pymdownx.inlinehilite:
       style_plain_text: py3
   - pymdownx.magiclink
-  - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.snippets:
+      base_path: [!relative $config_dir]
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
       slugify: !!python/object/apply:pymdownx.slugs.slugify
@@ -93,11 +100,3 @@ markdown_extensions:
       permalink: "¤"
   - pymdownx.arithmatex:
       generic: true
-
-extra_javascript:
-  - assets/js/katex.js
-  - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js
-  - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js
-
-extra_css:
-  - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css

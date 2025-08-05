@@ -35,66 +35,52 @@ from ..thermodynamics import (
 from .isa import A_0, P_0, RHO_0
 
 if TYPE_CHECKING:
-    from typing import Annotated
-
-    from annotated_types import Gt
-
-    from .. import units as u
-    from ..quantity import (
-        CAS,
-        EAS,
-        TAS,
-        Density,
-        ImpactPressure,
-        RatioOfSpecificHeats,
-        StaticPressure,
-    )
-    from ..types import Array, ArrayOrScalarT
+    from .. import types as t
 
 
 def impact_pressure_from_cas(
-    cas: Annotated[Array, CAS(u.MPS)],
-    gamma: Annotated[Array, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array, ImpactPressure(u.PASCAL)]:
+    cas: t.CasMPS,
+    gamma: t.RatioOfSpecificHeats = GAMMA_DRY_AIR,
+) -> t.ImpactPressurePA:
     """Impact pressure, compressible flow"""
     return impact_pressure(cas, RHO_0, P_0, gamma)
 
 
 def impact_pressure_from_cas_behind_normal_shock(
-    cas: Annotated[Array, CAS(u.MPS)],
-    gamma: Annotated[Array, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array, ImpactPressure(u.PASCAL)]:
+    cas: t.CasMPS,
+    gamma: t.RatioOfSpecificHeats = GAMMA_DRY_AIR,
+) -> t.ImpactPressurePA:
     """Impact pressure, behind normal shock wave, supersonic flow"""
     return impact_pressure_behind_normal_shock(cas, A_0, P_0, gamma)
 
 
 def density_factor(
-    rho: Annotated[ArrayOrScalarT, Density(u.KGM3)],
-) -> ArrayOrScalarT:
-    return (rho / RHO_0) ** 0.5  # type: ignore
+    rho: t.DensityKGM3,
+) -> t.DensityFactor:
+    return (rho / RHO_0) ** 0.5
 
 
 def eas_from_tas(
-    tas: Annotated[Array, TAS(u.MPS)],
-    rho: Annotated[Array, Density(u.KGM3)],
-) -> Annotated[Array, EAS(u.MPS)]:
+    tas: t.TasMPS,
+    rho: t.DensityKGM3,
+) -> t.EasMPS:
     """Converts TAS to EAS"""
     return tas * density_factor(rho)
 
 
 def tas_from_eas(
-    eas: Annotated[Array, EAS(u.MPS)],
-    rho: Annotated[Array, Density(u.KGM3)],
-) -> Annotated[Array, TAS(u.MPS)]:
+    eas: t.EasMPS,
+    rho: t.DensityKGM3,
+) -> t.TasMPS:
     """Converts EAS to TAS"""
     return eas / density_factor(rho)
 
 
 def compressibility_factor(
-    qc: Annotated[Array, ImpactPressure(), Gt(0)],
-    p: Annotated[Array, StaticPressure(u.PASCAL)],
-    gamma: Annotated[Array, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Array:
+    qc: t.ImpactPressurePA,
+    p: t.StaticPressurePA,
+    gamma: t.RatioOfSpecificHeats = GAMMA_DRY_AIR,
+) -> t.CompressibilityFactor:
     """Assumption: subsonic speeds"""
     exponent = (gamma - 1) / gamma
     inner = (qc / p + 1) ** exponent - 1
@@ -102,10 +88,10 @@ def compressibility_factor(
 
 
 def eas_from_cas(
-    cas: Annotated[Array, CAS(u.MPS), Gt(0)],
-    p: Annotated[Array, StaticPressure(u.PASCAL)],
-    gamma: Annotated[Array, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array, EAS(u.MPS)]:
+    cas: t.CasMPS,
+    p: t.StaticPressurePA,
+    gamma: t.RatioOfSpecificHeats = GAMMA_DRY_AIR,
+) -> t.EasMPS:
     """Assumption: subsonic speeds"""
     qc = impact_pressure_from_cas(cas)
     f = compressibility_factor(qc, p, gamma)
@@ -114,21 +100,21 @@ def eas_from_cas(
 
 
 def tas_from_cas(
-    cas: Annotated[Array, CAS(u.MPS)],
-    rho: Annotated[Array, Density(u.KGM3)],
-    p: Annotated[Array, StaticPressure(u.PASCAL)],
-) -> Annotated[Array, TAS(u.MPS)]:
+    cas: t.CasMPS,
+    rho: t.DensityKGM3,
+    p: t.StaticPressurePA,
+) -> t.TasMPS:
     """Assumption: subsonic speeds"""
     eas = eas_from_cas(cas, p)
     return tas_from_eas(eas, rho)
 
 
 def cas_from_tas(
-    tas: Annotated[Array, TAS(u.MPS), Gt(0)],
-    rho: Annotated[Array, Density(u.KGM3)],
-    p: Annotated[Array, StaticPressure(u.PASCAL)],
-    gamma: Annotated[Array, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array, CAS(u.MPS)]:
+    tas: t.TasMPS,
+    rho: t.DensityKGM3,
+    p: t.StaticPressurePA,
+    gamma: t.RatioOfSpecificHeats = GAMMA_DRY_AIR,
+) -> t.CasMPS:
     """Assumption: subsonic speeds"""
     eas = eas_from_tas(tas, rho)
     qc = impact_pressure(tas, rho, p, gamma)

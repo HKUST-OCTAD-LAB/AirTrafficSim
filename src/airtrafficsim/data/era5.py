@@ -31,18 +31,18 @@ import pytz
 import xarray as xr
 
 from ..performance.bada3 import atmosphere
-from ..quantity import StaticTemperature, WindSpeed
 
 if TYPE_CHECKING:
-    from typing import Annotated
+    import isqx
+    from isqx import aerospace as aero
 
-    from .. import units as u
-    from ..quantity import StaticPressure
+    from .. import types as t
+
 
 GOOGLE_STORAGE_URI = (
     "gs://gcp-public-data-arco-era5/raw/date-variable-pressure_level"
 )
-PRESSURE_LEVELS: Annotated[tuple[int, ...], StaticPressure(u.HPA)] = (
+PRESSURE_LEVELS: t.PressureHPA[tuple[int, ...]] = (
     *range(100, 275, 25),
     *range(300, 750, 50),
     *range(750, 1025, 25),
@@ -58,19 +58,40 @@ class EcmwfParameter(NamedTuple):
 
 
 VARIABLES: list[EcmwfParameter] = [
-    EcmwfParameter(248, "fraction_of_cloud_cover", "cc", "0-1"),
-    EcmwfParameter(129, "geopotential", "z", "m² s⁻²"),
-    EcmwfParameter(203, "ozone_mass_mixing_ratio", "o3", "kg kg⁻¹"),
-    EcmwfParameter(60, "potential_vorticity", "pv", "s⁻¹"),
-    EcmwfParameter(247, "specific_cloud_ice_water_content", "ciwc", "kg kg⁻¹"),
     EcmwfParameter(
-        246, "specific_cloud_liquid_water_content", "clwc", "kg kg⁻¹"
+        248, "fraction_of_cloud_cover", "cc", isqx.Dimensionless("fraction")
     ),
-    EcmwfParameter(133, "specific_humidity", "q", "kg kg⁻¹"),
-    EcmwfParameter(130, "temperature", "t", StaticTemperature(u.KELVIN)),
-    EcmwfParameter(131, "u_component_of_wind", "u", WindSpeed(u.MPS)),
-    EcmwfParameter(132, "v_component_of_wind", "v", WindSpeed(u.MPS)),
-    EcmwfParameter(135, "vertical_velocity", "w", "Pa s⁻¹"),
+    EcmwfParameter(129, "geopotential", "z", isqx.M**2 * isqx.S**-2),
+    EcmwfParameter(
+        203,
+        "ozone_mass_mixing_ratio",
+        "o3",
+        isqx.Dimensionless("mass_mixing_ratio"),
+    ),
+    EcmwfParameter(60, "potential_vorticity", "pv", isqx.S**-1),
+    EcmwfParameter(
+        247,
+        "specific_cloud_ice_water_content",
+        "ciwc",
+        isqx.Dimensionless("mass_mixing_ratio"),
+    ),
+    EcmwfParameter(
+        246,
+        "specific_cloud_liquid_water_content",
+        "clwc",
+        isqx.Dimensionless("mass_mixing_ratio"),
+    ),
+    EcmwfParameter(
+        133, "specific_humidity", "q", isqx.Dimensionless("mass_mixing_ratio")
+    ),
+    EcmwfParameter(130, "temperature", "t", aero.STATIC_TEMPERATURE(isqx.K)),
+    EcmwfParameter(
+        131, "u_component_of_wind", "u", aero.WIND_SPEED(isqx.M_PERS)
+    ),
+    EcmwfParameter(
+        132, "v_component_of_wind", "v", aero.WIND_SPEED(isqx.M_PERS)
+    ),
+    EcmwfParameter(135, "vertical_velocity", "w", isqx.PA * isqx.S**-1),
 ]
 """Available variables under the `raw` bucket."""
 VARIABLES_MAP = {v.name: v.short_name for v in VARIABLES}
@@ -93,7 +114,7 @@ def fetch_weather(
     *,
     base_dir: Path,
     variables: list[str] = list(VARIABLES_MAP.keys()),
-    pressure_levels: tuple[int] = PRESSURE_LEVELS,
+    pressure_levels: tuple[int, ...] = PRESSURE_LEVELS,
     gs_base: str = GOOGLE_STORAGE_URI,
 ) -> None:
     """
@@ -177,7 +198,7 @@ def concat_dataset(
         preprocess=add_dummy_pressure_dim,
     ).assign_coords(isobaricInhPa=[int(fp.stem) for fp in weather_variable_fps])
 
-    return ds
+    return ds  # type: ignore
 
 
 def build_path(base_dir: Path, year: int, month: int, day: int) -> Path:

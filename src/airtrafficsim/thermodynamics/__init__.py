@@ -1,95 +1,70 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Generic
+from typing import TYPE_CHECKING
 
 from typing_extensions import NamedTuple
 
-from ..types import ArrayOrScalarT
-
 if TYPE_CHECKING:
-    from typing import Annotated
+    from .. import types as t
 
-    from .. import units as u
-    from ..quantity import (
-        TAS,
-        Density,
-        DynamicPressure,
-        GasConstant,
-        ImpactPressure,
-        MolarMass,
-        RatioOfSpecificHeats,
-        SpecificGasConstant,
-        SpeedOfSound,
-        StaticPressure,
-        StaticTemperature,
-        TotalPressure,
-    )
-    from ..types import Array
-
-R: Annotated[float, GasConstant(u.JMOLK)] = 8.31446261815324
+R: t.GasConstantJMolK[float] = 8.31446261815324
 """Universal gas constant"""
 
-M_DRY_AIR: Annotated[float, MolarMass(u.KILOGRAM * u.MOLE**-1)] = 0.028964917
-R_SPECIFIC_DRY_AIR: Annotated[float, SpecificGasConstant(u.JKGK)] = 287.052874
-GAMMA_DRY_AIR: Annotated[float, RatioOfSpecificHeats(None)] = 1.4
+M_DRY_AIR: t.MolarMassKGMol[float] = 0.028964917
+R_SPECIFIC_DRY_AIR: t.SpecificGasConstantJKGK[float] = 287.052874
+GAMMA_DRY_AIR: t.RatioOfSpecificHeats[float] = 1.4
 
 
 def specific_gas_constant(
-    molar_mass: Annotated[ArrayOrScalarT, MolarMass(u.KILOGRAM * u.MOLE**-1)],
-) -> Annotated[ArrayOrScalarT, SpecificGasConstant(u.JKGK)]:
+    molar_mass: t.MolarMassKGMol,
+) -> t.SpecificGasConstantJKGK:
     return R / molar_mass
 
 
-class GasState(NamedTuple, Generic[ArrayOrScalarT]):
-    temperature: Annotated[ArrayOrScalarT, StaticTemperature(u.KELVIN)]
-    pressure: Annotated[ArrayOrScalarT, StaticPressure(u.PASCAL)]
+class GasState(NamedTuple):
+    temperature: t.StaticTemperatureK
+    pressure: t.StaticPressurePA
 
     def density(
         self,
-        specific_gas_constant: Annotated[
-            Array | float, SpecificGasConstant(u.JKGK)
-        ],
-    ) -> Annotated[ArrayOrScalarT, Density(u.KGM3)]:
+        specific_gas_constant: t.SpecificGasConstantJKGK,
+    ) -> t.DensityKGM3:
         """Density, perfect gas"""
         return density(self.temperature, self.pressure, specific_gas_constant)
 
 
 def density(
-    temperature: Annotated[Array | float, StaticTemperature(u.KELVIN)],
-    pressure: Annotated[Array | float, StaticPressure(u.PASCAL)],
-    specific_gas_constant: Annotated[
-        Array | float, SpecificGasConstant(u.JKGK)
-    ],
-) -> Annotated[Array | float, Density(u.KGM3)]:
+    temperature: t.StaticTemperatureK,
+    pressure: t.StaticPressurePA,
+    specific_gas_constant: t.SpecificGasConstantJKGK,
+) -> t.DensityKGM3:
     """Density, perfect gas"""
     return pressure / (specific_gas_constant * temperature)
 
 
 def speed_of_sound(
-    temperature: Annotated[Array | float, StaticTemperature(u.KELVIN)],
-    adiabatic_index: Annotated[Array | float, RatioOfSpecificHeats(None)],
-    specific_gas_constant: Annotated[
-        Array | float, SpecificGasConstant(u.JKGK)
-    ],
-) -> Annotated[Array | float, SpeedOfSound(u.MPS)]:
+    temperature: t.StaticTemperatureK,
+    adiabatic_index: t.RatioOfSpecificHeats,
+    specific_gas_constant: t.SpecificGasConstantJKGK,
+) -> t.SpeedOfSoundMPS:
     """Speed of sound, perfect gas"""
     return (adiabatic_index * specific_gas_constant * temperature) ** 0.5
 
 
 def dynamic_pressure(
-    rho: Annotated[Array | float, Density(u.KGM3)],
-    tas: Annotated[Array | float, TAS(u.MPS)],
-) -> Annotated[Array | float, DynamicPressure(u.PASCAL)]:
+    rho: t.DensityKGM3,
+    tas: t.TasMPS,
+) -> t.DynamicPressurePA:
     """Dynamic pressure, incompressible flow"""
     return 0.5 * rho * tas**2
 
 
 def total_pressure(
-    tas: Annotated[Array | float, TAS(u.MPS)],
-    rho: Annotated[Array | float, Density(u.KGM3)],
-    p: Annotated[Array | float, StaticPressure(u.PASCAL)],
-    gamma: Annotated[Array | float, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array | float, TotalPressure(u.PASCAL)]:
+    tas: t.TasMPS,
+    rho: t.DensityKGM3,
+    p: t.StaticPressurePA,
+    gamma: t.RatioOfSpecificHeats = GAMMA_DRY_AIR,
+) -> t.TotalPressurePA:
     """Total pressure, compressible flow"""
     # NOTE: from bernoulli's formula
     inner = 1 + (gamma - 1) / (2 * gamma) * rho / p * tas**2
@@ -97,11 +72,11 @@ def total_pressure(
 
 
 def total_pressure_behind_normal_shock(
-    tas: Annotated[Array | float, TAS(u.MPS)],
-    rho: Annotated[Array | float, Density(u.KGM3)],
-    p: Annotated[Array | float, StaticPressure(u.PASCAL)],
-    gamma: Annotated[Array | float, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array | float, TotalPressure(u.PASCAL)]:
+    tas: t.TasMPS,
+    rho: t.DensityKGM3,
+    p: t.StaticPressurePA,
+    gamma: t.RatioOfSpecificHeats = GAMMA_DRY_AIR,
+) -> t.TotalPressurePA:
     """Total pressure, behind normal shock wave, supersonic flow"""
     common = rho / p * tas**2
     inner = ((gamma + 1) ** 2 / gamma * common) / (4 * common - 2 * (gamma - 1))
@@ -109,21 +84,21 @@ def total_pressure_behind_normal_shock(
 
 
 def impact_pressure(
-    tas: Annotated[Array, TAS(u.MPS)],
-    rho: Annotated[Array, Density(u.KGM3)],
-    p: Annotated[Array, StaticPressure(u.PASCAL)],
-    gamma: Annotated[Array, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array, ImpactPressure(u.PASCAL)]:
+    tas: t.TasMPS,
+    rho: t.DensityKGM3,
+    p: t.StaticPressurePA,
+    gamma: t.RatioOfSpecificHeats = GAMMA_DRY_AIR,
+) -> t.ImpactPressurePA:
     """Impact pressure, compressible flow"""
     return total_pressure(tas, rho, p, gamma) - p
 
 
 def impact_pressure_behind_normal_shock(
-    tas: Annotated[Array | float, TAS(u.MPS)],
-    a: Annotated[Array | float, SpeedOfSound(u.MPS)],
-    p: Annotated[Array | float, StaticPressure(u.PASCAL)],
-    gamma: Annotated[Array | float, RatioOfSpecificHeats(None)] = GAMMA_DRY_AIR,
-) -> Annotated[Array | float, TotalPressure(u.PASCAL)]:
+    tas: t.TasMPS,
+    a: t.SpeedOfSoundMPS,
+    p: t.StaticPressurePA,
+    gamma: t.RatioOfSpecificHeats = GAMMA_DRY_AIR,
+) -> t.TotalPressurePA:
     """Impact pressure, behind normal shock wave, supersonic flow"""
     inner = (gamma + 1) ** 2 / (4 * gamma - 2 * (gamma - 1) * (a / tas) ** 2)
     return (

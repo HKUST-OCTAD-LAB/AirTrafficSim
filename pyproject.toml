@@ -91,5 +91,17 @@ warn_redundant_casts = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
+# isqx's Annotated[_T, ...] makes _T a generic parameter
+# we disable type-arg otherwise mypy will always complain with a bare `t.CasMPS` 
+[[tool.mypy.overrides]]
+module = [
+    "airtrafficsim.thermodynamics",
+    "airtrafficsim.performance.airspeed",
+    "airtrafficsim.performance.bada3",
+    "airtrafficsim.performance.isa",
+    "airtrafficsim.geospatial",
+]
+disable_error_code = ["type-arg"]
+
 [tool.uv.sources]
 isqx = { git = "https://github.com/abc8747/isqx.git" }

@@ -5,26 +5,16 @@ from typing import TYPE_CHECKING
 from .point import Point3D
 
 if TYPE_CHECKING:
-    from typing import Annotated
+    from .. import types as t
 
-    from .. import units as u
-    from ..quantity import (
-        Angle,
-        Delta,
-        GeometricAltitude,
-        GravitationalAcceleration,
-        Length,
-    )
-    from ..types import Array
-
-G_0: Annotated[float, GravitationalAcceleration(u.MPS2)] = 9.80665
+G_0: t.GravitationalAcceleration[float] = 9.80665
 """Standard gravitational acceleration, sea level"""
 
-RADIUS_EARTH_EQUATORIAL: Annotated[float, Length(u.METER)] = 6_378_137.0
+RADIUS_EARTH_EQUATORIAL: t.LengthM[float] = 6_378_137.0
 """Semi-major axis, Earth, WGS84"""
-RADIUS_EARTH_POLAR: Annotated[float, Length(u.METER)] = 6_356_752.3
+RADIUS_EARTH_POLAR: t.LengthM[float] = 6_356_752.3
 """Semi-minor axis, Earth, WGS84"""
-RADIUS_EARTH_MEAN: Annotated[float, Length(u.METER)] = 6_371_008.7714
+RADIUS_EARTH_MEAN: t.LengthM[float] = 6_371_008.7714
 """Mean radius of semi-axes, Earth, WGS84"""
 
 F_INV = 298.257223563
@@ -39,11 +29,11 @@ E2 = 1 - (1 - F) * (1 - F)
 
 
 def distance(
-    lon0: Annotated[Array, Angle(u.RAD)],
-    lat0: Annotated[Array, Angle(u.RAD)],
-    lon1: Annotated[Array, Angle(u.RAD)],
-    lat1: Annotated[Array, Angle(u.RAD)],
-) -> Annotated[Array, Length(u.METER)]:
+    lon0: t.AngleRad,
+    lat0: t.AngleRad,
+    lon1: t.AngleRad,
+    lat1: t.AngleRad,
+) -> t.LengthM:
     """
     Returns the [Haversine great circle distance](https://en.wikipedia.org/wiki/Haversine_formula)
     between two coordinates.
@@ -61,11 +51,11 @@ def distance(
 
 
 def bearing(
-    lon0: Annotated[Array, Angle(u.RAD)],
-    lat0: Annotated[Array, Angle(u.RAD)],
-    lon1: Annotated[Array, Angle(u.RAD)],
-    lat1: Annotated[Array, Angle(u.RAD)],
-) -> Annotated[Array, Angle(u.RAD)]:
+    lon0: t.AngleRad,
+    lat0: t.AngleRad,
+    lon1: t.AngleRad,
+    lat1: t.AngleRad,
+) -> t.AngleRad:
     """
     Returns the initial bearing (from origin to destination) along a
     [great-circle](https://en.wikipedia.org/wiki/Great_circle).
@@ -89,10 +79,10 @@ def bearing(
 
 
 def lla_to_ecef(
-    lon: Annotated[Array, Angle(u.RAD)],
-    lat: Annotated[Array, Angle(u.RAD)],
-    alt: Annotated[Array, GeometricAltitude(u.METER)],
-) -> Point3D[Annotated[Array, Length(u.METER)]]:
+    lon: t.AngleRad,
+    lat: t.AngleRad,
+    alt: t.GeometricAltitudeM,
+) -> Point3D[t.LengthM]:
     """
     Converts geodetic coordinates to Earth-centered, Earth-fixed coordinates.
     Equivalent to `epsg:4979 +proj=cart +ellps=WGS84` in PROJ.
@@ -110,12 +100,12 @@ def lla_to_ecef(
 
 
 def ecef_to_enu(
-    dx: Annotated[Array, Delta(Length(u.METER))],
-    dy: Annotated[Array, Delta(Length(u.METER))],
-    dz: Annotated[Array, Delta(Length(u.METER))],
-    lon_ref: Annotated[Array, Angle(u.RAD)],
-    lat_ref: Annotated[Array, Angle(u.RAD)],
-) -> Point3D[Annotated[Array, Length(u.METER)]]:
+    dx: t.DeltaLengthM,
+    dy: t.DeltaLengthM,
+    dz: t.DeltaLengthM,
+    lon_ref: t.AngleRad,
+    lat_ref: t.AngleRad,
+) -> Point3D[t.LengthM]:
     """
     Converts Earth-centered, Earth-fixed coordinates
     (x, y, z with respect to a reference point)

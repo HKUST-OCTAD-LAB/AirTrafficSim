@@ -2,9 +2,7 @@ from typing import Generic, TypeVar
 
 from typing_extensions import NamedTuple
 
-from ..types import Array
-
-T = TypeVar("T", bound=Array)
+T = TypeVar("T")
 
 
 class Point2D(NamedTuple, Generic[T]):
