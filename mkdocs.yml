@@ -96,8 +96,8 @@ markdown_extensions:
 
 extra_javascript:
   - assets/js/katex.js
-  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.21/katex.min.js
-  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.21/contrib/auto-render.min.js
+  - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js
+  - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js
 
 extra_css:
-  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.21/katex.min.css
+  - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css

@@ -19,6 +19,7 @@ Requires extras:
 
 # TODO: use cdsapi as a fallback
 
+import logging
 import random
 import subprocess
 from datetime import datetime, timedelta
@@ -29,7 +30,6 @@ import polars as pl
 import pytz
 import xarray as xr
 
-from .. import logger
 from ..performance.bada3 import atmosphere
 from ..quantity import StaticTemperature, WindSpeed
 
@@ -42,11 +42,12 @@ if TYPE_CHECKING:
 GOOGLE_STORAGE_URI = (
     "gs://gcp-public-data-arco-era5/raw/date-variable-pressure_level"
 )
-PRESSURE_LEVELS: Annotated[tuple[int], StaticPressure(u.HPA)] = (
+PRESSURE_LEVELS: Annotated[tuple[int, ...], StaticPressure(u.HPA)] = (
     *range(100, 275, 25),
     *range(300, 750, 50),
     *range(750, 1025, 25),
 )
+logger = logging.getLogger(__name__)
 
 
 class EcmwfParameter(NamedTuple):

@@ -5,10 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "AirTrafficSim"
 version = "0.2.0-alpha.4"
-authors = [
-    { name = "Frankie Hui", email = "kyhuiaf@connect.ust.hk" },
-    { name = "Abraham Cheung", email = "abraham@ylcheung.com" },
-]
+authors = [{ name = "Abraham Cheung", email = "abraham@ylcheung.com" }]
 description = "A lightweight collection of tools for air traffic management research."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -30,56 +27,38 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
 ]
-dependencies = [
-    "annotated-types>=0.7.0",
-    "numpy>=2.2.0",
-]
+dependencies = ["isqx", "numpy>=2"]
 
 [project.urls]
 Repository = "https://github.com/HKUST-OCTAD-LAB/AirTrafficSim"
 
 [project.optional-dependencies]
-polars = [
-    "polars[calamine]>=1.18.0",
-]
-networking = [
-    "httpx[http2]>=0.28.1",
-]
-era5 = [
-    "xarray>=2024.11.0",
-]
-jax = [
-    "jax>=0.5.0",
-]
-plot = [
-    "matplotlib>=3.10.0",
-]
-all = [
-    "airtrafficsim[polars,networking,era5]",
-]
+polars = ["polars[calamine]>=1.18.0"]
+networking = ["httpx[http2]>=0.28.1"]
+era5 = ["xarray>=2024.11.0"]
+rich = ["rich>=14.0.0"]
+jax = ["jax>=0.5.0"]
+plot = ["matplotlib>=3.10.0"]
+all = ["airtrafficsim[polars,networking,era5,rich]"]
+
 
 [dependency-groups]
 dev = [
+    { include-group = "test" },
+    { include-group = "docs" },
     "array-api-strict>=2.2",
     "ipykernel>=6.29.5",
     "mypy>=1.13.0",
     "ruff>=0.8.3",
     "types-pytz>=2024.2.0.20241221",
 ]
-test = [
-    "pytest-cov>=6.0.0",
-    "pytest>=8.3.4",
-    "anyio>=4.7.0",
-]
+test = ["pytest-cov>=6.0.0", "pytest>=8.3.4", "anyio>=4.7.0"]
 docs = [
     "griffe-warnings-deprecated>=1.1.0",
     "mkdocs-material[imaging]>=9.5.49",
     "mkdocstrings-python>=1.13.0",
 ]
 
-
-[tool.uv]
-default-groups = ["dev", "test", "docs"]
 
 [tool.ruff]
 lint.select = [
@@ -111,3 +90,6 @@ warn_no_return = true
 warn_redundant_casts = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+[tool.uv.sources]
+isqx = { git = "https://github.com/abc8747/isqx.git" }

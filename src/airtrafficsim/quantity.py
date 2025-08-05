@@ -26,7 +26,7 @@ not catch incompatible quantities.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import ClassVar, TypeAlias
+from typing import ClassVar, Literal, TypeAlias
 
 from . import units as u
 
@@ -40,16 +40,19 @@ class Quantity:
 
     Subclasses can define `allowed_units: ClassVar[tuple[Unit, ...]]` to
     restrict the allowed units for instances of that subclass.
-    If `allowed_units` is not defined, any Unit is allowed.
     """
 
     unit: Unit
-    allowed_units: ClassVar[tuple[Unit | None, ...]] = ()
+    """Unit of measurement, e.g., `u.METER * u.SECOND**-1`."""
+    allowed_units: ClassVar[tuple[Unit, ...] | Literal["any"]] = "any"
+    """Allowed units for the quantity, used for post init validation on runtime.
+    If not overriden in subclass, no checks are performed."""
+    symbol: str | None = None
+    r"""KaTeX symbol for the quantity (optional), e.g. `V_\infty`"""
 
     def __post_init__(self) -> None:
         allowed = self.__class__.allowed_units
-        if not len(allowed):
-            # no restriction
+        if allowed == "any":  # no restriction
             return
         if self.unit not in allowed:
             raise ValueError(
@@ -57,7 +60,7 @@ class Quantity:
                 f"help: allowed units: `{allowed}`"
             )
 
-    def to_siunitx(self) -> str:
+    def to_siunitx(self) -> str | None:
         return self.unit.to_siunitx()
 
 
@@ -247,13 +250,13 @@ class TemperatureGradient(Quantity):
 class MachNumber(Quantity):
     """Mach number"""
 
-    allowed_units = (None,)
+    allowed_units = (u.UNITLESS,)
 
 
 class RatioOfSpecificHeats(Quantity):
     """Ratio of specific heats"""
 
-    allowed_units = (None,)
+    allowed_units = (u.UNITLESS,)
 
 
 #
