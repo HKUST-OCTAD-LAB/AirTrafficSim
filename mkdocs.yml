@@ -5,8 +5,8 @@ repo_url: https://github.com/HKUST-OCTAD-LAB/AirTrafficSim
 site_url: https://hkust-octad-lab.github.io/AirTrafficSim/
 nav:
   - API Reference:
-      - Types: "api/types.md"
       - Core: "api/core.md"
+      - Types: "api/types.md"
       - Data: "api/data.md"
       - Misc: "api/misc.md"
 

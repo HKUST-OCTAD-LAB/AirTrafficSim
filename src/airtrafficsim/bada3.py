@@ -32,12 +32,12 @@ Contents:
 The following functions are defined elsewhere:
 
 - 3.1-21 Determination of air density
-[airtrafficsim.thermodynamics.density][]
+[airtrafficsim.thermo.density][]
 - 3.1-22 Determination of speed of sound
-[airtrafficsim.thermodynamics.speed_of_sound][]
+[airtrafficsim.thermo.speed_of_sound][]
 - 3.1-23, 3.1-24 CAS/TAS conversion
-    - [airtrafficsim.performance.airspeed.tas_from_cas][]
-    - [airtrafficsim.performance.airspeed.cas_from_tas][]
+    - [airtrafficsim.airspeed.tas_from_cas][]
+    - [airtrafficsim.airspeed.cas_from_tas][]
 """
 
 from __future__ import annotations
@@ -129,8 +129,7 @@ def atmosphere(
     Non-standard atmosphere conditions are modelled with the
     ISA temperature deviation.
 
-    Note that this is only valid for 0-20km, unlike
-    [airtrafficsim.performance.isa][].
+    Note that this is only valid for 0-20km.
     """
     xp = altitude.__array_namespace__()
     tropo_mask = altitude <= H_BELOW_TROP

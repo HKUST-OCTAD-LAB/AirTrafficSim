@@ -18,9 +18,9 @@ IAS    CAS --> EAS <-> TAS    GS
 
 The equivalent airspeed $V_e$ is such that the dynamic pressure at some altitude
 $q = \frac{1}{2} \rho V^2$ is the same as the dynamic pressure at
-[sea level ISA conditions][airtrafficsim.performance.isa]
+sea level ISA conditions.
 $q = \frac{1}{2} \rho_0 V_e^2$. EAS and TAS is related through
-[airtrafficsim.performance.airspeed.eas_from_tas][].
+[airtrafficsim.airspeed.eas_from_tas][].
 """
 
 from __future__ import annotations
