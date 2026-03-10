@@ -7,7 +7,7 @@ from typing import Any
 import array_api_strict
 import polars as pl
 
-import airtrafficsim._polars_array_api as polars_array_api
+from airtrafficsim.polars import PolarsArrayApiNamespace
 
 logger = getLogger(__name__)
 
@@ -24,7 +24,7 @@ def main() -> None:
         if array_api_attr.startswith("_"):
             continue
         try:
-            pl_array_api_attr = getattr(polars_array_api, array_api_attr)
+            pl_array_api_attr = getattr(PolarsArrayApiNamespace, array_api_attr)
         except AttributeError:
             logger.error(f"missing {array_api_attr}")
             if array_api_attr in dir(pl.Expr):

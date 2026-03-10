@@ -27,7 +27,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
 ]
-dependencies = ["isqx", "numpy>=2"]
+dependencies = ["isqx>=0.1.2", "numpy>=2"]
 
 [project.urls]
 Repository = "https://github.com/HKUST-OCTAD-LAB/AirTrafficSim"
@@ -101,8 +101,10 @@ module = [
     "airtrafficsim.airspeed",
     "airtrafficsim.bada3",
     "airtrafficsim.geo",
+    "airtrafficsim.turbofan",
 ]
 disable_error_code = ["type-arg"]
 
-[tool.uv.sources]
-isqx = { git = "https://github.com/abc8747/isqx.git" }
+[[tool.mypy.overrides]]
+module = ["airtrafficsim.array_api"]
+disable_error_code = ["type-arg", "no-untyped-def"]

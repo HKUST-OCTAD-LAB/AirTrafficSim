@@ -77,7 +77,7 @@ test = [
 requires-dist = [
     { name = "airtrafficsim", extras = ["polars", "networking", "era5", "rich"], marker = "extra == 'all'" },
     { name = "httpx", extras = ["http2"], marker = "extra == 'networking'", specifier = ">=0.28.1" },
-    { name = "isqx", git = "https://github.com/abc8747/isqx.git" },
+    { name = "isqx", specifier = ">=0.1.2" },
     { name = "jax", marker = "extra == 'jax'", specifier = ">=0.5.0" },
     { name = "matplotlib", marker = "extra == 'plot'", specifier = ">=3.10.0" },
     { name = "numpy", specifier = ">=2" },
@@ -1059,8 +1059,12 @@ wheels = [
 
 [[package]]
 name = "isqx"
-version = "0.1.1"
-source = { git = "https://github.com/abc8747/isqx.git#1f5e1745a179aad4fc58d12b7e512a3df6892165" }
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/05/24/7bf8af5502b5f6548778b72f888d41d95f6946a9bb718a35d0a74271eba8/isqx-0.1.2.tar.gz", hash = "sha256:341552103f34e66a6a17848170f14e8fc60406963f13b8705f32b8379a6f75ff", size = 482731, upload-time = "2025-12-16T20:46:50.595Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/30/31/0e5f1fce0346cace1769caf384b8e97b9ec4032a0f2c62a8fb93dc15ceb3/isqx-0.1.2-py3-none-any.whl", hash = "sha256:5a52a52610d42346fc19de5d00d35fe54cae223ddb09a90c4e75fc2af155f91f", size = 124024, upload-time = "2025-12-16T20:46:48.926Z" },
+]
 
 [[package]]
 name = "jax"

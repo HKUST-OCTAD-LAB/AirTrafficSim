@@ -48,13 +48,13 @@ SCHEMA_MANUFACTURERS = {
 # downloaders
 #
 
-URL_BASE_DOC8643 = "https://www4.icao.int/doc8643/External"
+URL_BASE_DOC8643 = "https://doc8643.icao.int/External"
 
 
 async def _post_and_parse_json(
     client: httpx.AsyncClient, url: str
 ) -> pl.DataFrame:
-    response = await client.post(url)
+    response = await client.post(url, headers={"Content-Length": "0"})
     data = BytesIO(response.content)
     df = pl.read_json(data)
     return df

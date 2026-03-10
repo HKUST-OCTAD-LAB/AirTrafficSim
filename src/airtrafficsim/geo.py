@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import math
 from typing import TYPE_CHECKING, Generic, TypeVar
 
 from typing_extensions import NamedTuple
 
 if TYPE_CHECKING:
     from . import types as t
+    from .array_api import ArrayApiNamespace
 
 G_0: t.GravitationalAcceleration[float] = 9.80665
 """Standard gravitational acceleration, sea level"""
@@ -33,19 +35,21 @@ def distance(
     lat0: t.AngleRad,
     lon1: t.AngleRad,
     lat1: t.AngleRad,
+    *,
+    xp: ArrayApiNamespace | None,
 ) -> t.LengthM:
     """
     Returns the [Haversine great circle distance](https://en.wikipedia.org/wiki/Haversine_formula)
     between two coordinates.
     """
-    xp = lat0.__array_namespace__()
     d_lon = lon1 - lon0
     d_lat = lat1 - lat0
 
-    a = xp.square(xp.sin(d_lat / 2)) + xp.square(
-        xp.cos(lat0) * xp.cos(lat1) * xp.sin(d_lon / 2)
-    )
-    c = 2 * xp.arcsin(xp.sqrt(a))
+    xpr = math if xp is None else xp
+    a = (xpr.sin(d_lat / 2)) ** 2 + (
+        xpr.cos(lat0) * xpr.cos(lat1) * xpr.sin(d_lon / 2)
+    ) ** 2
+    c = 2 * xpr.asin(xpr.sqrt(a))
 
     return RADIUS_EARTH_MEAN * c
 
@@ -55,6 +59,8 @@ def bearing(
     lat0: t.AngleRad,
     lon1: t.AngleRad,
     lat1: t.AngleRad,
+    *,
+    xp: ArrayApiNamespace | None,
 ) -> t.AngleRad:
     """
     Returns the initial bearing (from origin to destination) along a
@@ -62,15 +68,15 @@ def bearing(
 
     :return: initial bearing, radians, [$-\\pi$, $\\pi$], clockwise from north
     """
-    xp = lon0.__array_namespace__()
     d_lon = lon1 - lon0
 
-    y = xp.sin(d_lon) * xp.cos(lat1)
-    x = xp.cos(lat0) * xp.sin(lat1) - (
-        xp.sin(lat0) * xp.cos(lat1) * xp.cos(d_lon)
+    xpr = math if xp is None else xp
+    y = xpr.sin(d_lon) * xpr.cos(lat1)
+    x = xpr.cos(lat0) * xpr.sin(lat1) - (
+        xpr.sin(lat0) * xpr.cos(lat1) * xpr.cos(d_lon)
     )
 
-    return xp.arctan2(y, x)
+    return xpr.atan2(y, x)
 
 
 #
@@ -100,6 +106,8 @@ def lla_to_ecef(
     lon: t.AngleRad,
     lat: t.AngleRad,
     alt: t.GeometricAltitudeM,
+    *,
+    xp: ArrayApiNamespace | None,
 ) -> Point3D[t.LengthM]:
     """
     Converts geodetic coordinates to Earth-centered, Earth-fixed coordinates.
@@ -107,12 +115,12 @@ def lla_to_ecef(
 
     :return: (x, y, z) coordinates
     """
-    xp = lon.__array_namespace__()
-    v = RADIUS_EARTH_MEAN / xp.sqrt(1 - E2 * xp.sin(lat) * xp.sin(lat))
+    xpr = math if xp is None else xp
+    v = RADIUS_EARTH_MEAN / xpr.sqrt(1 - E2 * xpr.sin(lat) * xpr.sin(lat))
 
-    x = (v + alt) * xp.cos(lat) * xp.cos(lon)
-    y = (v + alt) * xp.cos(lat) * xp.sin(lon)
-    z = (v * (1 - E2) + alt) * xp.sin(lat)
+    x = (v + alt) * xpr.cos(lat) * xpr.cos(lon)
+    y = (v + alt) * xpr.cos(lat) * xpr.sin(lon)
+    z = (v * (1 - E2) + alt) * xpr.sin(lat)
 
     return Point3D(x, y, z)
 
@@ -123,6 +131,8 @@ def ecef_to_enu(
     dz: t.DeltaLengthM,
     lon_ref: t.AngleRad,
     lat_ref: t.AngleRad,
+    *,
+    xp: ArrayApiNamespace | None,
 ) -> Point3D[t.LengthM]:
     """
     Converts Earth-centered, Earth-fixed coordinates
@@ -131,11 +141,11 @@ def ecef_to_enu(
 
     :return: (east, north, up) coordinates
     """
-    xp = dx.__array_namespace__()
-    s_lat = xp.sin(lat_ref)
-    c_lat = xp.cos(lat_ref)
-    s_lon = xp.sin(lon_ref)
-    c_lon = xp.cos(lon_ref)
+    xpr = math if xp is None else xp
+    s_lat = xpr.sin(lat_ref)
+    c_lat = xpr.cos(lat_ref)
+    s_lon = xpr.sin(lon_ref)
+    c_lon = xpr.cos(lon_ref)
 
     east = -s_lon * dx + c_lon * dy
     north = -s_lat * c_lon * dx - s_lat * s_lon * dy + c_lat * dz

@@ -1,10 +1,13 @@
 """
 Polars isn't exactly an array library, but we would like to make it
-compatible with the array API as far as possible.
+compatible with the [array API](https://data-apis.org/array-api/latest).
 
-See: https://github.com/pola-rs/polars/issues/2249
+Use it by passing `xp=PolarsArrayApiNamespace` to functions that accept an
+explicit Array API namespace.
 
-Activate it by importing `airtrafficsim`.
+See:
+
+- https://github.com/pola-rs/polars/issues/2249
 """
 
 import math
@@ -12,7 +15,7 @@ import math
 import polars as pl
 
 
-class ArrayAPINamespace:
+class PolarsArrayApiNamespace:
     """
     Unsupported functions:
 
@@ -202,10 +205,11 @@ class ArrayAPINamespace:
     zeros = pl.zeros
 
 
-@pl.api.register_expr_namespace("__array_namespace__")
-class ArrayAPI:
-    def __init__(self, expr: pl.Expr) -> None:
-        self._expr = expr
+def register_polars_array_api() -> None:
+    @pl.api.register_expr_namespace("__array_namespace__")
+    class ArrayAPI:
+        def __init__(self, expr: pl.Expr) -> None:
+            self._expr = expr
 
-    def __call__(self) -> type[ArrayAPINamespace]:
-        return ArrayAPINamespace
+        def __call__(self) -> type[PolarsArrayApiNamespace]:
+            return PolarsArrayApiNamespace

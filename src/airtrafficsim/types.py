@@ -1,26 +1,24 @@
 """This module contains a set of type aliases for `isqx` physical quantity kinds
 and units.
 
-Note that while static typing is usually a good idea, many core numerical parts
-of the library (whose inputs and outputs are arrays) will **not** use static
-typing.
+## Usage
 
-This may be surprising: why not annotate `NDArray[np.float64] | float` and
-`TypeVars`? We wish to suppose a wide range of numerical libraries, and
-restricting ourselves to `numpy` will lead to many false positives in mypy
-strict mode. See:
+When annotating functions, use **unconstrained generic types**:
 
-- https://docs.jax.dev/en/latest/jep/12049-type-annotations.html
+```py
+from airtrafficsim import types as t
 
-Instead, we will utilise **unconstrained generic types** to signal to the
-static checker that we want an `Unknown` type, not the `Any` type.
+def foo(x: t.StaticTemperatureK) -> t.PressurePA:
+    ...
+```
 
-We will adopt the [array API](https://data-apis.org/array-api/latest)
-for most computations, see:
+This signals to the static type checker that we want an `Unknown` type, not the
+`Any` type. Do not annotate with `NDArray[np.float64]` or `float`.
 
-- https://github.com/data-apis/array-api/issues/229
-- https://github.com/data-apis/array-api/discussions/863
-- https://github.com/data-apis/array-api-typing
+Reasoning: we wish to support a wide range of numerical libraries, so
+restricting ourselves to `numpy` will lead to many false positives in strict
+mode. See https://docs.jax.dev/en/latest/jep/12049-type-annotations.html
+for more information.
 """
 
 from __future__ import annotations
@@ -86,9 +84,9 @@ StaticTemperatureKBelowTropo = Annotated[
 StaticPressurePABelowTropo = Annotated[_T, STATIC_PRESSURE_BELOW_TROPO(isqx.PA)]
 
 # aerospace
-CasMPS = Annotated[_T, aero.CAS(isqx.M_PERS)]
-EasMPS = Annotated[_T, aero.EAS(isqx.M_PERS)]
-TasMPS = Annotated[_T, aero.TAS(isqx.M_PERS)]
+CasMPS = Annotated[_T, aero.CALIBRATED_AIRSPEED(isqx.M_PERS)]
+EasMPS = Annotated[_T, aero.EQUIVALENT_AIRSPEED(isqx.M_PERS)]
+TasMPS = Annotated[_T, aero.TRUE_AIRSPEED(isqx.M_PERS)]
 SpeedOfSoundMPS = Annotated[_T, isqx.SPEED_OF_SOUND(isqx.M_PERS)]
 
 GeopotentialAltitudeM = Annotated[_T, aero.GEOPOTENTIAL_ALTITUDE(isqx.M)]

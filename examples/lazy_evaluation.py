@@ -5,10 +5,11 @@ import polars as pl
 
 import numpy as np
 from airtrafficsim.bada3 import atmosphere
+from airtrafficsim.polars import PolarsArrayApiNamespace
 
 
 def calc_atmosphere(z: pl.Expr) -> tuple[pl.Expr, pl.Expr, pl.Expr]:
-    res = atmosphere(z, delta_temperature=0.0)
+    res = atmosphere(z, delta_temperature=0.0, xp=PolarsArrayApiNamespace)
     return (
         z,
         res.pressure.alias("pressure"),

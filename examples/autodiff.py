@@ -13,8 +13,8 @@ from airtrafficsim.thermo import R_SPECIFIC_DRY_AIR
 zs = jnp.linspace(0, 20000, 100)
 
 dpdz = jax.vmap(
-    jax.grad(lambda z: atmosphere(z, delta_temperature=0.0).pressure)
+    jax.grad(lambda z: atmosphere(z, delta_temperature=0.0, xp=jnp).pressure)
 )(zs)
-rho = atmosphere(zs, delta_temperature=0.0).density(R_SPECIFIC_DRY_AIR)
+rho = atmosphere(zs, delta_temperature=0.0, xp=jnp).density(R_SPECIFIC_DRY_AIR)
 
 assert jnp.allclose(dpdz, -rho * G_0)

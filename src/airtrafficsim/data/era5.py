@@ -30,7 +30,9 @@ import polars as pl
 import pytz
 import xarray as xr
 
-from ..performance.bada3 import atmosphere
+import numpy as np
+
+from ..bada3 import atmosphere
 
 if TYPE_CHECKING:
     import isqx
@@ -232,7 +234,7 @@ def get_data_for_trajectory(
         pl.col("altitude"),  # meters
     ).collect()
 
-    atmos = atmosphere(alt.to_numpy(), delta_temperature=0)
+    atmos = atmosphere(alt.to_numpy(), delta_temperature=0, xp=np)
 
     times_ = xr.DataArray(time.to_numpy(), dims=["points"])
     lons_ = xr.DataArray(longitude, dims=["points"])

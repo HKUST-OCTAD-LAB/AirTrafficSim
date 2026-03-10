@@ -45,6 +45,7 @@ from __future__ import annotations
 import math
 from typing import TYPE_CHECKING
 
+from .array_api import where
 from .constants import (
     # A_0,  # 3.1.1
     BETA_BELOW_TROP,  # 3.1.2
@@ -67,6 +68,7 @@ from .thermo import (
 
 if TYPE_CHECKING:
     from . import types as t
+    from .array_api import ArrayApiNamespace
 
 #
 # 3. Operational Performance Models
@@ -106,22 +108,22 @@ def pressure_below_tropopause(
 
 
 def pressure_above_tropopause(
-    altitude: t.GeopotentialAltitudeM,
+    altitude: t.GeopotentialAltitudeM, *, xp: ArrayApiNamespace | None
 ) -> t.StaticPressurePA:
     """Pressure above tropopause (3.1-20)"""
-    exp = (
-        math.exp
-        if isinstance(altitude, float)
-        else altitude.__array_namespace__().exp
-    )
+    xpr = math if xp is None else xp
     return P_11 * (
-        exp((altitude - H_BELOW_TROP) * (-G_0 / (R_SPECIFIC_DRY_AIR * T_11)))
+        xpr.exp(
+            (altitude - H_BELOW_TROP) * (-G_0 / (R_SPECIFIC_DRY_AIR * T_11))
+        )
     )
 
 
 def atmosphere(
     altitude: t.GeopotentialAltitudeM,
     delta_temperature: t.DeltaTemperatureK,
+    *,
+    xp: ArrayApiNamespace | None,
 ) -> GasState:
     """
     BADA3 atmospheric model.
@@ -131,20 +133,21 @@ def atmosphere(
 
     Note that this is only valid for 0-20km.
     """
-    xp = altitude.__array_namespace__()
     tropo_mask = altitude <= H_BELOW_TROP
-    temperature = xp.where(
+    temperature = where(
         tropo_mask,
         temperature_below_tropopause(altitude, delta_temperature),
-        temperature_above_tropopause(delta_temperature),
+        lambda: temperature_above_tropopause(delta_temperature),
+        xp=xp,
     )
     return GasState(
         temperature=temperature,
         pressure=(
-            xp.where(
+            where(
                 tropo_mask,
                 pressure_below_tropopause(temperature, delta_temperature),
-                pressure_above_tropopause(altitude),
+                lambda: pressure_above_tropopause(altitude, xp=xp),
+                xp=xp,
             )
         ),
     )

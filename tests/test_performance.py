@@ -23,9 +23,13 @@ def test_jax() -> None:
     zs = ATMOSPHERE_TEST["z"]
 
     dpdz = jax.vmap(
-        jax.grad(lambda z: atmosphere(z, delta_temperature=0.0).pressure)
+        jax.grad(
+            lambda z: atmosphere(z, delta_temperature=0.0, xp=jnp).pressure
+        )
     )(zs)
-    rho = atmosphere(zs, delta_temperature=0.0).density(R_SPECIFIC_DRY_AIR)
+    rho = atmosphere(zs, delta_temperature=0.0, xp=jnp).density(
+        R_SPECIFIC_DRY_AIR
+    )
 
     assert jnp.allclose(dpdz, -rho * G_0)
 
@@ -35,9 +39,12 @@ def test_polars_extension() -> None:
     import polars as pl
 
     from airtrafficsim.bada3 import atmosphere
+    from airtrafficsim.polars import PolarsArrayApiNamespace
 
     def pressure(expr: pl.Expr) -> tuple[pl.Expr, pl.Expr]:
-        res = atmosphere(expr, delta_temperature=0.0)
+        res = atmosphere(
+            expr, delta_temperature=0.0, xp=PolarsArrayApiNamespace
+        )
         return (
             res.pressure.alias("pressure"),
             res.temperature.alias("temperature"),
@@ -46,7 +53,9 @@ def test_polars_extension() -> None:
     df = pl.DataFrame(ATMOSPHERE_TEST).lazy()
     values = df.select(pressure(pl.col("z"))).collect()
 
-    expected = atmosphere(np.array(ATMOSPHERE_TEST["z"]), delta_temperature=0.0)
+    expected = atmosphere(
+        np.array(ATMOSPHERE_TEST["z"]), delta_temperature=0.0, xp=np
+    )
     assert np.allclose(values["pressure"], expected.pressure)
     assert np.allclose(values["temperature"], expected.temperature)
 
