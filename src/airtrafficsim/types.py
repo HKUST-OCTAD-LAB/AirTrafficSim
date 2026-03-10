@@ -91,12 +91,19 @@ SpeedOfSoundMPS = Annotated[_T, isqx.SPEED_OF_SOUND(isqx.M_PERS)]
 
 GeopotentialAltitudeM = Annotated[_T, aero.GEOPOTENTIAL_ALTITUDE(isqx.M)]
 GeometricAltitudeM = Annotated[_T, aero.GEOMETRIC_ALTITUDE(isqx.M)]
+ThrustN = Annotated[_T, isqx.FORCE(isqx.N)]
+MassFlowKgPS = Annotated[_T, isqx.MASS_FLOW_RATE(isqx.KG * isqx.S**-1)]
+SpecificFuelConsumptionKgPNPS = Annotated[
+    _T,
+    aero.THRUST_SPECIFIC_FUEL_CONSUMPTION(isqx.KG * isqx.N**-1 * isqx.S**-1),
+]
 
 # dimensionless
 MachNumber = Annotated[_T, isqx.MACH_NUMBER]
 RatioOfSpecificHeats = Annotated[_T, isqx.HEAT_CAPACITY_RATIO]
 DensityFactor = Annotated[_T, DENSITY_FACTOR]
 CompressibilityFactor = Annotated[_T, COMPRESSIBILITY_FACTOR]
+BypassRatio = Annotated[_T, aero.BYPASS_RATIO]
 
 # deltas
 DeltaTemperatureK = Annotated[_T, isqx.TEMPERATURE[isqx.DELTA](isqx.K)]
