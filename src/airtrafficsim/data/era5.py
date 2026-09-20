@@ -19,6 +19,8 @@ Requires extras:
 
 # TODO: use cdsapi as a fallback
 
+from __future__ import annotations
+
 import logging
 import random
 import subprocess
@@ -26,18 +28,17 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import TYPE_CHECKING, Generator, NamedTuple
 
+import isqx
 import polars as pl
 import pytz
 import xarray as xr
+from isqx import aerospace as aero
 
 import numpy as np
 
 from ..bada3 import atmosphere
 
 if TYPE_CHECKING:
-    import isqx
-    from isqx import aerospace as aero
-
     from .. import types as t
 
 

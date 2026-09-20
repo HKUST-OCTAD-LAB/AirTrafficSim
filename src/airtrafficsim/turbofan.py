@@ -8,17 +8,14 @@ from __future__ import annotations
 
 import math
 from enum import Enum
-from typing import TYPE_CHECKING, Annotated, Generic, NamedTuple, TypeVar
+from typing import Annotated, Generic, NamedTuple, TypeVar
 
 import isqx
 import isqx.aerospace as aero
 import isqx.usc
 
+from . import types as t  # used at runtime for module-level `Annotated` aliases
 from .array_api import ArrayApiNamespace, linear_interp, where
-
-if TYPE_CHECKING:
-    from . import types as t
-
 
 lb_to_kg = isqx.convert(isqx.usc.LB, isqx.KG)
 m_to_in = isqx.convert(isqx.M, isqx.usc.IN)
