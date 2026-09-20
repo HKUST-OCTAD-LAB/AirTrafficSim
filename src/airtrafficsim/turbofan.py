@@ -8,11 +8,12 @@ from __future__ import annotations
 
 import math
 from enum import Enum
-from typing import Annotated, Generic, NamedTuple, TypeVar
+from typing import Annotated, Generic, TypeVar
 
 import isqx
 import isqx.aerospace as aero
 import isqx.usc
+from typing_extensions import NamedTuple
 
 from . import types as t  # used at runtime for module-level `Annotated` aliases
 from .array_api import ArrayApiNamespace, linear_interp, where

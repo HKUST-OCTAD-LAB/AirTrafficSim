@@ -47,8 +47,8 @@ def distance(
 
     xpr = math if xp is None else xp
     a = (xpr.sin(d_lat / 2)) ** 2 + (
-        xpr.cos(lat0) * xpr.cos(lat1) * xpr.sin(d_lon / 2)
-    ) ** 2
+        xpr.cos(lat0) * xpr.cos(lat1) * (xpr.sin(d_lon / 2)) ** 2
+    )
     c = 2 * xpr.asin(xpr.sqrt(a))
 
     return RADIUS_EARTH_MEAN * c
@@ -116,7 +116,7 @@ def lla_to_ecef(
     :return: (x, y, z) coordinates
     """
     xpr = math if xp is None else xp
-    v = RADIUS_EARTH_MEAN / xpr.sqrt(1 - E2 * xpr.sin(lat) * xpr.sin(lat))
+    v = RADIUS_EARTH_EQUATORIAL / xpr.sqrt(1 - E2 * xpr.sin(lat) * xpr.sin(lat))
 
     x = (v + alt) * xpr.cos(lat) * xpr.cos(lon)
     y = (v + alt) * xpr.cos(lat) * xpr.sin(lon)
